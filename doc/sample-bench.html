@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+	<title>jquery.dynatree - sample-big</title>
+	<script src='../jquery/jquery.js' type='text/javascript'></script>
+	<script src='../jquery/ui.core.js' type='text/javascript'></script>
+
+	<link href='../src/skin/ui.dynatree.css' rel='stylesheet' type='text/css' />
+	<script src='../src/jquery.dynatree.js' type='text/javascript'></script>
+
+<script type='text/javascript'>
+function onTreeSelect (tn) {
+	alert ('You selected "'+tn.key+'"');
+}
+function initTree() {
+	var tree = new CLazyTree ('tree', 'Big Tree');
+
+	tree.enableUpdate (false);
+	tree.onSelect = onTreeSelect;
+
+	for (var i=0; i<10; i++) {
+		var f = tree.getRoot().addFolder ('Folder_'+(i+1), i);
+		for (var j=0; j<100; j++) {
+			var d = f.addDoc ('Node_'+(i+1)+'.'+(j+1), j);
+			for (var k=0; k<100; k++) {
+				d.addDoc ('SubNode_'+(10*(i + 100*j) + k), k);
+			}
+		}
+	}
+	ltLog ('tree was created.');
+	tree.enableUpdate (true);
+}
+</script>
+	</head>
+	<body onload='initTree();' >
+		<P>lazyTree example: big tree with 100.000 nodes:</P>
+		<div id='tree'> </div>
+		<p>10 folders with 100 documents each, with 100 sub-documents each.<br>
+		This makes 100.000 nodes!<br>
+		enableUpdate(false) is used to </p>
+	</body>
+</html>
