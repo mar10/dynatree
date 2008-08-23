@@ -1,0 +1,17 @@
+#summary One-sentence summary of this page.
+#labels Phase-Requirements
+
+= Introduction =
+
+Add your content here.
+
+
+= Details =
+
+The main things that should be addressed are
+  * The interface, usage, naming conventions, etc. could probably be more jQuery-ish.
+    Any feedback from experienced plugin developers is very welcome!
+  * So far I am only testing Windows, IE 7 and FF 3. Maybe a little bit of IE 6/8, Safari and FF2.
+  * The code should be hosted more community friendly. Also some forum and issue tracker should be available.
+  * The internal implementation of dynatree could make more use of jQuery technique.
+    So far it's based on the lazytree implementations which was indepent of any library.
