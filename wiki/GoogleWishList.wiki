@@ -1,0 +1,7 @@
+#summary Wishes or to-learns.
+
+  * Wiki syntax
+    * Soft new line like <br>
+    * TOC generator
+  * Wiki editor
+    * always have to scroll to see the save button
