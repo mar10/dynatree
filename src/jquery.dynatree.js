@@ -6,7 +6,7 @@
 	Licensed under the MIT License (MIT-License.txt)
 
 	A current version and some documentation should be available at
-		http://www.wwWendt.de/ref/lazytree/
+		http://dynatree.googlecode.com/
 
 	Let me know, if you find bugs or improvements (martin [@] wwWendt.de).
 
@@ -629,12 +629,15 @@ $.widget("ui.dynatree", {
 				}
 			});
 		}
-		// Init tree from UL tag
-		if( opts.initObject ) {
-			root.addObject(opts.initObject);
+		// Init tree structure
+		if( opts.children ) {
+			// Read structure from node array
+			root.addObject(opts.children);
 		} else if( opts.initId ) {
+			// Init tree from another UL element
 			this.createFromTag(root, $("#"+opts.initId));
 		} else {
+			// Init tree from the first UL element inside the container <div>
 			var $ul = $this.find(">ul").hide();
 			this.createFromTag(root, $this.find(">ul"));
 		}
@@ -733,7 +736,7 @@ $.ui.dynatree.defaults = {
 	rootVisible: false, // Set to true, to make the root node visible
 	rootCollapsible: false, // TODO: minExpandLevel: 1,
 	initId: null, // Init tree structure from a <ul> element with this ID.
-	initObject: null, // Init tree structure from this object array.
+	children: null, // Init tree structure from this object array.
 	focusRoot: true, // Set focus to root node on init.
 	keyboard: true, // Support keyboard navigation.
 	onSelect: null, // Callback when a node is selected.
@@ -785,7 +788,7 @@ $.ui.dynatree.defaults = {
  * Reserved data attributes for a tree node.
  */
 $.ui.dynatree.nodedatadefaults = {
-	title: undefined, // (required) Name of the root node (html is allowed here)
+	title: undefined, // (required) Displayed name of the node (html is allowed here)
 	key: undefined, // May be used with select(), find(), ...
 	isFolder: false, // Use a folder icon. Also the node is expandable but not selectable.
 	isLazy: false, // Call tree.options.onLazyRead() when the node is expanded for the first time to allow for delayed creation of children.
@@ -793,8 +796,8 @@ $.ui.dynatree.nodedatadefaults = {
 	tooltip: undefined, // Show this popup text.
 	icon: undefined, // Use a custom image (filename relative to tree.options.imagePath)
 	children: undefined, // Array of child node dictionaries.
-	// NOTE that it is possible to add any custom attributes to this data object.
-	// This may then also be used in the onSelect() or on onLazyTree() callbacks.
+	// NOTE: we can also add custom attributes here.
+	// This may then also be used in the onSelect() or onLazyTree() callbacks.
 	// ------------------------------------------------------------------------
 	lastentry: undefined
 };

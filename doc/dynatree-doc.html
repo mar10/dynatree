@@ -45,16 +45,14 @@
 <body>
 	<h1>jquery.dynatree documentation</h1>
 	<div class="hint">This document describes dynatree <strong>version 0.3 alpha 3</strong>.</div>
-	<p>dynatree is a javascript tree view control.<br>
+	<p>Dynatree is a JavaScript dynamic tree view plugin for <a href="http://jquery.com" target="_blank">jQuery</a> with support for lazy loading of branches.<br>
 	Main features:
 	<ul>
-		<li>jQuery plugin
-		<li>Open source
+		<li>Open source (<a href="http://www.opensource.org/licenses/mit-license.php" target="_blank">MIT-License</a>)
 		<li>Object oriented interface
 		<li>Support for lazy loading
 		<li>Keyboard aware
 	</ul>
-	Known issues: <a href="#issues">see below</a>.
 	</p>
 
 	<div id="toc">
@@ -66,56 +64,58 @@
 	You find the latest versions of jquery.js and ui.core.js from <a href="http://www.jquery.com" target="_blank">jquery site</a>.
 	</p>
 
-	<h2>Usage</h2>
+	<h2 id="quickExample">Quick example</h2>
 	<p>
-	To create a tree, we need to include th JS libraries in the header and add
-	a &lt;div> tag to the html code, where the control should appear.<br>
-	Then we add some initialization code to document's load event.
+	Let's start with a simple example:
 	</p>
 
 	<div class="codesample">
-	<a href="sample-2.html" target="_blank">Try this example...</a>
+	<a href="sample-quick.html" target="_blank">Try this example...</a>
 	<pre class="prettyprint">
+&lt;html>
 &lt;head>
-	[&#8230;]
+    <title>Quick example</title>
+	&lt;!-- Include the required JavaScript libraries: -->
 	&lt;link rel='stylesheet' type='text/css' href='skin/ui.dynatree.css' />
 	&lt;script src='jquery/jquery.js' type='text/javascript'>&lt;/script>
 	&lt;script src='jquery/ui.core.js' type='text/javascript'>&lt;/script>
 	&lt;script src='jquery.dynatree.js' type='text/javascript'>&lt;/script>
-	[&#8230;]
+
+	&lt;!-- Add code to initialize the tree when the document is loaded: -->
 	&lt;script type='text/javascript'>
 	$(function(){
+		// Attach the dynatree widget to an existing &lt;div id="tree"> element
+		// and pass options:
 		$("#tree").dynatree({
 			onSelect: function(tn) {
 				alert("You selected " + tn);
 			},
-			initObj: [
+			children: [ // Pass an array of nodes.
 				{title: "Item 1"},
-				{title: "Folder 2", isFolder=true,
+				{title: "Folder 2", isFolder: true,
 					children: [
 						{title: "Sub-item 3.1"},
 						{title: "Sub-item 3.2"}
 					]
 				},
 				{title: "Item 4"}
-			],
+			]
 		});
 	});
 	&lt;/script>
-	[&#8230;]
 &lt;/head>
 &lt;body>
-	[&#8230;]
+	&lt;!-- Add a &lt;div id="tree"> element where the tree should appear: -->
 	&lt;div id="tree"> &lt;/div>
-	[&#8230;]
 &lt;/body>
+&lt;/html>
 </pre>
 </div>
 
-	<h3>Explanation</h3>
-	<p>
-	The tree is initialized in the onload event of the html document. In jQuery this is typically done by passing a function to $(..) :
-	</p>
+<h2>Initializing the tree</h2>
+<p>
+The tree is initialized in the onload event of the html document. In jQuery this is usually done by passing a function to $(..) :
+</p>
 <pre class="prettyprint">
 &lt;head>
 	&lt;script type='text/javascript'>
@@ -126,11 +126,11 @@
 &lt;/head>
 </pre>
 
-	<p>
-	The dynatree widget is then attached to an empty &lt;div > element with a given ID of 'tree'.
-	This id can have any value, it only has to match the jQuery selector, in our case '#tree'<br>
-	Options are passed to the dynatree() function as a dictionary:
-	</p>
+<p>
+The dynatree widget is then attached to an empty &lt;div > element with a given ID of 'tree'.
+This id can have any value, it only has to match the jQuery selector, in our case '#tree'<br>
+Options are passed to the dynatree() function as a dictionary:
+</p>
 <pre class="prettyprint">
 			$("#tree").dynatree({
 				[&#8230;]
@@ -138,16 +138,24 @@
 </pre>
 
 
-<h2>Options</h2>
+<h3>Tree options</h3>
 
-<p>The following dictionary shows the available options, with their default values.</p>
+<p>
+	Tree options are defined as plain JavaScript objects, e.g.<br>
+	<code>{ &#8230; }</code>.<br>
+</p>
+<p>
+	The following dictionary shows the available options, with their default values.<br>
+	Note that there are reasonable default values for all options, so we may only have to pass the <code>onSelect</code> handler.
+</p>
+
 <pre class="prettyprint">
 $("#tree").dynatree({
 	title: "dynatree", // Name of the root node
 	rootVisible: false, // Set to true, to make the root node visible
 	rootCollapsible: false, // TODO: minExpandLevel: 1,
 	initId: null, // Init tree structure from a &lt;ul> element with this ID.
-	initObject: null, // Init tree structure from this object array.
+	children: null, // Init tree structure from this object array.
 	focusRoot: true, // Set focus to root node on init.
 	keyboard: true, // Support keyboard navigation.
 	onSelect: null, // Callback when a node is selected.
@@ -174,96 +182,102 @@ $("#tree").dynatree({
 </pre>
 
 
-	<h2>Initializing the tree structure</h2>
-	<p>
+<h3>Initializing the tree structure</h3>
+<p>
 	A tree structure is made of <i>nodes</i>. Every tree node may in turn contain
 	a list child nodes.<br>
-	A new dynatree always has exactly one <i>root node</i>, that is usually hidden.
-	All top level nodes of our tree are added below this root node.
-	</p>
-
-	<h3>Initializing the tree structure from an object array</h3>
-	<p>
-	The example above shows how to a tree is initialized by passing an
-	array of data objects with the <code>initObj</code> option.<br>
-	The &lt;div> tag can be empty in this case.
-	</p>
-	<div class="codesample">
-	<a href="sample-2.html" target="_blank">Try this example...</a>
-	<pre class="prettyprint">
-&lt;head>
-	[&#8230;]
-	&lt;script type='text/javascript'>
-	$(function(){
-		$("#tree").dynatree({
-			initObj: [
-				{title: "Item 1"},
-				{title: "Item 2"},
-				{title: "Folder 3", isFolder=true,
-					children: [
-						{title: "Sub-item 3.1"},
-						{title: "Sub-item 3.2"}
-					]
-				},
-				{title: "Item 4"}
-			],
-			onSelect: function(tn) {
-				alert("You selected " + tn);
-			}
-		});
-	});
-	&lt;/script>
-	[&#8230;]
-&lt;/head>
-&lt;body>
-	[&#8230;]
-	&lt;div id="tree"> &lt;/div>
-	[&#8230;]
-&lt;/body>
-</pre>
-</div>
-
-	<p>The follwing snippet shows all attributes that can be used to define a tree node, along with their default values.</p>
-<pre class="prettyprint">
-			initObj: [
-				{
-					title: undefined, // (required) Name of the root node (html is allowed here)
-					key: undefined, // May be used with select(), find(), ...
-					isFolder: false, // Use a folder icon. Also the node is expandable but not selectable.
-					isLazy: false, // Call tree.options.onLazyRead() when the node is expanded for the first time to allow for delayed creation of children.
-					expanded: false, // Passed as &lt;li data="expanded: true">.
-					tooltip: undefined, // Show this popup text.
-					icon: undefined, // Use a custom image (filename relative to tree.options.imagePath)
-					// NOTE that it is possible to add any custom attributes to the data object.
-					// This may then also be used in the onSelect() or on onLazyTree() callbacks.
-				},
-				[&#8230;]
-			]
-</pre>
-<p>
-	It is possible to add any custom attributes to the data object. This may then also be used in the onSelect() or on onLazyTree() callbacks.
-
+	A dynatree always has exactly one <i>root node</i>, and all top level nodes of our tree are added below.<br>
+	The root node is usually hidden, so we only see the nodes that we have added.
 </p>
-	<h3>TODO: Initializing the tree structure from an AJAX response</h3>
-<p>Instead of passing an array of data objects, we can pass a url in the <code>initUrl</code> option that will be used to contact a AJAX webservice.
-This webservice is expected to return an object array as JSON response.</p>
+<p>
+	Dynatree reads the structure in different ways:
+	<ol>
+	<li>If the <code>children</code> option is passed, it will be used.
+	<li>TODO: Otherwise, if the <code>initUrl</code> option is passed, it will be used.
+	<li>Otherwise, if the <code>initId</code> option is passed, it will be used.
+	<li>Otherwise, if the the container &lt;div> element contains a &lt;ul> element, it will be used.
+	<li>Otherwise, the tree is left empty.<br>
+		But we may choose to do so, if we want to modify the tree programatically.
+	</ol>
+	All theses methods expect a list of node options, that are described in the following section.
+</p>
+
+
+<h4 id="nodeOptions">Node options</h4>
+
+<p>
+	Nodes options are defined as plain JavaScript objects, e.g.<br>
+	<code>{ &#8230; }</code>.<br>
+	Node lists are passed as an array, e.g.<br>
+	<code>[ { &#8230; }, { &#8230; }, &#8230; ]</code>.
+</p>
+<p>
+	The follwing snippet shows all attributes that can be used to define a tree node, along with their default values.<br>
+	Note that there are reasonable default values for all options, so we may only have to pass a <code>title</code>.
+</p>
+<pre class="prettyprint">
+children: [
+	{
+		title: undefined, // (required) Displayed name of the node (html is allowed here)
+		key: undefined, // May be used with select(), find(), ...
+		isFolder: false, // Use a folder icon. Also the node is expandable but not selectable.
+		isLazy: false, // Call tree.options.onLazyRead() when the node is expanded for the first time to allow for delayed creation of children.
+		expanded: false, // Passed as &lt;li data="expanded: true">.
+		tooltip: undefined, // Show this popup text.
+		icon: undefined, // Use a custom image (filename relative to tree.options.imagePath)
+		// NOTE: we can also add custom attributes here.
+		// This may then also be used in the onSelect() or onLazyTree() callbacks.
+	},
+	[&#8230;]
+]
+</pre>
+
+
+<h4>Initializing the tree structure from an object array</h4>
+<p>
+	In the <a href="#quickExample">quick example above</a> we have already seen how a tree is initialized by passing a
+	node array with the <code>children</code> option.
+</p>
 <pre class="prettyprint">
 $("#tree").dynatree({
-	initUrl: "http://myserver.com/sendmeit?key=123",
+	children: [ &#8230; ],
 	[&#8230;]
 });
 </pre>
+<p>
+	See <a href="#nodeOptions">Node options</a> for a list of available options.
+</p>
 
 
-	<h3>Initializing the tree structure from a &lt;ul> element</h3>
-	<p>
+<h4>TODO: Initializing the tree structure from an AJAX response</h4>
+
+<p>
+	<strong>Not yet implemented!</strong><br>
+</p>
+<p>
+	Instead of passing an array of data objects, we can pass a url in the <code>initUrl</code> option that will be used to contact a AJAX webservice.
+	This webservice is expected to return an object array as JSON response.
+</p>
+<pre class="prettyprint">
+$("#tree").dynatree({
+	initUrl: [&#8230;],
+	[&#8230;]
+});
+</pre>
+<p>
+	See <a href="#nodeOptions">Node options</a> for a list of available options.
+</p>
+
+
+<h4>Initializing the tree structure from a &lt;ul> element</h4>
+<p>
 	If the container &lt;div> element contains a &lt;ul> element, the tree node titles are read from the &lt;li> text.
 	Additional options can specified in a <code>data</code> attribut of a &lt;li> tag.<br>
 	Nesting &lt;ul> elements are used to build a hierarchivcal tree structure.
-	</p>
-	<div class="codesample">
+</p>
+<div class="codesample">
 	<a href="sample-1.html" target="_blank">Try this example...</a>
-	<pre class="prettyprint">
+<pre class="prettyprint">
 &lt;head>
 	[&#8230;]
 	&lt;script type='text/javascript'>
@@ -301,32 +315,52 @@ $("#tree").dynatree({
 </pre>
 	</div>
 
-	<h3>Initializing the tree structure progamatically</h3>
-<p>Finally, it is always possible to program the Tree and TreeNode objects directly.</p>
+
+<h4>Initializing the tree structure programatically</h4>
+<p>
+	Finally, it is always possible to program the DynaTree and DynaTreeNode objects directly.
+</p>
+
 <div class="codesample">
-	<a href="sample-2.html" target="_blank">Try this example...</a>
-	<pre class="prettyprint">
-	$(function(){
-		$("#tree").dynatree({
-			onSelect: function(tn) {
-				alert("You selected " + tn);
-			}
-		});
+	<a href="#" target="_blank">Try this example...</a>
+<pre class="prettyprint">
+$(function(){
+	// Initialize the tree in the onload event
+	$("#tree").dynatree({
+		onSelect: function(tn) {
+			alert("You selected " + tn);
+		}
 	});
+	// Now get the root node object
+	var rootNode = $("#tree").dynatree("getRoot");
+	// Call the addNode() member function and pass options for the new node
+	var childNode = rootNode.addNode({
+		title: "Child node 1",
+		tooltip: "This child node was added programmatically.",
+		isFolder: true
+	});
+	//
+	childNode.addNode({
+		title: "Document using a custom icon",
+		icon: "customdoc1.gif"
+	});
+});
 </pre>
 </div>
+
 
 <h2>Handling events</h2>
 
 <p>
-This is why we want a tree after all.
-When a user clicks a node, we want to react in some  way.
+	This is why we want a tree after all.
+	When a user clicks a node, we want to react in some  way.
 </p>
+
 
 <h3>Handling select/click</h3>
 
 <p>
-This is passing a onSelect callback fucntion:
+This is passing a onSelect callback function:
 </p>
 <pre class="prettyprint">
 [&#8230;]
@@ -335,7 +369,7 @@ This is passing a onSelect callback fucntion:
 <h3>Handling focus</h3>
 <p>dynatree supports loading of tree nodes </p>
 
-This is passing a onFocus callback fucntion:
+This is passing a onFocus callback function:
 </p>
 <pre class="prettyprint">
 [&#8230;]
@@ -359,28 +393,16 @@ This is passing a onFocus callback fucntion:
 </pre>
 </div>
 
-<h2><a id="issues" />Known issues</h2>
+<h2><a id="issues" />Feedback, version history and known issues</h2>
 <p>
-	First of all: this is work in progess, and still alpha. Please send your feedback to <u>martin(at)wwWendt.de</u>.<br>
-	The main things that should be addressed are
+	First of all: this is work in progess, and still alpha.<br>
 	<ul>
-		<li>The interface, usage, naming conventions, etc. could probably be more jQuery-ish.<br>
-			Any feedback from experienced plugin developers is very welcome!
-		<li>So far I am only testing Windows, IE 7 and FF 3. Maybe a little bit of IE 6/8, Safari and FF2.
-		<li>The code should be hosted more community friendly. Also some forum and issue tracker should be available.
-		<li>The internal implementation of dynatree could make more use of jQuery technique.
-			So far it's based on the lazytree implementations which was indepent of any library.
-	</ul>
+	<li>A <a href="http://groups.google.com/group/dynatree">discussion forum</a> is in place to ask questions or discuss features.
+	<li>There also is an <a href="http://code.google.com/p/dynatree/issues/list">Issue Tracker</a> get a list of known bugs, or vote for a feature.<br>
+		Please make sure you searched the group and issue tracker, before adding a new request.
+	<li>You may also contact me directly at <u>martin(at_sign)wwWendt.de</u>.
+	</ul
 </p>
-
-<h2>Sample</h2>
-<p>Sample</p>
-<div class="codesample">
-	<a href="#" target="_blank">Try this example...</a>
-	<pre class="prettyprint">
-[&#8230;]
-</pre>
-</div>
 
 </body>
 </html>
