@@ -4,8 +4,14 @@
     * Soft new line like <br>
     * TOC generator
     * target=_blank for links
-    * option to disable syntax higlighting in code blocks
+    * Need an escape character:
+{{{
+target=_blank
+}}} 
+    starts italic mode for the rest of the page
+    * Option to disable syntax higlighting in code blocks
   * Wiki editor
-    * always have to scroll down to see the save or preview buttons
+    * Always have to scroll down to see the save or preview buttons
+    * Option to disable comments on single or all pages, etc.
   * UI
     * Editors could ask 'Save changes?' when i click on another tab
