@@ -1,0 +1,54 @@
+.lazyTree
+{
+	font-family: tahoma, arial, helvetica;
+	font-size: smaller;
+
+	line-height: 0;
+
+	white-space: nowrap;
+
+	padding: 3;
+	border-width: 2;
+	border-style: inset;
+	border-color: buttonhighlight;
+}
+
+.lazyTree a, .lazyTree a:visited
+{
+	text-decoration: none;
+	color: black;
+	outline: 0; /* @ Firefox, prevent dotted border after click */
+}
+
+.lazyTree a:hover
+{
+	text-decoration: underline;
+}
+.lazyTree a:focus
+{
+	text-decoration: none;
+/*	background-color: Gray; */
+	border: dashed 1px blue;
+}
+.lazyTree a:active
+{
+	text-decoration: none;
+	background-color: Gray;
+}
+.lazyTree img
+{
+	border-width: 0;
+}
+.tnLevelN
+{
+}
+.ltFolder
+{
+	font-weight: bold;
+	color: graytext;
+	vertical-align: middle;
+/*	background-color:#DDDDDD;
+	padding: 0;
+	margin: 0;
+	border-width: 0;*/
+}

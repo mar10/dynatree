@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+	<title>dynatree sample - 2</title>
+
+	<script src='../jquery/jquery.js' type='text/javascript'></script>
+	<script src='../jquery/ui.core.js' type='text/javascript'></script>
+
+	<link href='../src/skin/ui.dynatree.css' rel='stylesheet' type='text/css' />
+	<script src='../src/jquery.dynatree.js' type='text/javascript'></script>
+
+<script type='text/javascript'>
+	$(function(){
+		// Initialize the tree inside the <div>element.
+		// The tree structure is read from the contained <ul> tag.
+		$("#tree").dynatree({
+			title: "Root Node",
+			rootVisible: true,
+//			initId: "tree2", // Read tree structure from this <ul> instead of "#tree > ul".
+//			initObject: [{title:"t1"}, {title:"t2"}],
+			onSelect: function(tn) {
+				$("#echoSelected").text("" + tn);
+			},
+			onFocus: function(tn) {
+				$("#echoFocused").text("" + tn);
+			},
+			onBlur: function(tn) {
+				$("#echoFocused").text("-");
+			},
+			onLazyRead: function(tn){
+				var jsonResult = "["
+				+ "{ title: 'Lazy node 1', isLazy: true },"
+				+ "{ title: 'Simple node 2' }"
+				+ "]";
+//				alert ("Let's pretend we're using this AJAX response to load the branch:\n " + jsonResult);
+				function fakeAjaxResponse() {
+					return function() {
+						tn.addJson(jsonResult);
+						// Remove the 'loading...' status:
+						tn.setLazyNodeStatus(LTNodeStatus_Ok);
+					};
+				}
+				window.setTimeout(fakeAjaxResponse(), 1500);
+			}
+		});
+
+		$("#btnAddCode").click(function(){
+			// Sample: add an hierarchic branch using code.
+			// This is how we would add tree nodes programatically
+			var rootNode = $("#tree").dynatree("getRoot");
+			var mr = rootNode.addNode({
+				title: "Programatically addded nodes",
+				tooltip: "This folder and all child nodes were added programmatically.",
+				isFolder: true
+			});
+			mr.addNode({
+				title: "Document using a custom icon",
+				icon: "customdoc1.gif"
+			});
+		});
+
+		$("#btnAddObject").click(function(){
+			// Sample: add an hierarchic branch using an array
+			var obj = [
+				{ title: 'Lazy node 1', isLazy: true },
+				{ title: 'Lazy node 2', isLazy: true },
+				{ title: 'Folder node 3', isFolder: true,
+					children: [
+						{title: 'node 3.1'}
+					]
+				}
+			];
+			$("#tree").dynatree("getRoot").addObject(obj);
+		});
+
+		$("#btnAddJson").click(function(){
+			// Sample: add an hierarchic branch using json.
+			var json = "["
+			+ "{ title: 'Lazy node 1', isLazy: true },"
+			+ "{ title: 'Lazy node 2', isLazy: true },"
+			+ "{ title: 'Folder node 3', isFolder: true, children: [{title: 'node 3.1'}] }"
+			+ "]";
+			$("#tree").dynatree("getRoot").addJson(json);
+		});
+		function el(e) {
+			alert("listener" + e);
+		}
+	});
+</script>
+</head>
+
+<body>
+	<h1>Simple Tree example:</h1>
+	<p>$("#tree").dynatree(...); creates the tree here:</p>
+	<div id="tree">
+		<ul>
+			<li>This simple node (and the following) have been created from html.
+			<li data="key: '1', tooltip: 'This is item #1'">item1 with key and tooltip
+			<li data="key: '2', tooltip: 'This is item #2'">item2
+
+			<li data="key: '3', isFolder: true">Standard Folder with some children
+				<ul>
+					<li data="key: '3.1'">Sub-item 3.1
+					<li data="key: '3.2'">Sub-item 3.2
+				</ul>
+
+			<li data="key: '4'">item 4. Note that also non-folders (i.e. 'documents') may have child nodes
+				<ul>
+					<li data="key: '4.1'">Sub-item 4.1
+					<li data="key: '4.2'">Sub-item 4.2
+				</ul>
+
+			<li data="key: '5', isFolder: true">Advanced examples
+				<ul>
+					<li id="5">item5: Using id attribute as an alternative way to specify a key.
+					<li>Using some <b>bold</b> markup in the text (&lt;li&gt; tag only).
+					<li><span>Using some <b>bold</b> markup in the text (&lt;li&gt;&lt;span&gt; tag).</span>
+					<li><span>Using some extended markup in the text (&lt;li&gt;&lt;span&gt; tag).<button value="123">Click me</button>
+					</span>
+					<li class="folder">item6: Using class 'folder as an alternative way to specify data.isFolder.
+					<li>Item without a key. Keys are optional, but may be used in the callbacks
+					<li data="key: '5.2'">Sub-item 5.2
+				</ul>
+
+			<li>item3
+		</ul>
+	</div>
+
+	<div>Selected node: <span id="echoSelected">-</span></div>
+	<div>Focused node: <span id="echoFocused">-</span></div>
+
+	<button id="btnAddCode">Add nodes progamatically</button>
+	<button id="btnAddObject">Add nodes using arrays</button>
+	<button id="btnAddJson">Add nodes using JSON</button>
+
+	<p>This UL tag is passed as initId:</p>
+	<ul id='tree2' class="lt">
+		<li id="idUsed"><span><i>Node0</i></span>
+		<li data="{key: 'dataUsed'}"><span><i>Node1b</i></span>
+		<li id="idUsed"><span><i>Node1</i></span>
+		<li data="{key:'1'}"><span>Node2</span>
+		<ul>
+			<li id="21">item 2.1
+			<li>item 2.2
+			<ul>
+				<li>item 2.1.1
+				<li>item 2.2.2
+				<li>item 2.3.3
+			</ul>
+			<li>item 2.3
+		</ul>
+		<li data="{isFolder: true}"><span>Node3</span>
+		<ul>
+			<li id="31">item 3.1
+			<li>item 3.2
+			<ul>
+				<li>item 3.1.1
+				<li>item 3.2.2
+				<li>item 3.3.3
+			</ul>
+			<li>item 3.3
+		</ul>
+		<li data="{isLazy: true, isFolder: true}"><span>Node4</span>
+		<li data="{isLazy: true, isFolder: true}"><span>Node5</span>
+		<li>Node6
+	</ul>
+	<p>Test JSON</p>
+</body>
+</html>
