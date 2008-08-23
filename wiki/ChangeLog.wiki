@@ -1,9 +1,9 @@
 #summary Main changes in recent releases.
 
-= 0.3 (in progress) =
+==== 0.3 (in progress) ====
   * Keyboard navigation
   * jQuery plugin style: $(..).dynatree()
 
-= 0.2 an before =
+==== 0.2 an before ====
 Dynatree is based on [http://wwWendt.de/tech/lazytree lazytree 0.2].
 I had to rename it, because there already was a jQuery plugin named _lazytree_.
