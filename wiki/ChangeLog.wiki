@@ -1,8 +1,10 @@
 #summary Main changes in recent releases.
 
 ==== 0.3 (in progress) ====
-  * Keyboard navigation
   * jQuery plugin style: $(..).dynatree()
+  * Keyboard navigation
+  * Improved documentation
+  * Hosted on a public platform
 
 ==== 0.2 an before ====
 Dynatree is based on [http://wwWendt.de/tech/lazytree lazytree 0.2].
