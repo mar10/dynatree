@@ -3,5 +3,9 @@
   * Wiki syntax
     * Soft new line like <br>
     * TOC generator
+    * target=_blank for links
+    * option to disable syntax higlighting in code blocks
   * Wiki editor
-    * always have to scroll to see the save button
+    * always have to scroll down to see the save or preview buttons
+  * UI
+    * Editors could ask 'Save changes?' when i click on another tab
