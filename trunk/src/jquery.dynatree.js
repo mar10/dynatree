@@ -70,7 +70,7 @@ DynaTreeNode.prototype = {
 	},
 
 	getInnerHtml: function() {
-		// cache tags
+		// TODO: cache tags
 		var ip = this.tree.options.imagePath;
 
 		this.tagFld    = '<img src="' + ip + 'ltFld.gif" alt="" />';
@@ -153,6 +153,8 @@ DynaTreeNode.prototype = {
 
 			this.span = document.createElement ('span');
 			this.span.className = 'ltNode';
+			if( this.data.key )
+				this.span.id = this.tree.options.idPrefix + this.data.key;
 			this.span.ltn = this;
 			this.div.appendChild ( this.span );
 		} else {
@@ -561,6 +563,17 @@ DynaTree.prototype = {
 	getRoot: function (tn) {
 		return this.tnRoot;
 	},
+	getNodeByKey: function(key) {
+		var span = document.getElementById(this.options.idPrefix + key);
+		return span ? span.ltn : null;
+	},
+	selectKey: function(key) {
+		tn = this.getNodeByKey(key);
+		if( tn ) {
+			tn.focus();
+			tn.select();
+		};
+	},
 	enableUpdate: function (bEnable) {
 		if ( this.bEnableUpdate==bEnable )
 			return bEnable;
@@ -760,6 +773,7 @@ $.ui.dynatree.defaults = {
 	selectExpandsFolders: true, // Clicking a folder title expands the folder, instead of selecting it.
 //	persist: "cookie",
 //	fx: null, // Animations, e.g. { height: 'toggle', opacity: 'toggle', duration: 200 }
+	idPrefix: 'ui-dynatree-id-', // Used to generate node id's like <span id="ui-dynatree-id-<key>">.
 	strings: {
 		loading: "Loading&#8230;",
 		loadError: "Load error!"

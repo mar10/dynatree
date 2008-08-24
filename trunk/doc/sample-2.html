@@ -85,9 +85,10 @@
 			+ "]";
 			$("#tree").dynatree("getRoot").addJson(json);
 		});
-		function el(e) {
-			alert("listener" + e);
-		}
+
+		$("#btnSelectNode").click(function(){
+			$("#tree").dynatree("getTree").selectKey("4.1");
+		});
 	});
 </script>
 </head>
@@ -135,6 +136,7 @@
 	<button id="btnAddCode">Add nodes progamatically</button>
 	<button id="btnAddObject">Add nodes using arrays</button>
 	<button id="btnAddJson">Add nodes using JSON</button>
+	<button id="btnSelectNode">Select Sub-item 4.1</button>
 
 </body>
 </html>
