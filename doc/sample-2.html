@@ -14,15 +14,18 @@
 		// Initialize the tree inside the <div>element.
 		// The tree structure is read from the contained <ul> tag.
 		$("#tree").dynatree({
-			title: "Root Node",
+			title: "Sample 2",
 			rootVisible: true,
 //			initId: "tree2", // Read tree structure from this <ul> instead of "#tree > ul".
 //			children: [{title:"t1"}, {title:"t2"}],
+			autoCollapse: true,
 			onSelect: function(tn) {
-				$("#echoSelected").text("" + tn);
+				$("#echoSelected").text(tn.data.title);
+				if( tn.data.url )
+					window.open(tn.data.url, tn.data.target);
 			},
 			onFocus: function(tn) {
-				$("#echoFocused").text("" + tn);
+				$("#echoFocused").text(tn.data.title);
 			},
 			onBlur: function(tn) {
 				$("#echoFocused").text("-");
@@ -48,12 +51,12 @@
 			// Sample: add an hierarchic branch using code.
 			// This is how we would add tree nodes programatically
 			var rootNode = $("#tree").dynatree("getRoot");
-			var childNode = rootNode.addNode({
+			var childNode = rootNode.append({
 				title: "Programatically addded nodes",
 				tooltip: "This folder and all child nodes were added programmatically.",
 				isFolder: true
 			});
-			childNode.addNode({
+			childNode.append({
 				title: "Document using a custom icon",
 				icon: "customdoc1.gif"
 			});
@@ -70,7 +73,7 @@
 					]
 				}
 			];
-			$("#tree").dynatree("getRoot").addObject(obj);
+			$("#tree").dynatree("getRoot").append(obj);
 		});
 
 		$("#btnAddJson").click(function(){
@@ -133,37 +136,5 @@
 	<button id="btnAddObject">Add nodes using arrays</button>
 	<button id="btnAddJson">Add nodes using JSON</button>
 
-	<p>This UL tag is passed as initId:</p>
-	<ul id='tree2' class="lt">
-		<li id="idUsed"><span><i>Node0</i></span>
-		<li data="{key: 'dataUsed'}"><span><i>Node1b</i></span>
-		<li id="idUsed"><span><i>Node1</i></span>
-		<li data="{key:'1'}"><span>Node2</span>
-		<ul>
-			<li id="21">item 2.1
-			<li>item 2.2
-			<ul>
-				<li>item 2.1.1
-				<li>item 2.2.2
-				<li>item 2.3.3
-			</ul>
-			<li>item 2.3
-		</ul>
-		<li data="{isFolder: true}"><span>Node3</span>
-		<ul>
-			<li id="31">item 3.1
-			<li>item 3.2
-			<ul>
-				<li>item 3.1.1
-				<li>item 3.2.2
-				<li>item 3.3.3
-			</ul>
-			<li>item 3.3
-		</ul>
-		<li data="{isLazy: true, isFolder: true}"><span>Node4</span>
-		<li data="{isLazy: true, isFolder: true}"><span>Node5</span>
-		<li>Node6
-	</ul>
-	<p>Test JSON</p>
 </body>
 </html>
