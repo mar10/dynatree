@@ -73,11 +73,11 @@ DynaTreeNode.prototype = {
 		// cache tags
 		var ip = this.tree.options.imagePath;
 
-		this.tagFld    = '<img src="' + ip + 'ltFld.gif" alt="" height="16" width="16"/>';
-		this.tagFld_o  = '<img src="' + ip + 'ltFld_o.gif" alt="" height="16" width="16"/>';
-		this.tagDoc    = '<img src="' + ip + 'ltDoc.gif" alt="" height="16" width="16"/>';
-		this.tagL_ns   = '<img src="' + ip + 'ltL_ns.gif" alt="|" height="16" width="16"/>';
-		this.tagL_     = '<img src="' + ip + 'ltL_.gif" alt="" height="16" width="16"/>';
+		this.tagFld    = '<img src="' + ip + 'ltFld.gif" alt="" />';
+		this.tagFld_o  = '<img src="' + ip + 'ltFld_o.gif" alt="" />';
+		this.tagDoc    = '<img src="' + ip + 'ltDoc.gif" alt="" />';
+		this.tagL_ns   = '<img src="' + ip + 'ltL_ns.gif" alt="|" />';
+		this.tagL_     = '<img src="' + ip + 'ltL_.gif" alt="" />';
 
 		var res = '';
 
@@ -118,13 +118,13 @@ DynaTreeNode.prototype = {
 		if ( bHasLink )
 			res += '<a href="#" onClick="parentNode.ltn.toggleExpand();">';
 		if ( imgConnector )
-			res += '<img src="' + this.tree.options.imagePath + imgConnector + '.gif" alt="' + imgAlt + '" height="16" width="16" />'
+			res += '<img src="' + this.tree.options.imagePath + imgConnector + '.gif" alt="' + imgAlt + '" />'
 		if ( bHasLink )
 			res += '</a>';
 
 		// folder or doctype icon
    		if ( this.data && this.data.icon ) {
-    		res += '<img src="' + ip + this.data.icon + '" alt="" height="16" width="16"/>';
+    		res += '<img src="' + ip + this.data.icon + '" alt="" />';
 		} else if ( this.data.isFolder ) {
 	    	res += ( this.bExpanded ? this.tagFld_o : this.tagFld );
 		} else {
@@ -169,7 +169,8 @@ DynaTreeNode.prototype = {
 			this._createOrSetDomElement();
 			if ( this.parent )
 				this.parent.div.appendChild ( this.div );
-			this.span.className = ( this.data.isFolder ? 'ltFolder' : 'ltDocument' );
+//			this.span.className = ( this.data.isFolder ? 'ltFolder' : 'ltDocument' );
+			this.span.className = ( this.data.isFolder ? this.tree.options.classnames.folder : this.tree.options.classnames.document );
 		}
 		// hide root?
 		if ( this.parent==null )
@@ -476,11 +477,13 @@ DynaTreeNode.prototype = {
 			this.render (true, false);
 		return tn;
 	},
-	addNode: function(data) {
+
+	_addNode: function(data) {
 		var tn = new DynaTreeNode (this.tree, data);
 		return this._addChildNode(tn);
 	},
-	addObject: function(obj) {
+
+	append: function(obj) {
 		/*
 		Data format: array of node objects, with optional 'children' attributes.
 		[
@@ -495,19 +498,23 @@ DynaTreeNode.prototype = {
 		A simple object is also accepted instead of an array.
 		*/
 		if( !obj ) return;
-		if( !obj.length ) return this.addNode(obj);
+		if( !obj.length ) return this._addNode(obj);
 		for (var i=0; i<obj.length; i++) {
 			var data = obj[i];
-			var tn = this.addNode(data);
+			var tn = this._addNode(data);
 			if( data.children )
 				for(var j=0; j<data.children.length; j++)
-					tn.addObject(data.children[j]);
+					tn.append(data.children[j]);
 		}
 		return;
 	},
-
+/*
+	addObject: function(obj) {
+		return this.appendNodes(obj);
+	},
+*/
 	addJson: function(json) {
-		return this.addObject(eval("(" + json + ")"));
+		return this.append(eval("(" + json + ")"));
 	},
 	// --- end of class
 	lastentry: undefined
@@ -537,7 +544,8 @@ DynaTree.prototype = {
 		this.tnRoot.data.isFolder   = true;
 		this.tnRoot.render(false, false);
 		this.divRoot   = this.tnRoot.div;
-		this.divRoot.className = "lazyTree";
+//		this.divRoot.className = "lazyTree";
+		this.divRoot.className = this.options.classnames.container;
 		// add root to container
 		this.divTree.appendChild (this.divRoot);
 	},
@@ -632,7 +640,7 @@ $.widget("ui.dynatree", {
 		// Init tree structure
 		if( opts.children ) {
 			// Read structure from node array
-			root.addObject(opts.children);
+			root.append(opts.children);
 		} else if( opts.initId ) {
 			// Init tree from another UL element
 			this.createFromTag(root, $("#"+opts.initId));
@@ -708,7 +716,7 @@ $.widget("ui.dynatree", {
 					throw ("Error parsing node data: " + e + "\ndata:\n'" + dataAttr + "'");
 				}
 			}
-			childNode = parentTreeNode.addNode(data);
+			childNode = parentTreeNode._addNode(data);
 			// Recursive reading of child nodes, if LI tag contains an UL tag
 			var $ul = $li.find(">ul:first");
 			if( $ul.length ) {
@@ -732,23 +740,25 @@ $.ui.dynatree.getter = "getTree getRoot";
 // Plugin default options:
 
 $.ui.dynatree.defaults = {
-	title: "dynatree", // Name of the root node
-	rootVisible: false, // Set to true, to make the root node visible
-	rootCollapsible: false, // TODO: minExpandLevel: 1,
-	initId: null, // Init tree structure from a <ul> element with this ID.
+	title: "DynaTree root", // Name of the root node.
+	rootVisible: false, // Set to true, to make the root node visible.
+	rootCollapsible: false, // Prevent root node from being collapsed.
+// 	minExpandLevel: 1, // Instead of rootCollapsible
+	imagePath: undefined, // Path to a folder containing icons. Defaults to 'skin/' subdirectory.
 	children: null, // Init tree structure from this object array.
-	focusRoot: true, // Set focus to root node on init.
-	keyboard: true, // Support keyboard navigation.
+	initId: null, // Init tree structure from a <ul> element with this ID.
+//	initUrl: null, // Init tree structure from an AJAX call.
 	onSelect: null, // Callback when a node is selected.
 	onLazyRead: null, // Callback when a lazy node is expanded for the first time.
 	onFocus: null, // Callback when a node receives keyboard focus.
 	onBlur: null, // Callback when a node looses focus.
-	imagePath: undefined, //"skin/", // Folder containing icons used.
+	focusRoot: true, // Set focus to root node on init.
+	keyboard: true, // Support keyboard navigation.
 //	expandLevel: 1, // Expand all branches until level i (set to 0 to )
 	autoCollapse: false, // Automatically collapse all siblings, when a node is expanded.
-//	persist: "cookie",
 	expandOnAdd: false, // Automatically expand parent, when a child is added.
 	selectExpandsFolders: true, // Clicking a folder title expands the folder, instead of selecting it.
+//	persist: "cookie",
 //	fx: null, // Animations, e.g. { height: 'toggle', opacity: 'toggle', duration: 200 }
 	strings: {
 		loading: "Loading&#8230;",
@@ -761,6 +771,7 @@ $.ui.dynatree.defaults = {
 		disabled: "ui-dynatree-disabled",
 		selected: "ui-dynatree-selected",
 		folder: "ui-dynatree-folder",
+		document: "ui-dynatree-document",
 		focused: "ui-dynatree-focused",
 		loading: "ui-dynatree-loading"
 	},
@@ -791,11 +802,12 @@ $.ui.dynatree.nodedatadefaults = {
 	title: undefined, // (required) Displayed name of the node (html is allowed here)
 	key: undefined, // May be used with select(), find(), ...
 	isFolder: false, // Use a folder icon. Also the node is expandable but not selectable.
-	isLazy: false, // Call tree.options.onLazyRead() when the node is expanded for the first time to allow for delayed creation of children.
+	isLazy: false, // Call onLazyRead(), when the node is expanded for the first time to allow for delayed creation of children.
 	expanded: false, // Passed as <li data="expanded: true">.
 	tooltip: undefined, // Show this popup text.
 	icon: undefined, // Use a custom image (filename relative to tree.options.imagePath)
-	children: undefined, // Array of child node dictionaries.
+	// The following attributes are only valid if passed to some functions:
+	children: undefined, // Array of child nodes.
 	// NOTE: we can also add custom attributes here.
 	// This may then also be used in the onSelect() or onLazyTree() callbacks.
 	// ------------------------------------------------------------------------

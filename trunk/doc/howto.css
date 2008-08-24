@@ -26,27 +26,56 @@ pre.codesample {
 	border: thin solid gray;
 }
 
+dl.optionList {
+	margin-left: 20px;
+}
+dl.optionList dt {
+	font-family: monospace;
+}
+dl.optionList dd {
+	font-style: italic;
+}
+
 /*****************************************************************************
  * jquery.planize
  */
 #toc {
 	border: thin solid gray;
-	background-color: f0f0f0;
+/*	background-color: f0f0f0; */
+	padding: 5px;
+}
+#toc >h4 {
+/*	background-color: f0f0f0; */
+	margin-top: 5px;
+	margin-bottom: 5px;
 }
 #toc ul {
-	list-style-type: none; /*square;*/
+	list-style-type: none;
+}
+
+#toc a,
+#toc a:visited
+{
+	color: blue;
+	text-decoration: none;
+}
+#toc a:hover
+{
+	text-decoration: underline;
 }
 
 /*****************************************************************************
  * ui.toc
  */
+/*
 div.ui-toc-container {
 	border: thin solid gray;
 	background-color: f0f0f0;
 }
 div.ui-toc-container ul {
-	list-style-type: none; /*square;*/
+	list-style-type: square;
 }
 div.ui-toc-title {
 	font-size: larger;
 }
+*/

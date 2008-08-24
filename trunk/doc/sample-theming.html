@@ -4,16 +4,16 @@
 	<title>jquery.dynatree - sample theming</title>
 	<script src='../jquery/jquery.js' type='text/javascript'></script>
 	<script src='../jquery/ui.core.js' type='text/javascript'></script>
-
+	<!-- Include a customized stylesheet: -->
 	<link href='custom-skin/ui.dynatree.css' rel='stylesheet' type='text/css' />
 	<script src='../src/jquery.dynatree.js' type='text/javascript'></script>
 
 <script type='text/javascript'>
 	$(function(){
 		$("#tree").dynatree({
-			title: "Sample 1",
+			title: "Sample Theming",
 			rootVisible: true,
-			imagePath: "custom-skin/",
+			imagePath: "custom-skin/", // Use a custom image folder
 			onSelect: function(tn) {
 				alert ("You selected " + tn);
 			}
@@ -29,18 +29,18 @@
 	</p>
 	<div id="tree">
 		<ul>
-			<li data="key: '1'">item1 with key and tooltip
-			<li data="key: '2'">item2
-			<li data="key: '3', isFolder: true"><span>Folder with some children</span>
+			<li>Node 1
+			<li data="icon: 'customdoc1.gif'">Node 2 (with custom icon)
+			<li data="isFolder: true">Folder 3
 				<ul>
-					<li data="key: '3.1'">Sub-item 3.1
-					<li data="key: '3.2'">Sub-item 3.2
+					<li>Node 3.1
+					<li>Node 3.2
 				</ul>
 
-			<li data="key: '4', expanded: true"><span>Document with some children</span>
+			<li>Document with some children
 				<ul>
-					<li data="key: '4.1'">Sub-item 4.1
-					<li data="key: '4.2'">Sub-item 4.2
+					<li>Sub-item 4.1
+					<li>Sub-item 4.2
 				</ul>
 		</ul>
 	</div>
