@@ -331,23 +331,24 @@ $("#tree").dynatree({
 </p>
 
 
-<h4>Initializing the tree structure from an AJAX response (Not yet implemented)</h4>
+<h4>Initializing the tree structure from an AJAX response</h4>
 
 <p>
-	<strong>Not yet implemented!</strong><br>
+	Instead of passing an array of data objects, we can pass a url in the <code>initUrl</code>
+	option that will be used to contact a AJAX webservice.
 </p>
 <p>
-	Instead of passing an array of data objects, we can pass a url in the <code>initUrl</code> option that will be used to contact a AJAX webservice.
-	This webservice is expected to return an object array as JSON response.
+	This webservice is expected to return an JSON object response, as explained in <a href="#nodeOptions">Node options</a>.
 </p>
 <pre class="prettyprint">
 $("#tree").dynatree({
-	initUrl: [&#8230;],
+	initUrl: "/send_data?mode=all",
 	[&#8230;]
 });
 </pre>
 <p>
-	See also <a href="#nodeOptions">Node options</a>.
+	Because the data request is performed asynchronously, the document will load faster.
+	Dynatree will display a spinning wheel, while waiting for the request to complete.
 </p>
 
 
@@ -541,31 +542,39 @@ $("#tree").dynatree({
 <h3>Loading child nodes on demand ('lazy loading')</h3>
 
 <p>
-	Dynatree supports loading of tree nodes<br>
-	TODO: document this.
+	Dynatree supports delayed loading of tree nodes, which means we read the nodes only when the parent is expanded.
 </p>
+<p>
+	We have to
+	<ul>
+	<li>Mark some or all nodes as lazy, by setting the isLazy option to true.
+	<li>Implement the onLazyRead callback to send an Ajax request, create the child nodes, and set the 'ok' status.
+	</ul>
+</p>
+
 <div class="codesample">
 <a href="sample-events.html" target="_blank">Try this example...</a>
 <pre class="prettyprint">
 $("#tree").dynatree({
 	[&#8230;]
 	onLazyRead: function(tn){
-		// Define a AJAX response handler to do something like that:
-		function ajaxResponse(jsonResult) {
-			return function(jsonResult) {
-				// Use the JSON result to create child nodes:
-				tn.addJson(jsonResult);
-				// Reset the 'loading...' status:
-				tn.setLazyNodeStatus(LTNodeStatus_Ok);
-			};
-		}
-		// Call the AJAX request
-		[&#8230;]
+		url = "/sendData?key=" + tn.data.key;
+		$.getJson(url, function(data) {
+			// Use the JSON result to create child nodes:
+			tn.append(data);
+			// Reset the 'loading...' status:
+			tn.setLazyNodeStatus(LTNodeStatus_Ok);
+		});
 	},
 	[&#8230;]
 });
 </pre>
 </div>
+
+<p>
+	Because the data request is performed asynchronously, the browser will not block and is still responsive.
+	Dynatree will display a spinning wheel, while waiting for the request to complete.
+</p>
 
 
 <h2 id="programming">Programming dynatree</h2>

@@ -817,7 +817,7 @@ $.ui.dynatree.nodedatadefaults = {
 	key: undefined, // May be used with select(), find(), ...
 	isFolder: false, // Use a folder icon. Also the node is expandable but not selectable.
 	isLazy: false, // Call onLazyRead(), when the node is expanded for the first time to allow for delayed creation of children.
-	expanded: false, // Passed as <li data="expanded: true">.
+	expanded: false, //
 	tooltip: undefined, // Show this popup text.
 	icon: undefined, // Use a custom image (filename relative to tree.options.imagePath)
 	// The following attributes are only valid if passed to some functions:
