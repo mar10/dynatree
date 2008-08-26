@@ -32,7 +32,7 @@ var Class = {
 var _bDebug = true;
 
 function logMsg (msg) {
-	if ( _bDebug  && window.console ) {
+	if ( _bDebug  && window.console && window.console.log ) {
 		//	window.console && console.log("%o was toggled", this);
 		// see http://michaelsync.net/2007/09/09/firebug-tutorial-logging-profiling-and-commandline-part-i
 		var dt = new Date();
@@ -114,7 +114,6 @@ DynaTreeNode.prototype = {
 			bHasLink = false;
 		}
 
-//		var anchor = '#' + this.key;
 		if ( bHasLink )
 			res += '<a href="#" onClick="parentNode.ltn.toggleExpand();">';
 		if ( imgConnector )
@@ -134,14 +133,6 @@ DynaTreeNode.prototype = {
 
 		// node name
 		var tooltip = ( this.data && typeof this.data.tooltip == 'string' ) ? ' title="' + this.data.tooltip + '"' : '';
-/* 		if ( this.data.isFolder && this.tree.options.selectExpandsFolders && (this.aChilds || this.data.isLazy) ) {
- * 			res +=  '<a href="#" onClick="parentNode.ltn.toggleExpand();"' + tooltip + '>' + this.data.title + '</a>';
- * 		} else if ( !this.data.isFolder ) {
- * 			res +=  '<a href="#" onClick="parentNode.ltn.select();"' + tooltip + '>' + this.data.title + '</a>';
- * 		} else {
- * 			res +=  this.data.title;
- * 		}
- */
 		res +=  '<a href="#" ' + tooltip + '>' + this.data.title + '</a>';
 		return res;
 	},
@@ -171,7 +162,6 @@ DynaTreeNode.prototype = {
 			this._createOrSetDomElement();
 			if ( this.parent )
 				this.parent.div.appendChild ( this.div );
-//			this.span.className = ( this.data.isFolder ? 'ltFolder' : 'ltDocument' );
 			this.span.className = ( this.data.isFolder ? this.tree.options.classnames.folder : this.tree.options.classnames.document );
 		}
 		// hide root?
@@ -514,16 +504,17 @@ DynaTreeNode.prototype = {
 	addObject: function(obj) {
 		return this.appendNodes(obj);
 	},
-*/
+
 	addJson: function(json) {
 		return this.append(eval("(" + json + ")"));
 	},
+*/
 	// --- end of class
 	lastentry: undefined
 }
 
 /*************************************************************************
- * DynaTree
+ * class DynaTree
  */
 var DynaTree = Class.create();
 DynaTree.prototype = {
@@ -587,11 +578,8 @@ DynaTree.prototype = {
 };
 
 /*************************************************************************
-	jquery.dynatree.js
-	Dynamic HTML tree, with support for lazy loading of branches.
-
- *************************************************************************/
-
+ * widget $(..).dynatree
+ */
 
 (function($) {
 
@@ -614,6 +602,7 @@ function fnFocusHandler(event) {
 	var tn = event.target.parentNode.ltn;
 	return tn.onFocus(event);
 }
+
 function fnFocusHandlerIE() {
 	// Handles blur and focus.
 	var event = window.event;
@@ -654,6 +643,13 @@ $.widget("ui.dynatree", {
 		if( opts.children ) {
 			// Read structure from node array
 			root.append(opts.children);
+		} else if( opts.initUrl ) {
+			// Init tree from AJAX request
+			root.setLazyNodeStatus(LTNodeStatus_Loading);
+			$.getJSON(opts.initUrl, function(data){
+				root.append(data);
+				root.setLazyNodeStatus(LTNodeStatus_Ok);
+        	});
 		} else if( opts.initId ) {
 			// Init tree from another UL element
 			this.createFromTag(root, $("#"+opts.initId));
@@ -665,19 +661,16 @@ $.widget("ui.dynatree", {
 		// bind event handlers
 		$this.bind("click", fnClick);
 		if( opts.keyboard ) {
-//			$this.bind("keypress", fnKeypress);
 			$this.bind("keypress keydown", fnKeyHandler);
 
-			// focus/blur don't bubble, i.e. are not delegated to enclosing <div> tags.
-			// so we use the addEventListener capturing phase
-			// see http://www.howtocreate.co.uk/tutorials/javascript/domevents
-//			$this.bind("focus blur", fnFocusHandler);
+			// focus/blur don't bubble, i.e. are not delegated to parent <div> tags,
+			// so we use the addEventListener capturing phase.
+			// See http://www.howtocreate.co.uk/tutorials/javascript/domevents
 			var div = this.tree.divTree;
 			if( div.addEventListener ) {
 				div.addEventListener("focus", fnFocusHandler, true);
 				div.addEventListener("blur", fnFocusHandler, true);
 			} else {
-//				alert("regofi");
 				div.onfocusin = div.onfocusout = fnFocusHandlerIE;
 			}
 			if( opts.focusRoot )
@@ -706,11 +699,8 @@ $.widget("ui.dynatree", {
 				// If a <li><span> tag is specified, use it literally.
 				title = $liSpan.html();
 			} else {
-				// If only a <li> tag is specified, use the trimmed string excluding child <ul> tags.
+				// If only a <li> tag is specified, use the trimmed string up to the next child <ul> tag.
 				title = $.trim($li.html().match(/.*(<ul)?/)[0]);
-//				title = $.trim($li.html().match(/[^<]*/)[0]);
-//				title = $.trim($li.html().match(/\s*([^<]*)<ul/)[0]);
-//				title = $.trim($li.html().match(/(.*)([<ul])|$/i)[0]);
 			}
 			// Parse node attributes data from data="" attribute
 			var data = {
@@ -753,14 +743,14 @@ $.ui.dynatree.getter = "getTree getRoot";
 // Plugin default options:
 
 $.ui.dynatree.defaults = {
-	title: "DynaTree root", // Name of the root node.
+	title: "Dynatree root", // Name of the root node.
 	rootVisible: false, // Set to true, to make the root node visible.
 	rootCollapsible: false, // Prevent root node from being collapsed.
 // 	minExpandLevel: 1, // Instead of rootCollapsible
 	imagePath: undefined, // Path to a folder containing icons. Defaults to 'skin/' subdirectory.
 	children: null, // Init tree structure from this object array.
 	initId: null, // Init tree structure from a <ul> element with this ID.
-//	initUrl: null, // Init tree structure from an AJAX call.
+	initUrl: null, // Init tree structure from an AJAX call.
 	onSelect: null, // Callback when a node is selected.
 	onLazyRead: null, // Callback when a lazy node is expanded for the first time.
 	onFocus: null, // Callback when a node receives keyboard focus.
