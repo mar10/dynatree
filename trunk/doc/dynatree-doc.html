@@ -183,6 +183,8 @@ $("#tree").dynatree({
 	imagePath: undefined, // Path to a folder containing icons. Defaults to 'skin/' subdirectory.
 	children: null, // Init tree structure from this object array.
 	initId: null, // Init tree structure from a &lt;ul> element with this ID.
+	initUrl: null, // Init tree structure from an Ajax call.
+	initData: null, // Optional data options for initUrl (appended as arguments).
 	onSelect: null, // Callback when a node is selected.
 	onLazyRead: null, // Callback when a lazy node is expanded for the first time.
 	onFocus: null, // Callback when a node receives keyboard focus.
@@ -222,7 +224,7 @@ $("#tree").dynatree({
 	Dynatree reads the structure in different ways:
 	<ol>
 	<li>If the <code>children</code> option is passed, it will be used.
-	<li>TODO: Otherwise, if the <code>initUrl</code> option is passed, it will be used.
+	<li>Otherwise, if the <code>initUrl</code> option is passed, it will be used.
 	<li>Otherwise, if the <code>initId</code> option is passed, it will be used.
 	<li>Otherwise, if the the container &lt;div> element contains a &lt;ul> element, it will be used.
 	<li>Otherwise, the tree is left empty.<br>
@@ -331,21 +333,24 @@ $("#tree").dynatree({
 </p>
 
 
-<h4>Initializing the tree structure from an AJAX response</h4>
+<h4>Initializing the tree structure from an Ajax response</h4>
 
 <p>
 	Instead of passing an array of data objects, we can pass a url in the <code>initUrl</code>
-	option that will be used to contact a AJAX webservice.
+	option that will be used to contact a Ajax webservice.
 </p>
 <p>
 	This webservice is expected to return an JSON object response, as explained in <a href="#nodeOptions">Node options</a>.
 </p>
+
 <pre class="prettyprint">
 $("#tree").dynatree({
-	initUrl: "/send_data?mode=all",
+	initUrl: "/send_data",
+    initData: {key: "root", mode: "all"}, // Optional arguments to append to the url
 	[&#8230;]
 });
 </pre>
+
 <p>
 	Because the data request is performed asynchronously, the document will load faster.
 	Dynatree will display a spinning wheel, while waiting for the request to complete.
@@ -575,6 +580,33 @@ $("#tree").dynatree({
 	Because the data request is performed asynchronously, the browser will not block and is still responsive.
 	Dynatree will display a spinning wheel, while waiting for the request to complete.
 </p>
+<p>
+	If we are concerned about error conditions or want more control, we would could also use it like this:
+</p>
+
+<pre class="prettyprint">
+$("#tree").dynatree({
+	[&#8230;]
+	onLazyRead: function(tn){
+        jQuery.ajax({
+            url: "/ajaxTree", 
+            data: {"key": tn.data.key,
+                   "mode": "all"
+                   },
+            dataType: "json",
+            cache: false, // Append random '_' argument to prevent caching.
+            success: function(data, textStatus){
+                tn.append(data);
+                tn.setLazyNodeStatus(LTNodeStatus_Ok);
+                },
+            error: function(XMLHttpRequest, textStatus, errorThrown){
+                tn.setLazyNodeStatus(LTNodeStatus_Error);
+                }
+        });
+	},
+	[&#8230;]
+});
+</pre>
 
 
 <h2 id="programming">Programming dynatree</h2>

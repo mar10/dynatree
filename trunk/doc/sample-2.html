@@ -31,14 +31,14 @@
 				$("#echoFocused").text("-");
 			},
 			onLazyRead: function(tn){
-				var jsonResult = "["
-				+ "{ title: 'Lazy node 1', isLazy: true },"
-				+ "{ title: 'Simple node 2' }"
-				+ "]";
+				var fakeJsonResult = [
+				    { title: 'Lazy node 1', isLazy: true },
+				    { title: 'Simple node 2' }
+				];
 //				alert ("Let's pretend we're using this AJAX response to load the branch:\n " + jsonResult);
 				function fakeAjaxResponse() {
 					return function() {
-						tn.addJson(jsonResult);
+						tn.append(fakeJsonResult);
 						// Remove the 'loading...' status:
 						tn.setLazyNodeStatus(LTNodeStatus_Ok);
 					};
@@ -76,18 +76,8 @@
 			$("#tree").dynatree("getRoot").append(obj);
 		});
 
-		$("#btnAddJson").click(function(){
-			// Sample: add an hierarchic branch using json.
-			var json = "["
-			+ "{ title: 'Lazy node 1', isLazy: true },"
-			+ "{ title: 'Lazy node 2', isLazy: true },"
-			+ "{ title: 'Folder node 3', isFolder: true, children: [{title: 'node 3.1'}] }"
-			+ "]";
-			$("#tree").dynatree("getRoot").addJson(json);
-		});
-
 		$("#btnSelectNode").click(function(){
-			$("#tree").dynatree("getTree").selectKey("4.1");
+			$("#tree").dynatree("getTree").selectKey("2");
 		});
 	});
 </script>
@@ -133,10 +123,9 @@
 	<div>Selected node: <span id="echoSelected">-</span></div>
 	<div>Focused node: <span id="echoFocused">-</span></div>
 
-	<button id="btnAddCode">Add nodes progamatically</button>
+	<button id="btnAddCode">Add nodes programmatically</button>
 	<button id="btnAddObject">Add nodes using arrays</button>
-	<button id="btnAddJson">Add nodes using JSON</button>
-	<button id="btnSelectNode">Select Sub-item 4.1</button>
+	<button id="btnSelectNode">Select item2</button>
 
 </body>
 </html>

@@ -26,14 +26,14 @@
 				$("#echoFocused").text("-");
 			},
 			onLazyRead: function(tn){
-				var jsonResult = "["
-				+ "{ title: 'Lazy node 1', isLazy: true },"
-				+ "{ title: 'Simple node 2' }"
-				+ "]";
+				var fakeJsonResult = [
+				    { title: 'Lazy node 1', isLazy: true },
+				    { title: 'Simple node 2' }
+				];
 //				alert ("Let's pretend we're using this AJAX response to load the branch:\n " + jsonResult);
 				function fakeAjaxResponse() {
 					return function() {
-						tn.addJson(jsonResult);
+						tn.append(fakeJsonResult);
 						// Remove the 'loading...' status:
 						tn.setLazyNodeStatus(LTNodeStatus_Ok);
 					};
