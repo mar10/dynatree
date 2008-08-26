@@ -646,13 +646,24 @@ $.widget("ui.dynatree", {
 		} else if( opts.initUrl ) {
 			// Init tree from AJAX request
 			root.setLazyNodeStatus(LTNodeStatus_Loading);
-			$.getJSON(opts.initUrl, function(data){
-				root.append(data);
-				root.setLazyNodeStatus(LTNodeStatus_Ok);
-        	});
+
+			var ajaxOptions = $.extend({}, opts.ajax, {
+        		url: opts.initUrl, 
+        		data: opts.initData, 
+        		success: function(data, textStatus){
+					root.append(data);
+					root.setLazyNodeStatus(LTNodeStatus_Ok);
+        			},
+        		error: function(XMLHttpRequest, textStatus, errorThrown){
+					root.setLazyNodeStatus(LTNodeStatus_Error);
+        			}
+			});
+        	jQuery.ajax(ajaxOptions);
+        	
 		} else if( opts.initId ) {
 			// Init tree from another UL element
 			this.createFromTag(root, $("#"+opts.initId));
+
 		} else {
 			// Init tree from the first UL element inside the container <div>
 			var $ul = $this.find(">ul").hide();
@@ -750,7 +761,8 @@ $.ui.dynatree.defaults = {
 	imagePath: undefined, // Path to a folder containing icons. Defaults to 'skin/' subdirectory.
 	children: null, // Init tree structure from this object array.
 	initId: null, // Init tree structure from a <ul> element with this ID.
-	initUrl: null, // Init tree structure from an AJAX call.
+	initUrl: null, // Init tree structure from an Ajax call.
+	initData: null, // Optional data options for initUrl (appended as arguments).
 	onSelect: null, // Callback when a node is selected.
 	onLazyRead: null, // Callback when a lazy node is expanded for the first time.
 	onFocus: null, // Callback when a node receives keyboard focus.
@@ -764,6 +776,10 @@ $.ui.dynatree.defaults = {
 //	persist: "cookie",
 //	fx: null, // Animations, e.g. { height: 'toggle', opacity: 'toggle', duration: 200 }
 	idPrefix: 'ui-dynatree-id-', // Used to generate node id's like <span id="ui-dynatree-id-<key>">.
+	ajax: { // Used by initUrl option
+		cache: false, // Append random '_' argument to url to prevent caching.
+		dataType: "json" // Expect json format and pass json object to callbacks.
+	},
 	strings: {
 		loading: "Loading&#8230;",
 		loadError: "Load error!"
@@ -785,12 +801,6 @@ $.ui.dynatree.defaults = {
 	// basic setup
 //	cookie: null, // e.g. { expires: 7, path: '/', domain: 'jquery.com', secure: true }
 	// TODO history: false,
-
-	// Ajax
-	//~ cache: false,
-	//~ idPrefix: 'ui-dynatree-',
-	//~ ajaxOptions: {},
-
 
 	// templates
 	//~ tabTemplate: '<li><a href="#{href}"><span>#{label}</span></a></li>', // 		var $li = $(o.tabTemplate.replace(/#\{href\}/g, url).replace(/#\{label\}/g, label));
