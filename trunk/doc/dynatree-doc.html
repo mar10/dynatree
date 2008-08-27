@@ -49,6 +49,7 @@
 <h1>jquery.dynatree documentation</h1>
 
 <div class="hint">This document describes dynatree <strong>version 0.3 alpha</strong>.</div>
+<div class="hint">Document version: $Rev$, $Date$.</div>
 <p>
 	Dynatree is a JavaScript dynamic tree view plugin for <a href="http://jquery.com" target="_blank">jQuery</a> with support for lazy loading of branches.<br>
 	Main features:
@@ -182,9 +183,8 @@ $("#tree").dynatree({
 	rootCollapsible: false, // Prevent root node from being collapsed.
 	imagePath: undefined, // Path to a folder containing icons. Defaults to 'skin/' subdirectory.
 	children: null, // Init tree structure from this object array.
-	initId: null, // Init tree structure from a &lt;ul> element with this ID.
-	initUrl: null, // Init tree structure from an Ajax call.
-	initData: null, // Optional data options for initUrl (appended as arguments).
+	initId: null, // Init tree structure from a <ul> element with this ID.
+	initAjax: null, // Ajax options used to initialize the tree strucuture.
 	onSelect: null, // Callback when a node is selected.
 	onLazyRead: null, // Callback when a lazy node is expanded for the first time.
 	onFocus: null, // Callback when a node receives keyboard focus.
@@ -194,6 +194,11 @@ $("#tree").dynatree({
 	autoCollapse: false, // Automatically collapse all siblings, when a node is expanded.
 	expandOnAdd: false, // Automatically expand parent, when a child is added.
 	selectExpandsFolders: true, // Clicking a folder title expands the folder, instead of selecting it.
+	idPrefix: 'ui-dynatree-id-', // Used to generate node id's like <span id="ui-dynatree-id-<key>">.
+	ajaxDefaults: { // Used by initAjax option
+		cache: false, // Append random '_' argument to url to prevent caching.
+		dataType: "json" // Expect json format and pass json object to callbacks.
+	},
 	strings: {
 		loading: "Loading&#8230;",
 		loadError: "Load error!"
@@ -224,7 +229,7 @@ $("#tree").dynatree({
 	Dynatree reads the structure in different ways:
 	<ol>
 	<li>If the <code>children</code> option is passed, it will be used.
-	<li>Otherwise, if the <code>initUrl</code> option is passed, it will be used.
+	<li>Otherwise, if the <code>initAjax</code> option is passed, it will be used.
 	<li>Otherwise, if the <code>initId</code> option is passed, it will be used.
 	<li>Otherwise, if the the container &lt;div> element contains a &lt;ul> element, it will be used.
 	<li>Otherwise, the tree is left empty.<br>
@@ -336,7 +341,7 @@ $("#tree").dynatree({
 <h4>Initializing the tree structure from an Ajax response</h4>
 
 <p>
-	Instead of passing an array of data objects, we can pass a url in the <code>initUrl</code>
+	Instead of passing an array of data objects, we can pass a url in the <code>initAjax</code>
 	option that will be used to contact a Ajax webservice.
 </p>
 <p>
@@ -345,8 +350,11 @@ $("#tree").dynatree({
 
 <pre class="prettyprint">
 $("#tree").dynatree({
-	initUrl: "/send_data",
-    initData: {key: "root", mode: "all"}, // Optional arguments to append to the url
+    initAjax: {url: "/ajaxTree",
+    		   data: {key: "root", // Optional arguments to append to the url
+                      mode: "all"
+                      }
+               },
 	[&#8230;]
 });
 </pre>
@@ -563,13 +571,12 @@ $("#tree").dynatree({
 $("#tree").dynatree({
 	[&#8230;]
 	onLazyRead: function(tn){
-		url = "/sendData?key=" + tn.data.key;
-		$.getJson(url, function(data) {
-			// Use the JSON result to create child nodes:
-			tn.append(data);
-			// Reset the 'loading...' status:
-			tn.setLazyNodeStatus(LTNodeStatus_Ok);
-		});
+		tn.appendAjax({url: "/sendData", 
+	                   data: {"key": tn.data.key, // Optional url arguments
+		                      "mode": "all"
+		                      },
+		               cache: false // Append random '_' argument to url to prevent caching.
+		               });
 	},
 	[&#8230;]
 });
@@ -580,33 +587,6 @@ $("#tree").dynatree({
 	Because the data request is performed asynchronously, the browser will not block and is still responsive.
 	Dynatree will display a spinning wheel, while waiting for the request to complete.
 </p>
-<p>
-	If we are concerned about error conditions or want more control, we would could also use it like this:
-</p>
-
-<pre class="prettyprint">
-$("#tree").dynatree({
-	[&#8230;]
-	onLazyRead: function(tn){
-        jQuery.ajax({
-            url: "/ajaxTree", 
-            data: {"key": tn.data.key,
-                   "mode": "all"
-                   },
-            dataType: "json",
-            cache: false, // Append random '_' argument to prevent caching.
-            success: function(data, textStatus){
-                tn.append(data);
-                tn.setLazyNodeStatus(LTNodeStatus_Ok);
-                },
-            error: function(XMLHttpRequest, textStatus, errorThrown){
-                tn.setLazyNodeStatus(LTNodeStatus_Error);
-                }
-        });
-	},
-	[&#8230;]
-});
-</pre>
 
 
 <h2 id="programming">Programming dynatree</h2>

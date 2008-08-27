@@ -9,6 +9,9 @@
 		http://dynatree.googlecode.com/
 
 	Let me know, if you find bugs or improvements (martin [@] wwWendt.de).
+	
+	$Rev$
+	$Date$
 
  	@depends: jquery.js
  	@depends: ui.core.js
@@ -500,6 +503,22 @@ DynaTreeNode.prototype = {
 		}
 		return;
 	},
+	
+	appendAjax: function(ajaxOptions) {
+		this.setLazyNodeStatus(LTNodeStatus_Loading);
+		// Ajax option inheritance: $.ajaxSetup < $.ui.dynatree.defaults.ajaxDefaults < tree.options.ajaxDefaults < ajaxOptions
+		var self = this;
+		var ajaxOptions = $.extend({}, this.tree.options.ajaxDefaults, ajaxOptions, {
+       		success: function(data, textStatus){
+				self.append(data);
+				self.setLazyNodeStatus(LTNodeStatus_Ok);
+       			},
+       		error: function(XMLHttpRequest, textStatus, errorThrown){
+				self.setLazyNodeStatus(LTNodeStatus_Error);
+       			}
+		});
+       	$.ajax(ajaxOptions);
+	},
 /*
 	addObject: function(obj) {
 		return this.appendNodes(obj);
@@ -643,22 +662,10 @@ $.widget("ui.dynatree", {
 		if( opts.children ) {
 			// Read structure from node array
 			root.append(opts.children);
-		} else if( opts.initUrl ) {
-			// Init tree from AJAX request
-			root.setLazyNodeStatus(LTNodeStatus_Loading);
 
-			var ajaxOptions = $.extend({}, opts.ajax, {
-        		url: opts.initUrl, 
-        		data: opts.initData, 
-        		success: function(data, textStatus){
-					root.append(data);
-					root.setLazyNodeStatus(LTNodeStatus_Ok);
-        			},
-        		error: function(XMLHttpRequest, textStatus, errorThrown){
-					root.setLazyNodeStatus(LTNodeStatus_Error);
-        			}
-			});
-        	jQuery.ajax(ajaxOptions);
+		} else if( opts.initAjax && opts.initAjax.url ) {
+			// Init tree from AJAX request
+			root.appendAjax(opts.initAjax);
         	
 		} else if( opts.initId ) {
 			// Init tree from another UL element
@@ -761,8 +768,7 @@ $.ui.dynatree.defaults = {
 	imagePath: undefined, // Path to a folder containing icons. Defaults to 'skin/' subdirectory.
 	children: null, // Init tree structure from this object array.
 	initId: null, // Init tree structure from a <ul> element with this ID.
-	initUrl: null, // Init tree structure from an Ajax call.
-	initData: null, // Optional data options for initUrl (appended as arguments).
+	initAjax: null, // Ajax options used to initialize the tree strucuture.
 	onSelect: null, // Callback when a node is selected.
 	onLazyRead: null, // Callback when a lazy node is expanded for the first time.
 	onFocus: null, // Callback when a node receives keyboard focus.
@@ -776,7 +782,7 @@ $.ui.dynatree.defaults = {
 //	persist: "cookie",
 //	fx: null, // Animations, e.g. { height: 'toggle', opacity: 'toggle', duration: 200 }
 	idPrefix: 'ui-dynatree-id-', // Used to generate node id's like <span id="ui-dynatree-id-<key>">.
-	ajax: { // Used by initUrl option
+	ajaxDefaults: { // Used by initAjax option
 		cache: false, // Append random '_' argument to url to prevent caching.
 		dataType: "json" // Expect json format and pass json object to callbacks.
 	},
