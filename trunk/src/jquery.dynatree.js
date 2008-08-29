@@ -232,7 +232,13 @@ DynaTreeNode.prototype = {
 			case LTNodeStatus_Ok:
 				this._setStatusNode(null);
 				this.bRead = true;
-				this.focus();
+				if( this === this.tree.tnRoot && this.tree.options.focusRoot 
+					&& !this.tree.options.rootVisible && this.aChilds.length > 0 ) {
+					// special case: using ajaxInit	
+					this.aChilds[0].focus();
+				} else {
+					this.focus();
+				}
 				break;
 			case LTNodeStatus_Loading:
 				this._setStatusNode({
@@ -402,7 +408,7 @@ DynaTreeNode.prototype = {
 				if( this.bExpanded ) {
 					this.toggleExpand();
 					this.focus();
-				} else if( this.parent ) {
+				} else if( this.parent && (this.tree.options.rootVisible || this.parent.parent) ) {
 					this.parent.focus();
 				}
 				break;
@@ -418,7 +424,7 @@ DynaTreeNode.prototype = {
 				var sib = this.prevSibling();
 				while( sib && sib.bExpanded )
 					sib = sib.aChilds[sib.aChilds.length-1];
-				if( !sib && this.parent )
+				if( !sib && this.parent && (this.tree.options.rootVisible || this.parent.parent) ) 
 					sib = this.parent;
 				if( sib ) sib.focus();
 				break;
@@ -691,8 +697,14 @@ $.widget("ui.dynatree", {
 			} else {
 				div.onfocusin = div.onfocusout = fnFocusHandlerIE;
 			}
-			if( opts.focusRoot )
-				root.focus();
+			if( opts.focusRoot ) {
+				if( opts.rootVisible ) {
+					root.focus();
+				} else if( root.aChilds.length > 0 && !opts.initAjax.url ) {
+					// Only if not lazy initing (Will be handled by setLazyNodeStatus(LTNodeStatus_Ok)) 
+					root.aChilds[0].focus();
+				}
+			}
 		}
 	},
 
