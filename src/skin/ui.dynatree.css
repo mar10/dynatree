@@ -8,11 +8,9 @@
 	white-space: nowrap;
 
 	padding: 3;
-	background-color: white;
-	border: 1px dotted black;
-/*	border-width: 2;
-	border-style: inset;
-	border-color: buttonhighlight;*/
+	background-color: white; 
+/*	border: 1px dotted black; */
+	border: 1px dashed gray;
 }
 
 .ui-dynatree-container a,
@@ -31,7 +29,7 @@
 {
 	text-decoration: none;
 /*	background-color: Gray; */
-	border: dashed 1px blue;
+	border: dashed 1px black;
 }
 .ui-dynatree-container a:active
 {
