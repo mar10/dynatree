@@ -608,14 +608,24 @@ DynaTree.prototype = {
 
 (function($) {
 
+function _getNodeFromElement(el) {
+	var iMax = 2;
+	do {
+		if( el.ltn ) return el.ltn;
+		el = el.parentNode;
+	} while( iMax-- );
+	return null;
+}
 function fnClick(event) {
-	var tn = event.target.parentNode.ltn;
+//	var tn = event.target.parentNode.ltn;
+	var tn = _getNodeFromElement(event.target);
 	return tn.onClick(event);
 }
 
 function fnKeyHandler(event) {
 	// Handles keydown and keypressed, because IE and Safari don't fire keypress for cursor keys.
-	var tn = event.target.parentNode.ltn;
+//	var tn = event.target.parentNode.ltn;
+	var tn = _getNodeFromElement(event.target);
 	// ...but Firefox does, so ignore them:
 	if( event.type == "keypress" && event.charCode == 0 )
 		return;
@@ -624,7 +634,8 @@ function fnKeyHandler(event) {
 
 function fnFocusHandler(event) {
 	// Handles blur and focus.
-	var tn = event.target.parentNode.ltn;
+//	var tn = event.target.parentNode.ltn;
+	var tn = _getNodeFromElement(event.target);
 	return tn.onFocus(event);
 }
 
@@ -634,7 +645,8 @@ function fnFocusHandlerIE() {
 //	alert (event.type + ": src=" + event.srcElement + ", to=" + event.toElement);
 //	var el = (event.type=="focusin") ? event.toElement : event.srcElement;
 //	var el = (event.toElement) ? event.toElement : event.srcElement;
-	var tn = event.srcElement.parentNode.ltn;
+//	var tn = event.srcElement.parentNode.ltn;
+	var tn = _getNodeFromElement(event.srcElement);
 	// TODO: use jQuery.event.fix() to make a compatible event object
 //	alert (event.type + ": " + tn);
 	return tn.onFocus(event);
