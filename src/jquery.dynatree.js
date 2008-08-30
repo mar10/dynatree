@@ -500,14 +500,16 @@ DynaTreeNode.prototype = {
 		*/
 		if( !obj ) return;
 		if( !obj.length ) return this._addNode(obj);
+		var tnFirst = null;
 		for (var i=0; i<obj.length; i++) {
 			var data = obj[i];
 			var tn = this._addNode(data);
+			if( !tnFirst ) tnFirst = tn;
 			if( data.children )
 				for(var j=0; j<data.children.length; j++)
 					tn.append(data.children[j]);
 		}
-		return;
+		return tnFirst;
 	},
 	
 	appendAjax: function(ajaxOptions) {
@@ -525,15 +527,6 @@ DynaTreeNode.prototype = {
 		});
        	$.ajax(ajaxOptions);
 	},
-/*
-	addObject: function(obj) {
-		return this.appendNodes(obj);
-	},
-
-	addJson: function(json) {
-		return this.append(eval("(" + json + ")"));
-	},
-*/
 	// --- end of class
 	lastentry: undefined
 }
@@ -609,7 +602,7 @@ DynaTree.prototype = {
 (function($) {
 
 function _getNodeFromElement(el) {
-	var iMax = 2;
+	var iMax = 4;
 	do {
 		if( el.ltn ) return el.ltn;
 		el = el.parentNode;
@@ -765,7 +758,7 @@ $.widget("ui.dynatree", {
 			// Recursive reading of child nodes, if LI tag contains an UL tag
 			var $ul = $li.find(">ul:first");
 			if( $ul.length ) {
-				if( data.expanded )
+				if( data.expand )
 					childNode.bExpanded = true;
 				self.createFromTag(childNode, $ul); // must use 'self', because 'this' is the each() context
 			}
@@ -789,7 +782,7 @@ $.ui.dynatree.defaults = {
 	rootVisible: false, // Set to true, to make the root node visible.
 	rootCollapsible: false, // Prevent root node from being collapsed.
 // 	minExpandLevel: 1, // Instead of rootCollapsible
-	imagePath: undefined, // Path to a folder containing icons. Defaults to 'skin/' subdirectory.
+	imagePath: null, // Path to a folder containing icons. Defaults to 'skin/' subdirectory.
 	children: null, // Init tree structure from this object array.
 	initId: null, // Init tree structure from a <ul> element with this ID.
 	initAjax: null, // Ajax options used to initialize the tree strucuture.
@@ -843,15 +836,15 @@ $.ui.dynatree.defaults = {
  * Reserved data attributes for a tree node.
  */
 $.ui.dynatree.nodedatadefaults = {
-	title: undefined, // (required) Displayed name of the node (html is allowed here)
-	key: undefined, // May be used with select(), find(), ...
+	title: null, // (required) Displayed name of the node (html is allowed here)
+	key: null, // May be used with select(), find(), ...
 	isFolder: false, // Use a folder icon. Also the node is expandable but not selectable.
 	isLazy: false, // Call onLazyRead(), when the node is expanded for the first time to allow for delayed creation of children.
-	expanded: false, //
-	tooltip: undefined, // Show this popup text.
-	icon: undefined, // Use a custom image (filename relative to tree.options.imagePath)
+	expand: false, // Initial expand status. 
+	tooltip: null, // Show this popup text.
+	icon: null, // Use a custom image (filename relative to tree.options.imagePath)
 	// The following attributes are only valid if passed to some functions:
-	children: undefined, // Array of child nodes.
+	children: null, // Array of child nodes.
 	// NOTE: we can also add custom attributes here.
 	// This may then also be used in the onSelect() or onLazyTree() callbacks.
 	// ------------------------------------------------------------------------
