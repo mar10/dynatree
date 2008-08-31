@@ -52,6 +52,7 @@ var DTNodeStatus_Loading = 1;
 var DTNodeStatus_Ok      = 0;
 
 var DynaTreeNode = Class.create();
+
 DynaTreeNode.prototype = {
 	initialize: function(tree, data) {
 		this.tree    = tree;
@@ -598,11 +599,17 @@ DynaTree.prototype = {
 		var el = document.getElementById(this.options.idPrefix + key);
 		return ( el && el.dtnode ) ? el.dtnode : null;
 	},
+
+	getSelectedNode: function() {
+		return this.tnSelected;
+	},
 	
 	selectKey: function(key) {
 		var dtnode = this.getNodeByKey(key);
-		if( !dtnode )
+		if( !dtnode ) {
+			this.tnSelected = null;
 			return null;
+		}
 		dtnode.select();
 		return dtnode;
 	},
@@ -745,6 +752,10 @@ $.widget("ui.dynatree", {
 		return this.tree.getRoot();
 	},
 
+	getSelectedNode: function() {
+		return this.tree.getSelectedNode();
+	},
+
 	// --- Private methods
 	createFromTag: function(parentTreeNode, $ulParent) {
 		// Convert a <UL>...</UL> list into children of the parent tree node.
@@ -795,7 +806,7 @@ $.widget("ui.dynatree", {
 
 // The following methods return a value (thus breaking the jQuery call chain):
 
-$.ui.dynatree.getter = "getTree getRoot";
+$.ui.dynatree.getter = "getTree getRoot getSelectedNode";
 
 
 // Plugin default options:

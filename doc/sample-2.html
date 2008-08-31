@@ -80,6 +80,11 @@
 			$("#tree").dynatree("getTree").selectKey("4.3.2");
 //			$("#tree").dynatree("getTree").getNodeByKey("4.3.2").select();
 		});
+
+		$("#btnShowSelected").click(function(){
+			var dtnode = $("#tree").dynatree("getSelectedNode");
+			alert("Currently selected: " + dtnode.data.title);
+		});
 	});
 </script>
 </head>
@@ -133,6 +138,7 @@
 	<button id="btnAddCode">Add nodes programmatically</button>
 	<button id="btnAddObject">Add nodes using arrays</button>
 	<button id="btnSelectNode">Select item 4.3.2</button>
+	<button id="btnShowSelected">Show selected node...</button>
 
 </body>
 </html>
