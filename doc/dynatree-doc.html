@@ -604,6 +604,10 @@ $("#tree").dynatree({
 <pre class="prettyprint">
 	var tree = $("#tree").dynatree("getTree");
 	var rootNode = $("#tree").dynatree("getRoot");
+	// Select node with key="2":
+	$("#tree").selectKey("2");
+	// .. or (just to show another way):
+	$("#ui-dynatree-id-2").attr("dtnode").select();
 </pre>
 
 <p>
