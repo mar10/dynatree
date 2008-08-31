@@ -77,7 +77,8 @@
 		});
 
 		$("#btnSelectNode").click(function(){
-			$("#tree").dynatree("getTree").selectKey("4.2");
+			$("#tree").dynatree("getTree").selectKey("4.3.2");
+//			$("#tree").dynatree("getTree").getNodeByKey("4.3.2").select();
 		});
 	});
 </script>
@@ -102,6 +103,12 @@
 				<ul>
 					<li data="key: '4.1'">Sub-item 4.1
 					<li data="key: '4.2'">Sub-item 4.2
+					<li data="key: '4.3'">Sub-item 4.3
+						<ul>
+							<li data="key: '4.3.1'">Sub-item 4.3.1
+							<li data="key: '4.3.2'">Sub-item 4.3.2
+						</ul>
+					<li data="key: '4.4'">Sub-item 4.4
 				</ul>
 
 			<li data="key: '5', isFolder: true">Advanced examples
@@ -125,7 +132,7 @@
 
 	<button id="btnAddCode">Add nodes programmatically</button>
 	<button id="btnAddObject">Add nodes using arrays</button>
-	<button id="btnSelectNode">Select item 4.2</button>
+	<button id="btnSelectNode">Select item 4.3.2</button>
 
 </body>
 </html>

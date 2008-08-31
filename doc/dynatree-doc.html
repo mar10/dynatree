@@ -599,15 +599,11 @@ $("#tree").dynatree({
 <h2 id="programming">Programming dynatree</h2>
 
 <p>
-	Two functions can be used to get DynaTree object and the DynaTreeNode object:
+	Two functions can be used to get a DynaTree object and the root DynaTreeNode object:
 </p>
 <pre class="prettyprint">
 	var tree = $("#tree").dynatree("getTree");
 	var rootNode = $("#tree").dynatree("getRoot");
-	// Select node with key="2":
-	$("#tree").selectKey("2");
-	// .. or (just to show another way):
-	$("#ui-dynatree-id-2").attr("dtnode").select();
 </pre>
 
 <p>
@@ -615,21 +611,29 @@ $("#tree").dynatree({
 	<dl class="optionList">
 		<dt>getRoot()
 		<dd>
+			Return the root DynaTreeNode object.  
 		</dd>
 		<dt>getNodeByKey(key)
 		<dd>
-			Return DynaTree node with a given key or 'undefined' if not found.  
+			Return DynaTreeNode with a given key or 'null' if not found.  
 		</dd>
 		<dt>selectKey(key)
 		<dd>
+			Select node with a given key. All parents will be expanded as 
+			necessary and focus and select events are fired.<br>
+			Return the selected DynaTreeNode.
 		</dd>
 	</dl>
 </p>
 <p>
-Example:
+Examples for selecting a node with key '1234':
 </p>
 <pre class="prettyprint">
 $("#tree").dynatree("getTree").selectKey("1234");
+// or another way:
+$("#tree").dynatree("getTree").getNodeByKey("1234").select();
+// .. or yet another way:
+$("#ui-dynatree-id-1234").attr("dtnode").select();
 </pre>
 
 <p>

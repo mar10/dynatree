@@ -262,30 +262,31 @@ DynaTreeNode.prototype = {
 	},
 
 	makeVisible: function() {
-		var parents = this._parentList(true, true);
+		// Make sure, all parents are expanded
+		var parents = this._parentList(true, false);
 		for(var i=0; i<parents.length; i++) 
 			parents[i]._expand(true);
+	},
+
+	focus: function() {
+		this.makeVisible();
+		$(this.span).find(">a").focus();
 	},
 
 	select: function() {
 		if( this.tree.isDisabled || this.data.isStatusNode )
 			return;
-		this.makeVisible();
 		this.focus();
 		this.tree.tnSelected = this;
 		if ( this.tree.options.onSelect )
 			this.tree.options.onSelect(this);
 	},
 
-	focus: function() {
-		$(this.span).find(">a").focus();
-	},
-
 	_expand: function (bExpand) {
 		if ( this.bExpanded == bExpand )
 			return;
 		this.bExpanded = bExpand;
-		// expanding a lazy node: set 'loading...' and call callback
+		// Expanding a lazy node: set 'loading...' and call callback
 		if ( bExpand && this.data.isLazy && !this.bRead ) {
 			try {
 				this.setLazyNodeStatus(DTNodeStatus_Loading);
@@ -300,9 +301,15 @@ DynaTreeNode.prototype = {
 			}
 			return;
 		}
+		// Auto-collapse mode: collapse all siblings
+		if ( this.bExpanded && this.parent && this.tree.options.autoCollapse ) {
+			var parents = this._parentList(false, true);
+			for(var i=0; i<parents.length; i++) 
+				parents[i].collapseSiblings();
+		}
 		// render expanded nodes
 //		this.render (true, false);
-		this.render (true, true); // Issue #4
+		this.render (true, false); // Issue #4
 		// we didn't render collapsed nodes, so we have to update the visibility of direct childs
 		if ( this.aChilds ) {
 			for (var i=0; i<this.aChilds.length; i++) {
@@ -312,52 +319,18 @@ DynaTreeNode.prototype = {
 	},
 
 	toggleExpand: function() {
-		logMsg('toggleExpand ('+this.data.title+')...');
+		logMsg('toggleExpand('+this.data.title+')...');
 		this._expand ( ! this.bExpanded);
-		// auto-collapse mode
-		if ( this.bExpanded && this.parent && this.tree.options.autoCollapse ) {
-			var ac = this.parent.aChilds;
-			for (var i=0; i<ac.length; i++) {
-				if ( ac[i]!=this )
-					ac[i]._expand (false);
-			}
-		}
-		logMsg('toggleExpand ('+this.data.title+') done.');
+		logMsg('toggleExpand('+this.data.title+') done.');
 	},
-/*
-	_cbHide: function (tn) {
-		tn.div.style.display = 'none';
-	},
-	_cbShow: function (tn) {
-		tn.div.style.display = '';
-	},
-	showChilds: function (bShow) {
-		// don't recurse, because div tags are nested anyway
-		this.visit (bShow ? this._cbShow : this._cbHide, false, false);
-	},
-	visit: function (cb, bSelf, bDeep) { // TODO: better name: each(fn)
-		var n = 0;
-		if ( bSelf ) { cb (this); n++; }
-		if ( this.aChilds ) {
-			for (var i=0; i<this.aChilds.length; i++) {
-				if ( bDeep ) {
-					n += this.aChilds[i].visit (cb, true, bDeep);
-				} else {
-					cb (this.aChilds[i]);
-					n++;
-				}
-			}
-		}
-		return n;
-	},
-*/
+
 	collapseSiblings: function() {
 		if ( this.parent==null )
 			return;
 		var ac = this.parent.aChilds;
 		for (var i=0; i<ac.length; i++) {
-			if ( ac[i]!=this && ac[i].bExpanded )
-				ac[i].toggleExpand();
+			if ( ac[i] !== this && ac[i].bExpanded )
+				ac[i]._expand(false);
 		}
 	},
 
@@ -484,6 +457,24 @@ DynaTreeNode.prototype = {
 		// TODO: return anything?
 //		return false;
 	},
+
+/*
+	visit: function (cb, bSelf, bDeep) { // TODO: better name: each(fn)
+		var n = 0;
+		if ( bSelf ) { cb (this); n++; }
+		if ( this.aChilds ) {
+			for (var i=0; i<this.aChilds.length; i++) {
+				if ( bDeep ) {
+					n += this.aChilds[i].visit (cb, true, bDeep);
+				} else {
+					cb (this.aChilds[i]);
+					n++;
+				}
+			}
+		}
+		return n;
+	},
+*/
 
 	_addChildNode: function (tn) {
 //		logMsg ('_addChildNode '+tn);
@@ -612,7 +603,6 @@ DynaTree.prototype = {
 		var dtnode = this.getNodeByKey(key);
 		if( !dtnode )
 			return null;
-//		dtnode.focus();
 		dtnode.select();
 		return dtnode;
 	},
@@ -738,7 +728,7 @@ $.widget("ui.dynatree", {
 			if( opts.focusRoot ) {
 				if( opts.rootVisible ) {
 					root.focus();
-				} else if( root.aChilds.length > 0 && !opts.initAjax.url ) {
+				} else if( root.aChilds.length > 0 && ! (opts.initAjax && opts.initAjax.url) ) {
 					// Only if not lazy initing (Will be handled by setLazyNodeStatus(DTNodeStatus_Ok)) 
 					root.aChilds[0].focus();
 				}
