@@ -1,11 +1,19 @@
 #summary Main changes in recent releases.
 
 ==== 0.3 (in progress) ====
+
+===== Main changes=====
   * jQuery plugin style: $(..).dynatree()
   * Keyboard navigation
   * Improved documentation
   * Hosted on a public platform
 
-==== 0.2 an before ====
+===== Details =====
+See the [http://code.google.com/p/dynatree/issues/list?can=1&q=milestone:Release0.3&sort=priority&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary Issue List] for this release.
+
+===== Updating from a previous release =====
+This is the first jQuery based release, so there is no update path.
+
+==== 0.2 and before ====
 Dynatree is based on [http://wwWendt.de/tech/lazytree lazytree 0.2].
 I had to rename it, because there already was a jQuery plugin named _lazytree_.
