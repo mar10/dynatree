@@ -118,7 +118,9 @@ DynaTreeNode.prototype = {
 		}
 
 		if ( bHasLink )
-			res += '<a href="#" onClick="parentNode.dtnode.toggleExpand();">';
+//				res += '<a href="#" onClick="parentNode.dtnode.toggleExpand();">';
+				res += '<a href="#" class="ui-dynatree-expander">';
+				 
 		if ( imgConnector )
 			res += '<img src="' + this.tree.options.imagePath + imgConnector + '.gif" alt="' + imgAlt + '" />'
 		if ( bHasLink )
@@ -360,10 +362,18 @@ DynaTreeNode.prototype = {
 		*/
 		logMsg(event.type + ": tn:" + this + ", button:" + event.button + ", which: " + event.which);
 
-		if ( this.data.isFolder && this.tree.options.selectExpandsFolders && (this.aChilds || this.data.isLazy) ) {
+		if( $(event.target).parent(".ui-dynatree-expander").length ) {
+			// Clicking the [+] icon always expands
+//			alert("Expander!");
+			this.toggleExpand();
+		} else if ( this.data.isFolder && this.tree.options.selectExpandsFolders && (this.aChilds || this.data.isLazy) ) {
+			// Clicking a non-empty folder, when selectExpandsFolders is on will expand
 			this.toggleExpand();
 		} else if ( !this.data.isFolder ) {
+			// Clicking a document will select it
 			this.select();
+		} else {
+			// Folders cannot be selected
 		}
 		// Make sure that clicks stop
 		return false;
@@ -610,14 +620,12 @@ function _getNodeFromElement(el) {
 	return null;
 }
 function fnClick(event) {
-//	var tn = event.target.parentNode.dtnode;
 	var tn = _getNodeFromElement(event.target);
 	return tn.onClick(event);
 }
 
 function fnKeyHandler(event) {
 	// Handles keydown and keypressed, because IE and Safari don't fire keypress for cursor keys.
-//	var tn = event.target.parentNode.dtnode;
 	var tn = _getNodeFromElement(event.target);
 	// ...but Firefox does, so ignore them:
 	if( event.type == "keypress" && event.charCode == 0 )
@@ -627,7 +635,6 @@ function fnKeyHandler(event) {
 
 function fnFocusHandler(event) {
 	// Handles blur and focus.
-//	var tn = event.target.parentNode.dtnode;
 	var tn = _getNodeFromElement(event.target);
 	return tn.onFocus(event);
 }
@@ -827,7 +834,8 @@ $.ui.dynatree.defaults = {
 	// TODO history: false,
 
 	// templates
-	//~ tabTemplate: '<li><a href="#{href}"><span>#{label}</span></a></li>', // 		var $li = $(o.tabTemplate.replace(/#\{href\}/g, url).replace(/#\{label\}/g, label));
+	//~ tabTemplate: '<li><a href="#{href}"><span>#{label}</span></a></li>', 
+	// 		var $li = $(o.tabTemplate.replace(/#\{href\}/g, url).replace(/#\{label\}/g, label));
 	//~ panelTemplate: '<div></div>'
 	// ------------------------------------------------------------------------
 	lastentry: undefined
