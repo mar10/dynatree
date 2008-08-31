@@ -102,9 +102,9 @@
 		// Attach the dynatree widget to an existing &lt;div id="tree"> element
 		// and pass the tree options as an argument to the dynatree() function:
 		$("#tree").dynatree({
-			onSelect: function(tn) {
+			onSelect: function(dtnode) {
 				// A DynaTreeNode object is passed to the select handler
-				alert("You selected " + tn.data.title);
+				alert("You selected " + dtnode.data.title);
 			},
 			children: [ // Pass an array of nodes.
 				{title: "Item 1"},
@@ -278,8 +278,8 @@ children: [
 	The node options are also passed to the event handlers and can be accessed like this:
 </p>
 <pre class="prettyprint">
-onSelect: function(tn) {
-	alert("You selected " + tn.data.title);
+onSelect: function(dtnode) {
+	alert("You selected " + dtnode.data.title);
 },
 </pre>
 
@@ -399,8 +399,8 @@ $("#tree").dynatree({
 	&lt;script type='text/javascript'>
 	$(function(){
 		$("#tree").dynatree({
-			onSelect: function(tn) {
-				alert("You selected " + tn);
+			onSelect: function(dtnode) {
+				alert("You selected " + dtnode);
 			}
 		});
 	});
@@ -445,8 +445,8 @@ $("#tree").dynatree({
 $(function(){
 	// Initialize the tree in the onload event
 	$("#tree").dynatree({
-		onSelect: function(tn) {
-			alert("You selected " + tn);
+		onSelect: function(dtnode) {
+			alert("You selected " + dtnode);
 		}
 	});
 	// Now get the root node object
@@ -478,8 +478,8 @@ $(function(){
 	The node options can be accessed like this:
 </p>
 <pre class="prettyprint">
-onSelect: function(tn) {
-	alert("You selected " + tn.data.title);
+onSelect: function(dtnode) {
+	alert("You selected " + dtnode.data.title);
 },
 </pre>
 
@@ -520,10 +520,10 @@ children: [
 <pre class="prettyprint">
 $("#tree").dynatree({
 	[&#8230;]
-	onSelect: function(tn) {
-		if( tn.data.url )
-			window.open(tn.data.url);
-		$("#echoSelected").text(tn.data.title);
+	onSelect: function(dtnode) {
+		if( dtnode.data.url )
+			window.open(dtnode.data.url);
+		$("#echoSelected").text(dtnode.data.title);
 	},
 	[&#8230;]
 });
@@ -546,10 +546,10 @@ $("#tree").dynatree({
 <pre class="prettyprint">
 $("#tree").dynatree({
 	[&#8230;]
-	onFocus: function(tn) {
-		$("#echoFocused").text(tn.data.title);
+	onFocus: function(dtnode) {
+		$("#echoFocused").text(dtnode.data.title);
 	},
-	onBlur: function(tn) {
+	onBlur: function(dtnode) {
 		$("#echoFocused").text("-");
 	},
 	[&#8230;]
@@ -576,13 +576,13 @@ $("#tree").dynatree({
 <pre class="prettyprint">
 $("#tree").dynatree({
 	[&#8230;]
-	onLazyRead: function(tn){
-		tn.appendAjax({url: "/sendData", 
-	                   data: {"key": tn.data.key, // Optional url arguments
-		                      "mode": "all"
-		                      },
-		               cache: false // Append random '_' argument to url to prevent caching.
-		               });
+	onLazyRead: function(dtnode){
+		dtnode.appendAjax({url: "/sendData", 
+	                       data: {"key": dtnode.data.key, // Optional url arguments
+		                          "mode": "all"
+		                          },
+		                   cache: false // Append random '_' argument to url to prevent caching.
+		                  });
 	},
 	[&#8230;]
 });

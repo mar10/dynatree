@@ -118,7 +118,7 @@ DynaTreeNode.prototype = {
 		}
 
 		if ( bHasLink )
-			res += '<a href="#" onClick="parentNode.ltn.toggleExpand();">';
+			res += '<a href="#" onClick="parentNode.dtnode.toggleExpand();">';
 		if ( imgConnector )
 			res += '<img src="' + this.tree.options.imagePath + imgConnector + '.gif" alt="' + imgAlt + '" />'
 		if ( bHasLink )
@@ -149,7 +149,7 @@ DynaTreeNode.prototype = {
 			this.span.className = 'ltNode';
 			if( this.data.key )
 				this.span.id = this.tree.options.idPrefix + this.data.key;
-			this.span.ltn = this;
+			this.span.dtnode = this;
 			this.div.appendChild ( this.span );
 		} else {
 			// simply replace existing span's inner html
@@ -574,7 +574,7 @@ DynaTree.prototype = {
 	},
 	getNodeByKey: function(key) {
 		var span = document.getElementById(this.options.idPrefix + key);
-		return span ? span.ltn : null;
+		return span ? span.dtnode : null;
 	},
 	selectKey: function(key) {
 		tn = this.getNodeByKey(key);
@@ -604,20 +604,20 @@ DynaTree.prototype = {
 function _getNodeFromElement(el) {
 	var iMax = 4;
 	do {
-		if( el.ltn ) return el.ltn;
+		if( el.dtnode ) return el.dtnode;
 		el = el.parentNode;
 	} while( iMax-- );
 	return null;
 }
 function fnClick(event) {
-//	var tn = event.target.parentNode.ltn;
+//	var tn = event.target.parentNode.dtnode;
 	var tn = _getNodeFromElement(event.target);
 	return tn.onClick(event);
 }
 
 function fnKeyHandler(event) {
 	// Handles keydown and keypressed, because IE and Safari don't fire keypress for cursor keys.
-//	var tn = event.target.parentNode.ltn;
+//	var tn = event.target.parentNode.dtnode;
 	var tn = _getNodeFromElement(event.target);
 	// ...but Firefox does, so ignore them:
 	if( event.type == "keypress" && event.charCode == 0 )
@@ -627,7 +627,7 @@ function fnKeyHandler(event) {
 
 function fnFocusHandler(event) {
 	// Handles blur and focus.
-//	var tn = event.target.parentNode.ltn;
+//	var tn = event.target.parentNode.dtnode;
 	var tn = _getNodeFromElement(event.target);
 	return tn.onFocus(event);
 }
@@ -638,7 +638,7 @@ function fnFocusHandlerIE() {
 //	alert (event.type + ": src=" + event.srcElement + ", to=" + event.toElement);
 //	var el = (event.type=="focusin") ? event.toElement : event.srcElement;
 //	var el = (event.toElement) ? event.toElement : event.srcElement;
-//	var tn = event.srcElement.parentNode.ltn;
+//	var tn = event.srcElement.parentNode.dtnode;
 	var tn = _getNodeFromElement(event.srcElement);
 	// TODO: use jQuery.event.fix() to make a compatible event object
 //	alert (event.type + ": " + tn);
