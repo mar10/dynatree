@@ -47,9 +47,9 @@ function logMsg (msg) {
 /*************************************************************************
  *	DynaTreeNode
  */
-var LTNodeStatus_Error   = -1;
-var LTNodeStatus_Loading = 1;
-var LTNodeStatus_Ok      = 0;
+var DTNodeStatus_Error   = -1;
+var DTNodeStatus_Loading = 1;
+var DTNodeStatus_Ok      = 0;
 
 var DynaTreeNode = Class.create();
 DynaTreeNode.prototype = {
@@ -231,7 +231,7 @@ DynaTreeNode.prototype = {
 
 	setLazyNodeStatus: function (lts) {
 		switch( lts ) {
-			case LTNodeStatus_Ok:
+			case DTNodeStatus_Ok:
 				this._setStatusNode(null);
 				this.bRead = true;
 				if( this === this.tree.tnRoot && this.tree.options.focusRoot 
@@ -242,13 +242,13 @@ DynaTreeNode.prototype = {
 					this.focus();
 				}
 				break;
-			case LTNodeStatus_Loading:
+			case DTNodeStatus_Loading:
 				this._setStatusNode({
 					title: this.tree.options.strings.loading,
 					icon: "ltWait.gif"
 				});
 				break;
-			case LTNodeStatus_Error:
+			case DTNodeStatus_Error:
 				this._setStatusNode({
 					title: this.tree.options.strings.loadError,
 					icon: "ltError.gif"
@@ -278,15 +278,15 @@ DynaTreeNode.prototype = {
 		// expanding a lazy node: set 'loading...' and call callback
 		if ( bExpand && this.data.isLazy && !this.bRead ) {
 			try {
-				this.setLazyNodeStatus(LTNodeStatus_Loading);
+				this.setLazyNodeStatus(DTNodeStatus_Loading);
 				if( true == this.tree.options.onLazyRead(this) ) {
 					// If function returns 'true', we assume that the loading is done:
-					this.setLazyNodeStatus(LTNodeStatus_Ok);
+					this.setLazyNodeStatus(DTNodeStatus_Ok);
 					// Otherwise (i.e. if the loading was started as an asynchronous process)
-					// the onLazyRead(tn) handler is expected to call tn.setLazyNodeStatus(LTNodeStatus_Ok/_Error) when done.
+					// the onLazyRead(tn) handler is expected to call tn.setLazyNodeStatus(DTNodeStatus_Ok/_Error) when done.
 				}
 			} catch(e) {
-				this.setLazyNodeStatus(LTNodeStatus_Error);
+				this.setLazyNodeStatus(DTNodeStatus_Error);
 			}
 			return;
 		}
@@ -364,7 +364,6 @@ DynaTreeNode.prototype = {
 
 		if( $(event.target).parent(".ui-dynatree-expander").length ) {
 			// Clicking the [+] icon always expands
-//			alert("Expander!");
 			this.toggleExpand();
 		} else if ( this.data.isFolder && this.tree.options.selectExpandsFolders && (this.aChilds || this.data.isLazy) ) {
 			// Clicking a non-empty folder, when selectExpandsFolders is on will expand
@@ -523,16 +522,16 @@ DynaTreeNode.prototype = {
 	},
 	
 	appendAjax: function(ajaxOptions) {
-		this.setLazyNodeStatus(LTNodeStatus_Loading);
+		this.setLazyNodeStatus(DTNodeStatus_Loading);
 		// Ajax option inheritance: $.ajaxSetup < $.ui.dynatree.defaults.ajaxDefaults < tree.options.ajaxDefaults < ajaxOptions
 		var self = this;
 		var ajaxOptions = $.extend({}, this.tree.options.ajaxDefaults, ajaxOptions, {
        		success: function(data, textStatus){
 				self.append(data);
-				self.setLazyNodeStatus(LTNodeStatus_Ok);
+				self.setLazyNodeStatus(DTNodeStatus_Ok);
        			},
        		error: function(XMLHttpRequest, textStatus, errorThrown){
-				self.setLazyNodeStatus(LTNodeStatus_Error);
+				self.setLazyNodeStatus(DTNodeStatus_Error);
        			}
 		});
        	$.ajax(ajaxOptions);
@@ -714,7 +713,7 @@ $.widget("ui.dynatree", {
 				if( opts.rootVisible ) {
 					root.focus();
 				} else if( root.aChilds.length > 0 && !opts.initAjax.url ) {
-					// Only if not lazy initing (Will be handled by setLazyNodeStatus(LTNodeStatus_Ok)) 
+					// Only if not lazy initing (Will be handled by setLazyNodeStatus(DTNodeStatus_Ok)) 
 					root.aChilds[0].focus();
 				}
 			}
