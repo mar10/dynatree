@@ -685,7 +685,8 @@ $.widget("ui.dynatree", {
 		} else {
 			// Init tree from the first UL element inside the container <div>
 			var $ul = $this.find(">ul").hide();
-			this.createFromTag(root, $this.find(">ul"));
+			this.createFromTag(root, $ul);
+			$ul.remove();
 		}
 		// bind event handlers
 		$this.bind("click", fnClick);
