@@ -9,8 +9,8 @@
 	<script src='../src/jquery.dynatree.js' type='text/javascript'></script>
 
 <script type='text/javascript'>
-function onTreeSelect (tn) {
-	alert ('You selected "'+tn.key+'"');
+function onTreeSelect (dtnode) {
+	alert ('You selected "'+dtnode.key+'"');
 }
 function initTree() {
 	var tree = new CLazyTree ('tree', 'Big Tree');

@@ -19,18 +19,18 @@
 //			initId: "tree2", // Read tree structure from this <ul> instead of "#tree > ul".
 //			children: [{title:"t1"}, {title:"t2"}],
 			autoCollapse: true,
-			onSelect: function(tn) {
-				$("#echoSelected").text(tn.data.title);
-				if( tn.data.url )
-					window.open(tn.data.url, tn.data.target);
+			onSelect: function(dtnode) {
+				$("#echoSelected").text(dtnode.data.title);
+				if( dtnode.data.url )
+					window.open(dtnode.data.url, dtnode.data.target);
 			},
-			onFocus: function(tn) {
-				$("#echoFocused").text(tn.data.title);
+			onFocus: function(dtnode) {
+				$("#echoFocused").text(dtnode.data.title);
 			},
-			onBlur: function(tn) {
+			onBlur: function(dtnode) {
 				$("#echoFocused").text("-");
 			},
-			onLazyRead: function(tn){
+			onLazyRead: function(dtnode){
 				var fakeJsonResult = [
 				    { title: 'Lazy node 1', isLazy: true },
 				    { title: 'Simple node 2' }
@@ -38,9 +38,9 @@
 //				alert ("Let's pretend we're using this AJAX response to load the branch:\n " + jsonResult);
 				function fakeAjaxResponse() {
 					return function() {
-						tn.append(fakeJsonResult);
+						dtnode.append(fakeJsonResult);
 						// Remove the 'loading...' status:
-						tn.setLazyNodeStatus(LTNodeStatus_Ok);
+						dtnode.setLazyNodeStatus(LTNodeStatus_Ok);
 					};
 				}
 				window.setTimeout(fakeAjaxResponse(), 1500);

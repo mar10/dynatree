@@ -14,9 +14,9 @@
 		// Attach the dynatree widget to an existing <div id="tree"> element
 		// and pass the tree options as an argument to the dynatree() function:
 		$("#tree").dynatree({
-			onSelect: function(tn) {
+			onSelect: function(dtnode) {
 				// A DynaTreeNode object is passed to the select handler
-				alert("You selected " + tn.data.title);
+				alert("You selected " + dtnode.data.title);
 			},
 			children: [
 				{title: "Item 1"},
