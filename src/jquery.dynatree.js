@@ -118,7 +118,6 @@ DynaTreeNode.prototype = {
 		}
 
 		if ( bHasLink )
-//				res += '<a href="#" onClick="parentNode.dtnode.toggleExpand();">';
 				res += '<a href="#" class="ui-dynatree-expander">';
 				 
 		if ( imgConnector )
@@ -142,32 +141,24 @@ DynaTreeNode.prototype = {
 		return res;
 	},
 
-	_createOrSetDomElement: function() {
-		if ( this.div==null ) {
+	render: function (bDeep, bHidden) {
+		/*
+			Called by
+		*/
+//		logMsg('render '+this.data.title+', expanded='+this.bExpanded + ', aChilds='+(this.aChilds?this.aChilds.length:'0'));
+		// --- create <div><span>..</span></div> tags for this node
+		if ( ! this.div ) {
+			logMsg('render: create '+this.data.title+', expanded='+this.bExpanded + ', aChilds='+(this.aChilds?this.aChilds.length:'0'));
 			this.div  = document.createElement ('div');
-			this.div.className = 'tnLevelN';
-
 			this.span = document.createElement ('span');
-			this.span.className = 'ltNode';
+			this.span.dtnode = this;
 			if( this.data.key )
 				this.span.id = this.tree.options.idPrefix + this.data.key;
-			this.span.dtnode = this;
-			this.div.appendChild ( this.span );
-		} else {
-			// simply replace existing span's inner html
-		}
-		return this.div;
-	},
+			this.span.className = ( this.data.isFolder ) ? this.tree.options.classnames.folder : this.span.className = this.tree.options.classnames.document;
 
-	render: function (bDeep, bHidden) {
-
-		// logMsg('render '+this.title+', expanded='+this.bExpanded + ', aChilds='+(this.aChilds?this.aChilds.length:'0'));
-		// --- create <div><span>..</span></div> tags for this node
-		if ( ! this.span ) {
-			this._createOrSetDomElement();
+			this.div.appendChild(this.span);
 			if ( this.parent )
-				this.parent.div.appendChild ( this.div );
-			this.span.className = ( this.data.isFolder ? this.tree.options.classnames.folder : this.tree.options.classnames.document );
+				this.parent.div.appendChild(this.div);
 		}
 		// hide root?
 		if ( this.parent==null )
@@ -259,9 +250,28 @@ DynaTreeNode.prototype = {
 		}
 	},
 
+	_parentList: function(includeRoot, includeSelf) {
+		var l = new Array();
+		var dtn = includeSelf ? this : this.parent;
+		while( dtn ) {
+			if( includeRoot || dtn.parent )
+				l.unshift(dtn);
+			dtn = dtn.parent;
+		};
+		return l;
+	},
+
+	makeVisible: function() {
+		var parents = this._parentList(true, true);
+		for(var i=0; i<parents.length; i++) 
+			parents[i]._expand(true);
+	},
+
 	select: function() {
 		if( this.tree.isDisabled || this.data.isStatusNode )
 			return;
+		this.makeVisible();
+		this.focus();
 		this.tree.tnSelected = this;
 		if ( this.tree.options.onSelect )
 			this.tree.options.onSelect(this);
@@ -291,7 +301,8 @@ DynaTreeNode.prototype = {
 			return;
 		}
 		// render expanded nodes
-		this.render (true, false);
+//		this.render (true, false);
+		this.render (true, true); // Issue #4
 		// we didn't render collapsed nodes, so we have to update the visibility of direct childs
 		if ( this.aChilds ) {
 			for (var i=0; i<this.aChilds.length; i++) {
@@ -475,7 +486,7 @@ DynaTreeNode.prototype = {
 	},
 
 	_addChildNode: function (tn) {
-		logMsg ('addChild '+tn);
+//		logMsg ('_addChildNode '+tn);
 		if ( this.aChilds==null )
 			this.aChilds = new Array();
 		this.aChilds.push (tn);
@@ -484,7 +495,9 @@ DynaTreeNode.prototype = {
 		if ( this.tree.options.expandOnAdd || ( (!this.tree.options.rootCollapsible || !this.tree.options.rootVisible) && this.parent==null ) )
 			this.bExpanded = true;
 		if ( this.tree.bEnableUpdate )
-			this.render (true, false);
+//			this.render (true, false);
+			this.render (true, true); // Issue #4
+			
 		return tn;
 	},
 
@@ -543,10 +556,12 @@ DynaTreeNode.prototype = {
 /*************************************************************************
  * class DynaTree
  */
+ 
 var DynaTree = Class.create();
+
 DynaTree.prototype = {
 	// static members
-	version: '0.3 alpha 3',
+//	version: '0.3 beta',
 	// constructor
 	initialize: function (id, options) {
 		logMsg ("DynaTree.initialize()");
@@ -564,41 +579,51 @@ DynaTree.prototype = {
 		this.tnRoot.data.isFolder   = true;
 		this.tnRoot.render(false, false);
 		this.divRoot   = this.tnRoot.div;
-//		this.divRoot.className = "lazyTree";
 		this.divRoot.className = this.options.classnames.container;
 		// add root to container
 		this.divTree.appendChild (this.divRoot);
 	},
+	
 	// member functions
+	
 	toString: function() {
 		return "DynaTree '" + this.options.title + "'";
 	},
+	
 	redraw: function() {
 		logMsg("redraw...");
-		this.tnRoot.render(true, false);
+//		this.tnRoot.render(true, false);
+		this.tnRoot.render(true, true); // issue #4
 		logMsg("redraw done.");
 	},
-	getRoot: function (tn) {
+	
+	getRoot: function() {
 		return this.tnRoot;
 	},
+	
 	getNodeByKey: function(key) {
-		var span = document.getElementById(this.options.idPrefix + key);
-		return span ? span.dtnode : null;
+		// $("#...") has problems, if the key contains '.', so we use getElementById()
+//		return $("#" + this.options.idPrefix + key).attr("dtnode");
+		var el = document.getElementById(this.options.idPrefix + key);
+		return ( el && el.dtnode ) ? el.dtnode : null;
 	},
+	
 	selectKey: function(key) {
-		tn = this.getNodeByKey(key);
-		if( tn ) {
-			tn.focus();
-			tn.select();
-		};
+		var dtnode = this.getNodeByKey(key);
+		if( !dtnode )
+			return null;
+//		dtnode.focus();
+		dtnode.select();
+		return dtnode;
 	},
-	enableUpdate: function (bEnable) {
+	
+	enableUpdate: function(bEnable) {
 		if ( this.bEnableUpdate==bEnable )
 			return bEnable;
 		this.bEnableUpdate = bEnable;
 		if ( bEnable )
 			this.redraw();
-		return !bEnable; // return prev. value
+		return !bEnable; // return previous value
 	},
 	// --- end of class
 	lastentry: undefined
@@ -618,6 +643,7 @@ function _getNodeFromElement(el) {
 	} while( iMax-- );
 	return null;
 }
+
 function fnClick(event) {
 	var tn = _getNodeFromElement(event.target);
 	return tn.onClick(event);
