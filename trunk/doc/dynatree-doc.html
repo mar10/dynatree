@@ -53,14 +53,14 @@
 <p>
 	Dynatree is a JavaScript dynamic tree view plugin for <a href="http://jquery.com" target="_blank">jQuery</a> with support for lazy loading of branches.<br>
 	Main features:
-	<ul>
-		<li>Open source (<a href="http://www.opensource.org/licenses/mit-license.php" target="_blank">MIT-License</a>)
-		<li>Programmable through an object oriented interface.
-		<li>Support for lazy loading and Ajax.
-		<li>Keyboard aware.
-		<li>Initializes from html code or JavaScript objects.
-	</ul>
 </p>
+<ul>
+	<li>Open source (<a href="http://www.opensource.org/licenses/mit-license.php" target="_blank">MIT-License</a>)
+	<li>Programmable through an object oriented interface.
+	<li>Support for lazy loading and Ajax.
+	<li>Keyboard aware.
+	<li>Initializes from html code or JavaScript objects.
+</ul>
 
 <!-- jquery.planize will generate a TOC here: -->
 <div id="toc">
@@ -210,13 +210,13 @@ $("#tree").dynatree({
 
 <p>
 	<strong>Details:</strong>
-	<dl class="optionList">
-		<dt>&#8230;
-		<dd>
-			&#8230;
-		</dd>
-	</dl>
 </p>
+<dl class="optionList">
+	<dt>&#8230;
+	<dd>
+		&#8230;
+	</dd>
+</dl>
 
 
 <h3>Initializing the tree structure</h3>
@@ -230,7 +230,8 @@ $("#tree").dynatree({
 </p>
 <p>
 	Dynatree reads the structure in different ways:
-	<ol>
+</p>
+<ol>
 	<li>If the <code>children</code> option is passed, it will be used.
 	<li>Otherwise, if the <code>initAjax</code> option is passed, it will be used.
 	<li>Otherwise, if the <code>initId</code> option is passed, it will be used.
@@ -238,7 +239,8 @@ $("#tree").dynatree({
 	it will be used.
 	<li>Otherwise, the tree is left empty.<br>
 		But we may choose to do so, if we want to modify the tree programmatically.
-	</ol>
+</ol>
+<p>
 	All theses methods expect a list of node options, as described in the following 
 	sections.
 </p>
@@ -285,46 +287,46 @@ onSelect: function(dtnode) {
 
 <p>
 	<strong>Details:</strong>
-	<dl class="optionList">
-		<dt>title
-		<dd>
-			Type: string, default: "".<br>
-			Displayed name of the node (html markup is allowed here).
-		</dd>
-		<dt>key
-		<dd>
-			&#8230;
-		</dd>
-		<dt>isFolder
-		<dd>
-			When a node is of type <i>folder</i>, it get's a special folder icon and class name.<br>
-			Also, folders can be expanded, but not selected. So we usually use them to hold child nodes.<br>
-			Note that also non-folders ('documents') may contain child nodes.<br>
-			Clicking on a child node selects it, so we have to click the small [+] icon in front to expand such a document node.
-		</dd>
-		<dt>isLazy
-		<dd>
-			Set this to true, if the node  
-		</dd>
-		<dt>exand
-		<dd>
-			&#8230;
-		</dd>
-		<dt>tooltip
-		<dd>
-			&#8230;
-		</dd>
-		<dt>icon
-		<dd>
-			&#8230;
-		</dd>
-		<dt>children
-		<dd>
-			Array of node options, that are used to generate child nodes.<br>
-			This option is only valid when passed to certain functions, like <code>DynTreeNode.append()</code>.
-		</dd>
-	</dl>
 </p>
+<dl class="optionList">
+	<dt>title
+	<dd>
+		Type: string, default: "".<br>
+		Displayed name of the node (html markup is allowed here).
+	</dd>
+	<dt>key
+	<dd>
+		&#8230;
+	</dd>
+	<dt>isFolder
+	<dd>
+		When a node is of type <i>folder</i>, it get's a special folder icon and class name.<br>
+		Also, folders can be expanded, but not selected. So we usually use them to hold child nodes.<br>
+		Note that also non-folders ('documents') may contain child nodes.<br>
+		Clicking on a child node selects it, so we have to click the small [+] icon in front to expand such a document node.
+	</dd>
+	<dt>isLazy
+	<dd>
+		Set this to true, if the node  
+	</dd>
+	<dt>exand
+	<dd>
+		&#8230;
+	</dd>
+	<dt>tooltip
+	<dd>
+		&#8230;
+	</dd>
+	<dt>icon
+	<dd>
+		&#8230;
+	</dd>
+	<dt>children
+	<dd>
+		Array of node options, that are used to generate child nodes.<br>
+		This option is only valid when passed to certain functions, like <code>DynTreeNode.append()</code>.
+	</dd>
+</dl>
 
 
 <h4>Initializing the tree structure from an object array</h4>
@@ -566,11 +568,11 @@ $("#tree").dynatree({
 </p>
 <p>
 	We have to
-	<ul>
+</p>
+<ul>
 	<li>Mark some or all nodes as lazy, by setting the isLazy option to true.
 	<li>Implement the onLazyRead callback to send an Ajax request, create the child nodes, and set the 'ok' status.
-	</ul>
-</p>
+</ul>
 
 <div class="codesample">
 <a href="sample-events.html" target="_blank">Try this example...</a>
@@ -608,25 +610,30 @@ $("#tree").dynatree({
 
 <p>
 	<strong>DynaTree class members</strong>
-	<dl class="optionList">
-		<dt>getRoot()
-		<dd>
-			Return the root DynaTreeNode object.  
-		</dd>
-		<dt>getNodeByKey(key)
-		<dd>
-			Return DynaTreeNode with a given key or 'null' if not found.  
-		</dd>
-		<dt>selectKey(key)
-		<dd>
-			Select node with a given key. All parents will be expanded as 
-			necessary and focus and select events are fired.<br>
-			Return the selected DynaTreeNode.
-		</dd>
-	</dl>
 </p>
+<dl class="optionList">
+	<dt>getRoot()
+	<dd>
+		Return the root DynaTreeNode object.  
+	</dd>
+	<dt>getNodeByKey(key)
+	<dd>
+		Return DynaTreeNode with a given key or 'null' if not found.  
+	</dd>
+	<dt>getSelectedNode()
+	<dd>
+		Return the currently selected DynaTreeNode or null.
+	</dd>
+	<dt>selectKey(key)
+	<dd>
+		Select node with a given key. All parents will be expanded as 
+		necessary and focus and select events are fired.<br>
+		Return the selected DynaTreeNode.
+	</dd>
+</dl>
+
 <p>
-Examples for selecting a node with key '1234':
+	Examples for selecting a node with key '1234':
 </p>
 <pre class="prettyprint">
 $("#tree").dynatree("getTree").selectKey("1234");
@@ -637,36 +644,45 @@ $("#ui-dynatree-id-1234").attr("dtnode").select();
 </pre>
 
 <p>
-	<strong>DynaTreeNode class members</strong>
-	<dl class="optionList">
-		<dt>setLazyNodeStatus(status)
-		<dd>
-		</dd>
-		<dt>select()
-		<dd>
-		</dd>
-		<dt>focus()
-		<dd>
-		</dd>
-		<dt>toggleExpand()
-		<dd>
-		</dd>
-		<dt>append(nodeArray)
-		<dd>
-			Accepts a node or an array of nodes to create child nodes.<br>
-			The nodes may contain a <code>children</code> option to build a hierarchy.<br>
-			Returns the new DynaTree object (or the first one, if an array was passed). 
-		</dd>
-		<dt>appendAjax(ajaxOptions)
-		<dd>
-			Accepts a standard jQuery Ajax option object.<br>
-			An asynchronous request is started, so this function returns immediately.
-			While loading, a spinning wheel is displayed.
-			On error, a red dummy node is displayed. 
-			The request handler must return a node list as JSON object.  
-		</dd>
-	</dl>
+	Access the currently selected node:
 </p>
+<pre class="prettyprint">
+var dtnode = $("#tree").dynatree("getSelectedNode");
+if( dtnode )
+	alert("Currently selected: " + dtnode.data.title);
+</pre>
+
+<p>
+	<strong>DynaTreeNode class members</strong>
+</p>
+<dl class="optionList">
+	<dt>setLazyNodeStatus(status)
+	<dd>
+	</dd>
+	<dt>select()
+	<dd>
+	</dd>
+	<dt>focus()
+	<dd>
+	</dd>
+	<dt>toggleExpand()
+	<dd>
+	</dd>
+	<dt>append(nodeArray)
+	<dd>
+		Accepts a node or an array of nodes to create child nodes.<br>
+		The nodes may contain a <code>children</code> option to build a hierarchy.<br>
+		Returns the new DynaTree object (or the first one, if an array was passed). 
+	</dd>
+	<dt>appendAjax(ajaxOptions)
+	<dd>
+		Accepts a standard jQuery Ajax option object.<br>
+		An asynchronous request is started, so this function returns immediately.
+		While loading, a spinning wheel is displayed.
+		On error, a red dummy node is displayed. 
+		The request handler must return a node list as JSON object.  
+	</dd>
+</dl>
 
 
 <h2>Theming and translation</h2>
@@ -731,13 +747,13 @@ $("#tree").dynatree({
 
 <p>
 	First of all: this is work in progess, and still alpha.<br>
-	<ul>
+</p>
+<ul>
 	<li>A <a href="http://groups.google.com/group/dynatree">discussion forum</a> is in place to ask questions or discuss features.
 	<li>Use the <a href="http://code.google.com/p/dynatree/issues/list">Issue Tracker</a> to get a list of known bugs, or vote for a feature.<br>
 		Please make sure you searched the group and issue tracker, before adding a new request.
 	<li>You may also contact me directly at <u>martin at_sign wwWendt.de</u>.
-	</ul
-</p>
+</ul>
 
 </body>
 </html>
