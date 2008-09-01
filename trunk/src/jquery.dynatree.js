@@ -662,23 +662,11 @@ function fnKeyHandler(event) {
 
 function fnFocusHandler(event) {
 	// Handles blur and focus.
+	// Fix event for IE:
+	event = arguments[0] = jQuery.event.fix( event || window.event );
 	var dtnode = _getNodeFromElement(event.target);
 	return dtnode.onFocus(event);
 }
-
-function fnFocusHandlerIE() {
-	// Handles blur and focus.
-	var event = window.event;
-//	alert (event.type + ": src=" + event.srcElement + ", to=" + event.toElement);
-//	var el = (event.type=="focusin") ? event.toElement : event.srcElement;
-//	var el = (event.toElement) ? event.toElement : event.srcElement;
-//	var dtnode = event.srcElement.parentNode.dtnode;
-	var dtnode = _getNodeFromElement(event.srcElement);
-	// TODO: use jQuery.event.fix() to make a compatible event object
-//	alert (event.type + ": " + dtnode);
-	return dtnode.onFocus(event);
-}
-
 
 $.widget("ui.dynatree", {
 	init: function() {
@@ -735,7 +723,7 @@ $.widget("ui.dynatree", {
 				div.addEventListener("focus", fnFocusHandler, true);
 				div.addEventListener("blur", fnFocusHandler, true);
 			} else {
-				div.onfocusin = div.onfocusout = fnFocusHandlerIE;
+				div.onfocusin = div.onfocusout = fnFocusHandler;
 			}
 			if( opts.focusRoot ) {
 				if( opts.rootVisible ) {
