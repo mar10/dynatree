@@ -20,17 +20,21 @@
 //			children: [{title:"t1"}, {title:"t2"}],
 			autoCollapse: true,
 			onSelect: function(dtnode) {
+				logMsg("onSelect: %o, this=%o", dtnode, this);
 				$("#echoSelected").text(dtnode.data.title);
 				if( dtnode.data.url )
 					window.open(dtnode.data.url, dtnode.data.target);
 			},
 			onFocus: function(dtnode) {
+				logMsg("onFocus: %o, this=%o", dtnode, this);
 				$("#echoFocused").text(dtnode.data.title);
 			},
 			onBlur: function(dtnode) {
+				logMsg("onBlur: %o, this=%o", dtnode, this);
 				$("#echoFocused").text("-");
 			},
 			onLazyRead: function(dtnode){
+				logMsg("onLazyRead: %o, this=%o", dtnode, this);
 				var fakeJsonResult = [
 				    { title: 'Lazy node 1', isLazy: true },
 				    { title: 'Simple node 2' }
@@ -48,6 +52,7 @@
 		});
 
 		$("#btnAddCode").click(function(){
+			logMsg("click: this=%o", this);
 			// Sample: add an hierarchic branch using code.
 			// This is how we would add tree nodes programatically
 			var rootNode = $("#tree").dynatree("getRoot");

@@ -34,13 +34,15 @@ var Class = {
  */
 var _bDebug = true;
 
-function logMsg (msg) {
+function logMsg(msg) {
+	// Usage: logMsg("%o was toggled", this);
+	// See http://michaelsync.net/2007/09/09/firebug-tutorial-logging-profiling-and-commandline-part-i
+	// for details (logInfo, logWarning, logGroup, ...)
 	if ( _bDebug  && window.console && window.console.log ) {
-		//	window.console && console.log("%o was toggled", this);
-		// see http://michaelsync.net/2007/09/09/firebug-tutorial-logging-profiling-and-commandline-part-i
 		var dt = new Date();
 		var tag = dt.getHours()+':'+dt.getMinutes()+':'+dt.getSeconds()+'.'+dt.getMilliseconds();
-		window.console.log(tag + " - " + msg);
+		arguments[0] = tag + " - " + arguments[0];
+		window.console.log.apply(this, arguments);
 	}
 }
 
@@ -279,8 +281,9 @@ DynaTreeNode.prototype = {
 			return;
 		this.focus();
 		this.tree.tnSelected = this;
-		if ( this.tree.options.onSelect )
-			this.tree.options.onSelect(this);
+		if ( this.tree.options.onSelect ) // Pass element as 'this' (jQuery convention)
+			this.tree.options.onSelect.call(this.span, this);
+//			this.tree.options.onSelect(this);
 	},
 
 	_expand: function (bExpand) {
@@ -291,7 +294,8 @@ DynaTreeNode.prototype = {
 		if ( bExpand && this.data.isLazy && !this.bRead ) {
 			try {
 				this.setLazyNodeStatus(DTNodeStatus_Loading);
-				if( true == this.tree.options.onLazyRead(this) ) {
+//				if( true == this.tree.options.onLazyRead(this) ) {
+				if( true == this.tree.options.onLazyRead.call(this.span, this) ) {
 					// If function returns 'true', we assume that the loading is done:
 					this.setLazyNodeStatus(DTNodeStatus_Ok);
 					// Otherwise (i.e. if the loading was started as an asynchronous process)
@@ -374,7 +378,7 @@ DynaTreeNode.prototype = {
 			.keyCode:   left:37, right:39, up:38 , down: 40, <Enter>:13
 			. currentTargte: div#tree
 		*/
-		logMsg(event.type + ": tn:" + this + ", charCode:" + event.charCode + ", keyCode: " + event.keyCode + ", " + event.which);
+		logMsg(event.type + ": dtnode:" + this + ", charCode:" + event.charCode + ", keyCode: " + event.keyCode + ", which: " + event.which);
 		var code = ( ! event.charCode ) ? 1000+event.keyCode : event.charCode;
 		var handled = true;
 
@@ -447,13 +451,13 @@ DynaTreeNode.prototype = {
 		// Handles blur and focus events.
 		logMsg(event.type + ": tn:" + this);
 		if ( event.type=="blur" || event.type=="focusout" ) {
-			if ( this.tree.options.onBlur )
-				this.tree.options.onBlur(this);
+			if ( this.tree.options.onBlur ) // Pass element as 'this' (jQuery convention)
+				this.tree.options.onBlur.call(this.span, this);
 			this.tree.tnFocused = null;
 		} else if ( event.type=="focus" || event.type=="focusin") {
 			this.tree.tnFocused = this;
-			if ( this.tree.options.onFocus )
-				this.tree.options.onFocus(this);
+			if ( this.tree.options.onFocus ) // Pass element as 'this' (jQuery convention)
+				this.tree.options.onFocus.call(this.span, this);
 		}
 		// TODO: return anything?
 //		return false;
