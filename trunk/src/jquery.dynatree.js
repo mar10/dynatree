@@ -359,7 +359,11 @@ DynaTreeNode.prototype = {
 		if( $(event.target).parent(".ui-dynatree-expander").length ) {
 			// Clicking the [+] icon always expands
 			this.toggleExpand();
-		} else if ( this.data.isFolder && this.tree.options.selectExpandsFolders && (this.aChilds || this.data.isLazy) ) {
+		} else if ( this.data.isFolder 
+			&& this.tree.options.selectExpandsFolders 
+			&& (this.aChilds || this.data.isLazy) 
+			&& (this.parent != null || this.tree.options.rootCollapsible)
+			) {
 			// Clicking a non-empty folder, when selectExpandsFolders is on will expand
 			this.toggleExpand();
 		} else if ( !this.data.isFolder ) {
