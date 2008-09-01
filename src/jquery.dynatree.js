@@ -42,7 +42,11 @@ function logMsg(msg) {
 		var dt = new Date();
 		var tag = dt.getHours()+':'+dt.getMinutes()+':'+dt.getSeconds()+'.'+dt.getMilliseconds();
 		arguments[0] = tag + " - " + arguments[0];
-		window.console.log.apply(this, arguments);
+		try {
+			// Safari gets here, but fails
+			window.console.log.apply(this, arguments);
+		} catch(e) {
+		}
 	}
 }
 
@@ -280,10 +284,12 @@ DynaTreeNode.prototype = {
 		if( this.tree.isDisabled || this.data.isStatusNode )
 			return;
 		this.focus();
+		if( this.tree.tnSelected )
+			$(this.tree.tnSelected.span).removeClass(this.tree.options.classnames.selected);
 		this.tree.tnSelected = this;
+		$(this.tree.tnSelected.span).addClass(this.tree.options.classnames.selected);
 		if ( this.tree.options.onSelect ) // Pass element as 'this' (jQuery convention)
 			this.tree.options.onSelect.call(this.span, this);
-//			this.tree.options.onSelect(this);
 	},
 
 	_expand: function (bExpand) {
@@ -294,7 +300,6 @@ DynaTreeNode.prototype = {
 		if ( bExpand && this.data.isLazy && !this.bRead ) {
 			try {
 				this.setLazyNodeStatus(DTNodeStatus_Loading);
-//				if( true == this.tree.options.onLazyRead(this) ) {
 				if( true == this.tree.options.onLazyRead.call(this.span, this) ) {
 					// If function returns 'true', we assume that the loading is done:
 					this.setLazyNodeStatus(DTNodeStatus_Ok);
@@ -454,11 +459,14 @@ DynaTreeNode.prototype = {
 		if ( event.type=="blur" || event.type=="focusout" ) {
 			if ( this.tree.options.onBlur ) // Pass element as 'this' (jQuery convention)
 				this.tree.options.onBlur.call(this.span, this);
+			if( this.tree.tnFocused )
+				$(this.tree.tnFocused.span).removeClass(this.tree.options.classnames.focused);
 			this.tree.tnFocused = null;
 		} else if ( event.type=="focus" || event.type=="focusin") {
 			this.tree.tnFocused = this;
 			if ( this.tree.options.onFocus ) // Pass element as 'this' (jQuery convention)
 				this.tree.options.onFocus.call(this.span, this);
+			$(this.tree.tnFocused.span).addClass(this.tree.options.classnames.focused);
 		}
 		// TODO: return anything?
 //		return false;
