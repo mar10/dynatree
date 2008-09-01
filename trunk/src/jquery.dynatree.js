@@ -63,12 +63,12 @@ DynaTreeNode.prototype = {
 		} else {
 			this.data = $.extend({}, $.ui.dynatree.nodedatadefaults, data);
 		}
-		this.parent  = null; // not yet added to a parent
-		this.div     = null; // not yet created
-		this.span    = null; // not yet created
+		this.parent = null; // not yet added to a parent
+		this.div = null; // not yet created
+		this.span = null; // not yet created
 		this.aChilds = null; // no subnodes yet
 		this.bRead = false; // Lazy content not yet read
-		this.bExpanded   = false; // Collapsed by default
+		this.bExpanded = false; // Collapsed by default
 	},
 
 	toString: function() {
@@ -299,7 +299,7 @@ DynaTreeNode.prototype = {
 					// If function returns 'true', we assume that the loading is done:
 					this.setLazyNodeStatus(DTNodeStatus_Ok);
 					// Otherwise (i.e. if the loading was started as an asynchronous process)
-					// the onLazyRead(tn) handler is expected to call tn.setLazyNodeStatus(DTNodeStatus_Ok/_Error) when done.
+					// the onLazyRead(dtnode) handler is expected to call dtnode.setLazyNodeStatus(DTNodeStatus_Ok/_Error) when done.
 				}
 			} catch(e) {
 				this.setLazyNodeStatus(DTNodeStatus_Error);
@@ -349,7 +349,7 @@ DynaTreeNode.prototype = {
 			.buton: 0
 			. currentTargte: div#tree
 		*/
-		logMsg(event.type + ": tn:" + this + ", button:" + event.button + ", which: " + event.which);
+		logMsg(event.type + ": dtnode:" + this + ", button:" + event.button + ", which: " + event.which);
 
 		if( $(event.target).parent(".ui-dynatree-expander").length ) {
 			// Clicking the [+] icon always expands
@@ -394,6 +394,7 @@ DynaTreeNode.prototype = {
 				//~ break;
 			//~ case 47: // '/'
 				//~ break;
+			case 1032: // <space>
 			case 32: // <space>
 				this.select();
 				break;
@@ -449,7 +450,7 @@ DynaTreeNode.prototype = {
 
 	onFocus: function(event) {
 		// Handles blur and focus events.
-		logMsg(event.type + ": tn:" + this);
+		logMsg(event.type + ": dtnode:" + this);
 		if ( event.type=="blur" || event.type=="focusout" ) {
 			if ( this.tree.options.onBlur ) // Pass element as 'this' (jQuery convention)
 				this.tree.options.onBlur.call(this.span, this);
@@ -481,12 +482,12 @@ DynaTreeNode.prototype = {
 	},
 */
 
-	_addChildNode: function (tn) {
-//		logMsg ('_addChildNode '+tn);
+	_addChildNode: function (dtnode) {
+//		logMsg ('_addChildNode '+dtnode);
 		if ( this.aChilds==null )
 			this.aChilds = new Array();
-		this.aChilds.push (tn);
-		tn.parent = this;
+		this.aChilds.push (dtnode);
+		dtnode.parent = this;
 
 		if ( this.tree.options.expandOnAdd || ( (!this.tree.options.rootCollapsible || !this.tree.options.rootVisible) && this.parent==null ) )
 			this.bExpanded = true;
@@ -494,12 +495,12 @@ DynaTreeNode.prototype = {
 //			this.render (true, false);
 			this.render (true, true); // Issue #4
 			
-		return tn;
+		return dtnode;
 	},
 
 	_addNode: function(data) {
-		var tn = new DynaTreeNode (this.tree, data);
-		return this._addChildNode(tn);
+		var dtnode = new DynaTreeNode (this.tree, data);
+		return this._addChildNode(dtnode);
 	},
 
 	append: function(obj) {
@@ -521,11 +522,11 @@ DynaTreeNode.prototype = {
 		var tnFirst = null;
 		for (var i=0; i<obj.length; i++) {
 			var data = obj[i];
-			var tn = this._addNode(data);
-			if( !tnFirst ) tnFirst = tn;
+			var dtnode = this._addNode(data);
+			if( !tnFirst ) tnFirst = dtnode;
 			if( data.children )
 				for(var j=0; j<data.children.length; j++)
-					tn.append(data.children[j]);
+					dtnode.append(data.children[j]);
 		}
 		return tnFirst;
 	},
@@ -646,23 +647,23 @@ function _getNodeFromElement(el) {
 }
 
 function fnClick(event) {
-	var tn = _getNodeFromElement(event.target);
-	return tn.onClick(event);
+	var dtnode = _getNodeFromElement(event.target);
+	return dtnode.onClick(event);
 }
 
 function fnKeyHandler(event) {
 	// Handles keydown and keypressed, because IE and Safari don't fire keypress for cursor keys.
-	var tn = _getNodeFromElement(event.target);
+	var dtnode = _getNodeFromElement(event.target);
 	// ...but Firefox does, so ignore them:
 	if( event.type == "keypress" && event.charCode == 0 )
 		return;
-	return tn.onKeypress(event);
+	return dtnode.onKeypress(event);
 }
 
 function fnFocusHandler(event) {
 	// Handles blur and focus.
-	var tn = _getNodeFromElement(event.target);
-	return tn.onFocus(event);
+	var dtnode = _getNodeFromElement(event.target);
+	return dtnode.onFocus(event);
 }
 
 function fnFocusHandlerIE() {
@@ -671,11 +672,11 @@ function fnFocusHandlerIE() {
 //	alert (event.type + ": src=" + event.srcElement + ", to=" + event.toElement);
 //	var el = (event.type=="focusin") ? event.toElement : event.srcElement;
 //	var el = (event.toElement) ? event.toElement : event.srcElement;
-//	var tn = event.srcElement.parentNode.dtnode;
-	var tn = _getNodeFromElement(event.srcElement);
+//	var dtnode = event.srcElement.parentNode.dtnode;
+	var dtnode = _getNodeFromElement(event.srcElement);
 	// TODO: use jQuery.event.fix() to make a compatible event object
-//	alert (event.type + ": " + tn);
-	return tn.onFocus(event);
+//	alert (event.type + ": " + dtnode);
+	return dtnode.onFocus(event);
 }
 
 
