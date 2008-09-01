@@ -1,7 +1,7 @@
 .ui-dynatree-container
 {
 	font-family: tahoma, arial, helvetica;
-	font-size: smaller;
+	font-size: 10pt; /*smaller;*/
 
 	line-height: 0;
 
@@ -9,8 +9,7 @@
 
 	padding: 3;
 	background-color: white; 
-/*	border: 1px dotted black; */
-	border: 1px dashed gray;
+	border: 1px dotted gray;
 }
 
 .ui-dynatree-container a,
@@ -20,38 +19,45 @@
 	color: black;
 	outline: 0; /* @ Firefox, prevent dotted border after click */
 }
-
 .ui-dynatree-container a:hover
 {
 	text-decoration: underline;
 }
-.ui-dynatree-container a:focus
-{
-	text-decoration: none;
-/*	background-color: Gray; */
-	border: dashed 1px black;
-}
 .ui-dynatree-container a:active
 {
 	text-decoration: none;
-	background-color: Gray;
 }
+
+.ui-dynatree-container a:focus
+{
+	text-decoration: none;
+	background-color: #3169C6;
+	color: white;
+	border: dotted 1px black;
+}
+
 .ui-dynatree-container img
 {
 	border-width: 0;
-/*	width: 16;
-	height: 16;*/
+	width: 16;
+	height: 16;
 }
-.tnLevelN
-{
-}
+
 .ui-dynatree-folder
 {
 	font-weight: bold;
-	color: graytext;
-	vertical-align: middle;
-/*	background-color:#DDDDDD;
-	padding: 0;
-	margin: 0;
-	border-width: 0;*/
+}
+
+.ui-dynatree-selected
+{
+/*	background-color: #EFEBDE; /* gray */
+}
+.ui-dynatree-selected a
+{
+	background-color: #EFEBDE; /* gray */
+}
+.ui-dynatree-focused
+{
+/*	background-color: #3169C6; /* blue */
+/*	border: 1px dotted white; */ 
 }
