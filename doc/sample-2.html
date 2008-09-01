@@ -16,8 +16,6 @@
 		$("#tree").dynatree({
 			title: "Sample 2",
 			rootVisible: true,
-//			initId: "tree2", // Read tree structure from this <ul> instead of "#tree > ul".
-//			children: [{title:"t1"}, {title:"t2"}],
 			autoCollapse: true,
 			onSelect: function(dtnode) {
 				$("#echoSelected").text(dtnode.data.title);

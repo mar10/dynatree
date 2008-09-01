@@ -1,9 +1,9 @@
 .ui-dynatree-container
 {
 	font-family: tahoma, arial, helvetica;
-	font-size: 10pt; /*smaller;*/
 
-	line-height: 0;
+	font-size: 10px; /*smaller;*/
+	line-height: 10px;
 
 	white-space: nowrap;
 
@@ -13,7 +13,8 @@
 }
 
 .ui-dynatree-container a,
-.ui-dynatree-container a:visited
+.ui-dynatree-container a:visited,
+.ui-dynatree-container a:active
 {
 	text-decoration: none;
 	color: black;
@@ -22,10 +23,6 @@
 .ui-dynatree-container a:hover
 {
 	text-decoration: underline;
-}
-.ui-dynatree-container a:active
-{
-	text-decoration: none;
 }
 
 .ui-dynatree-container a:focus
