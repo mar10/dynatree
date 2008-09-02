@@ -6,6 +6,10 @@ ul {
 	list-style-type: square;
 }
 
+div.hint {
+	font-size: smaller;
+}
+
 div.codesample {
 	border: thin solid gray;
 }
