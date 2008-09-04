@@ -660,12 +660,16 @@ function _getNodeFromElement(el) {
 
 function fnClick(event) {
 	var dtnode = _getNodeFromElement(event.target);
+	if( !dtnode )
+		return false; 
 	return dtnode.onClick(event);
 }
 
 function fnKeyHandler(event) {
 	// Handles keydown and keypressed, because IE and Safari don't fire keypress for cursor keys.
 	var dtnode = _getNodeFromElement(event.target);
+	if( !dtnode )
+		return false; 
 	// ...but Firefox does, so ignore them:
 	if( event.type == "keypress" && event.charCode == 0 )
 		return;
@@ -677,6 +681,8 @@ function fnFocusHandler(event) {
 	// Fix event for IE:
 	event = arguments[0] = jQuery.event.fix( event || window.event );
 	var dtnode = _getNodeFromElement(event.target);
+	if( !dtnode )
+		return false; 
 	return dtnode.onFocus(event);
 }
 
