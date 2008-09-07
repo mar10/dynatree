@@ -8,9 +8,9 @@
 	A current version and some documentation should be available at
 		http://dynatree.googlecode.com/
 
-	Let me know, if you find bugs or improvements (martin [@] wwWendt.de).
+	Let me know, if you find bugs or improvements (martin at domain wwWendt.de).
 	
-	$Rev$
+	$Rev:$
 	$Date$
 
  	@depends: jquery.js
@@ -155,7 +155,7 @@ DynaTreeNode.prototype = {
 //		logMsg('render '+this.data.title+', expanded='+this.bExpanded + ', aChilds='+(this.aChilds?this.aChilds.length:'0'));
 		// --- create <div><span>..</span></div> tags for this node
 		if ( ! this.div ) {
-			logMsg('render: create '+this.data.title+', expanded='+this.bExpanded + ', aChilds='+(this.aChilds?this.aChilds.length:'0'));
+//			logMsg('render: create '+this.data.title+', expanded='+this.bExpanded + ', aChilds='+(this.aChilds?this.aChilds.length:'0'));
 			this.div  = document.createElement ('div');
 			this.span = document.createElement ('span');
 			this.span.dtnode = this;
