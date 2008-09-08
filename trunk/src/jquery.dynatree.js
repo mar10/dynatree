@@ -10,7 +10,7 @@
 
 	Let me know, if you find bugs or improvements (martin at domain wwWendt.de).
 	
-	$Rev:$
+	$Rev$
 	$Date$
 
  	@depends: jquery.js
@@ -530,7 +530,11 @@ DynaTreeNode.prototype = {
 		A simple object is also accepted instead of an array.
 		*/
 		if( !obj ) return;
-		if( !obj.length ) return this._addNode(obj);
+		if( !obj.length ) // Passed a single node 
+			return this._addNode(obj);
+		
+		var prevFlag = this.tree.enableUpdate(false);
+
 		var tnFirst = null;
 		for (var i=0; i<obj.length; i++) {
 			var data = obj[i];
@@ -540,6 +544,7 @@ DynaTreeNode.prototype = {
 				for(var j=0; j<data.children.length; j++)
 					dtnode.append(data.children[j]);
 		}
+		this.tree.enableUpdate(prevFlag);
 		return tnFirst;
 	},
 	
