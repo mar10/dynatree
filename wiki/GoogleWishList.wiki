@@ -20,8 +20,6 @@ target=_blank
   * Issues
     * Why can't I edit issues? Not even the topic.
     (There could be an automatic blog entry 'Issue edited')
-    * Easy way to see the number of votes (peopled that starred the issue)
-    (Could be a column)
 
 Learnt things:
   * auto markup for issues: Issue #31
