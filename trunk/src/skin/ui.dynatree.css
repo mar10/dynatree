@@ -5,9 +5,9 @@ div.ui-dynatree-container
 	/*
 
 	white-space: nowrap;
-
-	padding: 3px;
 */
+	padding: 3px;
+
 	background-color: white; 
 	border: 1px dotted gray;
 }
@@ -20,7 +20,8 @@ div.ui-dynatree-container
 	color: black;
 	outline: 0; /* @ Firefox, prevent dotted border after click */
 	padding-bottom: 3px;
-	vertical-align: middle;
+	padding: 0 3 0 3;
+	vertical-align: text-top;
 }
 .ui-dynatree-container a:hover
 {
@@ -61,11 +62,10 @@ div.ui-dynatree-container
 
 .ui-dynatree-selected
 {
-	border: 1px solid green;
 }
 .ui-dynatree-selected a
 {
-	background-color: #EFEBDE; /* gray */
+	background-color: #DFDBCE; /* gray */
 }
 .ui-dynatree-focused
 {
