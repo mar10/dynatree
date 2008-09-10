@@ -21,6 +21,7 @@
  *	Common functions for extending classes etc.
  *	Borrowed from prototype.js
  */
+// TODO: remove Class
 var Class = {
 	create: function() {
 		return function() {
@@ -80,15 +81,6 @@ DynaTreeNode.prototype = {
 	},
 
 	getInnerHtml: function() {
-		// TODO: cache tags
-		var ip = this.tree.options.imagePath;
-
-		this.tagFld    = '<img src="' + ip + 'ltFld.gif" alt="" />';
-		this.tagFld_o  = '<img src="' + ip + 'ltFld_o.gif" alt="" />';
-		this.tagDoc    = '<img src="' + ip + 'ltDoc.gif" alt="" />';
-		this.tagL_ns   = '<img src="' + ip + 'ltL_ns.gif" alt="|" />';
-		this.tagL_     = '<img src="' + ip + 'ltL_.gif" alt="" />';
-
 		var res = '';
 
 		// parent connectors
@@ -98,7 +90,7 @@ DynaTreeNode.prototype = {
 		var p = this.parent;
 		while ( p ) {
 			if ( ! (bHideFirstConnector && p.parent==null ) )
-				res = ( p.isLastSibling() ? this.tagL_ : this.tagL_ns) + res ;
+				res = ( p.isLastSibling() ? this.tree.tagL_ : this.tree.tagL_ns) + res ;
 			p = p.parent;
 		}
 
@@ -125,7 +117,7 @@ DynaTreeNode.prototype = {
 		}
 
 		if ( bHasLink )
-				res += '<a href="#" class="ui-dynatree-expander">';
+			res += '<a href="#" class="ui-dynatree-expander">'; // TODO: classname should be in options
 				 
 		if ( imgConnector )
 			res += '<img src="' + this.tree.options.imagePath + imgConnector + '.gif" alt="' + imgAlt + '" />'
@@ -136,9 +128,9 @@ DynaTreeNode.prototype = {
    		if ( this.data && this.data.icon ) {
     		res += '<img src="' + ip + this.data.icon + '" alt="" />';
 		} else if ( this.data.isFolder ) {
-	    	res += ( this.bExpanded ? this.tagFld_o : this.tagFld );
+	    	res += ( this.bExpanded ? this.tree.tagFld_o : this.tree.tagFld );
 		} else {
-	    	res += this.tagDoc;
+	    	res += this.tree.tagDoc;
 		}
 		res += '&nbsp;';
 
@@ -586,6 +578,13 @@ DynaTree.prototype = {
 		this.bEnableUpdate = true;
 		this.isDisabled = false;
 
+		// Cached tags
+		this.tagFld    = '<img src="' + options.imagePath + 'ltFld.gif" alt="" />';
+		this.tagFld_o  = '<img src="' + options.imagePath + 'ltFld_o.gif" alt="" />';
+		this.tagDoc    = '<img src="' + options.imagePath + 'ltDoc.gif" alt="" />';
+		this.tagL_ns   = '<img src="' + options.imagePath + 'ltL_ns.gif" alt="|" />';
+		this.tagL_     = '<img src="' + options.imagePath + 'ltL_.gif" alt="" />';
+		
 		// find container element
 		this.divTree   = document.getElementById (id);
 		// create the root element
@@ -700,11 +699,6 @@ $.widget("ui.dynatree", {
 		var $this = this.element;
 		var opts = this.options;
 
-		// Attach the tree object to parent element
-		var id = $this.attr("id");
-		this.tree = new DynaTree(id, opts);
-		var root = this.tree.getRoot()
-
 		// Guess skin path, if not specified
 		if(!opts.imagePath) {
 			$("script").each( function () {
@@ -714,6 +708,11 @@ $.widget("ui.dynatree", {
 				}
 			});
 		}
+		// Attach the tree object to parent element
+		var id = $this.attr("id");
+		this.tree = new DynaTree(id, opts);
+		var root = this.tree.getRoot()
+
 		// Init tree structure
 		if( opts.children ) {
 			// Read structure from node array
