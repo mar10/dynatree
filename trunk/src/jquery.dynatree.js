@@ -97,32 +97,37 @@ DynaTreeNode.prototype = {
 		// connector (expanded, expandable or simple
 		var imgConnector = null;
 		var imgAlt = '';
-		var bHasLink = true;
+//		var bHasLink = true;
+		var connectorClass = "class='" + this.tree.options.classnames.expander + "' ";
 		if ( bHideFirstConnector && bIsRoot  ) {
 			// skip connector
 			imgConnector = null;
-			bHasLink = false;
+//			bHasLink = false;
+			connectorClass = "";
 		} else if ( this.aChilds && this.bExpanded  ) {
 			imgConnector = ( this.isLastSibling() ? 'ltM_ne' : 'ltM_nes' );
-			imgAlt = '-';
+			imgAlt = '[-]';
 		} else if (this.aChilds) {
 			imgConnector = ( this.isLastSibling() ? 'ltP_ne' : 'ltP_nes' );
-			imgAlt = '+';
+			imgAlt = '[+]';
 		} else if (this.data.isLazy) {
 			imgConnector = ( this.isLastSibling() ? 'ltD_ne' : 'ltD_nes' );
-			imgAlt = '?';
+			imgAlt = '[?]';
 		} else {
 			imgConnector = ( this.isLastSibling() ? 'ltL_ne' : 'ltL_nes' );
-			bHasLink = false;
+			imgAlt = ' + ';
+//			bHasLink = false;
+			connectorClass = "";
 		}
 
-		if ( bHasLink )
-			res += '<a href="#" class="ui-dynatree-expander">'; // TODO: classname should be in options
-				 
+//		if ( bHasLink )
+//			res += '<a href="#" class="ui-dynatree-expander">'; 
 		if ( imgConnector )
-			res += '<img src="' + this.tree.options.imagePath + imgConnector + '.gif" alt="' + imgAlt + '" />'
-		if ( bHasLink )
-			res += '</a>';
+			res += "<img src='" + this.tree.options.imagePath + imgConnector 
+				+ ".gif' alt='" + imgAlt 
+				+ "' " + connectorClass + "/>"
+//		if ( bHasLink )
+//			res += '</a>';
 
 		// folder or doctype icon
    		if ( this.data && this.data.icon ) {
@@ -582,8 +587,8 @@ DynaTree.prototype = {
 		this.tagFld    = '<img src="' + options.imagePath + 'ltFld.gif" alt="" />';
 		this.tagFld_o  = '<img src="' + options.imagePath + 'ltFld_o.gif" alt="" />';
 		this.tagDoc    = '<img src="' + options.imagePath + 'ltDoc.gif" alt="" />';
-		this.tagL_ns   = '<img src="' + options.imagePath + 'ltL_ns.gif" alt="|" />';
-		this.tagL_     = '<img src="' + options.imagePath + 'ltL_.gif" alt="" />';
+		this.tagL_ns   = '<img src="' + options.imagePath + 'ltL_ns.gif" alt=" | " />';
+		this.tagL_     = '<img src="' + options.imagePath + 'ltL_.gif" alt="   " />';
 		
 		// find container element
 		this.divTree   = document.getElementById (id);
@@ -858,6 +863,7 @@ $.ui.dynatree.defaults = {
 	},
 	classnames: {
 		container: "ui-dynatree-container",
+		expander: "ui-dynatree-expander",
 		hidden: "ui-dynatree-hidden",
 //		nav: "ui-dynatree-nav", // Hidden when printed or
 		disabled: "ui-dynatree-disabled",
