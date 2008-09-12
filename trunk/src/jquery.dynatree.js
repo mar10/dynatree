@@ -31,9 +31,10 @@ var Class = {
 }
 
 /*************************************************************************
- *	Debug funcions
+ *	Debug functions
  */
-var _bDebug = true;
+var _bDebug = false;
+//_bDebug = true;
 
 function logMsg(msg) {
 	// Usage: logMsg("%o was toggled", this);
@@ -271,6 +272,12 @@ DynaTreeNode.prototype = {
 		if ( this.bExpanded == bExpand )
 			return;
 		this.bExpanded = bExpand;
+		// Auto-collapse mode: collapse all siblings
+		if ( this.bExpanded && this.parent && this.tree.options.autoCollapse ) {
+			var parents = this._parentList(false, true);
+			for(var i=0; i<parents.length; i++) 
+				parents[i].collapseSiblings();
+		}
 		// Expanding a lazy node: set 'loading...' and call callback
 		if ( bExpand && this.data.isLazy && !this.bRead ) {
 			try {
@@ -285,12 +292,6 @@ DynaTreeNode.prototype = {
 				this.setLazyNodeStatus(DTNodeStatus_Error);
 			}
 			return;
-		}
-		// Auto-collapse mode: collapse all siblings
-		if ( this.bExpanded && this.parent && this.tree.options.autoCollapse ) {
-			var parents = this._parentList(false, true);
-			for(var i=0; i<parents.length; i++) 
-				parents[i].collapseSiblings();
 		}
 		// render expanded nodes
 //		this.render (true, false);
