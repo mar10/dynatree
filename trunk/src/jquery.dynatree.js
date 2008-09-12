@@ -88,56 +88,34 @@ DynaTreeNode.prototype = {
 		var bHideFirstConnector = ( !this.tree.options.rootVisible || !this.tree.options.rootCollapsible );
 
 		var p = this.parent;
+		var cache = this.tree.cache;
 		while ( p ) {
 			if ( ! (bHideFirstConnector && p.parent==null ) )
-				res = ( p.isLastSibling() ? this.tree.tagL_ : this.tree.tagL_ns) + res ;
+				res = ( p.isLastSibling() ? cache.tagL_ : cache.tagL_ns) + res ;
 			p = p.parent;
 		}
 
-		// connector (expanded, expandable or simple
-		var imgConnector = null;
-		var imgAlt = '';
-//		var bHasLink = true;
-		var connectorClass = "class='" + this.tree.options.classnames.expander + "' ";
+		// connector (expanded, expandable or simple)
 		if ( bHideFirstConnector && bIsRoot  ) {
 			// skip connector
-			imgConnector = null;
-//			bHasLink = false;
-			connectorClass = "";
 		} else if ( this.aChilds && this.bExpanded  ) {
-			imgConnector = ( this.isLastSibling() ? 'ltM_ne' : 'ltM_nes' );
-			imgAlt = '[-]';
+			res += ( this.isLastSibling() ? cache.tagM_ne : cache.tagM_nes );
 		} else if (this.aChilds) {
-			imgConnector = ( this.isLastSibling() ? 'ltP_ne' : 'ltP_nes' );
-			imgAlt = '[+]';
+			res += ( this.isLastSibling() ? cache.tagP_ne : cache.tagP_nes );
 		} else if (this.data.isLazy) {
-			imgConnector = ( this.isLastSibling() ? 'ltD_ne' : 'ltD_nes' );
-			imgAlt = '[?]';
+			res += ( this.isLastSibling() ? cache.tagD_ne : cache.tagD_nes );
 		} else {
-			imgConnector = ( this.isLastSibling() ? 'ltL_ne' : 'ltL_nes' );
-			imgAlt = ' + ';
-//			bHasLink = false;
-			connectorClass = "";
+			res += ( this.isLastSibling() ? cache.tagL_ne : cache.tagL_nes );
 		}
-
-//		if ( bHasLink )
-//			res += '<a href="#" class="ui-dynatree-expander">'; 
-		if ( imgConnector )
-			res += "<img src='" + this.tree.options.imagePath + imgConnector 
-				+ ".gif' alt='" + imgAlt 
-				+ "' " + connectorClass + "/>"
-//		if ( bHasLink )
-//			res += '</a>';
-
 		// folder or doctype icon
    		if ( this.data && this.data.icon ) {
-    		res += '<img src="' + ip + this.data.icon + '" alt="" />';
+    		res += '<img src="' + this.tree.options.imagePath + this.data.icon + '" alt="" />';
 		} else if ( this.data.isFolder ) {
-	    	res += ( this.bExpanded ? this.tree.tagFld_o : this.tree.tagFld );
+	    	res += ( this.bExpanded ? cache.tagFld_o : cache.tagFld );
 		} else {
-	    	res += this.tree.tagDoc;
+	    	res += cache.tagDoc;
 		}
-		res += '&nbsp;';
+//		res += '&nbsp;';
 
 		// node name
 		var tooltip = ( this.data && typeof this.data.tooltip == 'string' ) ? ' title="' + this.data.tooltip + '"' : '';
@@ -326,6 +304,7 @@ DynaTreeNode.prototype = {
 	},
 
 	toggleExpand: function() {
+		// TODO: this should fix the current focus, if neccessary
 		logMsg('toggleExpand('+this.data.title+')...');
 		this._expand ( ! this.bExpanded);
 		logMsg('toggleExpand('+this.data.title+') done.');
@@ -353,7 +332,8 @@ DynaTreeNode.prototype = {
 		*/
 		logMsg(event.type + ": dtnode:" + this + ", button:" + event.button + ", which: " + event.which);
 
-		if( $(event.target).parent(".ui-dynatree-expander").length ) {
+//		if( $(event.target).parent(".ui-dynatree-expander").length ) {
+		if( $(event.target).hasClass(this.tree.options.classnames.expander) ) {
 			// Clicking the [+] icon always expands
 			this.toggleExpand();
 		} else if ( this.data.isFolder 
@@ -361,13 +341,13 @@ DynaTreeNode.prototype = {
 			&& (this.aChilds || this.data.isLazy) 
 			&& (this.parent != null || this.tree.options.rootCollapsible)
 			) {
-			// Clicking a non-empty folder, when selectExpandsFolders is on will expand
+			// Clicking a non-empty folder, when selectExpandsFolders is on, will expand
 			this.toggleExpand();
 		} else if ( !this.data.isFolder ) {
 			// Clicking a document will select it
 			this.select();
 		} else {
-			// Folders cannot be selected
+			// Folders cannot be selected TODO: really?
 		}
 		// Make sure that clicks stop
 		return false;
@@ -584,12 +564,22 @@ DynaTree.prototype = {
 		this.isDisabled = false;
 
 		// Cached tags
-		this.tagFld    = '<img src="' + options.imagePath + 'ltFld.gif" alt="" />';
-		this.tagFld_o  = '<img src="' + options.imagePath + 'ltFld_o.gif" alt="" />';
-		this.tagDoc    = '<img src="' + options.imagePath + 'ltDoc.gif" alt="" />';
-		this.tagL_ns   = '<img src="' + options.imagePath + 'ltL_ns.gif" alt=" | " />';
-		this.tagL_     = '<img src="' + options.imagePath + 'ltL_.gif" alt="   " />';
-		
+		this.cache = {
+			tagFld: "<img src='" + options.imagePath + "ltFld.gif' alt='' />",
+			tagFld_o: "<img src='" + options.imagePath + "ltFld_o.gif' alt='' />",
+			tagDoc: "<img src='" + options.imagePath + "ltDoc.gif' alt='' />",
+			tagL_ns: "<img src='" + options.imagePath + "ltL_ns.gif' alt=' | ' />",
+			tagL_: "<img src='" + options.imagePath + "ltL_.gif' alt='   ' />",
+			tagL_ne: "<img src='" + options.imagePath + "ltL_ne.gif' alt=' + ' />",
+			tagL_nes: "<img src='" + options.imagePath + "ltL_nes.gif' alt=' + ' />",
+			tagM_ne: "<img src='" + options.imagePath + "ltM_ne.gif' alt='[-]' class='" + options.classnames.expander + "'/>",
+			tagM_nes: "<img src='" + options.imagePath + "ltM_nes.gif' alt='[-]' class='" + options.classnames.expander + "'/>",
+			tagP_ne: "<img src='" + options.imagePath + "ltP_ne.gif' alt='[+]' class='" + options.classnames.expander + "'/>",
+			tagP_nes: "<img src='" + options.imagePath + "ltP_nes.gif' alt='[+]' class='" + options.classnames.expander + "'/>",
+			tagD_ne: "<img src='" + options.imagePath + "ltD_ne.gif' alt='[?]' class='" + options.classnames.expander + "'/>",
+			tagD_nes: "<img src='" + options.imagePath + "ltD_nes.gif' alt='[?]' class='" + options.classnames.expander + "'/>"
+		};
+
 		// find container element
 		this.divTree   = document.getElementById (id);
 		// create the root element
