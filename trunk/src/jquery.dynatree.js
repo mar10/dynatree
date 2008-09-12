@@ -269,6 +269,7 @@ DynaTreeNode.prototype = {
 		if( this.tree.isDisabled || this.data.isStatusNode )
 			return;
 //		this.focus();
+		this.makeVisible();
 		if( this.tree.tnSelected )
 			$(this.tree.tnSelected.span).removeClass(this.tree.options.classnames.selected);
 		this.tree.tnSelected = this;
@@ -436,10 +437,14 @@ DynaTreeNode.prototype = {
 				var sib;
 				if( this.bExpanded ) {
 					sib = this.aChilds[0];
-				} else if( this.parent && this.isLastSibling() ) {
-					sib = this.parent.nextSibling();
 				} else {
-					sib = this.nextSibling();
+					var parents = this._parentList(false, true);
+					logMsg("DOWN, parents=%o", parents);
+					for(var i=parents.length-1; i>=0; i--) { 
+						sib = parents[i].nextSibling();
+						logMsg("  i=%i, sib=%o", i, sib);
+						if( sib ) break;
+					}
 				}
 				if( sib ) sib.focus();
 				break;
