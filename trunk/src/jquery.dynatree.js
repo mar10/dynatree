@@ -34,7 +34,7 @@ var Class = {
  *	Debug functions
  */
 var _bDebug = false;
-//_bDebug = true;
+_bDebug = true;
 
 function logMsg(msg) {
 	// Usage: logMsg("%o was toggled", this);
@@ -116,7 +116,6 @@ DynaTreeNode.prototype = {
 		} else {
 	    	res += cache.tagDoc;
 		}
-//		res += '&nbsp;';
 
 		// node name
 		var tooltip = ( this.data && typeof this.data.tooltip == 'string' ) ? ' title="' + this.data.tooltip + '"' : '';
@@ -162,7 +161,7 @@ DynaTreeNode.prototype = {
 	isLastSibling: function() {
 		var p = this.parent;
 		if ( !p ) return true;
-		return p.aChilds[p.aChilds.length-1] == this;
+		return p.aChilds[p.aChilds.length-1] === this;
 	},
 
 	prevSibling: function() {
@@ -244,6 +243,14 @@ DynaTreeNode.prototype = {
 		return l;
 	},
 
+	isVisible: function() {
+		// Return true, if all parents are expanded.
+		var parents = this._parentList(true, false);
+		for(var i=0; i<parents.length; i++) 
+			if( parents[i].bExpanded ) return false;
+		return true;
+	},
+
 	makeVisible: function() {
 		// Make sure, all parents are expanded
 		var parents = this._parentList(true, false);
@@ -252,14 +259,16 @@ DynaTreeNode.prototype = {
 	},
 
 	focus: function() {
+		logMsg("dtnode.focus(): %o", this);
 		this.makeVisible();
 		$(this.span).find(">a").focus();
 	},
 
 	select: function() {
+		logMsg("dtnode.select(): %o", this);
 		if( this.tree.isDisabled || this.data.isStatusNode )
 			return;
-		this.focus();
+//		this.focus();
 		if( this.tree.tnSelected )
 			$(this.tree.tnSelected.span).removeClass(this.tree.options.classnames.selected);
 		this.tree.tnSelected = this;
@@ -269,6 +278,7 @@ DynaTreeNode.prototype = {
 	},
 
 	_expand: function (bExpand) {
+		logMsg("dtnode._expand(%s): %o", bExpand, this);
 		if ( this.bExpanded == bExpand )
 			return;
 		this.bExpanded = bExpand;
@@ -278,6 +288,10 @@ DynaTreeNode.prototype = {
 			for(var i=0; i<parents.length; i++) 
 				parents[i].collapseSiblings();
 		}
+		// If current focus is now hidden, focus the first visible parent.
+		if ( ! this.bExpanded && ! this.isVisible() ) 
+			this.focus();
+		//  
 		// Expanding a lazy node: set 'loading...' and call callback
 		if ( bExpand && this.data.isLazy && !this.bRead ) {
 			try {
@@ -331,7 +345,8 @@ DynaTreeNode.prototype = {
 			.buton: 0
 			. currentTargte: div#tree
 		*/
-		logMsg(event.type + ": dtnode:" + this + ", button:" + event.button + ", which: " + event.which);
+//		logMsg("dtnode.onClick(%o)", event);
+		logMsg("dtnode.onClick(" + event.type + "): dtnode:" + this + ", button:" + event.button + ", which: " + event.which);
 
 //		if( $(event.target).parent(".ui-dynatree-expander").length ) {
 		if( $(event.target).hasClass(this.tree.options.classnames.expander) ) {
@@ -350,6 +365,9 @@ DynaTreeNode.prototype = {
 		} else {
 			// Folders cannot be selected TODO: really?
 		}
+
+		this.focus();
+		
 		// Make sure that clicks stop
 		return false;
 	},
@@ -365,7 +383,7 @@ DynaTreeNode.prototype = {
 			.keyCode:   left:37, right:39, up:38 , down: 40, <Enter>:13
 			. currentTargte: div#tree
 		*/
-		logMsg(event.type + ": dtnode:" + this + ", charCode:" + event.charCode + ", keyCode: " + event.keyCode + ", which: " + event.which);
+		logMsg("dtnode.onKeyPress(" + event.type + "): dtnode:" + this + ", charCode:" + event.charCode + ", keyCode: " + event.keyCode + ", which: " + event.which);
 		var code = ( ! event.charCode ) ? 1000+event.keyCode : event.charCode;
 		var handled = true;
 
@@ -437,7 +455,7 @@ DynaTreeNode.prototype = {
 
 	onFocus: function(event) {
 		// Handles blur and focus events.
-		logMsg(event.type + ": dtnode:" + this);
+		logMsg("dtnode.onFocus(%o): %o", event, this);
 		if ( event.type=="blur" || event.type=="focusout" ) {
 			if ( this.tree.options.onBlur ) // Pass element as 'this' (jQuery convention)
 				this.tree.options.onBlur.call(this.span, this);
@@ -445,6 +463,11 @@ DynaTreeNode.prototype = {
 				$(this.tree.tnFocused.span).removeClass(this.tree.options.classnames.focused);
 			this.tree.tnFocused = null;
 		} else if ( event.type=="focus" || event.type=="focusin") {
+			// Fix: sometimes the blur event is not generated
+			if( this.tree.tnFocused && this.tree.tnFocused !== this ) { 
+				logMsg("onFocus: out of sync: curFocus: %o", this.tree.tnFocused);
+				$(this.tree.tnFocused.span).removeClass(this.tree.options.classnames.focused);
+			}
 			this.tree.tnFocused = this;
 			if ( this.tree.options.onFocus ) // Pass element as 'this' (jQuery convention)
 				this.tree.options.onFocus.call(this.span, this);
@@ -681,6 +704,7 @@ function fnFocusHandler(event) {
 	// Fix event for IE:
 	event = arguments[0] = jQuery.event.fix( event || window.event );
 	var dtnode = _getNodeFromElement(event.target);
+//	logMsg("fnFocusHandler(%o), dtnode=%o", event, dtnode);
 	if( !dtnode )
 		return false; 
 	return dtnode.onFocus(event);
