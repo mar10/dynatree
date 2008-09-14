@@ -259,13 +259,13 @@ DynaTreeNode.prototype = {
 	},
 
 	focus: function() {
-		logMsg("dtnode.focus(): %o", this);
+//		logMsg("dtnode.focus(): %o", this);
 		this.makeVisible();
 		$(this.span).find(">a").focus();
 	},
 
 	select: function() {
-		logMsg("dtnode.select(): %o", this);
+//		logMsg("dtnode.select(): %o", this);
 		if( this.tree.isDisabled || this.data.isStatusNode )
 			return;
 //		this.focus();
@@ -279,7 +279,7 @@ DynaTreeNode.prototype = {
 	},
 
 	_expand: function (bExpand) {
-		logMsg("dtnode._expand(%s): %o", bExpand, this);
+//		logMsg("dtnode._expand(%s): %o", bExpand, this);
 		if ( this.bExpanded == bExpand )
 			return;
 		this.bExpanded = bExpand;
@@ -346,8 +346,7 @@ DynaTreeNode.prototype = {
 			.buton: 0
 			. currentTargte: div#tree
 		*/
-//		logMsg("dtnode.onClick(%o)", event);
-		logMsg("dtnode.onClick(" + event.type + "): dtnode:" + this + ", button:" + event.button + ", which: " + event.which);
+//		logMsg("dtnode.onClick(" + event.type + "): dtnode:" + this + ", button:" + event.button + ", which: " + event.which);
 
 //		if( $(event.target).parent(".ui-dynatree-expander").length ) {
 		if( $(event.target).hasClass(this.tree.options.classnames.expander) ) {
@@ -384,7 +383,7 @@ DynaTreeNode.prototype = {
 			.keyCode:   left:37, right:39, up:38 , down: 40, <Enter>:13
 			. currentTargte: div#tree
 		*/
-		logMsg("dtnode.onKeyPress(" + event.type + "): dtnode:" + this + ", charCode:" + event.charCode + ", keyCode: " + event.keyCode + ", which: " + event.which);
+//		logMsg("dtnode.onKeyPress(" + event.type + "): dtnode:" + this + ", charCode:" + event.charCode + ", keyCode: " + event.keyCode + ", which: " + event.which);
 		var code = ( ! event.charCode ) ? 1000+event.keyCode : event.charCode;
 		var handled = true;
 
@@ -439,10 +438,8 @@ DynaTreeNode.prototype = {
 					sib = this.aChilds[0];
 				} else {
 					var parents = this._parentList(false, true);
-					logMsg("DOWN, parents=%o", parents);
 					for(var i=parents.length-1; i>=0; i--) { 
 						sib = parents[i].nextSibling();
-						logMsg("  i=%i, sib=%o", i, sib);
 						if( sib ) break;
 					}
 				}
@@ -460,7 +457,7 @@ DynaTreeNode.prototype = {
 
 	onFocus: function(event) {
 		// Handles blur and focus events.
-		logMsg("dtnode.onFocus(%o): %o", event, this);
+//		logMsg("dtnode.onFocus(%o): %o", event, this);
 		if ( event.type=="blur" || event.type=="focusout" ) {
 			if ( this.tree.options.onBlur ) // Pass element as 'this' (jQuery convention)
 				this.tree.options.onBlur.call(this.span, this);
@@ -470,7 +467,7 @@ DynaTreeNode.prototype = {
 		} else if ( event.type=="focus" || event.type=="focusin") {
 			// Fix: sometimes the blur event is not generated
 			if( this.tree.tnFocused && this.tree.tnFocused !== this ) { 
-				logMsg("onFocus: out of sync: curFocus: %o", this.tree.tnFocused);
+				logMsg("dtnode.onFocus: out of sync: curFocus: %o", this.tree.tnFocused);
 				$(this.tree.tnFocused.span).removeClass(this.tree.options.classnames.focused);
 			}
 			this.tree.tnFocused = this;
@@ -727,9 +724,10 @@ $.widget("ui.dynatree", {
 		// Guess skin path, if not specified
 		if(!opts.imagePath) {
 			$("script").each( function () {
-				if(this.src.toString().match(/jquery.dynatree.js$/)) {
-					opts.imagePath = this.src.toString().replace("jquery.dynatree.js", "skin/");
-					logMsg("Fixed imagePath: " + opts.imagePath);
+				if( this.src.search(/.*dynatree[^/]*\.js$/i) >= 0 ) {
+					opts.imagePath = this.src.slice(0, this.src.lastIndexOf("/")) + "/skin/";
+					logMsg("Guessing imagePath from '%s': '%s'", this.src, opts.imagePath);
+					return false; // first match
 				}
 			});
 		}
