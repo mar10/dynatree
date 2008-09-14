@@ -22,6 +22,9 @@
 				if( dtnode.data.url )
 					window.open(dtnode.data.url, dtnode.data.target);
 			},
+			onUnselect: function(dtnode) {
+				$("#echoSelected").text("-");
+			},
 			onFocus: function(dtnode) {
 				$("#echoFocused").text(dtnode.data.title);
 			},
@@ -81,7 +84,10 @@
 
 		$("#btnShowSelected").click(function(){
 			var dtnode = $("#tree").dynatree("getSelectedNode");
-			alert("Currently selected: " + dtnode.data.title);
+			if( dtnode )
+				alert("Currently selected: " + dtnode.data.title);
+			else
+				alert("Nothing selected.");
 		});
 	});
 </script>
