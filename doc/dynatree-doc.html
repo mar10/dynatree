@@ -191,6 +191,7 @@ $("#tree").dynatree({
 	initId: null, // Init tree structure from a <ul> element with this ID.
 	initAjax: null, // Ajax options used to initialize the tree strucuture.
 	onSelect: null, // Callback when a node is selected.
+	onUnselect: null, // Callback when a node is deselected.
 	onLazyRead: null, // Callback when a lazy node is expanded for the first time.
 	onFocus: null, // Callback when a node receives keyboard focus.
 	onBlur: null, // Callback when a node looses focus.
@@ -539,6 +540,9 @@ $("#tree").dynatree({
 			window.open(dtnode.data.url);
 		$("#echoSelected").text(dtnode.data.title);
 	},
+	onUnselect: function(dtnode) {
+		$("#echoSelected").text("-");
+	},
 	[&#8230;]
 });
 </pre>
@@ -637,8 +641,9 @@ $("#tree").dynatree({
 	</dd>
 	<dt>selectKey(key)
 	<dd>
-		Select node with a given key. All parents will be expanded as 
+		Select and focus node with a given key. All parents will be expanded as 
 		necessary and focus and select events are fired.<br>
+		If key is null, the current selection is removed.<br>
 		Return the selected DynaTreeNode.
 	</dd>
 </dl>
@@ -681,9 +686,12 @@ if( dtnode )
 	</dd>
 	<dt>select()
 	<dd>
+		Selects this node.
 	</dd>
 	<dt>focus()
 	<dd>
+		Sets focus to this node. Parent nodes are expanded, if this is necessary 
+		to make it visible.
 	</dd>
 	<dt>toggleExpand()
 	<dd>

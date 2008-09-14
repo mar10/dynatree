@@ -247,7 +247,7 @@ DynaTreeNode.prototype = {
 		// Return true, if all parents are expanded.
 		var parents = this._parentList(true, false);
 		for(var i=0; i<parents.length; i++) 
-			if( parents[i].bExpanded ) return false;
+			if( ! parents[i].bExpanded ) return false;
 		return true;
 	},
 
@@ -265,17 +265,31 @@ DynaTreeNode.prototype = {
 	},
 
 	select: function() {
+		// Select - but not focus - this node.
 //		logMsg("dtnode.select(): %o", this);
 		if( this.tree.isDisabled || this.data.isStatusNode )
 			return;
-//		this.focus();
-		this.makeVisible();
-		if( this.tree.tnSelected )
-			$(this.tree.tnSelected.span).removeClass(this.tree.options.classnames.selected);
+		if( this.tree.tnSelected ) {
+			if( this.tree.tnSelected === this )
+				return;
+			this.tree.tnSelected.unselect();
+		}
+		if( this.tree.options.selectionVisible )
+			this.makeVisible();
 		this.tree.tnSelected = this;
-		$(this.tree.tnSelected.span).addClass(this.tree.options.classnames.selected);
+		$(this.span).addClass(this.tree.options.classnames.selected);
 		if ( this.tree.options.onSelect ) // Pass element as 'this' (jQuery convention)
 			this.tree.options.onSelect.call(this.span, this);
+	},
+
+	unselect: function() {
+//		logMsg("dtnode.unselect(): %o", this);
+		$(this.span).removeClass(this.tree.options.classnames.selected);
+		if( this.tree.tnSelected === this ) {
+			this.tree.tnSelected = null;
+			if ( this.tree.options.onUnselect )
+				this.tree.options.onUnselect.call(this.span, this);
+		}
 	},
 
 	_expand: function (bExpand) {
@@ -290,9 +304,16 @@ DynaTreeNode.prototype = {
 				parents[i].collapseSiblings();
 		}
 		// If current focus is now hidden, focus the first visible parent.
-		if ( ! this.bExpanded && ! this.isVisible() ) 
+		// TODO: doesn't make sense here(?) we should check if the currently focused node (not <this>) is visible.
+		// At the moment, _expand gets only called, after focus was set to <this>.
+		if ( ! this.bExpanded && ! this.isVisible() ) { 
+			logMsg("Focus became invisible: setting to this.");
 			this.focus();
-		//  
+		}
+		// If current selection is now hidden, unselect it  
+		if( this.tree.options.selectionVisible && this.tree.tnSelected && ! this.tree.tnSelected.isVisible() ) {
+			this.tree.tnSelected.unselect();
+		}
 		// Expanding a lazy node: set 'loading...' and call callback
 		if ( bExpand && this.data.isLazy && !this.bRead ) {
 			try {
@@ -309,8 +330,7 @@ DynaTreeNode.prototype = {
 			return;
 		}
 		// render expanded nodes
-//		this.render (true, false);
-		this.render (true, false); // Issue #4
+		this.render (true, false);
 		// we didn't render collapsed nodes, so we have to update the visibility of direct childs
 		if ( this.aChilds ) {
 			for (var i=0; i<this.aChilds.length; i++) {
@@ -320,7 +340,6 @@ DynaTreeNode.prototype = {
 	},
 
 	toggleExpand: function() {
-		// TODO: this should fix the current focus, if neccessary
 		logMsg('toggleExpand('+this.data.title+')...');
 		this._expand ( ! this.bExpanded);
 		logMsg('toggleExpand('+this.data.title+') done.');
@@ -625,10 +644,9 @@ DynaTree.prototype = {
 	},
 	
 	redraw: function() {
-		logMsg("redraw...");
-//		this.tnRoot.render(true, false);
-		this.tnRoot.render(true, true); // issue #4
-		logMsg("redraw done.");
+		logMsg("dynatree.redraw()...");
+		this.tnRoot.render(true, true);
+		logMsg("dynatree.redraw() done.");
 	},
 	
 	getRoot: function() {
@@ -652,6 +670,7 @@ DynaTree.prototype = {
 			this.tnSelected = null;
 			return null;
 		}
+		dtnode.focus();
 		dtnode.select();
 		return dtnode;
 	},
@@ -853,23 +872,20 @@ $.ui.dynatree.defaults = {
 	title: "Dynatree root", // Name of the root node.
 	rootVisible: false, // Set to true, to make the root node visible.
 	rootCollapsible: false, // Prevent root node from being collapsed.
-// 	minExpandLevel: 1, // Instead of rootCollapsible
 	imagePath: null, // Path to a folder containing icons. Defaults to 'skin/' subdirectory.
 	children: null, // Init tree structure from this object array.
 	initId: null, // Init tree structure from a <ul> element with this ID.
 	initAjax: null, // Ajax options used to initialize the tree strucuture.
 	onSelect: null, // Callback when a node is selected.
+	onUnselect: null, // Callback when a node is deselected.
 	onLazyRead: null, // Callback when a lazy node is expanded for the first time.
 	onFocus: null, // Callback when a node receives keyboard focus.
 	onBlur: null, // Callback when a node looses focus.
 	focusRoot: true, // Set focus to root node on init.
 	keyboard: true, // Support keyboard navigation.
-//	expandLevel: 1, // Expand all branches until level i (set to 0 to )
 	autoCollapse: false, // Automatically collapse all siblings, when a node is expanded.
 	expandOnAdd: false, // Automatically expand parent, when a child is added.
 	selectExpandsFolders: true, // Clicking a folder title expands the folder, instead of selecting it.
-//	persist: "cookie",
-//	fx: null, // Animations, e.g. { height: 'toggle', opacity: 'toggle', duration: 200 }
 	idPrefix: 'ui-dynatree-id-', // Used to generate node id's like <span id="ui-dynatree-id-<key>">.
 	ajaxDefaults: { // Used by initAjax option
 		cache: false, // Append random '_' argument to url to prevent caching.
@@ -883,7 +899,6 @@ $.ui.dynatree.defaults = {
 		container: "ui-dynatree-container",
 		expander: "ui-dynatree-expander",
 		hidden: "ui-dynatree-hidden",
-//		nav: "ui-dynatree-nav", // Hidden when printed or
 		disabled: "ui-dynatree-disabled",
 		selected: "ui-dynatree-selected",
 		folder: "ui-dynatree-folder",
@@ -892,11 +907,17 @@ $.ui.dynatree.defaults = {
 		loading: "ui-dynatree-loading"
 	},
 	debugLevel: 0,
+	// Experimental:
+	selectionVisible: true, // Make sure, selected nodes are visible (expanded).
+// 	minExpandLevel: 1, // Instead of rootCollapsible
+//	expandLevel: 1, // Expand all branches until level i (set to 0 to )
+//	persist: "cookie",
+//	fx: null, // Animations, e.g. { height: 'toggle', opacity: 'toggle', duration: 200 }
 
 	// ### copied from ui.tabs
 	// basic setup
 //	cookie: null, // e.g. { expires: 7, path: '/', domain: 'jquery.com', secure: true }
-	// TODO history: false,
+//  history: false,
 
 	// templates
 	//~ tabTemplate: '<li><a href="#{href}"><span>#{label}</span></a></li>', 
