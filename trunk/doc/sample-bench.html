@@ -56,35 +56,36 @@
 			}
 		});
 	});
-	
+
 	function addNodes(dtnode, level1, level2, level3) {
 		var key;
 		for (var i=0; i<level1; i++) {
 			key = "" + (i+1);
 			var f = dtnode.append({title: "Folder_" + key,
-			                       key: key, 
+			                       key: key,
 				                   isFolder: true
 								   });
 			for (var j=0; j<level2; j++) {
 				key = "" + (i+1) + "." + (j+1);
 				var d = f.append({title: "Node_" + key,
-				                  key: key 
+				                  key: key
 							      });
 				for (var k=0; k<level3; k++) {
 					key = "" + (i+1) + "." + (j+1) + "." + (k+1);
 					d.append({title: "Node_" + key,
-					          key: key 
+					          key: key
 						      });
 				}
 			}
 		}
 	}
-	
+
     </script>
 </head>
 <body>
 	<P>Expand a node to start a benchmark, then check the firebug console.</P>
 	<div id='tree'> </div>
 	enableUpdate(false) is used for speedup.</p>
+	<p><a href="http://dynatree.googlecode.com">jquery.dynatree.js</a></p>
 </body>
 </html>

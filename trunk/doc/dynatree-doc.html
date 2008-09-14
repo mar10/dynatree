@@ -46,7 +46,7 @@
 <body>
 
 
-<h1>jquery.dynatree documentation</h1>
+<h1>Dynatree documentation</h1>
 
 <div class="hint">This document describes dynatree <strong>version 0.3 beta</strong>.</div>
 <div class="hint">
@@ -54,7 +54,9 @@
 	A current version may be found at the project site <a href="http://wwwendt.de/tech/dynatree/index.html">http://wwwendt.de/tech/dynatree/index.html</a>.
 </div>
 <p>
-	Dynatree is a JavaScript dynamic tree view plugin for <a href="http://jquery.com" target="_blank">jQuery</a> with support for lazy loading of branches.<br>
+	Dynatree is a dynamic JavaScript tree view control with support for lazy loading of branches.
+</p>
+<p>
 	Main features:
 </p>
 <ul>
@@ -63,6 +65,8 @@
 	<li>Support for lazy loading and Ajax.
 	<li>Keyboard aware.
 	<li>Initializes from html code or JavaScript objects.
+	<li>Implemented as a <a href="http://jquery.com" target="_blank">jQuery</a> plugin.<br>
+		(Note: this doesn't mean that you have to use jQuery for your whole site.)
 </ul>
 
 <!-- jquery.planize will generate a TOC here: -->
@@ -73,10 +77,10 @@
 <h2>Download</h2>
 
 <p>
-	You can download the current dynatree package at 
+	You can download the current dynatree package at
 	<a href="http://wwwendt.de/tech/dynatree/index.html" target="_blank">http://wwwendt.de/tech/dynatree/index.html</a>.
 	It contains everything needed includging the source, some documentation and examples.<br>
-	jQuery is already included, but you can check the <a href="http://www.jquery.com" target="_blank">jQuery site</a> 
+	jQuery is already included, but you can check the <a href="http://www.jquery.com" target="_blank">jQuery site</a>
 	for the latest versions of jquery.js and ui.core.js.
 </p>
 
@@ -134,6 +138,9 @@
 	As an alternative, it is possible to leave away the <code>children</code> option and
 	add a &lt;ul> inside the &lt;div id="tree"> tag instead.<br>
 	See <a href="#initFromUl">Initializing the tree structure from a &lt;ul> element</a> for an example.
+</p>
+<p>
+	See here for a more <a href="sample-2.html" target="_blank">advanced example</a>.
 </p>
 <p>
 	I am going into more details in the following sections.
@@ -228,7 +235,7 @@ $("#tree").dynatree({
 <p>
 	A tree structure is made of <i>nodes</i>. Every node may in turn contain
 	a list child nodes.<br>
-	A dynatree always has exactly one <i>root node</i>, and all top level nodes 
+	A dynatree always has exactly one <i>root node</i>, and all top level nodes
 	of our tree are added below.<br>
 	The root node is usually hidden, so we only see the nodes that we have added.
 </p>
@@ -239,13 +246,13 @@ $("#tree").dynatree({
 	<li>If the <code>children</code> option is passed, it will be used.
 	<li>Otherwise, if the <code>initAjax</code> option is passed, it will be used.
 	<li>Otherwise, if the <code>initId</code> option is passed, it will be used.
-	<li>Otherwise, if the the container &lt;div> element contains a &lt;ul> element, 
+	<li>Otherwise, if the the container &lt;div> element contains a &lt;ul> element,
 	it will be used.
 	<li>Otherwise, the tree is left empty.<br>
 		But we may choose to do so, if we want to modify the tree programmatically.
 </ol>
 <p>
-	All theses methods expect a list of node options, as described in the following 
+	All theses methods expect a list of node options, as described in the following
 	sections.
 </p>
 
@@ -314,7 +321,7 @@ onSelect: function(dtnode) {
 	</dd>
 	<dt>isLazy
 	<dd>
-		Enables delayed loading of the node contents. When a lazy node is expanded 
+		Enables delayed loading of the node contents. When a lazy node is expanded
 		for the first time, the onLazyTree() callback is called.
 	</dd>
 	<dt>expand
@@ -323,14 +330,14 @@ onSelect: function(dtnode) {
 	</dd>
 	<dt>tooltip
 	<dd>
-		Optional string to display i na popup window when the cursor hovers over 
+		Optional string to display i na popup window when the cursor hovers over
 		the node.
 	</dd>
 	<dt>icon
 	<dd>
-		Optional name of an image file relative to the image directory. 
+		Optional name of an image file relative to the image directory.
 		If not specified, a default is used depending on the node type (folder
-		or document). 
+		or document).
 	</dd>
 	<dt>children
 	<dd>
@@ -454,7 +461,7 @@ $("#tree").dynatree({
 </p>
 
 <div class="codesample">
-	<a href="#" target="_blank">Try this example...</a>
+	<a href="sample-2.html" target="_blank">Try this example...</a>
 <pre class="prettyprint">
 $(function(){
 	// Initialize the tree in the onload event
@@ -595,7 +602,7 @@ $("#tree").dynatree({
 $("#tree").dynatree({
 	[&#8230;]
 	onLazyRead: function(dtnode){
-		dtnode.appendAjax({url: "/sendData", 
+		dtnode.appendAjax({url: "/sendData",
 	                       data: {"key": dtnode.data.key, // Optional url arguments
 		                          "mode": "all"
 		                          },
@@ -629,11 +636,11 @@ $("#tree").dynatree({
 <dl class="optionList">
 	<dt>getRoot()
 	<dd>
-		Return the root DynaTreeNode object.  
+		Return the root DynaTreeNode object.
 	</dd>
 	<dt>getNodeByKey(key)
 	<dd>
-		Return DynaTreeNode with a given key or 'null' if not found.  
+		Return DynaTreeNode with a given key or 'null' if not found.
 	</dd>
 	<dt>getSelectedNode()
 	<dd>
@@ -641,7 +648,7 @@ $("#tree").dynatree({
 	</dd>
 	<dt>selectKey(key)
 	<dd>
-		Select and focus node with a given key. All parents will be expanded as 
+		Select and focus node with a given key. All parents will be expanded as
 		necessary and focus and select events are fired.<br>
 		If key is null, the current selection is removed.<br>
 		Return the selected DynaTreeNode.
@@ -690,7 +697,7 @@ if( dtnode )
 	</dd>
 	<dt>focus()
 	<dd>
-		Sets focus to this node. Parent nodes are expanded, if this is necessary 
+		Sets focus to this node. Parent nodes are expanded, if this is necessary
 		to make it visible.
 	</dd>
 	<dt>toggleExpand()
@@ -700,15 +707,15 @@ if( dtnode )
 	<dd>
 		Accepts a node or an array of nodes to create child nodes.<br>
 		The nodes may contain a <code>children</code> option to build a hierarchy.<br>
-		Returns the new DynaTree object (or the first one, if an array was passed). 
+		Returns the new DynaTree object (or the first one, if an array was passed).
 	</dd>
 	<dt>appendAjax(ajaxOptions)
 	<dd>
 		Accepts a standard jQuery Ajax option object.<br>
 		An asynchronous request is started, so this function returns immediately.
 		While loading, a spinning wheel is displayed.
-		On error, a red dummy node is displayed. 
-		The request handler must return a node list as JSON object.  
+		On error, a red dummy node is displayed.
+		The request handler must return a node list as JSON object.
 	</dd>
 </dl>
 
