@@ -19,6 +19,9 @@
 				if( dtnode.data.url )
 					window.open(dtnode.data.url);
 			},
+			onUnselect: function(dtnode) {
+				$("#echoSelected").text("-");
+			},
 			onFocus: function(dtnode) {
 				$("#echoFocused").text(dtnode.data.title);
 			},
