@@ -20,6 +20,7 @@ target=_blank
   * Issues
     * Why can't I edit issues? Not even the topic.
     (There could be an automatic blog entry 'Issue edited')
+    * Sorting: 'modified' is set to '---' for new issues. Should be the creation date instead.
 
 Learnt things:
   * auto markup for issues: Issue #31
