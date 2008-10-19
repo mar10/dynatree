@@ -563,8 +563,7 @@ DynaTreeNode.prototype = {
 			var dtnode = this._addNode(data);
 			if( !tnFirst ) tnFirst = dtnode;
 			if( data.children )
-				for(var j=0; j<data.children.length; j++)
-					dtnode.append(data.children[j]);
+				dtnode.append(data.children);
 		}
 		this.tree.enableUpdate(prevFlag);
 		return tnFirst;
