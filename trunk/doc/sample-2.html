@@ -70,7 +70,17 @@
 				{ title: 'Lazy node 2', isLazy: true },
 				{ title: 'Folder node 3', isFolder: true,
 					children: [
-						{title: 'node 3.1'}
+						{ title: 'node 3.1' },
+						{ title: 'node 3.2',
+							children: [
+								{ title: 'node 3.2.1' },
+								{ title: 'node 3.2.2',
+									children: [
+										{ title: 'node 3.2.2.1' }
+									] 
+								},
+							] 
+						},
 					]
 				}
 			];
