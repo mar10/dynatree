@@ -261,7 +261,9 @@ DynaTreeNode.prototype = {
 	focus: function() {
 //		logMsg("dtnode.focus(): %o", this);
 		this.makeVisible();
-		$(this.span).find(">a").focus();
+		try {
+			$(this.span).find(">a").focus();
+		} catch(e) { }
 	},
 
 	select: function() {
