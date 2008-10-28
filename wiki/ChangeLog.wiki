@@ -1,7 +1,7 @@
 #summary Main changes in recent releases.
-{{{
-<wiki:toc/>
-}}} 
+
+<wiki:toc max_depth="4" />
+
 ==== 0.3 (in progress) ====
 
 ===== Main changes=====
