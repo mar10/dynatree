@@ -734,6 +734,12 @@ function fnFocusHandler(event) {
 
 $.widget("ui.dynatree", {
 	init: function() {
+        // ui.core 1.6 renamed init() to _init(): this stub assures backward compatibility
+        logMsg("ui.dynatree.init() was called, you should upgrade to ui.core.js v1.6 or higher.");
+        return this._init();
+    },
+    
+	_init: function() {
 		// The widget framework supplies this.element and this.options.
 		this.options.event += '.dynatree'; // namespace event
 
