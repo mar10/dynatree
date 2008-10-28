@@ -1,5 +1,7 @@
 #summary Main changes in recent releases.
-
+{{{
+<wiki:toc/>
+}}} 
 ==== 0.3 (in progress) ====
 
 ===== Main changes=====
