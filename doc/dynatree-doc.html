@@ -273,13 +273,13 @@ $("#tree").dynatree({
 <pre class="prettyprint">
 children: [
 	{
-		title: undefined, // (required) Displayed name of the node (html is allowed here)
-		key: undefined, // May be used with select(), find(), ...
+		title: null, // (required) Displayed name of the node (html is allowed here)
+		key: null, // May be used with select(), find(), ...
 		isFolder: false, // Use a folder icon. Also the node is expandable but not selectable.
-		isLazy: false, // Call tree.options.onLazyRead() when the node is expanded for the first time to allow for delayed creation of children.
+		isLazy: false, // Call onLazyRead() when the node is expanded for the first time to allow for delayed creation of children.
 		expand: false, // Initial expand status.
-		tooltip: undefined, // Show this popup text.
-		icon: undefined, // Use a custom image (filename relative to tree.options.imagePath)
+		tooltip: null, // Show this popup text.
+		icon: null, // Use a custom image (filename relative to tree.options.imagePath). 'null' for default icon, 'false' for no icon.
 		// NOTE: we can also add custom attributes here.
 		// This may then also be used in the onSelect() or onLazyTree() callbacks.
 	},
@@ -335,9 +335,10 @@ onSelect: function(dtnode) {
 	</dd>
 	<dt>icon
 	<dd>
-		Optional name of an image file relative to the image directory.
-		If not specified, a default is used depending on the node type (folder
-		or document).
+		Optional name of an image file relative to the image directory. <br>
+		If <i>null</i> specified, a default image is used depending on the node type (folder
+		or document). This is the default.<br>
+		If <i>false</i> specified, no image is displayed.
 	</dd>
 	<dt>children
 	<dd>
@@ -345,6 +346,20 @@ onSelect: function(dtnode) {
 		This option is only valid when passed to certain functions, like <code>DynTreeNode.append()</code>.
 	</dd>
 </dl>
+
+<p>
+	To override the node attribute <i>defaults</i>, modify the structure before initializing
+	dynatree:
+</p>
+<pre class="prettyprint">
+&lt;script type='text/javascript'>
+    $.ui.dynatree.nodedatadefaults["icon"] = false; // Turn off icons by default
+    		
+	$(function(){
+		$("#tree").dynatree({
+			rootVisible: false,
+			[...]
+</pre>
 
 
 <h4>Initializing the tree structure from an object array</h4>
