@@ -19,12 +19,21 @@ div.ui-dynatree-container
 	border-width: 0px;
 	width: 16px;
 	height: 16px;
+	display: block; /* Removes bottom margin from images */
+	float: left;    /* Makes images display inline */
 }
+
+/*clear the float left from above */
+div.ui-dynatree-container div  
+{
+    clear: both; 
+}
+
 
 .ui-dynatree-document,
 .ui-dynatree-folder
 {
-	line-height: 10px; /* Seems to remove vertical gaps*/
+/*	line-height: 10px; /* Seems to remove vertical gaps*/
 	margin: 0px;
 	border: 0px;
 	color: black;
