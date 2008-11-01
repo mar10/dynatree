@@ -72,7 +72,7 @@ DynaTreeNode.prototype = {
 		this.parent = null; // not yet added to a parent
 		this.div = null; // not yet created
 		this.span = null; // not yet created
-		this.aChilds = null; // no subnodes yet
+		this.aChilds = null; // no subnodes yet 
 		this.bRead = false; // Lazy content not yet read
 		this.bExpanded = ( data.expand == true ) ? true : false; // Collapsed by default
 	},
@@ -127,10 +127,8 @@ DynaTreeNode.prototype = {
 		/*
 			Called by
 		*/
-//		logMsg('render '+this.data.title+', expanded='+this.bExpanded + ', aChilds='+(this.aChilds?this.aChilds.length:'0'));
 		// --- create <div><span>..</span></div> tags for this node
 		if ( ! this.div ) {
-//			logMsg('render: create '+this.data.title+', expanded='+this.bExpanded + ', aChilds='+(this.aChilds?this.aChilds.length:'0'));
 			this.div  = document.createElement ('div');
 			this.span = document.createElement ('span');
 			this.span.dtnode = this;
@@ -151,7 +149,7 @@ DynaTreeNode.prototype = {
 		// set node connector images, links and text
 		this.span.innerHTML = this.getInnerHtml();
 
-		if ( bDeep && (this.aChilds != null ) && (bHidden || this.bExpanded) ) {
+		if ( bDeep && this.aChilds && (bHidden || this.bExpanded) ) {
 			for (var i=0; i<this.aChilds.length; i++) {
 				this.aChilds[i].render (bDeep, bHidden)
 			}
@@ -208,7 +206,7 @@ DynaTreeNode.prototype = {
 				this._setStatusNode(null);
 				this.bRead = true;
 				if( this === this.tree.tnRoot && this.tree.options.focusRoot 
-					&& !this.tree.options.rootVisible && this.aChilds.length > 0 ) {
+					&& !this.tree.options.rootVisible && this.aChilds ) {
 					// special case: using ajaxInit	
 					this.aChilds[0].focus();
 				} else {
@@ -799,7 +797,7 @@ $.widget("ui.dynatree", {
 			if( opts.focusRoot ) {
 				if( opts.rootVisible ) {
 					root.focus();
-				} else if( root.aChilds.length > 0 && ! (opts.initAjax && opts.initAjax.url) ) {
+				} else if( root.aChilds && ! (opts.initAjax && opts.initAjax.url) ) {
 					// Only if not lazy initing (Will be handled by setLazyNodeStatus(DTNodeStatus_Ok)) 
 					root.aChilds[0].focus();
 				}
