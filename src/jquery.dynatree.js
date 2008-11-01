@@ -749,7 +749,10 @@ $.widget("ui.dynatree", {
 		if(!opts.imagePath) {
 			$("script").each( function () {
 				if( this.src.search(/.*dynatree[^/]*\.js$/i) >= 0 ) {
-					opts.imagePath = this.src.slice(0, this.src.lastIndexOf("/")) + "/skin/";
+                    if( this.src.indexOf("/")>=0 ) // issue # 47
+					    opts.imagePath = this.src.slice(0, this.src.lastIndexOf("/")) + "/skin/";
+                    else
+					    opts.imagePath = "skin/";
 					logMsg("Guessing imagePath from '%s': '%s'", this.src, opts.imagePath);
 					return false; // first match
 				}
