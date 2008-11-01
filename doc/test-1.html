@@ -14,7 +14,25 @@
     $(function(){
 		$("#tree").dynatree({
 			children: [
-				{title: "Node 1" },
+				{title: "Node 1", expanded: true,
+				 children: [
+					{title: "Node 1.1" }, 
+					{title: "Node 1.2", expanded: true,
+						 children: [
+									{title: "Node 1.2.1" }, 
+									{title: "Node 1.2.2",
+										 children: [
+													{title: "Node 1.2.2.1" }, 
+													{title: "Node 1.2.2.2" }, 
+													{title: "Node 1.2.2.3" }
+													] 
+										 }, 
+									{title: "Node 1.2.3" }
+									] 
+						 }, 
+					{title: "Node 1.3" }
+					] 
+					},
 				{title: "Node 2" }
 			],
 			onSelect: function(dtnode) {
