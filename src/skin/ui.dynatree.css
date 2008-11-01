@@ -19,14 +19,15 @@ div.ui-dynatree-container
 	border-width: 0px;
 	width: 16px;
 	height: 16px;
-	display: block; /* Removes bottom margin from images */
-	float: left;    /* Makes images display inline */
+	/* FIXME: see issue #49 */
+/*	display: block; /* Removes bottom margin from images */
+/*	float: left;    /* Makes images display inline  */
 }
 
 /*clear the float left from above */
 div.ui-dynatree-container div  
 {
-    clear: both; 
+/*    clear: both; */  
 }
 
 
