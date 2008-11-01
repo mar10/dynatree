@@ -11,8 +11,12 @@
 
     <!-- Add code to initialize the tree when the document is loaded: -->
     <script type='text/javascript'>
-    $(function(){
+
+	$(function(){
 		$("#tree").dynatree({
+			rootVisible: false,
+			keyboard: true,
+/*
 			children: [
 				{title: "Node 1", expand: true,
 				 children: [
@@ -35,6 +39,7 @@
 					},
 				{title: "Node 2" }
 			],
+*/
 			onSelect: function(dtnode) {
 				$("#echoSelected").text(dtnode.data.title);
 				//alert("You selected " + dtnode.data.title);
@@ -53,6 +58,13 @@
 			logMsg("removing %o", $("#tree"));
 			$("#tree").remove();
 		});
+		$("#btn48").click(function(){
+			var a = null;
+			var b = [];
+			var c = [{}]; 
+			var d = [{title: 'x'}];
+			if (a) alert ("TRUE"); else alert("FALSE"); 
+		});
 		$("#btn50").click(function(){
 			$("#tree").dynatree("getRoot").append({title: 'i50', expand: true});
 		});
@@ -62,13 +74,14 @@
     </script>
 </head>
 <body>
-	<P>Expand a node to start a benchmark, then check the firebug console.</P>
+	<P>This file is only temporarily used to reproduce issues.</P>
 	<div id='tree'> </div>
 
 	<div>Selected node: <span id="echoSelected">-</span></div>
 	<div>Focused node: <span id="echoFocused">-</span></div>
 
 	<button id="btnRemoveDiv">Remove main div</button>
+	<button id="btn48">issue #48</button>
 	<button id="btn50">issue #50</button>
 
 	<div id='tree2'>
