@@ -67,7 +67,7 @@ DynaTreeNode.prototype = {
 		if ( typeof data == 'string' ) {
 			this.data = { title: data };
 		} else {
-			this.data = $.extend({}, $.ui.dynatree.nodedatadefaults, data);
+			this.data = jQuery.extend({}, jQuery.ui.dynatree.nodedatadefaults, data);
 		}
 		this.parent = null; // not yet added to a parent
 		this.div = null; // not yet created
@@ -573,9 +573,9 @@ DynaTreeNode.prototype = {
 	
 	appendAjax: function(ajaxOptions) {
 		this.setLazyNodeStatus(DTNodeStatus_Loading);
-		// Ajax option inheritance: $.ajaxSetup < $.ui.dynatree.defaults.ajaxDefaults < tree.options.ajaxDefaults < ajaxOptions
+		// Ajax option inheritance: jQuery.ajaxSetup < jQuery.ui.dynatree.defaults.ajaxDefaults < tree.options.ajaxDefaults < ajaxOptions
 		var self = this;
-		var ajaxOptions = $.extend({}, this.tree.options.ajaxDefaults, ajaxOptions, {
+		var ajaxOptions = jQuery.extend({}, this.tree.options.ajaxDefaults, ajaxOptions, {
        		success: function(data, textStatus){
 				self.append(data);
 				self.setLazyNodeStatus(DTNodeStatus_Ok);
@@ -584,7 +584,7 @@ DynaTreeNode.prototype = {
 				self.setLazyNodeStatus(DTNodeStatus_Error);
        			}
 		});
-       	$.ajax(ajaxOptions);
+       	jQuery.ajax(ajaxOptions);
 	},
 	// --- end of class
 	lastentry: undefined
@@ -724,7 +724,7 @@ function fnKeyHandler(event) {
 function fnFocusHandler(event) {
 	// Handles blur and focus.
 	// Fix event for IE:
-	event = arguments[0] = jQuery.event.fix( event || window.event );
+	event = arguments[0] = $.event.fix( event || window.event );
 	var dtnode = _getNodeFromElement(event.target);
 //	logMsg("fnFocusHandler(%o), dtnode=%o", event, dtnode);
 	if( !dtnode )
