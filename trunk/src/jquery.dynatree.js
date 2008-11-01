@@ -844,7 +844,7 @@ $.widget("ui.dynatree", {
 			};
 			var dataAttr = $.trim($li.attr("data"));
 			if( dataAttr ) {
-				if( dataAttr[0] != "{" )
+				if( dataAttr.charAt(0) != "{" )
 					dataAttr = "{" + dataAttr + "}"
 				try{
 					$.extend(data, eval("(" + dataAttr + ")"));

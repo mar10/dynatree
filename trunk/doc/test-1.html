@@ -43,9 +43,18 @@
 				logMsg("Benchmarking mode='" + dtnode.data.mode + "' done.");
 			}
 		});
+		$("#tree2").dynatree({
+			onSelect: function(dtnode) {
+				$("#echoSelected").text(dtnode.data.title);
+				//alert("You selected " + dtnode.data.title);
+			}
+		});
 		$("#btnRemoveDiv").click(function(){
 			logMsg("removing %o", $("#tree"));
 			$("#tree").remove();
+		});
+		$("#btn50").click(function(){
+			$("#tree").dynatree("getRoot").append({title: 'i50', expand: true});
 		});
 	});
 
@@ -60,6 +69,15 @@
 	<div>Focused node: <span id="echoFocused">-</span></div>
 
 	<button id="btnRemoveDiv">Remove main div</button>
+	<button id="btn50">issue #50</button>
+
+	<div id='tree2'>
+	<ul>
+	<li data="{title: 'node1'}" />node1
+	<li data="{title: 'node2'}" />node2
+	</ul> 
+	</div>
+
 
 	<p><a href="http://dynatree.googlecode.com">jquery.dynatree.js</a></p>
 </body>
