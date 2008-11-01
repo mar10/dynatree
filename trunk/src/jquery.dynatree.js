@@ -111,6 +111,8 @@ DynaTreeNode.prototype = {
 		// folder or doctype icon
    		if ( this.data && this.data.icon ) {
     		res += '<img src="' + this.tree.options.imagePath + this.data.icon + '" alt="" />';
+   		} else if ( this.data && this.data.icon == false ) {
+        	// issue #40: icon == false means 'no icon'
 		} else if ( this.data.isFolder ) {
 	    	res += ( this.bExpanded ? cache.tagFld_o : cache.tagFld );
 		} else {
@@ -945,7 +947,7 @@ $.ui.dynatree.nodedatadefaults = {
 	isLazy: false, // Call onLazyRead(), when the node is expanded for the first time to allow for delayed creation of children.
 	expand: false, // Initial expand status. 
 	tooltip: null, // Show this popup text.
-	icon: null, // Use a custom image (filename relative to tree.options.imagePath)
+	icon: null, // Use a custom image (filename relative to tree.options.imagePath). 'null' for default icon, 'false' for no icon.
 	// The following attributes are only valid if passed to some functions:
 	children: null, // Array of child nodes.
 	// NOTE: we can also add custom attributes here.
