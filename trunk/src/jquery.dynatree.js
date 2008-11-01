@@ -74,7 +74,7 @@ DynaTreeNode.prototype = {
 		this.span = null; // not yet created
 		this.aChilds = null; // no subnodes yet
 		this.bRead = false; // Lazy content not yet read
-		this.bExpanded = false; // Collapsed by default
+		this.bExpanded = ( data.expanded == true ) ? true : false; // Collapsed by default
 	},
 
 	toString: function() {
