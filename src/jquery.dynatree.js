@@ -15,6 +15,7 @@
 
  	@depends: jquery.js
  	@depends: ui.core.js
+    @depends: jquery.cookie.js
 *************************************************************************/
 
 /*************************************************************************
@@ -75,6 +76,15 @@ DynaTreeNode.prototype = {
 		this.aChilds = null; // no subnodes yet 
 		this.bRead = false; // Lazy content not yet read
 		this.bExpanded = ( data.expand == true ) ? true : false; // Collapsed by default
+		
+		if( this.tree.initCookie && this.bExpanded ) {
+			// Initialize cookie from status stored in data.expanded
+			this.tree._changeExpandList(this.data.key, true, false);
+		} else if( this.tree.options.persist && ! this.tree.initCookie && this.data.key ) {
+			// Initialize expand state from cookie
+			logMsg("DynaTreeNode %o init: setting expanded-mode from cookie", this.data.key);
+			this.bExpanded = (jQuery.inArray(this.data.key, this.tree.expandedKeys) >= 0);
+		}
 	},
 
 	toString: function() {
@@ -299,7 +309,13 @@ DynaTreeNode.prototype = {
 		if ( this.bExpanded == bExpand )
 			return;
 		this.bExpanded = bExpand;
-		// Auto-collapse mode: collapse all siblings
+
+		// Persist expand state 
+        if( this.tree.options.persist && this.data.key ) {
+        	this.tree._changeExpandList(this.data.key, bExpand, true);
+        }
+
+        // Auto-collapse mode: collapse all siblings
 		if ( this.bExpanded && this.parent && this.tree.options.autoCollapse ) {
 			var parents = this._parentList(false, true);
 			for(var i=0; i<parents.length; i++) 
@@ -525,17 +541,25 @@ DynaTreeNode.prototype = {
 		this.aChilds.push (dtnode);
 		dtnode.parent = this;
 
-		if ( this.tree.options.expandOnAdd || ( (!this.tree.options.rootCollapsible || !this.tree.options.rootVisible) && this.parent==null ) )
+		// Expand the parent, if 
+		// 1. expandOnAdd is set
+		// 2. this is the root node, and the root node is invisible 
+		// 3. this is the root node, and the root node is defined as always open 
+		if ( this.tree.options.expandOnAdd 
+			 || ( (!this.tree.options.rootCollapsible || !this.tree.options.rootVisible) && this.parent==null )
+			 ) {
 			this.bExpanded = true;
+			if( this.tree.initCookie )
+				this.tree._changeExpandList(this.key, true, false);
+		}
 		if ( this.tree.bEnableUpdate )
-//			this.render (true, false);
-			this.render (true, true); // Issue #4
+			this.render (true, true);
 			
 		return dtnode;
 	},
 
 	_addNode: function(data) {
-		var dtnode = new DynaTreeNode (this.tree, data);
+		var dtnode = new DynaTreeNode(this.tree, data);
 		return this._addChildNode(dtnode);
 	},
 
@@ -605,9 +629,24 @@ DynaTree.prototype = {
 		// instance members
 		this.options = options;
 
-		this.tnSelected    = null;
+		this.tnSelected = null;
 		this.bEnableUpdate = true;
 		this.isDisabled = false;
+
+		// list of expanded nodes (only maintained in persist mode)
+		this.expandedKeys = new Array(); 
+		// True: 
+		this.initCookie = false;
+		if( this.options.persist ) {
+			// Requires jquery.cookie.js:
+			var cookie = jQuery.cookie(this.options.cookieId);
+			if( cookie ) {
+				this.expandedKeys = cookie.split(",");
+			} else {
+				this.initCookie = true; // Init first time persistence from node.data
+			}
+			logMsg("Read cookie: %o, initCookie: %o", this.expandedKeys, this.initCookie);
+		}
 
 		// Cached tags
 		this.cache = {
@@ -625,23 +664,43 @@ DynaTree.prototype = {
 			tagD_ne: "<img src='" + options.imagePath + "ltD_ne.gif' alt='[?]' class='" + options.classnames.expander + "'/>",
 			tagD_nes: "<img src='" + options.imagePath + "ltD_nes.gif' alt='[?]' class='" + options.classnames.expander + "'/>"
 		};
-
+		
 		// find container element
-		this.divTree   = document.getElementById (id);
+		this.divTree = document.getElementById(id);
 		// create the root element
-		this.tnRoot    = new DynaTreeNode (this, {title: this.options.title, key:"root"});
-		this.tnRoot.data.isFolder   = true;
+		this.tnRoot = new DynaTreeNode(this, {title: this.options.title, key: this.options.idPrefix+"root"});
+		this.tnRoot.data.isFolder = true;
 		this.tnRoot.render(false, false);
-		this.divRoot   = this.tnRoot.div;
+		this.divRoot = this.tnRoot.div;
 		this.divRoot.className = this.options.classnames.container;
 		// add root to container
-		this.divTree.appendChild (this.divRoot);
+		this.divTree.appendChild(this.divRoot);
 	},
 	
 	// member functions
 	
 	toString: function() {
 		return "DynaTree '" + this.options.title + "'";
+	},
+	
+	_changeExpandList: function(key, bAdd, bWriteCookie) {
+		// Add or remove key from expand-list.
+		if( !key )
+			return false;
+		var n = this.expandedKeys.length;
+		if( bAdd ) {
+			if( jQuery.inArray(key, this.expandedKeys) == -1 )  
+				this.expandedKeys.push(key);
+		} else {
+			this.expandedKeys = jQuery.grep(this.expandedKeys, function(e){ return(e != key); });
+		}
+		if( bWriteCookie ) {
+			logMsg("_changeExpandList: write cookie: <%s> = '%s'", this.options.cookieId, this.expandedKeys.join(","));
+			jQuery.cookie(this.options.cookieId, this.expandedKeys.join(","));
+		} else {
+			logMsg("_changeExpandList: %o", this.expandedKeys);
+		}
+		return ( n != this.expandedKeys.length );
 	},
 	
 	redraw: function() {
@@ -784,6 +843,8 @@ $.widget("ui.dynatree", {
 			this.createFromTag(root, $ul);
 			$ul.remove();
 		}
+		// 
+		
 		// bind event handlers
 		$this.bind("click", fnClick);
 		if( opts.keyboard ) {
@@ -808,6 +869,11 @@ $.widget("ui.dynatree", {
 				}
 			}
 		}
+		// We defined the first-time cookie from node.data, no store it
+        if( this.tree.initCookie ) {
+			logMsg("Write cookie: <%s> = '%s'", opts.cookieId, this.tree.expandedKeys.join(","));
+			$.cookie(opts.cookieId, this.tree.expandedKeys.join(","));
+        }
 	},
 
 	// --- getter methods (i.e. NOT returning a reference to $)
@@ -849,7 +915,7 @@ $.widget("ui.dynatree", {
 			if( dataAttr ) {
 				if( dataAttr.charAt(0) != "{" )
 					dataAttr = "{" + dataAttr + "}"
-				try{
+				try {
 					$.extend(data, eval("(" + dataAttr + ")"));
 				} catch(e) {
 					throw ("Error parsing node data: " + e + "\ndata:\n'" + dataAttr + "'");
@@ -859,8 +925,8 @@ $.widget("ui.dynatree", {
 			// Recursive reading of child nodes, if LI tag contains an UL tag
 			var $ul = $li.find(">ul:first");
 			if( $ul.length ) {
-				if( data.expand )
-					childNode.bExpanded = true;
+//				if( data.expand ) // 1.11.08: no longer required(?)
+//					childNode.bExpanded = true;
 				self.createFromTag(childNode, $ul); // must use 'self', because 'this' is the each() context
 			}
 		});
@@ -896,6 +962,7 @@ $.ui.dynatree.defaults = {
 	autoCollapse: false, // Automatically collapse all siblings, when a node is expanded.
 	expandOnAdd: false, // Automatically expand parent, when a child is added.
 	selectExpandsFolders: true, // Clicking a folder title expands the folder, instead of selecting it.
+	selectionVisible: true, // Make sure, selected nodes are visible (expanded).
 	idPrefix: 'ui-dynatree-id-', // Used to generate node id's like <span id="ui-dynatree-id-<key>">.
 	ajaxDefaults: { // Used by initAjax option
 		cache: false, // Append random '_' argument to url to prevent caching.
@@ -917,16 +984,23 @@ $.ui.dynatree.defaults = {
 		loading: "ui-dynatree-loading"
 	},
 	debugLevel: 0,
-	// Experimental:
-	selectionVisible: true, // Make sure, selected nodes are visible (expanded).
+	// EXPERIMENTAL:
+    persist: false, // Persist expand-status to a cookie
+    cookieId: "ui-dynatree-cookie", // Choose a more unique name, to allow multiple trees.
+/*
+ 	cookie: { 
+		expires: 7, // 
+		path: '/', 
+//		domain: 'jquery.com', 
+//		secure: true 
+	},
+*/	
 // 	minExpandLevel: 1, // Instead of rootCollapsible
 //	expandLevel: 1, // Expand all branches until level i (set to 0 to )
-//	persist: "cookie",
 //	fx: null, // Animations, e.g. { height: 'toggle', opacity: 'toggle', duration: 200 }
 
 	// ### copied from ui.tabs
 	// basic setup
-//	cookie: null, // e.g. { expires: 7, path: '/', domain: 'jquery.com', secure: true }
 //  history: false,
 
 	// templates
