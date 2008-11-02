@@ -1,4 +1,4 @@
-#Appreciation of contributors to dynatree.
+#summary Appreciation of contributors to dynatree.
 
 = Credits =
 
