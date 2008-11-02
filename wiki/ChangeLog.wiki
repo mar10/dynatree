@@ -4,7 +4,11 @@
 
 ==== 0.3 (in progress) ====
 
-===== Main changes=====
+===== 0.3 RC1 =====
+  * Fixes issue #41, issue #42, issue #46, issue #51, issue #50, issue #48, issue #47, issue #43 
+  * New features: issue #40, issue #5 (experimental)
+
+===== Main changes =====
   * jQuery plugin style: $(..).dynatree()
   * Keyboard navigation
   * Improved documentation
