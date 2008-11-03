@@ -10,8 +10,8 @@
 
 	Let me know, if you find bugs or improvements (martin at domain wwWendt.de).
 	
-	$Rev$
-	$Date$
+	$Rev:$
+	$Date:$
 
  	@depends: jquery.js
  	@depends: ui.core.js
@@ -82,7 +82,7 @@ DynaTreeNode.prototype = {
 			this.tree._changeExpandList(this.data.key, true, false);
 		} else if( this.tree.options.persist && ! this.tree.initCookie && this.data.key ) {
 			// Initialize expand state from cookie
-			logMsg("DynaTreeNode %o init: setting expanded-mode from cookie", this.data.key);
+//			logMsg("DynaTreeNode %o init: setting expanded-mode from cookie", this.data.key);
 			this.bExpanded = (jQuery.inArray(this.data.key, this.tree.expandedKeys) >= 0);
 		}
 	},
@@ -535,7 +535,7 @@ DynaTreeNode.prototype = {
 */
 
 	_addChildNode: function (dtnode) {
-//		logMsg ('_addChildNode '+dtnode);
+//		logMsg ('%o._addChildNode(%o)', this, dtnode);
 		if ( this.aChilds==null )
 			this.aChilds = new Array();
 		this.aChilds.push (dtnode);
@@ -559,6 +559,7 @@ DynaTreeNode.prototype = {
 	},
 
 	_addNode: function(data) {
+//		logMsg ('%o._addNode(%o)', this, data);
 		var dtnode = new DynaTreeNode(this.tree, data);
 		return this._addChildNode(dtnode);
 	},
@@ -577,7 +578,9 @@ DynaTreeNode.prototype = {
 		]
 		A simple object is also accepted instead of an array.
 		*/
-		if( !obj ) return;
+//		logMsg ('%o.append(%o)', this, obj);
+		if( !obj || obj.length==0 ) // Passed null or undefined or empty array
+			return;
 		if( !obj.length ) // Passed a single node 
 			return this._addNode(obj);
 		
@@ -635,7 +638,7 @@ DynaTree.prototype = {
 
 		// list of expanded nodes (only maintained in persist mode)
 		this.expandedKeys = new Array(); 
-		// True: 
+
 		this.initCookie = false;
 		if( this.options.persist ) {
 			// Requires jquery.cookie.js:
@@ -869,7 +872,7 @@ $.widget("ui.dynatree", {
 				}
 			}
 		}
-		// We defined the first-time cookie from node.data, no store it
+		// We defined the first-time cookie from node.data, now store it
         if( this.tree.initCookie ) {
 			logMsg("Write cookie: <%s> = '%s'", opts.cookieId, this.tree.expandedKeys.join(","));
 			$.cookie(opts.cookieId, this.tree.expandedKeys.join(","));
