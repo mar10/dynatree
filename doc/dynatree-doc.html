@@ -195,7 +195,7 @@ $("#tree").dynatree({
 	rootCollapsible: false, // Prevent root node from being collapsed.
 	imagePath: undefined, // Path to a folder containing icons. Defaults to 'skin/' subdirectory.
 	children: null, // Init tree structure from this object array.
-	initId: null, // Init tree structure from a <ul> element with this ID.
+	initId: null, // Init tree structure from a &lt;ul> element with this ID.
 	initAjax: null, // Ajax options used to initialize the tree strucuture.
 	onSelect: null, // Callback when a node is selected.
 	onUnselect: null, // Callback when a node is deselected.
@@ -207,6 +207,7 @@ $("#tree").dynatree({
 	autoCollapse: false, // Automatically collapse all siblings, when a node is expanded.
 	expandOnAdd: false, // Automatically expand parent, when a child is added.
 	selectExpandsFolders: true, // Clicking a folder title expands the folder, instead of selecting it.
+	selectionVisible: true, // Make sure, selected nodes are visible (expanded).
 	idPrefix: 'ui-dynatree-id-', // Used to generate node id's like &lt;span id="ui-dynatree-id-<i>key</i>">.
 	ajaxDefaults: { // Used by initAjax option
 		cache: false, // Append random '_' argument to url to prevent caching.
