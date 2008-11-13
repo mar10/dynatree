@@ -1,22 +1,21 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 	<head>
-    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
-    
     <title>dynatree - temporary tests</title>
     <!-- Include the required JavaScript libraries: -->
     <script src='../jquery/jquery.js' type='text/javascript'></script>
     <script src='../jquery/jquery.cookie.js' type='text/javascript'></script>
     <script src='../jquery/ui.core.js' type='text/javascript'></script>
 
-    <link rel='stylesheet' type='text/css' href='../src/skin/ui.dynatree.css'>
+    <link rel='stylesheet' type='text/css' href='../src/skin/ui.dynatree.css' />
 	<script src='../src/jquery.dynatree.js' type='text/javascript'></script>
 
     <!-- Add code to initialize the tree when the document is loaded: -->
     <script type='text/javascript'>
-    <!--
-//    $.ui.dynatree.nodedatadefaults["icon"] = false; // Turn off icons by default
-	
+    /* <![CDATA[ */
+
 	$(function(){
 		$("#tree").dynatree({
 			rootVisible: true,
@@ -68,15 +67,15 @@
 		$("#btn50").click(function(){
 			$("#tree").dynatree("getRoot").append({title: 'i50', expand: true});
 		});
+
 	});
 
-
-    -->
+    /* ]]> */
     </script>
 </head>
 <body>
-	<P>This file is only temporarily used to reproduce issues.</P>
-	<p style="color: red;">Using doctype HTML 4.01 Strict.</p>
+	<p>This file is only temporarily used to reproduce issues.</p>
+	<p style="color: red;">Using doctype XHTML 1.0 Strict.</p>
 	<div id='tree'> </div>
 
 	<div>Selected node: <span id="echoSelected">-</span></div>
