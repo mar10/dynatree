@@ -1,12 +1,16 @@
 #summary Main changes in recent releases.
+#labels Featured
 
 <wiki:toc max_depth="4" />
 
 ==== 0.3 (in progress) ====
 
+===== 0.3 (trunk) =====
+  * Fixes: issue #52 
+
 ===== 0.3 RC1 =====
-  * Fixes issue #41, issue #42, issue #46, issue #51, issue #50, issue #48, issue #47, issue #43 
-  * New features: issue #40, issue #5 (experimental)
+  * Fixes: issue #41, issue #42, issue #46, issue #51, issue #50, issue #48, issue #47, issue #43 
+  * Enhancements: issue #40, issue #5 (experimental)
 
 ===== Main changes =====
   * jQuery plugin style: $(..).dynatree()
