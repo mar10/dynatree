@@ -373,6 +373,28 @@ DynaTreeNode.prototype = {
 		}
 	},
 
+	onDblClick: function(event) {
+		if ( this.data.isFolder && ( this.aChilds || this.data.isLazy ) 
+			&& (this.parent != null || this.tree.options.rootCollapsible)
+			) {
+			this.toggleExpand();
+		}
+	},
+	
+	_activate: function() {
+		if ( this.data.isFolder 
+			&& this.tree.options.selectExpandsFolders 
+			&& (this.parent != null || this.tree.options.rootCollapsible)
+			) {
+			// Clicking a folder, when selectExpandsFolders is on, will expand
+			this.toggleExpand();
+			this.focus();
+		} else {
+			// Otherwise select
+			this.select();
+		}
+	},
+	
 	onClick: function(event) {
 		/*
 		this is the <div> element
@@ -385,22 +407,11 @@ DynaTreeNode.prototype = {
 		*/
 //		logMsg("dtnode.onClick(" + event.type + "): dtnode:" + this + ", button:" + event.button + ", which: " + event.which);
 
-//		if( $(event.target).parent(".ui-dynatree-expander").length ) {
 		if( $(event.target).hasClass(this.tree.options.classnames.expander) ) {
 			// Clicking the [+] icon always expands
 			this.toggleExpand();
-		} else if ( this.data.isFolder 
-			&& this.tree.options.selectExpandsFolders 
-			&& (this.aChilds || this.data.isLazy) 
-			&& (this.parent != null || this.tree.options.rootCollapsible)
-			) {
-			// Clicking a non-empty folder, when selectExpandsFolders is on, will expand
-			this.toggleExpand();
-		} else if ( !this.data.isFolder ) {
-			// Clicking a document will select it
-			this.select();
 		} else {
-			// Folders cannot be selected TODO: really?
+			this._activate();
 		}
 
 		this.focus();
@@ -438,7 +449,8 @@ DynaTreeNode.prototype = {
 				//~ break;
 			case 1032: // <space>
 			case 32: // <space>
-				this.select();
+//				this.select();
+				this._activate();
 				break;
 			// keyCodes
 			case 1008: // <backspace>
@@ -533,6 +545,15 @@ DynaTreeNode.prototype = {
 		return n;
 	},
 */
+
+	remove: function() {
+        // Remove this node
+		logMsg ('%o.remove()', this);
+        if ( this === this.tree.root )
+            return false;
+        if ( this === this.tree.root )
+            return false;
+	},
 
 	_addChildNode: function (dtnode) {
 //		logMsg ('%o._addChildNode(%o)', this, dtnode);
@@ -772,6 +793,13 @@ function fnClick(event) {
 	return dtnode.onClick(event);
 }
 
+function fnDblClick(event) {
+	var dtnode = _getNodeFromElement(event.target);
+	if( !dtnode )
+		return false; 
+	return dtnode.onDblClick(event);
+}
+
 function fnKeyHandler(event) {
 	// Handles keydown and keypressed, because IE and Safari don't fire keypress for cursor keys.
 	var dtnode = _getNodeFromElement(event.target);
@@ -850,6 +878,7 @@ $.widget("ui.dynatree", {
 		
 		// bind event handlers
 		$this.bind("click", fnClick);
+		$this.bind("dblclick", fnDblClick);
 		if( opts.keyboard ) {
 			$this.bind("keypress keydown", fnKeyHandler);
 
@@ -964,7 +993,8 @@ $.ui.dynatree.defaults = {
 	keyboard: true, // Support keyboard navigation.
 	autoCollapse: false, // Automatically collapse all siblings, when a node is expanded.
 	expandOnAdd: false, // Automatically expand parent, when a child is added.
-	selectExpandsFolders: true, // Clicking a folder title expands the folder, instead of selecting it.
+	selectExpandsFolders: true, // Clicking a folder title expands the node instead of selecting it.
+//	foldersSelectable: true, // Folders generate onSelect events.
 	selectionVisible: true, // Make sure, selected nodes are visible (expanded).
 	idPrefix: 'ui-dynatree-id-', // Used to generate node id's like <span id="ui-dynatree-id-<key>">.
 	ajaxDefaults: { // Used by initAjax option
