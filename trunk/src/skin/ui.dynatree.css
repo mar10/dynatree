@@ -1,8 +1,8 @@
 div.ui-dynatree-container
 {
 	font-family: tahoma, arial, helvetica;
-	font-size: 67%;
-	/* white-space: nowrap; */
+	font-size: 10pt; /* font size should not be too big */
+	white-space: nowrap; /* better to set it by default, imho */
 	padding: 3px;
 
 	background-color: white; 
@@ -19,6 +19,7 @@ div.ui-dynatree-container
 	border-width: 0px;
 	width: 16px;
 	height: 16px;
+	vertical-align:bottom; /* correctly align img */
 	/* FIXME: see issue #49 */
 /*	display: block; /* Removes bottom margin from images */
 /*	float: left;    /* Makes images display inline  */
@@ -34,7 +35,7 @@ div.ui-dynatree-container div
 .ui-dynatree-document,
 .ui-dynatree-folder
 {
-/*	line-height: 10px; /* Seems to remove vertical gaps*/
+	line-height: 16px; /* should be the same as img height, in case 16 px */
 	margin: 0px;
 	border: 0px;
 	color: black;
