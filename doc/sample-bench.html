@@ -27,13 +27,13 @@
 				var tree = dtnode.tree;
 				logMsg("Benchmarking mode='" + dtnode.data.mode + "'...");
 				switch( dtnode.data.mode ) {
-					case "add100_flat_update":
-						addNodes(dtnode, 100, 0, 0)
-						break;
 					case "add100_flat":
 						tree.enableUpdate (false);
 						addNodes(dtnode, 100, 0, 0)
 						tree.enableUpdate (true);
+						break;
+					case "add100_flat_update":
+						addNodes(dtnode, 100, 0, 0)
 						break;
 					case "add1000_flat":
 						tree.enableUpdate (false);
