@@ -551,8 +551,25 @@ DynaTreeNode.prototype = {
 		logMsg ('%o.remove()', this);
         if ( this === this.tree.root )
             return false;
-        if ( this === this.tree.root )
-            return false;
+        if ( this === this.tree.tnSelected )
+        	this.unselect();
+	},
+
+	removeChildren: function() {
+        // Remove all child nodes (more efficient than recursive remove())
+		logMsg ('%o.remove()', this);
+		var tree = this.tree;
+        var ac = this.parent.aChilds;
+        if( ac ) {
+        	for(var i=0, tn=ac[i]; i<ac.length; i++) {
+        		logMsg ('del %o', tn);
+                if ( tn === tree.tnSelected )
+                	tn.unselect();
+                tn.removeChildren();
+                delete tn;
+        	}
+        	this.parent.aChilds = null;
+        }
 	},
 
 	_addChildNode: function (dtnode) {
