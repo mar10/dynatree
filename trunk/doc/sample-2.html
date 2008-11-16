@@ -1,12 +1,13 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 	<title>dynatree sample - 2</title>
 
 	<script src='../jquery/jquery.js' type='text/javascript'></script>
 	<script src='../jquery/ui.core.js' type='text/javascript'></script>
 
-	<link href='../src/skin/ui.dynatree.css' rel='stylesheet' type='text/css' />
+	<link href='../src/skin/ui.dynatree.css' rel='stylesheet' type='text/css' >
 	<script src='../src/jquery.dynatree.js' type='text/javascript'></script>
 
 <script type='text/javascript'>
@@ -77,9 +78,9 @@
 								{ title: 'node 3.2.2',
 									children: [
 										{ title: 'node 3.2.2.1' }
-									] 
+									]
 								},
-							] 
+							]
 						},
 					]
 				}
@@ -135,7 +136,7 @@
 
 			<li data="key: '5', isFolder: true">Advanced examples
 				<ul>
-					<li id="5">item5: Using id attribute as an alternative way to specify a key.
+					<li id="node5.1">item5.1: Using id attribute as an alternative way to specify a key.
 					<li>Using some <b>bold</b> markup in the text (&lt;li&gt; tag only).
 					<li><span>Using some <b>bold</b> markup in the text (&lt;li&gt;&lt;span&gt; tag).</span>
 					<li><span>Using some extended markup in the text (&lt;li&gt;&lt;span&gt; tag).<button value="123">Click me</button>
@@ -151,12 +152,12 @@
 
 	<div>Selected node: <span id="echoSelected">-</span></div>
 	<div>Focused node: <span id="echoFocused">-</span></div>
-
-	<button id="btnAddCode">Add nodes programmatically</button>
-	<button id="btnAddObject">Add nodes using arrays</button>
-	<button id="btnSelectNode">Select item 4.3.2</button>
-	<button id="btnShowSelected">Show selected node...</button>
-
+	<p>
+		<button id="btnAddCode">Add nodes programmatically</button>
+		<button id="btnAddObject">Add nodes using arrays</button>
+		<button id="btnSelectNode">Select item 4.3.2</button>
+		<button id="btnShowSelected">Show selected node...</button>
+	</p>
 	<p><a href="http://dynatree.googlecode.com">jquery.dynatree.js</a></p>
 </body>
 </html>
