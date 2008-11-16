@@ -421,7 +421,7 @@ $("#tree").dynatree({
 	All other node options are specified in the <code>data</code> attribute of a &lt;li> element.
 </p>
 <p class="info">
-	Note that the <code>data</code> attribute is not valid in Strict doctypes (HTML 4.01 Strict and XHTML 1.0 Strict).
+	Note that the <code>data</code> attribute is not valid in doctypes (HTML 4.01 Strict and XHTML 1.0 Strict).
 </p>
 <p>
 	Nested &lt;ul> elements are used to build a hierarchical tree structure.<br>
@@ -657,13 +657,17 @@ $("#tree").dynatree({
 	<strong>DynaTree class members</strong>
 </p>
 <dl class="optionList">
-	<dt>getRoot()
+	<dt>enableUpdate(enable)
 	<dd>
-		Return the root DynaTreeNode object.
+		Turn rendering on or off. Disabling update may speedup processing, when adding lots of nodes.
 	</dd>
 	<dt>getNodeByKey(key)
 	<dd>
 		Return DynaTreeNode with a given key or 'null' if not found.
+	</dd>
+	<dt>getRoot()
+	<dd>
+		Return the root DynaTreeNode object.
 	</dd>
 	<dt>getSelectedNode()
 	<dd>
@@ -671,10 +675,83 @@ $("#tree").dynatree({
 	</dd>
 	<dt>selectKey(key)
 	<dd>
-		Select and focus node with a given key. All parents will be expanded as
-		necessary and focus and select events are fired.<br>
+		Select and focus node with a given key and fire focus and select events.<br>
+		If <code>selectionVisible</code> option is set, all parents will be expanded as necessary.<br>
 		If key is null, the current selection is removed.<br>
 		Return the selected DynaTreeNode.
+	</dd>
+</dl>
+
+<p>
+	<strong>DynaTreeNode class members</strong>
+</p>
+<dl class="optionList">
+	<dt>Attribute 'data'
+	<dd>
+		Use this attribute to access all node options that were passed to create
+		this node.<br>
+		For example <code>dtnode.data.title</code> or <code>dtnode.data.tooltip</code>.
+		See also <a href="#nodeOptions">Node options</a>.
+	</dd>
+	<dt>append(nodeArray)
+	<dd>
+		Accepts a node or an array of nodes to create child nodes.<br>
+		The nodes may contain a <code>children</code> option to build a hierarchy.<br>
+		Returns the new DynaTree object (or the first one, if an array was passed).
+		<br>
+		The nodeArray must be formatted like the data'a <code>children</code> object.
+		(See also <a href="#nodeOptions">Node options</a>).
+	</dd>
+	<dt>appendAjax(ajaxOptions)
+	<dd>
+		Accepts a standard jQuery Ajax option object.<br>
+		An asynchronous request is started, so this function returns immediately.
+		While loading, a spinning wheel is displayed. On error, a red icon is shown.<br>
+		The request handler must return a JSON object, formatted like the data'a <code>children</code> object (see also <a href="#nodeOptions">Node options</a>.).<br>
+		Use the <code>setLazyNodeStatus()</code> function to display the result.<br>
+	</dd>
+	<dt>focus()
+	<dd>
+		Sets focus to this node. Parent nodes are expanded, if this is necessary
+		to make it visible.
+	</dd>
+	<dt>makeVisible()
+	<dd>
+		Expands all parents as neccessary, to make this node visible.
+	</dd>
+	<dt>remove()
+	<dd>
+		Remove this node from tree.
+	</dd>
+	<dt>removeChildren()
+	<dd>
+		Remove all children and collpase this node.
+	</dd>
+	<dt>select()
+	<dd>
+		Select this node and fires a select event.<br>
+		If <code>selectionVisible</code> option is set, all parents will be expanded as necessary.<br>
+		Focus is <em>not</em> set.
+	</dd>
+	<dt>setLazyNodeStatus(status)
+	<dd>
+		Display a dummy child node, to provide feedback, when loading a lazy node's content. <br>
+		Possible status:
+		<ul>
+		<li><code>DTNodeStatus_Loading</code>: show a spinning wheel, with 'loading...' message.
+		<li><code>DTNodeStatus_Error</code>: show an error icon and message.
+		<li><code>DTNodeStatus_Ok</code>: Remove the status node.
+		</ul>
+		Messages may be customized using the <code>strings.loading</code> and <code>strings.loadError</code> options.
+	</dd>
+	<dt>toggleExpand()
+	<dd>
+		Toggle selection state.<br>
+		Expanding a lazy node, fires a onLazyRead event..
+	</dd>
+	<dt>unselect()
+	<dd>
+		Unselect this node and fires an unselect event.
 	</dd>
 </dl>
 
@@ -697,50 +774,6 @@ var dtnode = $("#tree").dynatree("getSelectedNode");
 if( dtnode )
 	alert("Currently selected: " + dtnode.data.title);
 </pre>
-
-<p>
-	<strong>DynaTreeNode class members</strong>
-</p>
-<dl class="optionList">
-	<dt>Attribute 'data'
-	<dd>
-		Use this attribute to access all node options that were passed to create
-		this node.<br>
-		For example <code>dtnode.data.title</code> or <code>dtnode.data.tooltip</code>.
-		<p>
-			See also <a href="#nodeOptions">Node options</a>.
-		</p>
-	</dd>
-	<dt>setLazyNodeStatus(status)
-	<dd>
-	</dd>
-	<dt>select()
-	<dd>
-		Selects this node.
-	</dd>
-	<dt>focus()
-	<dd>
-		Sets focus to this node. Parent nodes are expanded, if this is necessary
-		to make it visible.
-	</dd>
-	<dt>toggleExpand()
-	<dd>
-	</dd>
-	<dt>append(nodeArray)
-	<dd>
-		Accepts a node or an array of nodes to create child nodes.<br>
-		The nodes may contain a <code>children</code> option to build a hierarchy.<br>
-		Returns the new DynaTree object (or the first one, if an array was passed).
-	</dd>
-	<dt>appendAjax(ajaxOptions)
-	<dd>
-		Accepts a standard jQuery Ajax option object.<br>
-		An asynchronous request is started, so this function returns immediately.
-		While loading, a spinning wheel is displayed.
-		On error, a red dummy node is displayed.
-		The request handler must return a node list as JSON object.
-	</dd>
-</dl>
 
 
 <h2>Theming and translation</h2>
@@ -804,7 +837,7 @@ $("#tree").dynatree({
 <h2><a id="issues"></a>Feedback, version history and known issues</h2>
 
 <p>
-	First of all: this is work in progress, and still beta.<br>
+	First of all: this is work in progress.<br>
 	Any kind of feedback is very welcome :-)
 </p>
 <ul>

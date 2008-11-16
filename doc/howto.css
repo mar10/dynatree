@@ -27,10 +27,16 @@ div.codesample a {
 	text-align: right;
 }
 
+code
+{
+	font-family: monospace;
+	font-size: 1.2em;
+}
+
 div.codesample pre,
 pre.codesample
 {
-	font-family: monospace;
+	font-family: monospace; /* courier doesn't contain '...'*/
 	background-color: #f0f0f0;
 	padding: 5px;
 }
@@ -44,9 +50,11 @@ dl.optionList {
 }
 dl.optionList dt {
 	font-family: monospace;
+	background-color: #f0f0f0;
 }
 dl.optionList dd {
-	font-style: italic;
+/*	font-style: italic; */
+	margin-bottom: 10px;
 }
 
 /*****************************************************************************
