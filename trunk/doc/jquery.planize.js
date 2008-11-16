@@ -1,10 +1,10 @@
 /**
  * The planize jQuery plugin adds some features for dealing with hierarchical headings in a given DOM element.
- * 
+ *
  *  * adds enumerations and anchors in all headings,
  *  * can generates an HTML table of content and append it to an existing DOM element,
  *  * in an unobstrusive way.
- * 
+ *
  * Example of use:
  * $('html *').planize();
  *
@@ -30,7 +30,7 @@
 (function(jQuery){
 
   jQuery.fn.planize = function(config) {
-  
+
     var self          = jQuery(this);
     var processed     = false;
     var toc           = '';
@@ -44,10 +44,10 @@
       number_suffix    : '',
       number_separator : '.',
       toc_elem         : null,
-      toc_title        : 'Table of contents',
+      toc_title        : 'Table of contents' // FIX
     };
     config = jQuery.extend(defaultConfig, config);
-  
+
     /**
      * Prepends all headers text with the current tree number reference
      * @return void
@@ -101,7 +101,7 @@
           prevLevel = level;
         }
       });
-      
+
       if (config.generate_toc) {
         if (config.toc_title) {
           toc = '<h4>' + config.toc_title + '</h4>' + toc;
@@ -111,10 +111,10 @@
         }
         jQuery(config.toc_elem ? config.toc_elem : 'body').append(toc);
       }
-      
+
       processed = true;
     };
-  
+
     /**
      * Logs a message into the firebug or opera console if available
      */
@@ -130,13 +130,13 @@
         } catch(e){}
       }
     }
-  
+
     process();
-    
+
     if (config.callback) {
       config.callback(config.toc_elem);
     }
-  
+
     return jQuery(this);
   };
 
