@@ -19,7 +19,7 @@
 	<link rel='stylesheet' type='text/css' href='howto.css'>
 	<script src='howto.js' type='text/javascript'></script>
 	<!-- Automatic TOC generator -->
-	<script src='jquery.planize.js' type='text/javascript'></script>
+	<script src='./jquery.planize.js' type='text/javascript'></script>
 	<!-- PrettyPrint (triggered in onload event) -->
 	<link href="prettify.css" rel="stylesheet">
 	<script src="prettify.js" type='text/javascript'></script>
@@ -421,7 +421,8 @@ $("#tree").dynatree({
 	All other node options are specified in the <code>data</code> attribute of a &lt;li> element.
 </p>
 <p class="info">
-	Note that the <code>data</code> attribute is not valid in doctypes (HTML 4.01 Strict and XHTML 1.0 Strict).
+	Note that the <code>data</code> attribute is not valid in some doctypes (HTML 4.01 transitional and Strict and XHTML 1.0 Strict).<br>
+	Validators will complain about this.
 </p>
 <p>
 	Nested &lt;ul> elements are used to build a hierarchical tree structure.<br>
