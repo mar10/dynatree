@@ -6,8 +6,10 @@
 ==== 0.3 (in progress) ====
 
 ===== 0.3 (trunk) =====
-  * Fixes: issue #52 
-  * Enhancements: issue #58, issue #21, issue #22
+  *
+===== 0.3 RC2 =====
+  * Fixes: issue #52, issue #55 
+  * Enhancements: issue #21, issue #22, issue #45, issue #58
 
 ===== 0.3 RC1 =====
   * Fixes: issue #41, issue #42, issue #46, issue #51, issue #50, issue #48, issue #47, issue #43 
