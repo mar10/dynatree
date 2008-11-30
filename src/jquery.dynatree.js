@@ -390,6 +390,7 @@ DynaTreeNode.prototype = {
 	},
 
 	_activate: function() {
+/*		
 		if ( this.data.isFolder
 			&& this.tree.options.selectExpandsFolders
 			&& (this.parent != null || this.tree.options.rootCollapsible)
@@ -399,6 +400,30 @@ DynaTreeNode.prototype = {
 			this.focus();
 		} else {
 			// Otherwise select
+			this.select();
+		}
+*/
+		var select = true;
+		var expand = false;
+		if ( this.data.isFolder ) {
+			switch( this.tree.options.clickFolderMode ) {
+			case 2:
+				select = false;
+				expand = true;
+				break;
+			case 3:
+				select = expand = true;
+				break;
+			}
+		}
+		if( this.parent == null && !this.tree.options.rootCollapsible ) {
+			expand = false;
+		}
+		if( expand ) {
+			this.toggleExpand();
+			this.focus();
+		} 
+		if( select ) {
 			this.select();
 		}
 	},
@@ -888,11 +913,15 @@ $.widget("ui.dynatree", {
 		var $this = this.element;
 		var opts = this.options;
 
+		//  Migration helper (2008-11-30)
+		if( opts.selectExpandsFolders == false )
+			alert("Dynatree option 'selectExpandsFolders' is deprecated. Use 'clickFolderMode' instead.");
+		
 		// Guess skin path, if not specified
 		if(!opts.imagePath) {
 			$("script").each( function () {
 				if( this.src.search(/.*dynatree[^/]*\.js$/i) >= 0 ) {
-                    if( this.src.indexOf("/")>=0 ) // issue # 47
+                    if( this.src.indexOf("/")>=0 ) // issue #47
 					    opts.imagePath = this.src.slice(0, this.src.lastIndexOf("/")) + "/skin/";
                     else
 					    opts.imagePath = "skin/";
@@ -1044,7 +1073,8 @@ $.ui.dynatree.defaults = {
 	keyboard: true, // Support keyboard navigation.
 	autoCollapse: false, // Automatically collapse all siblings, when a node is expanded.
 	expandOnAdd: false, // Automatically expand parent, when a child is added.
-	selectExpandsFolders: true, // Clicking a folder title expands the node instead of selecting it.
+//	selectExpandsFolders: true, // Clicking a folder title expands the node instead of selecting it.
+	clickFolderMode: 3, // 1:select, 2:expand, 3:select and expand
 	selectionVisible: true, // Make sure, selected nodes are visible (expanded).
 	idPrefix: 'ui-dynatree-id-', // Used to generate node id's like <span id="ui-dynatree-id-<key>">.
 	ajaxDefaults: { // Used by initAjax option
@@ -1067,7 +1097,6 @@ $.ui.dynatree.defaults = {
 		loading: "ui-dynatree-loading"
 	},
 	debugLevel: 0,
-	// EXPERIMENTAL:
     persist: false, // Persist expand-status to a cookie
     cookieId: "ui-dynatree-cookie", // Choose a more unique name, to allow multiple trees.
 /*

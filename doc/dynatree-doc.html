@@ -100,8 +100,9 @@
 	&lt;!-- Include the required JavaScript libraries: -->
 	&lt;script src='jquery/jquery.js' type='text/javascript'>&lt;/script>
 	&lt;script src='jquery/ui.core.js' type='text/javascript'>&lt;/script>
+    &lt;script src='jquery/jquery.cookie.js' type='text/javascript'>&lt;/script>
 
-	&lt;link rel='stylesheet' type='text/css' href='skin/ui.dynatree.css' />
+	&lt;link rel='stylesheet' type='text/css' href='skin/ui.dynatree.css'>
 	&lt;script src='jquery.dynatree.js' type='text/javascript'>&lt;/script>
 
 	&lt;!-- Add code to initialize the tree when the document is loaded: -->
@@ -114,6 +115,7 @@
 				// A DynaTreeNode object is passed to the select handler
 				alert("You selected " + dtnode.data.title);
 			},
+			persist: true,
 			children: [ // Pass an array of nodes.
 				{title: "Item 1"},
 				{title: "Folder 2", isFolder: true,
@@ -207,9 +209,10 @@ $("#tree").dynatree({
 	keyboard: true, // Support keyboard navigation.
 	autoCollapse: false, // Automatically collapse all siblings, when a node is expanded.
 	expandOnAdd: false, // Automatically expand parent, when a child is added.
-	selectExpandsFolders: true, // Clicking a folder title expands the folder, instead of selecting it.
+	clickFolderMode: 3, // 1:select, 2:expand, 3:select and expand
 	selectionVisible: true, // Make sure, selected nodes are visible (expanded).
 	idPrefix: 'ui-dynatree-id-', // Used to generate node id's like &lt;span id="ui-dynatree-id-<i>key</i>">.
+    persist: false, // Persist expand-status to a cookie
 	ajaxDefaults: { // Used by initAjax option
 		cache: false, // Append random '_' argument to url to prevent caching.
 		dataType: "json" // Expect json format and pass json object to callbacks.
@@ -225,14 +228,30 @@ $("#tree").dynatree({
 	<strong>Details:</strong>
 </p>
 <dl class="optionList">
-	<dt>selectExpandsFolders
+	<dt>clickFolderMode
 	<dd>
-		Type: boolean, default: true.<br>
-		True: single-clicking a folder title expands the node, instead of selecting it.<br>
-		False: the folder will be selected instead. In this case the user can double-click the title to expand.<br>
-		(Clicking the [-] icon will always expand.)
+		Type: integer, default: 3.<br>
+		Define, how a mouse click will change a folder status.
+		<ol>
+		<li>Single-clicking a folder title (or pressing the [enter] or [space] key) will select it.<br>
+		    Double-click (or [+] or [right]) expands it.
+		<li>Single-clicking a folder title expands the node. The folder cannot
+		    be selected.
+		<li>Single-clicking a folder title will select and expand it.
+		</ol>  
+	</dd>
+	<dt>persist
+	<dd>
+		Type: boolean, default: false.<br>
+		True: the tree's expand state is saved to a session cookie, so reloading 
+		the page will not collapse all nodes.<br>
+		Notes: the nodes must have a key defined. Also, it will not work with 
+		lazy nodes. 
 	</dd>
 </dl>
+<p class="info">
+	selectExpandsFolders is deprecated. Use clickFolderMode instead.
+</p>
 
 
 <h3>Initializing the tree structure</h3>
@@ -437,7 +456,7 @@ $("#tree").dynatree({
 	&lt;script src='jquery/jquery.js' type='text/javascript'>&lt;/script>
 	&lt;script src='jquery/ui.core.js' type='text/javascript'>&lt;/script>
 
-	&lt;link rel='stylesheet' type='text/css' href='skin/ui.dynatree.css' />
+	&lt;link rel='stylesheet' type='text/css' href='skin/ui.dynatree.css' >
 	&lt;script src='jquery.dynatree.js' type='text/javascript'>&lt;/script>
 
 	&lt;!-- Add code to initialize the tree when the document is loaded: -->
@@ -806,7 +825,7 @@ children: [
 &lt;script src='../jquery/jquery.js' type='text/javascript'>&lt;/script>
 &lt;script src='../jquery/ui.core.js' type='text/javascript'>&lt;/script>
 &lt;!-- Include a customized stylesheet: -->
-&lt;link href='custom-skin/ui.dynatree.css' rel='stylesheet' type='text/css' />
+&lt;link href='custom-skin/ui.dynatree.css' rel='stylesheet' type='text/css' >
 &lt;script src='../src/jquery.dynatree.js' type='text/javascript'>&lt;/script>
 
 &lt;script type='text/javascript'>
@@ -835,8 +854,9 @@ $("#tree").dynatree({
 </pre>
 
 
-<h2><a id="issues"></a>Feedback, version history and known issues</h2>
+<h2><a id="issues"></a>Feedback, version history, credits and known issues</h2>
 
+<h3>Feedback</h3>
 <p>
 	First of all: this is work in progress.<br>
 	Any kind of feedback is very welcome :-)
@@ -847,6 +867,10 @@ $("#tree").dynatree({
 		Please make sure you searched the group and issue tracker, before adding a new request.
 	<li>You may also contact me directly at <i>martin at_sign wwWendt.de</i>.
 </ul>
-
+<h3>Credits</h3>
+<p>
+	I am using the <a href="http://prendreuncafe.com/work/jqplanize/">planize plugin</a> by Nicolas Perriault for the table of contents.<br>
+	I am using the <a href="http://code.google.com/p/google-code-prettify/">prettify.js</a> by Mike Samuel for syntax highlighting in the of source code samples.<br>
+</p>
 </body>
 </html>
