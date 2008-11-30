@@ -6,6 +6,7 @@
 
 	<script src='../jquery/jquery.js' type='text/javascript'></script>
 	<script src='../jquery/ui.core.js' type='text/javascript'></script>
+    <script src='../jquery/jquery.cookie.js' type='text/javascript'></script>
 
 	<link href='../src/skin/ui.dynatree.css' rel='stylesheet' type='text/css' >
 	<script src='../src/jquery.dynatree.js' type='text/javascript'></script>
@@ -15,6 +16,7 @@
 		$("#tree").dynatree({
 			title: "Event samples",
 			rootVisible: true,
+			persist: true,
 			onSelect: function(dtnode) {
 				$("#echoSelected").text(dtnode.data.title);
 				if( dtnode.data.url )
