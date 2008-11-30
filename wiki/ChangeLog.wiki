@@ -6,7 +6,9 @@
 ==== 0.3 (in progress) ====
 
 ===== 0.3 (trunk) =====
-  *
+  * Changes: selectExpandsFolders is deprecated. Use clickFolderMode instead.
+  * Enhancements: issue #5, issue #57
+
 ===== 0.3 RC2 =====
   * Fixes: issue #52, issue #55 
   * Enhancements: issue #21, issue #22, issue #45, issue #58
