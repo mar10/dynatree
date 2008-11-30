@@ -264,7 +264,7 @@ $("#tree").dynatree({
 	The root node is usually hidden, so we only see the nodes that we have added.
 </p>
 <p>
-	Dynatree reads the structure in different ways:
+	Dynatree can read it's structure from different sources:
 </p>
 <ol>
 	<li>If the <code>children</code> option is passed, it will be used.
@@ -276,7 +276,7 @@ $("#tree").dynatree({
 		But we may choose to do so, if we want to modify the tree programmatically.
 </ol>
 <p>
-	All theses methods expect a list of node options, as described in the following
+	Methods 1-3 expect a list of node options, as described in the following
 	sections.
 </p>
 
@@ -287,7 +287,7 @@ $("#tree").dynatree({
 	Node options are defined as plain JavaScript objects in curly braces, e.g.<br>
 	<code>{ &#8230; }</code>.<br>
 	Most of the time we pass a list of node options like this<br>
-	<code>[ { &#8230; }, { &#8230; }, &#8230; ]</code>.
+	<code>children: [ { &#8230; }, { &#8230; }, &#8230; ]</code>.
 </p>
 <p>
 	The follwing snippet shows the attributes that can be used to define a tree node.<br>
@@ -339,8 +339,11 @@ onSelect: function(dtnode) {
 	<dt>isFolder
 	<dd>
 		When a node is of type <i>folder</i>, it get's a special folder icon and class name.<br>
-		Also, folders can be expanded, but not selected. So we usually use them to hold child nodes.<br>
-		Note that also non-folders ('documents') may contain child nodes.<br>
+		We usually use them to hold child nodes.<br>
+		Also, folders can be expanded by clicking the title text (this behavior 
+		can be controlled using the <code>clickFolderMode</code> option).<br>
+		<br>
+		Non-folders ('documents') may also contain child nodes.<br>
 		Clicking on a child node selects it, so we have to click the small [+] icon in front to expand such a document node.
 	</dd>
 	<dt>isLazy
@@ -354,7 +357,7 @@ onSelect: function(dtnode) {
 	</dd>
 	<dt>tooltip
 	<dd>
-		Optional string to display i na popup window when the cursor hovers over
+		Optional string to display in a popup window when the cursor hovers over
 		the node.
 	</dd>
 	<dt>icon
@@ -403,7 +406,7 @@ $("#tree").dynatree({
 </p>
 
 
-<h4>Initializing the tree structure from an Ajax response</h4>
+<h4 id="ajaxResponse">Initializing the tree structure from an Ajax response</h4>
 
 <p>
 	Instead of passing an array of data objects, we can pass a url in the <code>initAjax</code>
@@ -428,12 +431,16 @@ $("#tree").dynatree({
 	Because the data request is performed asynchronously, the document will load faster.
 	Dynatree will display a spinning wheel, while waiting for the request to complete.
 </p>
+<p>
+	See <a href="#lazyLoading">Loading child nodes on demand</a> for details.
+</p>
 
 
 <h4 id="initFromUl">Initializing the tree structure from a &lt;ul> element</h4>
 
 <p>
-	If the container &lt;div> contains a &lt;ul> element, the node titles are read from the &lt;li> tags.<br>
+	If the container &lt;div> contains a &lt;ul> element, the node titles are 
+	read from the &lt;li> tags.<br>
 	If the title contains html markup, it may be better to wrap it inside a span element.
 </p>
 <p>
@@ -626,7 +633,7 @@ $("#tree").dynatree({
 </div>
 
 
-<h3>Loading child nodes on demand ('lazy loading')</h3>
+<h3 id="lazyLoading">Loading child nodes on demand ('lazy loading')</h3>
 
 <p>
 	Dynatree supports delayed loading of tree nodes, which means we read the nodes only when the parent is expanded.
@@ -658,8 +665,13 @@ $("#tree").dynatree({
 </div>
 
 <p>
-	Because the data request is performed asynchronously, the browser will not block and is still responsive.
-	Dynatree will display a spinning wheel, while waiting for the request to complete.
+	Because the data request is performed asynchronously, the browser will not 
+	block and is still responsive. Dynatree will display a spinning wheel, while waiting for the request to 
+	complete.<br>
+	This webservice is expected to return an JSON object response, as explained 
+	in <a href="#nodeOptions">Node options</a>.<br>
+	See also <a href="#ajaxResponse">Initializing the structure from an Ajax response</a> 
+	for a sample to initialize the whole tree with an Ajax request.<br>
 </p>
 
 
@@ -679,7 +691,8 @@ $("#tree").dynatree({
 <dl class="optionList">
 	<dt>enableUpdate(enable)
 	<dd>
-		Turn rendering on or off. Disabling update may speedup processing, when adding lots of nodes.
+		Turn rendering on or off. Disabling update may speedup processing, when adding lots of nodes.<br>
+		Don't forget to turn rendering back on, after applying the changes. 
 	</dd>
 	<dt>getNodeByKey(key)
 	<dd>
@@ -717,7 +730,7 @@ $("#tree").dynatree({
 	<dd>
 		Accepts a node or an array of nodes to create child nodes.<br>
 		The nodes may contain a <code>children</code> option to build a hierarchy.<br>
-		Returns the new DynaTree object (or the first one, if an array was passed).
+		Returns the new DynaTree object (the first one, if an array was passed).
 		<br>
 		The nodeArray must be formatted like the data'a <code>children</code> object.
 		(See also <a href="#nodeOptions">Node options</a>).
@@ -732,12 +745,12 @@ $("#tree").dynatree({
 	</dd>
 	<dt>focus()
 	<dd>
-		Sets focus to this node. Parent nodes are expanded, if this is necessary
+		Set focus to this node. Parent nodes are expanded, if this is necessary
 		to make it visible.
 	</dd>
 	<dt>makeVisible()
 	<dd>
-		Expands all parents as neccessary, to make this node visible.
+		Expand all parents as neccessary, to make this node visible.
 	</dd>
 	<dt>remove()
 	<dd>
@@ -766,8 +779,8 @@ $("#tree").dynatree({
 	</dd>
 	<dt>toggleExpand()
 	<dd>
-		Toggle selection state.<br>
-		Expanding a lazy node, fires a onLazyRead event..
+		Toggle expansion state.<br>
+		Expanding a lazy node, fires a onLazyRead event.
 	</dd>
 	<dt>unselect()
 	<dd>
