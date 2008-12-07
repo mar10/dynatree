@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+	<title>dynatree sample - events</title>
+
+	<script src='../jquery/jquery.js' type='text/javascript'></script>
+	<script src='../jquery/ui.core.js' type='text/javascript'></script>
+    <script src='../jquery/jquery.cookie.js' type='text/javascript'></script>
+
+	<link href='../src/skin/ui.dynatree.css' rel='stylesheet' type='text/css' >
+	<script src='../src/jquery.dynatree.js' type='text/javascript'></script>
+
+<script type='text/javascript'>
+	$(function(){
+		$("#tree").dynatree({
+			title: "Event samples",
+			rootVisible: true,
+			persist: true,
+			onSelect: function(dtnode) {
+				$("#echoSelected").text(dtnode.data.title);
+				if( dtnode.data.url )
+					window.open(dtnode.data.url);
+			},
+			onUnselect: function(dtnode) {
+				$("#echoSelected").text("-");
+			},
+			onFocus: function(dtnode) {
+				$("#echoFocused").text(dtnode.data.title);
+			},
+			onBlur: function(dtnode) {
+				$("#echoFocused").text("-");
+			},
+			onLazyRead: function(dtnode){
+				var fakeJsonResult = [
+				    { title: 'Lazy node 1', isLazy: true },
+				    { title: 'Simple node 2' }
+				];
+//				alert ("Let's pretend we're using this AJAX response to load the branch:\n " + jsonResult);
+				function fakeAjaxResponse() {
+					return function() {
+						dtnode.append(fakeJsonResult);
+						// Remove the 'loading...' status:
+						dtnode.setLazyNodeStatus(DTNodeStatus_Ok);
+					};
+				}
+				window.setTimeout(fakeAjaxResponse(), 1500);
+			}
+		});
+
+	});
+</script>
+</head>
+
+<body>
+	<div id="tree">
+		<ul>
+			<li data="isFolder: true">jQuery links
+				<ul>
+					<li data="url: 'http://jquery.com'">jQuery home
+					<li data="url: 'http://docs.jquery.com'">jQuery docs
+				</ul>
+
+			<li data="isFolder: true">Other links
+				<ul>
+					<li data="url: 'http://code.google.com'">Google Code
+				</ul>
+
+			<li data="isFolder: true">Lazy loading
+				<ul>
+					<li data="isLazy: true, key: '123'">This is a lazy loading document with key 123.
+					<li data="isLazy: true, key: '234', isFolder: true">This is a lazy loading folder with key 234.
+				</ul>
+		</ul>
+	</div>
+
+	<div>Selected node: <span id="echoSelected">-</span></div>
+	<div>Focused node: <span id="echoFocused">-</span></div>
+
+	<p><a href="http://dynatree.googlecode.com">jquery.dynatree.js</a></p>
+</body>
+</html>

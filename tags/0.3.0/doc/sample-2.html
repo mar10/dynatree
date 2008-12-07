@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+	<title>dynatree sample - 2</title>
+
+	<script src='../jquery/jquery.js' type='text/javascript'></script>
+	<script src='../jquery/ui.core.js' type='text/javascript'></script>
+    <script src='../jquery/jquery.cookie.js' type='text/javascript'></script>
+
+	<link href='../src/skin/ui.dynatree.css' rel='stylesheet' type='text/css' >
+	<script src='../src/jquery.dynatree.js' type='text/javascript'></script>
+
+<script type='text/javascript'>
+	$(function(){
+		// Initialize the tree inside the <div>element.
+		// The tree structure is read from the contained <ul> tag.
+		$("#tree").dynatree({
+			title: "Sample 2",
+			rootVisible: true,
+			autoCollapse: true,
+//			clickFolderMode: 3,
+			onSelect: function(dtnode) {
+				$("#echoSelected").text(dtnode.data.title);
+				if( dtnode.data.url )
+					window.open(dtnode.data.url, dtnode.data.target);
+			},
+			onUnselect: function(dtnode) {
+				$("#echoSelected").text("-");
+			},
+			onFocus: function(dtnode) {
+				$("#echoFocused").text(dtnode.data.title);
+			},
+			onBlur: function(dtnode) {
+				$("#echoFocused").text("-");
+			},
+			onLazyRead: function(dtnode){
+				var fakeJsonResult = [
+				    { title: 'Lazy node 1', isLazy: true },
+				    { title: 'Simple node 2' }
+				];
+//				alert ("Let's pretend we're using this AJAX response to load the branch:\n " + jsonResult);
+				function fakeAjaxResponse() {
+					return function() {
+						dtnode.append(fakeJsonResult);
+						// Remove the 'loading...' status:
+						dtnode.setLazyNodeStatus(DTNodeStatus_Ok);
+					};
+				}
+				window.setTimeout(fakeAjaxResponse(), 1500);
+			}
+		});
+
+		$("#btnAddCode").click(function(){
+			// Sample: add an hierarchic branch using code.
+			// This is how we would add tree nodes programatically
+			var rootNode = $("#tree").dynatree("getRoot");
+			var childNode = rootNode.append({
+				title: "Programatically addded nodes",
+				tooltip: "This folder and all child nodes were added programmatically.",
+				isFolder: true
+			});
+			childNode.append({
+				title: "Document using a custom icon",
+				icon: "customdoc1.gif"
+			});
+		});
+
+		$("#btnAddObject").click(function(){
+			// Sample: add an hierarchic branch using an array
+			var obj = [
+				{ title: 'Lazy node 1', isLazy: true },
+				{ title: 'Lazy node 2', isLazy: true },
+				{ title: 'Folder node 3', isFolder: true,
+					children: [
+						{ title: 'node 3.1' },
+						{ title: 'node 3.2',
+							children: [
+								{ title: 'node 3.2.1' },
+								{ title: 'node 3.2.2',
+									children: [
+										{ title: 'node 3.2.2.1' }
+									]
+								},
+							]
+						},
+					]
+				}
+			];
+			$("#tree").dynatree("getRoot").append(obj);
+		});
+
+		$("#btnSelectNode").click(function(){
+			$("#tree").dynatree("getTree").selectKey("4.3.2");
+//			$("#tree").dynatree("getTree").getNodeByKey("4.3.2").select();
+		});
+
+		$("#btnShowSelected").click(function(){
+			var dtnode = $("#tree").dynatree("getSelectedNode");
+			if( dtnode )
+				alert("Currently selected: " + dtnode.data.title);
+			else
+				alert("Nothing selected.");
+		});
+	});
+</script>
+</head>
+
+<body>
+	<h1>Advanced Dynatree example</h1>
+	<div id="tree">
+		<ul>
+			<li>This simple node (and the following) have been created from html.
+			<li data="key: '1', tooltip: 'This is item #1'">item1 with key and tooltip
+			<li data="key: '2', tooltip: 'This is item #2'">item2
+
+			<li data="key: '3', isFolder: true">Standard Folder with some children
+				<ul>
+					<li data="key: '3.1'">Sub-item 3.1
+					<li data="key: '3.2'">Sub-item 3.2
+				</ul>
+
+			<li data="key: '4'">item 4. Note that also non-folders (i.e. 'documents') may have child nodes
+				<ul>
+					<li data="key: '4.1'">Sub-item 4.1
+					<li data="key: '4.2'">Sub-item 4.2
+					<li data="key: '4.3'">Sub-item 4.3
+						<ul>
+							<li data="key: '4.3.1'">Sub-item 4.3.1
+							<li data="key: '4.3.2'">Sub-item 4.3.2
+							<ul>
+								<li data="key: '4.3.2.1'">Sub-item 4.3.2.1
+								<li data="key: '4.3.2.2'">Sub-item 4.3.2.2
+							</ul>
+						</ul>
+					<li data="key: '4.4'">Sub-item 4.4
+				</ul>
+
+			<li data="key: '5', isFolder: true">Advanced examples
+				<ul>
+					<li id="node5.1">item5.1: Using id attribute as an alternative way to specify a key.
+					<li>Using some <b>bold</b> markup in the text (&lt;li&gt; tag only).
+					<li><span>Using some <b>bold</b> markup in the text (&lt;li&gt;&lt;span&gt; tag).</span>
+					<li><span>Using some extended markup in the text (&lt;li&gt;&lt;span&gt; tag).<button value="123">Click me</button>
+					</span>
+					<li class="folder">item6: Using class 'folder as an alternative way to specify data.isFolder.
+					<li>Item without a key. Keys are optional, but may be used in the callbacks
+					<li data="key: '5.2'">Sub-item 5.2
+				</ul>
+
+			<li>item3
+		</ul>
+	</div>
+
+	<div>Selected node: <span id="echoSelected">-</span></div>
+	<div>Focused node: <span id="echoFocused">-</span></div>
+	<p>
+		<button id="btnAddCode">Add nodes programmatically</button>
+		<button id="btnAddObject">Add nodes using arrays</button>
+		<button id="btnSelectNode">Select item 4.3.2</button>
+		<button id="btnShowSelected">Show selected node...</button>
+	</p>
+	<p><a href="http://dynatree.googlecode.com">jquery.dynatree.js</a></p>
+</body>
+</html>
