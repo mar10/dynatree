@@ -10,8 +10,8 @@
 
 	Let me know, if you find bugs or improvements (martin at domain wwWendt.de).
 
-	$Rev:$
-	$Date:$
+	$Version:$
+	$Revision:$
 
  	@depends: jquery.js
  	@depends: ui.core.js
