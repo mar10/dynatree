@@ -5,7 +5,7 @@
 	Copyright (c) 2008  Martin Wendt (http://wwWendt.de)
 	Licensed under the MIT License (MIT-License.txt)
 
-	A current version and some documentation should be available at
+	A current version and some documentation are available at
 		http://dynatree.googlecode.com/
 
 	Let me know, if you find bugs or improvements (martin at domain wwWendt.de).
@@ -22,7 +22,7 @@
  *	Common functions for extending classes etc.
  *	Borrowed from prototype.js
  */
-// TODO: remove Class
+
 var Class = {
 	create: function() {
 		return function() {
@@ -390,19 +390,6 @@ DynaTreeNode.prototype = {
 	},
 
 	_activate: function() {
-/*		
-		if ( this.data.isFolder
-			&& this.tree.options.selectExpandsFolders
-			&& (this.parent != null || this.tree.options.rootCollapsible)
-			) {
-			// Clicking a folder, when selectExpandsFolders is on, will expand
-			this.toggleExpand();
-			this.focus();
-		} else {
-			// Otherwise select
-			this.select();
-		}
-*/
 		var select = true;
 		var expand = false;
 		if ( this.data.isFolder ) {
@@ -429,15 +416,6 @@ DynaTreeNode.prototype = {
 	},
 
 	onClick: function(event) {
-		/*
-		this is the <div> element
-		event:.target: <a>
-		event.type: 'click'
-			.which: 1
-			.shiftKey: false, .ctrlKey:  false, . metaKey: false
-			.buton: 0
-			. currentTargte: div#tree
-		*/
 //		logMsg("dtnode.onClick(" + event.type + "): dtnode:" + this + ", button:" + event.button + ", which: " + event.which);
 
 		if( $(event.target).hasClass(this.tree.options.classnames.expander) ) {
@@ -455,7 +433,6 @@ DynaTreeNode.prototype = {
 
 	onKeypress: function(event) {
 		/*
-		this is the <div> element
 		event:.target: <a>
 		event.type: 'keypress'
 			.which: 1
@@ -581,7 +558,7 @@ DynaTreeNode.prototype = {
 
 	remove: function() {
         // Remove this node
-		logMsg ('%o.remove()', this);
+//		logMsg ('%o.remove()', this);
         if ( this === this.tree.root )
             return false;
         return this.parent.removeChild(this);
@@ -725,7 +702,7 @@ DynaTree.prototype = {
 //	version: '0.3 beta',
 	// constructor
 	initialize: function (id, options) {
-		logMsg ("DynaTree.initialize()");
+//		logMsg ("DynaTree.initialize()");
 		// instance members
 		this.options = options;
 
@@ -745,7 +722,7 @@ DynaTree.prototype = {
 			} else {
 				this.initCookie = true; // Init first time persistence from node.data
 			}
-			logMsg("Read cookie: %o, initCookie: %o", this.expandedKeys, this.initCookie);
+//			logMsg("Read cookie: %o, initCookie: %o", this.expandedKeys, this.initCookie);
 		}
 
 		// Cached tags
@@ -795,10 +772,10 @@ DynaTree.prototype = {
 			this.expandedKeys = jQuery.grep(this.expandedKeys, function(e){ return(e != key); });
 		}
 		if( bWriteCookie ) {
-			logMsg("_changeExpandList: write cookie: <%s> = '%s'", this.options.cookieId, this.expandedKeys.join(","));
+//			logMsg("_changeExpandList: write cookie: <%s> = '%s'", this.options.cookieId, this.expandedKeys.join(","));
 			jQuery.cookie(this.options.cookieId, this.expandedKeys.join(","));
 		} else {
-			logMsg("_changeExpandList: %o", this.expandedKeys);
+//			logMsg("_changeExpandList: %o", this.expandedKeys);
 		}
 		return ( n != this.expandedKeys.length );
 	},
@@ -983,7 +960,7 @@ $.widget("ui.dynatree", {
 		}
 		// We defined the first-time cookie from node.data, now store it
         if( this.tree.initCookie ) {
-			logMsg("Write cookie: <%s> = '%s'", opts.cookieId, this.tree.expandedKeys.join(","));
+//			logMsg("Write cookie: <%s> = '%s'", opts.cookieId, this.tree.expandedKeys.join(","));
 			$.cookie(opts.cookieId, this.tree.expandedKeys.join(","));
         }
 	},
@@ -1037,8 +1014,6 @@ $.widget("ui.dynatree", {
 			// Recursive reading of child nodes, if LI tag contains an UL tag
 			var $ul = $li.find(">ul:first");
 			if( $ul.length ) {
-//				if( data.expand ) // 1.11.08: no longer required(?)
-//					childNode.bExpanded = true;
 				self.createFromTag(childNode, $ul); // must use 'self', because 'this' is the each() context
 			}
 		});

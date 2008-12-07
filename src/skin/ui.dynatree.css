@@ -70,20 +70,13 @@ div.ui-dynatree-container div
 .ui-dynatree-container a:focus
 {
 	background-color: #EFEBDE; /* light gray */
-/*	background-color: #3169C6; */
-/*	color: white !important; */
-/*	border: dotted 1px black; */
 }
 
 .ui-dynatree-container a:focus,
 .ui-dynatree-focused a,
 .ui-dynatree-focused a:link
 {
-/*	text-decoration: none; */
 	background-color: #EFEBDE; /* gray */
-/*	background-color: #3169C6; */
-/*	color: white !important; */
-/*	border: dotted 1px black; */
 }
 
 .ui-dynatree-selected
@@ -91,7 +84,6 @@ div.ui-dynatree-container div
 }
 .ui-dynatree-selected a
 {
-/*	background-color: #DFDBCE; /* gray */
 	background-color: #3169C6 !important;
 	color: white !important; /* @ IE6 */
 }
