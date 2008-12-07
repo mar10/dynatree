@@ -3,9 +3,9 @@
 
 <wiki:toc max_depth="4" />
 
-==== 0.3 (in progress) ====
+==== Release 0.3 ====
 
-===== 0.3 (trunk) =====
+===== 0.3.0 =====
   * Changes: selectExpandsFolders is deprecated. Use clickFolderMode instead.
   * Enhancements: issue #5, issue #57
 
