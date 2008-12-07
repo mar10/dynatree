@@ -1,0 +1,90 @@
+div.ui-dynatree-container
+{
+	font-family: tahoma, arial, helvetica;
+	font-size: 10pt; /* font size should not be too big */
+	white-space: nowrap; /* better to set it by default, imho */
+	padding: 3px;
+
+	background-color: white; 
+	border: 1px dotted gray;
+}
+
+.ui-dynatree-expander
+{
+	cursor: pointer;
+}
+
+.ui-dynatree-container img
+{
+	border-width: 0px;
+	width: 16px;
+	height: 16px;
+	vertical-align:bottom; /* correctly align img */
+	/* FIXME: see issue #49 */
+/*	display: block; /* Removes bottom margin from images */
+/*	float: left;    /* Makes images display inline  */
+}
+
+/*clear the float left from above */
+div.ui-dynatree-container div  
+{
+/*    clear: both; */  
+}
+
+
+.ui-dynatree-document,
+.ui-dynatree-folder
+{
+	line-height: 16px; /* should be the same as img height, in case 16 px */
+	margin: 0px;
+	border: 0px;
+	color: black;
+}
+.ui-dynatree-folder
+{
+	font-weight: bold;
+}
+
+.ui-dynatree-container a,
+.ui-dynatree-container a:link,
+.ui-dynatree-container a:visited,
+.ui-dynatree-container a:active 
+{
+	text-decoration: none;
+	color: black;
+/*	outline: 0; /* @ Firefox, prevent dotted border after click */
+	margin-left: 5px;
+	padding: 0px 3px 0px 3px;
+	vertical-align: text-top;
+}
+
+.ui-dynatree-container a:hover
+{
+	text-decoration: underline;
+}
+
+.ui-dynatree-focused
+{
+}
+
+.ui-dynatree-container a:focus
+{
+	background-color: #EFEBDE; /* light gray */
+}
+
+.ui-dynatree-container a:focus,
+.ui-dynatree-focused a,
+.ui-dynatree-focused a:link
+{
+	background-color: #EFEBDE; /* gray */
+}
+
+.ui-dynatree-selected
+{
+}
+.ui-dynatree-selected a
+{
+	background-color: #3169C6 !important;
+	color: white !important; /* @ IE6 */
+}
+
