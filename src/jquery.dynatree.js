@@ -965,6 +965,13 @@ $.widget("ui.dynatree", {
         }
 	},
 
+	bindKeys: function(enable) {
+		if( enable )
+			this.element.bind("keypress keydown", fnKeyHandler);
+		else
+			this.element.unbind("keypress keydown", fnKeyHandler);
+	},
+
 	// --- getter methods (i.e. NOT returning a reference to $)
 	getTree: function() {
 		return this.tree;
