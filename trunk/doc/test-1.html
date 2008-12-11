@@ -75,6 +75,10 @@
 		$("#btn22").click(function(){
 			$("#tree").dynatree("getTree").getNodeByKey("_122").remove();
 		});
+		$("#btnUnbind").click(function(){
+//			logMsg("fn=%o", fnKeyHandler);
+			$("#tree").dynatree("bindKeys", false);
+		});
 	});
 
 
@@ -94,6 +98,7 @@
         <button id="btnDiv">dynamic div issue</button>
         <button id="btn21">remove 1.2 children</button>
         <button id="btn22">remove 1.2.2</button>
+        <button id="btnUnbind">unbind</button>
     </p>
 	<div id='tree2'>
 	<ul>
