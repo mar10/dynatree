@@ -9,6 +9,14 @@ div.ui-dynatree-container
 	border: 1px dotted gray;
 }
 
+/* Style, when control is disabled */
+.ui-dynatree-disabled
+{
+	opacity: 0.5;
+	filter: alpha(opacity=50);
+/*	cursor: wait; */
+}
+
 .ui-dynatree-expander
 {
 	cursor: pointer;
