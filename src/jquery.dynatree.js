@@ -18,6 +18,29 @@
     @depends: jquery.cookie.js
 *************************************************************************/
 
+/* Changelog 0.3 -> 0.4
+ *   - New ui.core.js 1.5.2 -> 1.6 rc2
+ *   - issue #59: 'expand' -> 'expanded'
+ *     data.select and expand are commands(verbs) class="expanded selected" are adjectives  
+ *   - issue #54: class='selected expanded lazy folder'
+ *     Note: Cookie persistence overrides 'expanded' 
+ *     Note: data='...' overrides id, class, and title attributes
+ *     Note: id="" must begin with a character.  
+ *   - issue #53: 'selected'
+ *   - issue # : tree.visit
+ *   - tree.bind / unbind
+ *   - tree.enable / disable
+ *   - opts.onClick, ... to hook events
+ * TODO
+ *   - issue #63: work with prototype
+ *   - issue #61: allow image names + extensions
+ *   - issue #15: multi-select
+ *   - issue #56: <span class="ui-dynatree-title"> --> use a template?
+ *   - issue #17: checkbox mode
+ *   - data.isFolder -> folder, .isLazy -> lazy 
+ *   - 'focus' attribute on init and in cookie
+ */
+
 /*************************************************************************
  *	Common functions for extending classes etc.
  *	Borrowed from prototype.js
@@ -73,7 +96,7 @@ var DynaTreeNode = Class.create();
 DynaTreeNode.prototype = {
 	initialize: function(tree, data) {
 		this.tree    = tree;
-		if ( typeof data == 'string' ) {
+		if ( typeof data == "string" ) {
 			this.data = { title: data };
 		} else {
 			this.data = jQuery.extend({}, jQuery.ui.dynatree.nodedatadefaults, data);
@@ -86,7 +109,7 @@ DynaTreeNode.prototype = {
 		this.bExpanded = ( data.expand == true ) ? true : false; // Collapsed by default
 
 		if( this.tree.initCookie && this.bExpanded ) {
-			// Initialize cookie from status stored in data.expanded
+			// Initialize cookie from status stored in data.expand
 			this.tree._changeExpandList(this.data.key, true, false);
 		} else if( this.tree.options.persist && ! this.tree.initCookie && this.data.key ) {
 			// Initialize expand state from cookie
@@ -381,14 +404,6 @@ DynaTreeNode.prototype = {
 		}
 	},
 
-	onDblClick: function(event) {
-		if ( this.data.isFolder && ( this.aChilds || this.data.isLazy )
-			&& (this.parent != null || this.tree.options.rootCollapsible)
-			) {
-			this.toggleExpand();
-		}
-	},
-
 	_activate: function() {
 		var select = true;
 		var expand = false;
@@ -416,7 +431,7 @@ DynaTreeNode.prototype = {
 	},
 
 	onClick: function(event) {
-//		logMsg("dtnode.onClick(" + event.type + "): dtnode:" + this + ", button:" + event.button + ", which: " + event.which);
+		logMsg("dtnode.onClick(" + event.type + "): dtnode:" + this + ", button:" + event.button + ", which: " + event.which);
 
 		if( $(event.target).hasClass(this.tree.options.classnames.expander) ) {
 			// Clicking the [+] icon always expands
@@ -424,24 +439,23 @@ DynaTreeNode.prototype = {
 		} else {
 			this._activate();
 		}
-
 		this.focus();
 
 		// Make sure that clicks stop
 		return false;
 	},
 
+	onDblClick: function(event) {
+		logMsg("dtnode.onDblClick(" + event.type + "): dtnode:" + this + ", button:" + event.button + ", which: " + event.which);
+		if ( this.data.isFolder && ( this.aChilds || this.data.isLazy )
+			&& (this.parent != null || this.tree.options.rootCollapsible)
+			) {
+			this.toggleExpand();
+		}
+	},
+
 	onKeypress: function(event) {
-		/*
-		event:.target: <a>
-		event.type: 'keypress'
-			.which: 1
-			.shiftKey: false, 	.ctrlKey:  false, 	. metaKey: false
-			.charCode:  '+':43, '-':45, '*':42, '/':47, ' ':32
-			.keyCode:   left:37, right:39, up:38 , down: 40, <Enter>:13
-			. currentTargte: div#tree
-		*/
-//		logMsg("dtnode.onKeyPress(" + event.type + "): dtnode:" + this + ", charCode:" + event.charCode + ", keyCode: " + event.keyCode + ", which: " + event.which);
+		logMsg("dtnode.onKeyPress(" + event.type + "): dtnode:" + this + ", charCode:" + event.charCode + ", keyCode: " + event.keyCode + ", which: " + event.which);
 		var code = ( ! event.charCode ) ? 1000+event.keyCode : event.charCode;
 		var handled = true;
 
@@ -459,7 +473,6 @@ DynaTreeNode.prototype = {
 				//~ break;
 			case 1032: // <space>
 			case 32: // <space>
-//				this.select();
 				this._activate();
 				break;
 			// keyCodes
@@ -516,7 +529,7 @@ DynaTreeNode.prototype = {
 
 	onFocus: function(event) {
 		// Handles blur and focus events.
-//		logMsg("dtnode.onFocus(%o): %o", event, this);
+		logMsg("dtnode.onFocus(%o): %o", event, this);
 		if ( event.type=="blur" || event.type=="focusout" ) {
 			if ( this.tree.options.onBlur ) // Pass element as 'this' (jQuery convention)
 				this.tree.options.onBlur.call(this.span, this);
@@ -538,23 +551,18 @@ DynaTreeNode.prototype = {
 //		return false;
 	},
 
-/*
-	visit: function (cb, bSelf, bDeep) { // TODO: better name: each(fn)
+	visit: function(cb, bSelf) {
 		var n = 0;
-		if ( bSelf ) { cb (this); n++; }
-		if ( this.aChilds ) {
-			for (var i=0; i<this.aChilds.length; i++) {
-				if ( bDeep ) {
-					n += this.aChilds[i].visit (cb, true, bDeep);
-				} else {
-					cb (this.aChilds[i]);
-					n++;
-				}
-			}
+		if ( bSelf != false ) {
+			if( cb(this) == false )
+				return 1; 
+			n++; 
 		}
+		if ( this.aChilds )
+			for (var i=0; i<this.aChilds.length; i++)
+				n += this.aChilds[i].visit (cb, true);
 		return n;
 	},
-*/
 
 	remove: function() {
         // Remove this node
@@ -621,11 +629,15 @@ DynaTreeNode.prototype = {
 		// 3. this is the root node, and the root node is defined as always open
 		if ( this.tree.options.expandOnAdd
 			 || ( (!this.tree.options.rootCollapsible || !this.tree.options.rootVisible) && this.parent==null )
+			 || ( dtnode.data.expand )
 			 ) {
 			this.bExpanded = true;
 			if( this.tree.initCookie )
 				this.tree._changeExpandList(this.key, true, false);
 		}
+//		logMsg("%o: %o, %o", this, this.tree.isInitializing, dtnode.data.select)
+		if( this.tree.isInitializing && dtnode.data.select )
+			this.tree.selectedNodes.push(dtnode);
 		if ( this.tree.bEnableUpdate )
 			this.render (true, true);
 
@@ -699,7 +711,7 @@ var DynaTree = Class.create();
 
 DynaTree.prototype = {
 	// static members
-//	version: '0.3 beta',
+	version: "$Version:",
 	// constructor
 	initialize: function (id, options) {
 //		logMsg ("DynaTree.initialize()");
@@ -710,7 +722,10 @@ DynaTree.prototype = {
 		this.bEnableUpdate = true;
 		this.isDisabled = false;
 
-		// list of expanded nodes (only maintained in persist mode)
+		// list of expanded nodes (only maintained while initializing)
+		this.selectedNodes = new Array();
+
+		// list of expanded node keys (only maintained in persist mode)
 		this.expandedKeys = new Array();
 
 		this.initCookie = false;
@@ -830,6 +845,7 @@ DynaTree.prototype = {
 
 (function($) {
 
+/*
 function _getNodeFromElement(el) {
 	var iMax = 4;
 	do {
@@ -870,10 +886,12 @@ function fnFocusHandler(event) {
 	event = arguments[0] = $.event.fix( event || window.event );
 	var dtnode = _getNodeFromElement(event.target);
 //	logMsg("fnFocusHandler(%o), dtnode=%o", event, dtnode);
+	logMsg("fnFocusHandler(%o), dtnode=%o, this=", event, dtnode, this);
 	if( !dtnode )
 		return false;
 	return dtnode.onFocus(event);
 }
+*/
 
 $.widget("ui.dynatree", {
 	init: function() {
@@ -884,9 +902,9 @@ $.widget("ui.dynatree", {
 
 	_init: function() {
 		// The widget framework supplies this.element and this.options.
-		this.options.event += '.dynatree'; // namespace event
+		this.options.event += ".dynatree"; // namespace event
 
-		// create lazytree
+		// Create DynaTree
 		var $this = this.element;
 		var opts = this.options;
 
@@ -913,6 +931,8 @@ $.widget("ui.dynatree", {
 		var root = this.tree.getRoot()
 
 		// Init tree structure
+		this.tree.isInitializing = true;
+
 		if( opts.children ) {
 			// Read structure from node array
 			root.append(opts.children);
@@ -931,47 +951,126 @@ $.widget("ui.dynatree", {
 			this.createFromTag(root, $ul);
 			$ul.remove();
 		}
-		//
-
 		// bind event handlers
-		$this.bind("click", fnClick);
-		$this.bind("dblclick", fnDblClick);
-		if( opts.keyboard ) {
-			$this.bind("keypress keydown", fnKeyHandler);
+		this.bind();
+		
+		// EVENTS
+		// Register events sources
+//		this.$tabs.unbind('.tabs').bind(o.event, function() {
+//		}
 
-			// focus/blur don't bubble, i.e. are not delegated to parent <div> tags,
-			// so we use the addEventListener capturing phase.
-			// See http://www.howtocreate.co.uk/tutorials/javascript/domevents
-			var div = this.tree.divTree;
-			if( div.addEventListener ) {
-				div.addEventListener("focus", fnFocusHandler, true);
-				div.addEventListener("blur", fnFocusHandler, true);
-			} else {
-				div.onfocusin = div.onfocusout = fnFocusHandler;
-			}
-			if( opts.focusRoot ) {
-				if( opts.rootVisible ) {
-					root.focus();
-				} else if( root.aChilds && ! (opts.initAjax && opts.initAjax.url) ) {
-					// Only if not lazy initing (Will be handled by setLazyNodeStatus(DTNodeStatus_Ok))
-					root.aChilds[0].focus();
-				}
-			}
-		}
 		// We defined the first-time cookie from node.data, now store it
         if( this.tree.initCookie ) {
 //			logMsg("Write cookie: <%s> = '%s'", opts.cookieId, this.tree.expandedKeys.join(","));
 			$.cookie(opts.cookieId, this.tree.expandedKeys.join(","));
         }
+        
+        // Fire select events for all node that were initialized as 'selected'
+		this.tree.isInitializing = false;
+		for(var i=0; i<this.tree.selectedNodes.length; i++ ) {
+			var dtnode = this.tree.selectedNodes[i];
+			logMsg("Select on init: %o", dtnode);
+			dtnode._activate();
+		}
+		
+		//
+		if( opts.focusRoot ) {
+			if( opts.rootVisible ) {
+				root.focus();
+			} else if( root.aChilds && ! (opts.initAjax && opts.initAjax.url) ) {
+				// Only if not lazy initing (Will be handled by setLazyNodeStatus(DTNodeStatus_Ok))
+				root.aChilds[0].focus();
+			}
+		}
+		// EVENTS
+/*
+		// clean up to avoid memory leaks in certain versions of IE 6
+		$(window).bind('unload', function() {
+			self.$tabs.unbind('.tabs');
+			self.$lis = self.$tabs = self.$panels = null;
+		});
+*/
+		logMsg("this.widgetBaseClass: %o", this.widgetBaseClass);
+		logMsg("this.options: %o", this.options);
+		
 	},
 
-	bindKeys: function(enable) {
-		if( enable )
-			this.element.bind("keypress keydown", fnKeyHandler);
-		else
-			this.element.unbind("keypress keydown", fnKeyHandler);
-	},
+	bind: function() {
+		var $this = this.element;
+		var o = this.options;
+		// Prevent duplicate binding
+		this.unbind();
+		
+		// Tool function to get dtnode from the event target:
+		function __getNodeFromElement(el) {
+			var iMax = 4;
+			do {
+				if( el.dtnode ) return el.dtnode;
+				el = el.parentNode;
+			} while( iMax-- );
+			return null;
+		}
 
+		$this.bind("click.dynatree dblclick.dynatree keypress.dynatree keydown.dynatree", function(event){
+			var dtnode = __getNodeFromElement(event.target);
+//			logMsg("bind(" + event.type + "): dtnode:" + this + ", charCode:" + event.charCode + ", keyCode: " + event.keyCode + ", which: " + event.which);
+			if( !dtnode )
+				return false;
+			// Handles keydown and keypressed, because IE and Safari don't fire keypress for cursor keys.
+			// ...but Firefox does, so ignore them:
+			if( event.type == "keypress" && event.charCode == 0 )
+				return;
+			switch(event.type) {
+			case "click":
+				return ( o.onClick && o.onClick(dtnode, event)===false ) ? false : dtnode.onClick(event);
+			case "dblclick":
+				return ( o.onDblClick && o.onDblClick(dtnode, event)===false ) ? false : dtnode.onDblClick(event);
+			case "keydown":
+			case "keypress":
+				return ( o.onKeypress && o.onKeypress(dtnode, event)===false ) ? false : dtnode.onKeypress(event);
+			};
+		});
+		
+		// focus/blur don't bubble, i.e. are not delegated to parent <div> tags,
+		// so we use the addEventListener capturing phase.
+		// See http://www.howtocreate.co.uk/tutorials/javascript/domevents
+		function __focusHandler(event) {
+			// Handles blur and focus.
+			// Fix event for IE:
+			event = arguments[0] = $.event.fix( event || window.event );
+			var dtnode = __getNodeFromElement(event.target);
+			return dtnode ? dtnode.onFocus(event) : false;
+		}
+		var div = this.tree.divTree;
+		if( div.addEventListener ) {
+			div.addEventListener("focus", __focusHandler, true);
+			div.addEventListener("blur", __focusHandler, true);
+		} else {
+			div.onfocusin = div.onfocusout = __focusHandler;
+		}
+		// EVENTS
+		// disable click if event is configured to something else
+//		if (!(/^click/).test(o.event))
+//			this.$tabs.bind('click.tabs', function() { return false; });
+		
+	},
+	
+	unbind: function() {
+		this.element.unbind(".dynatree");
+	},
+	
+	enable: function() {
+		this.bind();
+		// Enable and remove -disabled from css: 
+		this._setData('disabled', false);
+	},
+	
+	disable: function() {
+		this.unbind();
+		// Disable and add -disabled to css: 
+		this._setData('disabled', true);
+	},
+	
 	// --- getter methods (i.e. NOT returning a reference to $)
 	getTree: function() {
 		return this.tree;
@@ -989,6 +1088,11 @@ $.widget("ui.dynatree", {
 	createFromTag: function(parentTreeNode, $ulParent) {
 		// Convert a <UL>...</UL> list into children of the parent tree node.
 		var self = this;
+/*
+TODO: better?
+		this.$lis = $('li:has(a[href])', this.element);
+		this.$tabs = this.$lis.map(function() { return $('a', this)[0]; });
+ */
 		$ulParent.find(">li").each(function() {
 			var $li = $(this);
 			var $liSpan = $li.find(">span:first");
@@ -1000,21 +1104,29 @@ $.widget("ui.dynatree", {
 				// If only a <li> tag is specified, use the trimmed string up to the next child <ul> tag.
 				title = $.trim($li.html().match(/.*(<ul)?/)[0]);
 			}
-			// Parse node attributes data from data="" attribute
+			// Parse node options from ID, title and class attributes
 			var data = {
 				title: title,
-				key: $li.attr("id"),
 				isFolder: $li.hasClass("folder"),
-				isLazy: $li.hasClass("lazy")
+				isLazy: $li.hasClass("lazy"),
+				expand: $li.hasClass("expanded"),
+				select: $li.hasClass("selected")
 			};
-			var dataAttr = $.trim($li.attr("data"));
-			if( dataAttr ) {
-				if( dataAttr.charAt(0) != "{" )
-					dataAttr = "{" + dataAttr + "}"
-				try {
-					$.extend(data, eval("(" + dataAttr + ")"));
-				} catch(e) {
-					throw ("Error parsing node data: " + e + "\ndata:\n'" + dataAttr + "'");
+			if( $li.attr("title") )
+				data.tooltip = $li.attr("title");
+			if( $li.attr("id") )
+				data.key = $li.attr("id");
+			// If a data attribute is present, evaluate as a javascript object
+			if( $li.attr("data") ) {
+				var dataAttr = $.trim($li.attr("data"));
+				if( dataAttr ) {
+					if( dataAttr.charAt(0) != "{" )
+						dataAttr = "{" + dataAttr + "}"
+					try {
+						$.extend(data, eval("(" + dataAttr + ")"));
+					} catch(e) {
+						throw ("Error parsing node data: " + e + "\ndata:\n'" + dataAttr + "'");
+					}
 				}
 			}
 			childNode = parentTreeNode._addNode(data);
@@ -1046,19 +1158,24 @@ $.ui.dynatree.defaults = {
 	children: null, // Init tree structure from this object array.
 	initId: null, // Init tree structure from a <ul> element with this ID.
 	initAjax: null, // Ajax options used to initialize the tree strucuture.
+	focusRoot: true, // Set focus to root node on init.
+	keyboard: true, // Support keyboard navigation.
+	autoCollapse: false, // Automatically collapse all siblings, when a node is expanded.
+	expandOnAdd: false, // Automatically expand parent, when a child is added.
+	clickFolderMode: 3, // 1:select, 2:expand, 3:select and expand
+	selectionVisible: true, // Make sure, selected nodes are visible (expanded).
+	idPrefix: 'ui-dynatree-id-', // Used to generate node id's like <span id="ui-dynatree-id-<key>">.
+	// Event handlers
 	onSelect: null, // Callback when a node is selected.
 	onUnselect: null, // Callback when a node is deselected.
 	onLazyRead: null, // Callback when a lazy node is expanded for the first time.
 	onFocus: null, // Callback when a node receives keyboard focus.
 	onBlur: null, // Callback when a node looses focus.
-	focusRoot: true, // Set focus to root node on init.
-	keyboard: true, // Support keyboard navigation.
-	autoCollapse: false, // Automatically collapse all siblings, when a node is expanded.
-	expandOnAdd: false, // Automatically expand parent, when a child is added.
-//	selectExpandsFolders: true, // Clicking a folder title expands the node instead of selecting it.
-	clickFolderMode: 3, // 1:select, 2:expand, 3:select and expand
-	selectionVisible: true, // Make sure, selected nodes are visible (expanded).
-	idPrefix: 'ui-dynatree-id-', // Used to generate node id's like <span id="ui-dynatree-id-<key>">.
+	// Core event handlers (return false, to stop processing)
+	onClick: null, // null: generate onSelect, ...
+	onDblClick: null, // null: generate onFocus, ...
+	onKeypressed: null, // null: 
+	
 	ajaxDefaults: { // Used by initAjax option
 		cache: false, // Append random '_' argument to url to prevent caching.
 		dataType: "json" // Expect json format and pass json object to callbacks.
@@ -1113,9 +1230,10 @@ $.ui.dynatree.nodedatadefaults = {
 	key: null, // May be used with select(), find(), ...
 	isFolder: false, // Use a folder icon. Also the node is expandable but not selectable.
 	isLazy: false, // Call onLazyRead(), when the node is expanded for the first time to allow for delayed creation of children.
-	expand: false, // Initial expand status.
 	tooltip: null, // Show this popup text.
 	icon: null, // Use a custom image (filename relative to tree.options.imagePath). 'null' for default icon, 'false' for no icon.
+	expand: false, // Initial expand status.
+	select: false, // Initial select status.
 	// The following attributes are only valid if passed to some functions:
 	children: null, // Array of child nodes.
 	// NOTE: we can also add custom attributes here.
