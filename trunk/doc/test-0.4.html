@@ -24,6 +24,8 @@
 			keyboard: true,
 			persist: true,
 			clickFolderMode: 3, //2,
+			checkbox: true,
+			selectMode: 3,
 			children: [
 				{title: "Node 1", expand: true, key: "1",
 				 children: [
@@ -33,9 +35,9 @@
 									{title: "Node 1.2.1" },
 									{title: "Node 1.2.2", key: "122",
 										 children: [
-													{title: "Node 1.2.2.1" },
-													{title: "Node 1.2.2.2" },
-													{title: "Node 1.2.2.3" }
+													{title: "Node 1.2.2.1", activate: true },
+													{title: "Node 1.2.2.2", select: true },
+													{title: "Node 1.2.2.3", focus: true }
 													]
 										 },
 									{title: "Node 1.2.3",
@@ -43,18 +45,34 @@
 									}
 									]
 						 },
-					{title: "Node 1.3" }
+					{title: "Node 1.3", select: true }
 					]
 					},
 				{title: "Node 2" }
 			],
+			onActivate: function(dtnode) {
+				logMsg("onActivate(%o)", dtnode);
+				$("#echoActive").text(dtnode.data.title);
+			},
+			onDectivate: function(dtnode) {
+				logMsg("onDeactivate(%o)", dtnode);
+				$("#echoActive").text("-");
+			},
 			onSelect: function(dtnode) {
 				logMsg("onSelect(%o)", dtnode);
-				$("#echoSelected").text(dtnode.data.title);
-				//alert("You selected " + dtnode.data.title);
+				var s = "" + dtnode.tree.getSelectedNodes();
+				$("#echoSelected").text(s);
+			},
+			onUnselect: function(dtnode) {
+				logMsg("onUnselect(%o)", dtnode);
+				var s = "" + dtnode.tree.getSelectedNodes();
+				$("#echoSelected").text(s);
 			},
 			onFocus: function(dtnode) {
 				$("#echoFocused").text(dtnode.data.title);
+			},
+			onBlur: function(dtnode) {
+				$("#echoFocused").text("-");
 			},
 			onClick: function(dtnode, event) {
 				logMsg("onClick(%o, %o)", dtnode, event);
@@ -95,7 +113,8 @@
 	<p style="color: red;">Using doctype HTML 4.01 Strict.</p>
 	<div id='tree'> </div>
 
-	<div>Selected node: <span id="echoSelected">-</span></div>
+	<div>Active node: <span id="echoActive">-</span></div>
+	<div>Selected nodes: <span id="echoSelected">-</span></div>
 	<div>Focused node: <span id="echoFocused">-</span></div>
     <p>
         <input type="checkbox" id="btnEnable" checked="checked"><label for="btnEnable">Enabled</label>
