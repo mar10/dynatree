@@ -910,7 +910,7 @@ $.widget("ui.dynatree", {
 		// Attach the tree object to parent element
 		var id = $this.attr("id");
 		this.tree = new DynaTree(id, opts);
-		var root = this.tree.getRoot()
+		var root = this.tree.getRoot();
 
 		// Init tree structure
 		if( opts.children ) {
