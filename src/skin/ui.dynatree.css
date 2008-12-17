@@ -14,7 +14,8 @@ div.ui-dynatree-container
 {
 	opacity: 0.5;
 	filter: alpha(opacity=50);
-/*	cursor: wait; */
+/*	background-color: gray !important;*/ 
+	/*	cursor: wait; */
 }
 
 .ui-dynatree-expander
@@ -87,12 +88,22 @@ div.ui-dynatree-container div
 	background-color: #EFEBDE; /* gray */
 }
 
-.ui-dynatree-selected
+.ui-dynatree-expanded
+{
+	font-style: italic;
+}
+
+.ui-dynatree-active
 {
 }
-.ui-dynatree-selected a
+
+.ui-dynatree-active a
 {
 	background-color: #3169C6 !important;
 	color: white !important; /* @ IE6 */
 }
 
+.ui-dynatree-selected
+{
+	border: 1px solid blue;
+}

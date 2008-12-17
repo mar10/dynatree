@@ -14,8 +14,6 @@
 <script type='text/javascript'>
 	$(function(){
 		$("#tree").dynatree({
-			title: "Sample 1",
-			rootVisible: true,
 			persist: true,
 			onSelect: function(dtnode) {
 				$("#echoSelected").text(dtnode.data.title);
@@ -26,8 +24,8 @@
 </head>
 
 <body>
-	<h1>Simple Tree example:</h1>
-	<p>$("#tree").dynatree(...); creates the tree here:</p>
+	<h1>jquery.dynatree - Simple Example</h1>
+	<p>This sample initializes the tree from a &lt;ul> element.</p>
 	<div id="tree">
 		<ul>
 			<li id="id1" title="Look, a tool tip!">item1 with key and tooltip
