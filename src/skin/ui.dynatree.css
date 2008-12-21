@@ -17,28 +17,74 @@ div.ui-dynatree-container
 /*	background-color: gray !important;*/ 
 	/*	cursor: wait; */
 }
-
-.ui-dynatree-expander
-{
-	cursor: pointer;
-}
-
+/*
 .ui-dynatree-container img
 {
 	border-width: 0px;
 	width: 16px;
 	height: 16px;
-	vertical-align:bottom; /* correctly align img */
-	/* FIXME: see issue #49 */
-/*	display: block; /* Removes bottom margin from images */
-/*	float: left;    /* Makes images display inline  */
+	vertical-align: bottom; /* correctly align img */
+}
+*/
+
+img.ui-dynatree-expander
+{
+	cursor: pointer;
+}
+/*
+img.ui-dynatree-checkbox
+{
+	border-width: 0px;
+	width: 13px;
+	height: 13px;
+	vertical-align: baseline;
+	background-image: url("");
+	
+}
+*/
+span.ui-dynatree-checkbox
+{
+	width: 13px;
+	height: 13px;
+/*	padding-right: 16px; */
+	margin-left: 3px;
+	margin-right: 3px;
+/*	padding-bottom: 2px;*/
+	vertical-align: center;
+	display: inline-block;
+	background-repeat: no-repeat;
+	background-position: left;
+	background-image: url("cbUnchecked.gif");
 }
 
-/*clear the float left from above */
-div.ui-dynatree-container div  
+.ui-dynatree-selected span.ui-dynatree-checkbox
 {
-/*    clear: both; */  
+	background-image: url("cbChecked.gif");
 }
+
+span.ui-dynatree-partsel
+{
+	background-image: url("cbIntermediate.gif");
+}
+
+
+span.ui-dynatree-icon
+{
+	width: 16px;
+	height: 16px;
+	margin-left: 3px;
+	margin-right: 3px;
+	display: inline-block;
+	background-repeat: no-repeat;
+	background-position: left;
+	background-image: url("ltDoc.gif");
+}
+
+.ui-dynatree-folder span.ui-dynatree-icon
+{
+	background-image: url("ltFld.gif");
+}
+
 
 
 .ui-dynatree-document,
@@ -62,9 +108,10 @@ div.ui-dynatree-container div
 	text-decoration: none;
 	color: black;
 /*	outline: 0; /* @ Firefox, prevent dotted border after click */
-	margin-left: 5px;
-	padding: 0px 3px 0px 3px;
-	vertical-align: text-top;
+/*	margin-left: 5px;
+	padding: 0px 3px 0px 3px; */
+/*	vertical-align: text-top;*/
+	vertical-align: top;
 }
 
 .ui-dynatree-container a:hover
@@ -103,7 +150,13 @@ div.ui-dynatree-container div
 	color: white !important; /* @ IE6 */
 }
 
-.ui-dynatree-selected
+.ui-dynatree-selected>a
 {
-	border: 1px solid blue;
+	border: 1px solid green;
+}
+
+input.ui-dynatree-partsel
+{
+	border: 1px solid red;
+	background-color: blue;
 }

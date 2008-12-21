@@ -413,7 +413,7 @@ $("#tree").dynatree({
 	option that will be used to contact a Ajax webservice.
 </p>
 <p>
-	This webservice is expected to return an JSON object response, as explained in <a href="#nodeOptions">Node options</a>.
+	This webservice is expected to return an JSON object response, formatted like a <code>children</code> object as explained in <a href="#nodeOptions">Node options</a>.
 </p>
 
 <pre class="prettyprint">
@@ -447,7 +447,7 @@ $("#tree").dynatree({
 	All other node options are specified in the <code>data</code> attribute of a &lt;li> element.
 </p>
 <p class="info">
-	Note that the <code>data</code> attribute is not valid in some doctypes (HTML 4.01 transitional and Strict and XHTML 1.0 Strict).<br>
+	Note that the <code>data</code> attribute is not valid in &gt;li> elements in some doctypes (HTML 4.01 transitional and Strict and XHTML 1.0 Strict).<br>
 	Validators will complain about this.
 </p>
 <p>
