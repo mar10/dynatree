@@ -57,21 +57,22 @@ span.ui-dynatree-checkbox
 	background-image: url("cbUnchecked.gif");
 }
 
+.ui-dynatree-partsel span.ui-dynatree-checkbox
+{
+	background-image: url("cbIntermediate.gif");
+}
+
 .ui-dynatree-selected span.ui-dynatree-checkbox
 {
 	background-image: url("cbChecked.gif");
 }
 
-span.ui-dynatree-partsel
-{
-	background-image: url("cbIntermediate.gif");
-}
-
-
 span.ui-dynatree-icon
 {
 	width: 16px;
 	height: 16px;
+	border-width: 0px;
+	margin: 0px;
 	margin-left: 3px;
 	margin-right: 3px;
 	display: inline-block;
@@ -85,15 +86,20 @@ span.ui-dynatree-icon
 	background-image: url("ltFld.gif");
 }
 
+.ui-dynatree-folder.ui-dynatree-expanded  span.ui-dynatree-icon
+{
+	background-image: url("ltFld_o.gif");
+}
+
 
 
 .ui-dynatree-document,
 .ui-dynatree-folder
 {
-	line-height: 16px; /* should be the same as img height, in case 16 px */
-	margin: 0px;
+/*	line-height: 16px; /* should be the same as img height, in case 16 px */
+/*	margin: 0px;
 	border: 0px;
-	color: black;
+	color: black;*/
 }
 .ui-dynatree-folder
 {
@@ -111,7 +117,7 @@ span.ui-dynatree-icon
 /*	margin-left: 5px;
 	padding: 0px 3px 0px 3px; */
 /*	vertical-align: text-top;*/
-	vertical-align: top;
+/*	vertical-align: top; */
 }
 
 .ui-dynatree-container a:hover
@@ -153,10 +159,4 @@ span.ui-dynatree-icon
 .ui-dynatree-selected>a
 {
 	border: 1px solid green;
-}
-
-input.ui-dynatree-partsel
-{
-	border: 1px solid red;
-	background-color: blue;
 }

@@ -23,8 +23,8 @@
 			rootCollapsible: false,
 			keyboard: true,
 			persist: true,
-			clickFolderMode: 3, //2,
-			checkbox: true,
+			clickFolderMode: 1, //3, //2,
+//			checkbox: true,
 			selectMode: 3,
 			children: [
 				{title: "Node 1", expand: true, key: "1",
@@ -48,8 +48,16 @@
 					{title: "Node 1.3", select: true }
 					]
 					},
-				{title: "Node 2" }
+				{title: "Node 2",
+					children: [
+								{title: "Node 2.1" }
+						] 
+					}
 			],
+
+			onQueryActivate: function(dtnode, activate) {
+				logMsg("onQueryActivate(%o, %o)", dtnode, activate);
+			},
 			onActivate: function(dtnode) {
 				logMsg("onActivate(%o)", dtnode);
 				$("#echoActive").text(dtnode.data.title);
@@ -58,25 +66,47 @@
 				logMsg("onDeactivate(%o)", dtnode);
 				$("#echoActive").text("-");
 			},
+			
+			onQuerySelect: function(dtnode, select) {
+				logMsg("onQuerySelect(%o, %o)", dtnode, select);
+				if( dtnode.isfolder )
+					return false;
+			},
 			onSelect: function(dtnode) {
 				logMsg("onSelect(%o)", dtnode);
-				var s = "" + dtnode.tree.getSelectedNodes();
+				var s = dtnode.tree.getSelectedNodes().join(", ");
 				$("#echoSelected").text(s);
 			},
 			onUnselect: function(dtnode) {
 				logMsg("onUnselect(%o)", dtnode);
-				var s = "" + dtnode.tree.getSelectedNodes();
+				var s = dtnode.tree.getSelectedNodes().join(", ");
 				$("#echoSelected").text(s);
 			},
+			
+			onQueryExpand: function(dtnode, expand) {
+				logMsg("onQueryExpand(%o, %o)", dtnode, expand);
+			},
+			onExpand: function(dtnode) {
+				logMsg("onExpand(%o)", dtnode);
+			},
+			onCollapse: function(dtnode) {
+				logMsg("onCollapse(%o)", dtnode);
+			},
+			
 			onFocus: function(dtnode) {
 				$("#echoFocused").text(dtnode.data.title);
 			},
 			onBlur: function(dtnode) {
 				$("#echoFocused").text("-");
 			},
+			
 			onClick: function(dtnode, event) {
 				logMsg("onClick(%o, %o)", dtnode, event);
 				//return false;
+			},
+			onDblClick: function(dtnode, event) {
+				logMsg("onDblClick(%o, %o)", dtnode, event);
+				dtnode.toggleSelect();
 			},
 			onKeypress: function(dtnode, event) {
 				logMsg("onKeypress(%o, %o)", dtnode, event);

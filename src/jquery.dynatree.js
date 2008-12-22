@@ -35,6 +35,7 @@
  *   - distinguish 'active' and 'selected' 
  *   - issue #15: multi-select
  *   - issue #17: checkbox mode
+ *   - use span + css backround-image: url()
  * TODO
  *   - issue #61: allow image names + extensions
  *   - issue #56: <span class="ui-dynatree-title"> --> use a template?
@@ -48,10 +49,22 @@
  *   - use opts.debugLevel instead of _bDebug
  *   - _expand wird für alle PArents 2x aufgerufen
  *   - $(this.span) --> $span
- *   - $(this.span).find(">INPUT").get(0)  --> checkboxElement
- *   - use span + css backround-image: url()
  *   - Table-Tree: use CSS 2.1: display:table, display:table-row, display:table-cell 
- *   - render() setzt die Klassen beim exandieren nicht, daher wird der checkbox-state nicht richtig angezeigt
+ *     --
+ *   - Für das FX expandieren wird ein eigen <div> benötigt, dass die Children enthält
+ *     Stattdessen muss das render nur noch aufgerufen werden ,wenn sich die struktur ändert
+ *     (remove() insert(), ...
+ *   - unselect -> deselect
+ *   - onDblClick
+ 
+	rootCollapsible --> minExpandLevel
+	focusRoot: --> use 'focus' style
+	clickFolderMode: --> nur im onClickHandler berücksichtigen
+	checkbox: false, // Show checkbox
+	selectMode: 0, // 0:off, 1:single, 2:multi, 3:multi-hier
+	selectionVisible --> onSelect dtnode.makevisible
+	?? autoCollapse --> onExpand dtnode.collapseSiblilings
+ 
  */
 
 /*************************************************************************
@@ -148,7 +161,7 @@ DynaTreeNode.prototype = {
 		return "DynaTreeNode '" + this.data.title + "', key=" + this.data.key;
 	},
 
-	getInnerHtml: function() {
+	_getInnerHtml: function() {
 		var res = "";
 
 		// parent connectors
@@ -178,30 +191,15 @@ DynaTreeNode.prototype = {
 		
 		// Checkbox mode
 		if( this.tree.options.checkbox ) {
-//			logMsg("cb html: " + this.isSelected);
-//			var checked = this.isSelected ? " checked" : "";
-//    		res += "<input type='checkbox'" + checked + "/>";
    			res += cache.tagCheckbox;
-/*   			
-    		if( this.isSelected ) {
-    			res += cache.tagCbSel;
-    		} else if( this.hasSubSel ) {
-    			res += cache.tagCbIntermediate;
-    		} else {
-    			res += cache.tagCbUnsel;
-    		}
-*/
 		}
 		
 		// folder or doctype icon
    		if ( this.data.icon ) {
     		res += "<img src='" + this.tree.options.imagePath + this.data.icon + "' alt='' />";
    		} else if ( this.data.icon == false ) {
-        	// issue #40: icon == false means 'no icon'
-//		} else if ( this.data.isFolder ) {
-//	    	res += ( this.isExpanded ? cache.tagFld_o : cache.tagFld );
+        	// icon == false means 'no icon'
 		} else {
-//	    	res += cache.tagDoc;
    			res += cache.tagNodeIcon;
 		}
 
@@ -212,10 +210,8 @@ DynaTreeNode.prototype = {
 		return res;
 	},
 
-	render: function (bDeep, bHidden) {
-		/*
-			Called by
-		*/
+	render: function(bDeep, bHidden) {
+		// 
 		logMsg("%o.render()", this);
 		// --- create <div><span>..</span></div> tags for this node
 		if( ! this.div ) {
@@ -237,7 +233,17 @@ DynaTreeNode.prototype = {
 		this.div.style.display = ( this.parent==null || this.parent.isExpanded ? "" : "none");
 
 		// set node connector images, links and text
-		this.span.innerHTML = this.getInnerHtml();
+		this.span.innerHTML = this._getInnerHtml();
+		
+		// Set classes for current status
+		if( this.isExpanded )
+			$(this.span).addClass(this.tree.options.classNames.expanded);
+		if( this.isSelected )
+			$(this.span).addClass(this.tree.options.classNames.selected);
+		if( this.hasSubSel )
+			$(this.span).addClass(this.tree.options.classNames.partsel);
+		if( this.tree.activeNode === this )
+			$(this.span).addClass(this.tree.options.classNames.active);
 
 		if( bDeep && this.childList && (bHidden || this.isExpanded) ) {
 			for(var i=0; i<this.childList.length; i++) {
@@ -374,7 +380,7 @@ DynaTreeNode.prototype = {
 				return;
 			this.tree.activeNode.deactivate();
 		}
-		if( this.tree.options.selectionVisible )
+		if( this.tree.options.activeVisible )
 			this.makeVisible();
 		this.tree.activeNode = this;
 		$(this.span).addClass(this.tree.options.classNames.active);
@@ -396,32 +402,33 @@ DynaTreeNode.prototype = {
 		if( hasSubSel ) {
 			this.hasSubSel = true;
 //			$(this.span).find(">INPUT").addClass(this.tree.options.classNames.partsel);
-			$(this.span).find("."+this.tree.options.classNames.checkbox).addClass(this.tree.options.classNames.partsel);
+			$(this.span).addClass(this.tree.options.classNames.partsel);
 		} else {
 			this.hasSubSel = false;
 //			$(this.span).find(">INPUT").removeClass(this.tree.options.classNames.partsel);
-			$(this.span).find("."+this.tree.options.classNames.checkbox).removeClass(this.tree.options.classNames.partsel);
+			$(this.span).removeClass(this.tree.options.classNames.partsel);
 		}
 	},
 	
 	_select: function(sel, fireEvents, deep) {
 		// Select - but not focus - this node.
-//		logMsg("dtnode._select(%o) - %o", sel, this);
+		logMsg("dtnode._select(%o) - %o", sel, this);
+		var opts = this.tree.options;
 		if( this.tree.isDisabled || this.data.isStatusNode )
 			return;
-		this.isSelected = sel;
 		var idx = $.inArray(this, this.tree.selectedNodes);
 		if( sel ) {
 			if( idx >= 0 ) 
-				return;
-			if ( fireEvents && this.tree.options.onSelect && this.tree.options.onSelect.call(this.span, this) == false )
-				return; // Callback returned false
-//			$(this.span).find(">INPUT").get(0).checked = true;
-//			$(this.span).find(".checkbox").attr("src", "x");
-			
-			$(this.span).addClass(this.tree.options.classNames.selected);
+				return; // Already selected: nothing to do
+			if ( fireEvents && opts.onQuerySelect && opts.onQuerySelect.call(this.span, this, sel) == false )
+				return; // Client returned false
+			// Force sinlge-selection
+			if( opts.selectMode==1 && this.tree.selectedNodes.length ) 
+				this.tree.selectedNodes[0]._select(false, false, false);
+			this.isSelected = true;
+			$(this.span).addClass(opts.classNames.selected);
 			this.tree.selectedNodes.push(this);
-			if( deep ) {
+			if( deep && opts.selectMode==3 ) {
 				// Select all children
 				this.visit(function(dtnode){
 					dtnode.parent._setSubSel(true);
@@ -443,17 +450,20 @@ DynaTreeNode.prototype = {
 					p = p.parent;
 				}
 			}
-//			if( this.tree.options.selectionVisible )
-//				this.makeVisible();
+
+			if ( fireEvents && opts.onSelect )
+				opts.onSelect.call(this.span, this);
+
 		} else {
 			if( idx < 0 ) 
-				return;
-			if ( fireEvents && this.tree.options.onUnselect && this.tree.options.onUnselect.call(this.span, this) == false )
+				return; // Not selected: nothing to do
+			if ( fireEvents && opts.onQuerySelect && opts.onQuerySelect.call(this.span, this, sel) == false )
 				return; // Callback returned false
-//			$(this.span).find(">INPUT").get(0).checked = false;
-			$(this.span).removeClass(this.tree.options.classNames.selected);
+
+			this.isSelected = false;
+			$(this.span).removeClass(opts.classNames.selected);
 			this.tree.selectedNodes.splice(idx, 1);
-			if( deep ) {
+			if( deep && opts.selectMode==3 ) {
 				// Deselect all children
 				this._setSubSel(false);
 				this.visit(function(dtnode){
@@ -475,6 +485,8 @@ DynaTreeNode.prototype = {
 					p = p.parent;
 				}
 			}
+			if ( fireEvents && opts.onUnselect )
+				opts.onUnselect.call(this.span, this);
 		}
 	},
 
@@ -482,6 +494,11 @@ DynaTreeNode.prototype = {
 		// Select - but not focus - this node.
 		logMsg("dtnode.select(%o) - %o", sel, this);
 		return this._select(sel, true, true);
+	},
+
+	toggleSelect: function() {
+		logMsg("dtnode.toggleSelect() - %o", this);
+		return this.select(!this.isSelected);
 	},
 
 	_expand: function (bExpand) {
@@ -513,8 +530,8 @@ DynaTreeNode.prototype = {
 			logMsg("Focus became invisible: setting to this.");
 			this.focus();
 		}
-		// If current selection is now hidden, deactivate it
-		if( this.tree.options.selectionVisible && this.tree.activeNode && ! this.tree.activeNode.isVisible() ) {
+		// If currently active node is now hidden, deactivate it
+		if( this.tree.options.activeVisible && this.tree.activeNode && ! this.tree.activeNode.isVisible() ) {
 			this.tree.activeNode.deactivate();
 		}
 		// Expanding a lazy node: set 'loading...' and call callback
@@ -532,6 +549,9 @@ DynaTreeNode.prototype = {
 			}
 			return;
 		}
+		
+// TODO		$(this.div).toggle();
+		
 		// render expanded nodes
 		this.render (true, false);
 		// we didn't render collapsed nodes, so we have to update the visibility of direct childs
@@ -588,20 +608,14 @@ DynaTreeNode.prototype = {
 		logMsg("dtnode.onClick(" + event.type + "): dtnode:" + this + ", button:" + event.button + ", which: " + event.which);
 
 		if( $(event.target).hasClass(this.tree.options.classNames.expander) ) {
-			// Clicking the [+] icon always expands
+			// Clicking the [+] icon always expands/collapses
 			this.toggleExpand();
-//		} else if( $(event.target).is("INPUT") ) {
-//			this.select(event.target.checked);
 		} else if( $(event.target).hasClass(this.tree.options.classNames.checkbox) ) {
-			this.select( !this.isSelected );
-//			logMsg("onClick: event.target.checked=" + event.target);
-//			event.target.checked = false;// ! event.target.checked;
-			return true;
+			// Clicking the checkbox image always (de)selects
+			this.toggleSelect();
 		} else {
 			this._activate();
 		}
-//		this.focus();
-
 		// Make sure that clicks stop
 		return false;
 	},
@@ -1319,19 +1333,25 @@ $.ui.dynatree.defaults = {
 	clickFolderMode: 3, // 1:activate, 2:expand, 3:activate and expand
 	selectionVisible: true, // Make sure, selected nodes are visible (expanded).
 	checkbox: false, // Show checkbox
-	selectMode: 0, // 0:off, 1:single, 2:multi, 3:multi-hier
-	// High level event handlers
-	onActivate: null, // Callback when a node is activated.
-	onDeactivate: null, // Callback when a node is deactivated.
-	onSelect: null, // Callback when a node is selected.
-	onUnselect: null, // Callback when a node is deselected.
-	onLazyRead: null, // Callback when a lazy node is expanded for the first time.
+	selectMode: 2, // 1:single, 2:multi, 3:multi-hier
 	// Low level event handlers (return false, to stop processing)
 	onClick: null, // null: generate onSelect, ...
 	onDblClick: null, // null: generate onFocus, ...
 	onKeypress: null, // null: 
 	onFocus: null, // Callback when a node receives focus.
 	onBlur: null, // Callback when a node looses focus.
+	// Pre-event handlers (return false, to stop processing)
+	onQueryActivate: null, // Callback before a node is (de)activated.
+	onQuerySelect: null, // Callback before a node is (de)selected.
+	onQueryExpand: null, // Callback before a node is expanded/collpsed.
+	// High level event handlers
+	onActivate: null, // Callback when a node is activated.
+	onDeactivate: null, // Callback when a node is deactivated.
+	onSelect: null, // Callback when a node is selected.
+	onUnselect: null, // Callback when a node is deselected.
+	onExpand: null, // Callback when a node is expanded.
+	onCollapse: null, // Callback when a node is expanded.
+	onLazyRead: null, // Callback when a lazy node is expanded for the first time.
 	
 	ajaxDefaults: { // Used by initAjax option
 		cache: false, // Append random '_' argument to url to prevent caching.
