@@ -127,38 +127,55 @@ var DynaTreeNode = Class.create();
 
 DynaTreeNode.prototype = {
 	initialize: function(tree, data) {
-		this.tree    = tree;
-		if ( typeof data == "string" ) {
-			this.data = { title: data };
-		} else {
-			this.data = $.extend({}, $.ui.dynatree.nodedatadefaults, data);
-		}
+		this.tree = tree;
+		if ( typeof data == "string" ) 
+			data = { title: data };
+		if( data.key == undefined )
+			data.key = "_" + tree._nodeCount++;
+		this.data = $.extend({}, $.ui.dynatree.nodedatadefaults, data);
 		this.parent = null; // not yet added to a parent
 		this.div = null; // not yet created
 		this.span = null; // not yet created
-
 		this.childList = null; // no subnodes yet
 		this.isRead = false; // Lazy content not yet read
-		this.isExpanded = ( data.expand == true ) ? true : false; // Collapsed by default
-		this.isSelected = ( data.select == true ) ? true : false; // Unselected by default
 		this.hasSubSel = false;
-		if( data.activate )
-			this.tree.initActiveNode = this;
-		if( data.focus )
-			this.tree.initFocusNode = this;
+		
 
+		if( tree.initMode == "cookie" ) {
+			// Init status from cookies
+			if( this.tree.initActiveKey == data.key )
+				this.tree.initActiveNode = this;
+			if( this.tree.initFocusKey == data.key )
+				this.tree.initFocusNode = this;
+			this.isExpanded = ($.inArray(this.data.key, this.tree.initExpandedKeys) >= 0);
+			this.isSelected = ($.inArray(this.data.key, this.tree.initSelectedKeys) >= 0);
+		} else {
+			// Init status from data (write to cookie after init phase)
+			if( data.activate )
+				this.tree.initActiveNode = this;
+			if( data.focus )
+				this.tree.initFocusNode = this;
+			this.isExpanded = ( data.expand == true );// Collapsed by default
+			this.isSelected = ( data.select == true ); // Deselected by default
+		}
+		if( this.isExpanded )
+			this.tree.initExpandedNodes.push(this);
+		if( this.isSelected )
+			this.tree.initSelectedNodes.push(this);
+/*
 		if( this.tree.initCookie && this.isExpanded ) {
 			// Initialize cookie from status stored in data.expand
-			this.tree._changeExpandList(this.data.key, true, false);
+			this.tree._changeKeyListCookie(this.data.key, true, false);
 		} else if( this.tree.options.persist && ! this.tree.initCookie && this.data.key ) {
 			// Initialize expand state from cookie
 //			logMsg("DynaTreeNode %o init: setting expanded-mode from cookie", this.data.key);
 			this.isExpanded = ($.inArray(this.data.key, this.tree.expandedKeys) >= 0);
 		}
+*/
 	},
 
 	toString: function() {
-		return "DynaTreeNode '" + this.data.title + "', key=" + this.data.key;
+		return "dtnode<" + this.data.key + ">: '" + this.data.title + "'";
 	},
 
 	_getInnerHtml: function() {
@@ -508,9 +525,8 @@ DynaTreeNode.prototype = {
 		this.isExpanded = bExpand;
 		var opts = this.tree.options;
 		// Persist expand state
-        if( opts.persist && this.data.key ) {
-        	this.tree._changeExpandList(this.data.key, bExpand, true);
-        }
+        if( opts.persist ) 
+        	this.tree._changeKeyListCookie(this.tree.expanded, this.data.key, bExpand, opts.cookieId+"-expand");
 
         if( bExpand ) {
 			$(this.span).addClass(opts.classNames.expanded);
@@ -813,9 +829,11 @@ DynaTreeNode.prototype = {
 			 || ( dtnode.data.expand )
 			 ) {
 			this.isExpanded = true;
-			if( this.tree.initCookie )
-				this.tree._changeExpandList(this.key, true, false);
+//			if( this.tree.initCookie )
+//			if( this.tree.initMode == "data" && this.tree.options.persist )
+//				this.tree._changeExpandList(this.key, true, false);
 		}
+/*		
 //		logMsg("%o: %o, %o", this, this.tree.isInitializing, dtnode.data.select)
 		if( this.tree.isInitializing ) {
 			if( dtnode.data.focus )
@@ -823,6 +841,7 @@ DynaTreeNode.prototype = {
 			if( dtnode.data.select )
 				this.tree.initSelectedNodes.push(dtnode);
 		}
+*/
 		if ( this.tree.bEnableUpdate )
 			this.render (true, true);
 
@@ -897,7 +916,7 @@ var DynaTree = Class.create();
 DynaTree.prototype = {
 	// static members
 	version: "$Version:",
-	// constructor
+	// Constructor
 	initialize: function(id, options) {
 //		logMsg ("DynaTree.initialize()");
 		// instance members
@@ -907,32 +926,46 @@ DynaTree.prototype = {
 		this.selectedNodes = new Array();
 		this.bEnableUpdate = true;
 		this.isDisabled = false;
+		this._nodeCount = 0;
 
-		// list of expanded nodes (only maintained while initializing)
-		this.initFocusNode = null;
+		// Initial status is read from cookies, if persistence is active and 
+		// cookies are already present.
+		// Otherwise the status is read from the data attributes and then persisted.
+		this.initMode = "data";
+
 		this.initActiveNode = null;
+		this.initFocusNode = null;
 		this.initSelectedNodes = new Array();
+		this.initExpandedNodes = new Array();
 
-		// list of expanded node keys (only maintained in persist mode)
-		this.expandedKeys = new Array();
-
-		this.initCookie = false;
 		if( this.options.persist ) {
 			// Requires jquery.cookie.js:
-			var cookie = $.cookie(this.options.cookieId);
-			if( cookie ) {
-				this.expandedKeys = cookie.split(",");
-			} else {
-				this.initCookie = true; // Init first time persistence from node.data
+			this.initActiveKey = null;
+			this.initFocusKey = null;
+			this.initExpandedKeys = [];
+			this.initSelectedKeys = [];
+			var cookie = $.cookie(this.options.cookieId + "-active");
+			if( cookie != null ) {
+				this.initMode = "cookie";
+/*
+ 				this.initActiveKey = cookie;
+				this.initFocusKey = $.cookie(this.options.cookieId + "-focus");
+				cookie = $.cookie(this.options.cookieId + "-expanded");
+				this.initExpandedKeys = cookie ? cookie.split(",") : [];
+				cookie = $.cookie(this.options.cookieId + "-selected");
+				this.initSelectedKeys = cookie ? cookie.split(",") : [];
+*/
 			}
-//			logMsg("Read cookie: %o, initCookie: %o", this.expandedKeys, this.initCookie);
 		}
+		logMsg("initMode: %o, active: %o, expanded: %o, selected: %o", this.initMode, this.initActiveKey, this.initExpandedKeys, this.initSelectedKeys);
 
-		// Cached tags
+		// Cached tag strings
 		this.cache = {
-			tagFld: "<img src='" + options.imagePath + "ltFld.gif' alt='' />",
-			tagFld_o: "<img src='" + options.imagePath + "ltFld_o.gif' alt='' />",
-			tagDoc: "<img src='" + options.imagePath + "ltDoc.gif' alt='' />",
+//			tagFld: "<img src='" + options.imagePath + "ltFld.gif' alt='' />",
+//			tagFld_o: "<img src='" + options.imagePath + "ltFld_o.gif' alt='' />",
+//			tagDoc: "<img src='" + options.imagePath + "ltDoc.gif' alt='' />",
+			tagNodeIcon: "<span class='" + options.classNames.nodeIcon + "'></span>",
+			tagCheckbox: "<span class='" + options.classNames.checkbox + "'></span>",
 			tagL_ns: "<img src='" + options.imagePath + "ltL_ns.gif' alt=' | ' />",
 			tagL_: "<img src='" + options.imagePath + "ltL_.gif' alt='   ' />",
 			tagL_ne: "<img src='" + options.imagePath + "ltL_ne.gif' alt=' + ' />",
@@ -943,11 +976,6 @@ DynaTree.prototype = {
 			tagP_nes: "<img src='" + options.imagePath + "ltP_nes.gif' alt='[+]' class='" + options.classNames.expander + "'/>",
 			tagD_ne: "<img src='" + options.imagePath + "ltD_ne.gif' alt='[?]' class='" + options.classNames.expander + "'/>",
 			tagD_nes: "<img src='" + options.imagePath + "ltD_nes.gif' alt='[?]' class='" + options.classNames.expander + "'/>",
-//			tagCbSel: "<img src='" + options.imagePath + "cbChecked.gif' alt='[X]' class='" + options.classNames.checkbox + "'/>",
-//			tagCbUnsel: "<img src='" + options.imagePath + "cbUnchecked.gif' alt='[ ]' class='" + options.classNames.checkbox + "'/>",
-//			tagCbIntermediate: "<img src='" + options.imagePath + "cbIntermediate.gif' alt='[?]' class='" + options.classNames.checkbox + "'/>",
-			tagNodeIcon: "<span class='" + options.classNames.nodeIcon + "'></span>",
-			tagCheckbox: "<span class='" + options.classNames.checkbox + "'></span>",
 			lastentry: undefined
 		};
 
@@ -968,7 +996,28 @@ DynaTree.prototype = {
 	toString: function() {
 		return "DynaTree '" + this.options.title + "'";
 	},
+	
+	_changeKeyListCookie: function(keyList, key, bAdd, cookieName) {
+		// Add or remove key from key list and optionally write cookie.
+		if( !key )
+			return false;
+		var n = keyList.length;
+		if( bAdd ) {
+			if( $.inArray(key, keyList) == -1 )
+				keyList.push(key);
+		} else {
+			keyList = $.grep(thiskeyList, function(e){ return(e != key); });
+		}
+		if( cookieName ) {
+			logMsg("_changeKeyListCookie: write cookie: <%s> = '%s'", cookieName, keyList.join(","));
+			$.cookie(cookieName, keyList.join(","));
+		} else {
+			logMsg("_changeKeyListCookie: %o", keyList);
+		}
+		return ( n != keyList.length );
+	},
 
+/*
 	_changeExpandList: function(key, bAdd, bWriteCookie) {
 		// Add or remove key from expand-list.
 		if( !key )
@@ -988,7 +1037,7 @@ DynaTree.prototype = {
 		}
 		return ( n != this.expandedKeys.length );
 	},
-
+*/
 	redraw: function() {
 		logMsg("dynatree.redraw()...");
 		this.tnRoot.render(true, true);
@@ -1088,7 +1137,7 @@ $.widget("ui.dynatree", {
 		var root = this.tree.getRoot();
 
 		// Init tree structure
-		this.tree.isInitializing = true;
+//		this.tree.isInitializing = true;
 
 		if( opts.children ) {
 			// Read structure from node array
@@ -1112,9 +1161,12 @@ $.widget("ui.dynatree", {
 		this.bind();
 		
 		// We defined the first-time cookie from node.data, now store it
-        if( this.tree.initCookie ) {
-//			logMsg("Write cookie: <%s> = '%s'", opts.cookieId, this.tree.expandedKeys.join(","));
-			$.cookie(opts.cookieId, this.tree.expandedKeys.join(","));
+        if( this.tree.initMode == "data" && opts.persist ) {
+			logMsg("Write cookie: <%s> = '%s'", opts.cookieId, this.tree.initExpandedKeys.join(","));
+			$.cookie(opts.cookieId+"-active", this.tree.initActiveKey);
+			$.cookie(opts.cookieId+"-focus", this.tree.initFocusKey);
+			$.cookie(opts.cookieId+"-expand", this.tree.initExpandedKeys.join(","));
+			$.cookie(opts.cookieId+"-select", this.tree.initSelectedKeys.join(","));
         }
         
         // Fire select events for all node that were initialized as 'selected'
@@ -1155,10 +1207,7 @@ $.widget("ui.dynatree", {
 			self.$lis = self.$tabs = self.$panels = null;
 		});
 */
-		logMsg("this.widgetBaseClass: %o", this.widgetBaseClass);
 		logMsg("this.options: %o", this.options);
-		logMsg("this.options.event: %o", this.options.event);
-		
 	},
 
 	bind: function() {
@@ -1340,17 +1389,19 @@ $.ui.dynatree.defaults = {
 	checkbox: false, // Show checkbox
 	selectMode: 2, // 1:single, 2:multi, 3:multi-hier
 	fx: null, // Animations, e.g. null or { height: "toggle", duration: 200 }
-//	fx: { height: "toggle", opacity: "toggle", duration: 200 },
+
 	// Low level event handlers (return false, to stop processing)
 	onClick: null, // null: generate onSelect, ...
 	onDblClick: null, // null: generate onFocus, ...
 	onKeypress: null, // null: 
 	onFocus: null, // Callback when a node receives focus.
 	onBlur: null, // Callback when a node looses focus.
+
 	// Pre-event handlers (return false, to stop processing)
 	onQueryActivate: null, // Callback before a node is (de)activated.
 	onQuerySelect: null, // Callback before a node is (de)selected.
 	onQueryExpand: null, // Callback before a node is expanded/collpsed.
+	
 	// High level event handlers
 	onActivate: null, // Callback when a node is activated.
 	onDeactivate: null, // Callback when a node is deactivated.
@@ -1390,10 +1441,10 @@ $.ui.dynatree.defaults = {
     cookieId: "ui-dynatree-cookie", // Choose a more unique name, to allow multiple trees.
 /*
  	cookie: {
-		expires: 7, //
-		path: "/",
-//		domain: "jquery.com",
-//		secure: true
+		expires: 7, // Days or Date; null: session cookie
+		path: "/", // Defaults to current page
+		domain: "jquery.com",
+		secure: true
 	},
 */
 // 	minExpandLevel: 1, // Instead of rootCollapsible
