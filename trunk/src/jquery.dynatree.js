@@ -506,19 +506,19 @@ DynaTreeNode.prototype = {
 		if( this.isExpanded == bExpand )
 			return;
 		this.isExpanded = bExpand;
-
+		var opts = this.tree.options;
 		// Persist expand state
-        if( this.tree.options.persist && this.data.key ) {
+        if( opts.persist && this.data.key ) {
         	this.tree._changeExpandList(this.data.key, bExpand, true);
         }
 
         if( bExpand ) {
-			$(this.span).addClass(this.tree.options.classNames.expanded);
+			$(this.span).addClass(opts.classNames.expanded);
         } else {
-			$(this.span).removeClass(this.tree.options.classNames.expanded);
+			$(this.span).removeClass(opts.classNames.expanded);
         }
         // Auto-collapse mode: collapse all siblings
-		if( this.isExpanded && this.parent && this.tree.options.autoCollapse ) {
+		if( this.isExpanded && this.parent && opts.autoCollapse ) {
 			var parents = this._parentList(false, true);
 			for(var i=0; i<parents.length; i++)
 				parents[i].collapseSiblings();
@@ -531,14 +531,14 @@ DynaTreeNode.prototype = {
 			this.focus();
 		}
 		// If currently active node is now hidden, deactivate it
-		if( this.tree.options.activeVisible && this.tree.activeNode && ! this.tree.activeNode.isVisible() ) {
+		if( opts.activeVisible && this.tree.activeNode && ! this.tree.activeNode.isVisible() ) {
 			this.tree.activeNode.deactivate();
 		}
 		// Expanding a lazy node: set 'loading...' and call callback
 		if( bExpand && this.data.isLazy && !this.isRead ) {
 			try {
 				this.setLazyNodeStatus(DTNodeStatus_Loading);
-				if( true == this.tree.options.onLazyRead.call(this.span, this) ) {
+				if( true == opts.onLazyRead.call(this.span, this) ) {
 					// If function returns 'true', we assume that the loading is done:
 					this.setLazyNodeStatus(DTNodeStatus_Ok);
 					// Otherwise (i.e. if the loading was started as an asynchronous process)
@@ -549,9 +549,13 @@ DynaTreeNode.prototype = {
 			}
 			return;
 		}
-		
-// TODO		$(this.div).toggle();
-		
+		if( opts.fx ) {
+			var duration = opts.fx.duration || 200;
+			$(">DIV", this.div).animate(opts.fx, duration);
+		}else {
+			$(">DIV", this.div).toggle();
+		}
+/*		
 		// render expanded nodes
 		this.render (true, false);
 		// we didn't render collapsed nodes, so we have to update the visibility of direct childs
@@ -560,6 +564,7 @@ DynaTreeNode.prototype = {
 				this.childList[i].div.style.display = (this.isExpanded ? "" : "none");
 			}
 		}
+		*/
 	},
 
 	toggleExpand: function() {
@@ -1334,6 +1339,8 @@ $.ui.dynatree.defaults = {
 	selectionVisible: true, // Make sure, selected nodes are visible (expanded).
 	checkbox: false, // Show checkbox
 	selectMode: 2, // 1:single, 2:multi, 3:multi-hier
+	fx: null, // Animations, e.g. null or { height: "toggle", duration: 200 }
+//	fx: { height: "toggle", opacity: "toggle", duration: 200 },
 	// Low level event handlers (return false, to stop processing)
 	onClick: null, // null: generate onSelect, ...
 	onDblClick: null, // null: generate onFocus, ...
@@ -1391,7 +1398,6 @@ $.ui.dynatree.defaults = {
 */
 // 	minExpandLevel: 1, // Instead of rootCollapsible
 //	expandLevel: 1, // Expand all branches until level i (set to 0 to )
-//	fx: null, // Animations, e.g. { height: "toggle", opacity: "toggle", duration: 200 }
 
 	// ### copied from ui.tabs
 	// basic setup
