@@ -56,6 +56,10 @@
  *     (remove() insert(), ...
  *   - unselect -> deselect
  *   - onDblClick
+ *   - onPostInit: setzt auch die Cookies (muss auch be lazyInit delayed aufgerufen werden
+ *   - sample-options: mit reInit() und interaktiven options
+ *   - $("#ui-dynatree-id-5").attr("dtnode").focus();
+
  
 	rootCollapsible --> minExpandLevel
 	focusRoot: --> use 'focus' style
@@ -144,24 +148,24 @@ DynaTreeNode.prototype = {
 		if( tree.initMode == "cookie" ) {
 			// Init status from cookies
 			if( this.tree.initActiveKey == data.key )
-				this.tree.initActiveNode = this;
+				this.tree.activeNode = this;
 			if( this.tree.initFocusKey == data.key )
-				this.tree.initFocusNode = this;
+				this.tree.focusNode = this;
 			this.isExpanded = ($.inArray(this.data.key, this.tree.initExpandedKeys) >= 0);
 			this.isSelected = ($.inArray(this.data.key, this.tree.initSelectedKeys) >= 0);
 		} else {
 			// Init status from data (write to cookie after init phase)
 			if( data.activate )
-				this.tree.initActiveNode = this;
+				this.tree.activeNode = this;
 			if( data.focus )
-				this.tree.initFocusNode = this;
+				this.tree.focusNode = this;
 			this.isExpanded = ( data.expand == true );// Collapsed by default
 			this.isSelected = ( data.select == true ); // Deselected by default
 		}
 		if( this.isExpanded )
-			this.tree.initExpandedNodes.push(this);
+			this.tree.expandedNodes.push(this);
 		if( this.isSelected )
-			this.tree.initSelectedNodes.push(this);
+			this.tree.selectedNodes.push(this);
 /*
 		if( this.tree.initCookie && this.isExpanded ) {
 			// Initialize cookie from status stored in data.expand
@@ -525,8 +529,8 @@ DynaTreeNode.prototype = {
 		this.isExpanded = bExpand;
 		var opts = this.tree.options;
 		// Persist expand state
-        if( opts.persist ) 
-        	this.tree._changeKeyListCookie(this.tree.expanded, this.data.key, bExpand, opts.cookieId+"-expand");
+//        if( opts.persist ) 
+//        	this.tree._changeKeyListCookie(this.tree.expanded, this.data.key, bExpand, opts.cookieId+"-expand");
 
         if( bExpand ) {
 			$(this.span).addClass(opts.classNames.expanded);
@@ -922,8 +926,6 @@ DynaTree.prototype = {
 		// instance members
 		this.options = options;
 
-		this.activeNode = null;
-		this.selectedNodes = new Array();
 		this.bEnableUpdate = true;
 		this.isDisabled = false;
 		this._nodeCount = 0;
@@ -933,29 +935,26 @@ DynaTree.prototype = {
 		// Otherwise the status is read from the data attributes and then persisted.
 		this.initMode = "data";
 
-		this.initActiveNode = null;
-		this.initFocusNode = null;
-		this.initSelectedNodes = new Array();
-		this.initExpandedNodes = new Array();
+		this.activeNode = null;
+		this.selectedNodes = new Array();
+		this.expandedNodes = new Array();
+
+//		this.initActiveNode = null;
+//		this.initFocusNode = null;
+//		this.initSelectedNodes = new Array();
+//		this.initExpandedNodes = new Array();
 
 		if( this.options.persist ) {
 			// Requires jquery.cookie.js:
-			this.initActiveKey = null;
-			this.initFocusKey = null;
-			this.initExpandedKeys = [];
+			this.initActiveKey = $.cookie(this.options.cookieId + "-active");
+			this.initFocusKey = $.cookie(this.options.cookieId + "-focus");
 			this.initSelectedKeys = [];
-			var cookie = $.cookie(this.options.cookieId + "-active");
-			if( cookie != null ) {
+			var cookie = $.cookie(this.options.cookieId + "-expanded");
+			if( cookie || this.initActiveKey )
 				this.initMode = "cookie";
-/*
- 				this.initActiveKey = cookie;
-				this.initFocusKey = $.cookie(this.options.cookieId + "-focus");
-				cookie = $.cookie(this.options.cookieId + "-expanded");
-				this.initExpandedKeys = cookie ? cookie.split(",") : [];
-				cookie = $.cookie(this.options.cookieId + "-selected");
-				this.initSelectedKeys = cookie ? cookie.split(",") : [];
-*/
-			}
+			this.initExpandedKeys = cookie ? cookie.split(",") : [];
+			cookie = $.cookie(this.options.cookieId + "-selected");
+			this.initSelectedKeys = cookie ? cookie.split(",") : [];
 		}
 		logMsg("initMode: %o, active: %o, expanded: %o, selected: %o", this.initMode, this.initActiveKey, this.initExpandedKeys, this.initSelectedKeys);
 
@@ -1162,31 +1161,54 @@ $.widget("ui.dynatree", {
 		
 		// We defined the first-time cookie from node.data, now store it
         if( this.tree.initMode == "data" && opts.persist ) {
-			logMsg("Write cookie: <%s> = '%s'", opts.cookieId, this.tree.initExpandedKeys.join(","));
-			$.cookie(opts.cookieId+"-active", this.tree.initActiveKey);
-			$.cookie(opts.cookieId+"-focus", this.tree.initFocusKey);
-			$.cookie(opts.cookieId+"-expand", this.tree.initExpandedKeys.join(","));
-			$.cookie(opts.cookieId+"-select", this.tree.initSelectedKeys.join(","));
+			logMsg("Write cookie: active: %o, expanded: %o", this.tree.activeNode, this.tree.expandedNodes);
+			$.cookie(opts.cookieId+"-active", this.tree.activeNode ? this.tree.activeNode.key : "");
+			$.cookie(opts.cookieId+"-focus", this.tree.focusNode ? this.tree.focusNode.key : "");
+
+			var keyList = [];
+        	for(var i=0; i<this.tree.expandedNodes; i++)
+        		keyList.push(this.tree.expandedNodes[i].key);
+			$.cookie(opts.cookieId+"-expand", keyList.join(","));
+			logMsg("Write cookie: <%s> = '%s'", opts.cookieId, keyList.join(","));
+
+			keyList = [];
+        	for(var i=0; i<this.tree.selectedNodes; i++)
+        		keyList.push(this.tree.selectedNodes[i].key);
+			$.cookie(opts.cookieId+"-select", keyList.join(","));
         }
         
         // Fire select events for all node that were initialized as 'selected'
-		this.tree.isInitializing = false;
-		for(var i=0; i<this.tree.initSelectedNodes.length; i++ ) {
-			var dtnode = this.tree.initSelectedNodes[i];
-//			logMsg("Select on init: %o", dtnode);
+//		this.tree.isInitializing = false;
+		this.tree.initMode = "postInit";
+
+		var nodeList = this.tree.expandedNodes;
+		this.tree.expandedNode = [];
+		for(var i=0; i<nodeList.length; i++ ) {
+			var dtnode = nodeList[i];
+			logMsg("Expand on init: %o", dtnode);
+			dtnode._expand(true);
+		}
+		nodeList = this.tree.selectedNodes;
+		this.tree.selectedNodes = [];
+		for(var i=0; i<nodeList.length; i++ ) {
+			var dtnode = nodeList[i];
+			logMsg("Select on init: %o", dtnode);
 			dtnode.select(true);
 		}
 		// Activate node, that was initialized as 'active'
-		if( this.tree.initActiveNode ) {
-//			logMsg("Activate on init: %o", dtnode);
-			this.tree.initActiveNode._activate();
+		if( this.tree.activeNode ) {
+			var dtnode = this.tree.activeNode;
+			this.tree.activeNode = null;
+			logMsg("Activate on init: %o", dtnode);
+			dtnode._activate();
 		}
 		
 		// Focus, that was initialized as 'active'
-		if( this.tree.initFocusNode ) {
+		if( this.tree.focusNode ) {
 			logMsg("Focus on init: %o", dtnode);
-			this.tree.initFocusNode.focus();
+			this.tree.focusNode.focus();
 		}
+		this.tree.initMode = "running";
 		
 		//
 /*		
@@ -1488,3 +1510,5 @@ $.ui.dynatree.nodedatadefaults = {
 
 // ---------------------------------------------------------------------------
 })(jQuery);
+
+
