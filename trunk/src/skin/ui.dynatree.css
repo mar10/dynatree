@@ -47,15 +47,28 @@ span.ui-dynatree-checkbox
 	background-position: left;
 	background-image: url("cbUnchecked.gif");
 }
+span.ui-dynatree-checkbox:hover
+{
+	background-image: url("cbUnchecked_hover.gif");
+}
+
 
 .ui-dynatree-partsel span.ui-dynatree-checkbox
 {
 	background-image: url("cbIntermediate.gif");
 }
+.ui-dynatree-partsel span.ui-dynatree-checkbox:hover
+{
+	background-image: url("cbIntermediate_hover.gif");
+}
 
 .ui-dynatree-selected span.ui-dynatree-checkbox
 {
 	background-image: url("cbChecked.gif");
+}
+.ui-dynatree-selected span.ui-dynatree-checkbox:hover
+{
+	background-image: url("cbChecked_hover.gif");
 }
 
 span.ui-dynatree-icon
