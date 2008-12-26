@@ -11,28 +11,44 @@ div.ui-dynatree-container
 }
 
 /* Style, when control is disabled */
-.ui-dynatree-disabled
+div.ui-dynatree-disabled
 {
 	opacity: 0.5;
 	filter: alpha(opacity=50);
-/*	background-color: gray !important;*/ 
+	background-color: gray !important; 
 	/*	cursor: wait; */
 }
-/*
-.ui-dynatree-container img
+
+/** 
+ * Expander icon
+ */
+span.ui-dynatree-expander
 {
-	border-width: 0px;
 	width: 16px;
 	height: 16px;
-	vertical-align: bottom; /* correctly align img */
-}
-*/
-
-img.ui-dynatree-expander
-{
+	display: inline-block;
+	vertical-align: center;
+	background-repeat: no-repeat;
+	background-position: left;
+	background-image: url("ltP_nes.gif");
 	cursor: pointer;
 }
+.ui-dynatree-lastsib span.ui-dynatree-expander
+{
+	background-image: url("ltP_ne.gif");
+}
+.ui-dynatree-expanded span.ui-dynatree-expander
+{
+	background-image: url("ltM_nes.gif");
+}
+.ui-dynatree-expanded.ui-dynatree-lastsib span.ui-dynatree-expander
+{
+	background-image: url("ltM_ne.gif");
+}
 
+/** 
+ * Checkbox icon
+ */
 span.ui-dynatree-checkbox
 {
 	width: 13px;
