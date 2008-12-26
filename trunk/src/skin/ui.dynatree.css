@@ -109,6 +109,7 @@ span.ui-dynatree-icon
 	padding: 0px 3px 0px 3px; */
 /*	vertical-align: text-top;*/
 /*	vertical-align: top; */
+	vertical-align: text-top;
 }
 
 .ui-dynatree-container a:hover
