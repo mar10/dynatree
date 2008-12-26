@@ -221,6 +221,7 @@ DynaTreeNode.prototype = {
    		} else if ( this.data.icon == false ) {
         	// icon == false means 'no icon'
 		} else {
+        	// icon == null means 'default icon'
    			res += cache.tagNodeIcon;
 		}
 
@@ -950,7 +951,7 @@ DynaTree.prototype = {
 			this.initFocusKey = $.cookie(this.options.cookieId + "-focus");
 			this.initSelectedKeys = [];
 			var cookie = $.cookie(this.options.cookieId + "-expanded");
-			if( cookie || this.initActiveKey )
+			if( cookie || this.initActiveKey != null )
 				this.initMode = "cookie";
 			this.initExpandedKeys = cookie ? cookie.split(",") : [];
 			cookie = $.cookie(this.options.cookieId + "-selected");
@@ -1089,6 +1090,61 @@ DynaTree.prototype = {
 			this.redraw();
 		return !bEnable; // return previous value
 	},
+
+	_createFromTag: function(parentTreeNode, $ulParent) {
+		// Convert a <UL>...</UL> list into children of the parent tree node.
+		var self = this;
+/*
+TODO: better?
+		this.$lis = $("li:has(a[href])", this.element);
+		this.$tabs = this.$lis.map(function() { return $("a", this)[0]; });
+ */
+		$ulParent.find(">li").each(function() {
+			var $li = $(this);
+			var $liSpan = $li.find(">span:first");
+			var title;
+			if( $liSpan.length ) {
+				// If a <li><span> tag is specified, use it literally.
+				title = $liSpan.html();
+			} else {
+				// If only a <li> tag is specified, use the trimmed string up to the next child <ul> tag.
+				title = $.trim($li.html().match(/.*(<ul)?/)[0]);
+			}
+			// Parse node options from ID, title and class attributes
+			var data = {
+				title: title,
+				isFolder: $li.hasClass("folder"),
+				isLazy: $li.hasClass("lazy"),
+				expand: $li.hasClass("expanded"),
+				select: $li.hasClass("selected"),
+				activate: $li.hasClass("active"),
+				focus: $li.hasClass("focused")
+			};
+			if( $li.attr("title") )
+				data.tooltip = $li.attr("title");
+			if( $li.attr("id") )
+				data.key = $li.attr("id");
+			// If a data attribute is present, evaluate as a javascript object
+			if( $li.attr("data") ) {
+				var dataAttr = $.trim($li.attr("data"));
+				if( dataAttr ) {
+					if( dataAttr.charAt(0) != "{" )
+						dataAttr = "{" + dataAttr + "}"
+					try {
+						$.extend(data, eval("(" + dataAttr + ")"));
+					} catch(e) {
+						throw ("Error parsing node data: " + e + "\ndata:\n'" + dataAttr + "'");
+					}
+				}
+			}
+			childNode = parentTreeNode._addNode(data);
+			// Recursive reading of child nodes, if LI tag contains an UL tag
+			var $ul = $li.find(">ul:first");
+			if( $ul.length ) {
+				self._createFromTag(childNode, $ul); // must use 'self', because 'this' is the each() context
+			}
+		});
+	},
 	// --- end of class
 	lastentry: undefined
 };
@@ -1148,12 +1204,12 @@ $.widget("ui.dynatree", {
 
 		} else if( opts.initId ) {
 			// Init tree from another UL element
-			this._createFromTag(root, $("#"+opts.initId));
+			this.tree._createFromTag(root, $("#"+opts.initId));
 
 		} else {
 			// Init tree from the first UL element inside the container <div>
 			var $ul = $this.find(">ul").hide();
-			this._createFromTag(root, $ul);
+			this.tree._createFromTag(root, $ul);
 			$ul.remove();
 		}
 		// bind event handlers
@@ -1324,62 +1380,6 @@ $.widget("ui.dynatree", {
 
 	getSelectedNode: function() {
 		return this.tree.getSelectedNode();
-	},
-
-	// --- Private methods
-	_createFromTag: function(parentTreeNode, $ulParent) {
-		// Convert a <UL>...</UL> list into children of the parent tree node.
-		var self = this;
-/*
-TODO: better?
-		this.$lis = $("li:has(a[href])", this.element);
-		this.$tabs = this.$lis.map(function() { return $("a", this)[0]; });
- */
-		$ulParent.find(">li").each(function() {
-			var $li = $(this);
-			var $liSpan = $li.find(">span:first");
-			var title;
-			if( $liSpan.length ) {
-				// If a <li><span> tag is specified, use it literally.
-				title = $liSpan.html();
-			} else {
-				// If only a <li> tag is specified, use the trimmed string up to the next child <ul> tag.
-				title = $.trim($li.html().match(/.*(<ul)?/)[0]);
-			}
-			// Parse node options from ID, title and class attributes
-			var data = {
-				title: title,
-				isFolder: $li.hasClass("folder"),
-				isLazy: $li.hasClass("lazy"),
-				expand: $li.hasClass("expanded"),
-				select: $li.hasClass("selected"),
-				activate: $li.hasClass("active"),
-				focus: $li.hasClass("focused")
-			};
-			if( $li.attr("title") )
-				data.tooltip = $li.attr("title");
-			if( $li.attr("id") )
-				data.key = $li.attr("id");
-			// If a data attribute is present, evaluate as a javascript object
-			if( $li.attr("data") ) {
-				var dataAttr = $.trim($li.attr("data"));
-				if( dataAttr ) {
-					if( dataAttr.charAt(0) != "{" )
-						dataAttr = "{" + dataAttr + "}"
-					try {
-						$.extend(data, eval("(" + dataAttr + ")"));
-					} catch(e) {
-						throw ("Error parsing node data: " + e + "\ndata:\n'" + dataAttr + "'");
-					}
-				}
-			}
-			childNode = parentTreeNode._addNode(data);
-			// Recursive reading of child nodes, if LI tag contains an UL tag
-			var $ul = $li.find(">ul:first");
-			if( $ul.length ) {
-				self._createFromTag(childNode, $ul); // must use 'self', because 'this' is the each() context
-			}
-		});
 	},
 
 	// ------------------------------------------------------------------------
