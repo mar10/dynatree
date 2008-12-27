@@ -2,12 +2,16 @@
 
 = Introduction =
 
-Add your content here.
+Version 0.4 of dynatree has a lot of changes.
+Main features:
 
+  * Selection support<br>
+  ff
+  * Support for checkboxes
 
-= Details =
+= Migration hints =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+When updating from version 0.3, the following aspects have changed and may have to be adjusted.
+
+  * Replace onSelect with onActivate
+  * ...
