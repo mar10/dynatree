@@ -8,6 +8,20 @@ Issue updates:
 
 <wiki:gadget url="http://markmail.org/gadgets/markmailmini.xqy?l=google-web-toolkit"/>
 
+<wiki:gadget url="http://www.ohloh.net/p/65164/widgets/project_users.xml?style=blue" height="100"  border="0" />
+
+<wiki:gadget url="http://www.ohloh.net/p/65164/widgets/project_users_logo.xml" height="43"  border="0" />
+
+<wiki:gadget url="http://www.ohloh.net/p/65164/widgets/project_thin_badge.xml" height="36"  border="0" />
+
+<wiki:gadget url="http://www.ohloh.net/p/65164/widgets/project_languages.xml" border="1" width="380" height="200" />
+
+<wiki:gadget url="http://www.ohloh.net/p/65164/widgets/project_factoids.xml" border="0" width="380" height="200" />
+
+<wiki:gadget url="http://www.ohloh.net/p/65164/widgets/project_cocomo.xml" height="240"  border="0" />
+
+<wiki:gadget url="http://www.ohloh.net/p/65164/widgets/project_basic_stats.xml" height="220"  border="1" />
+
 = Details =
 
 Add your content here.  Format your content with:
