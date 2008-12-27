@@ -1,6 +1,9 @@
 #summary Project statistics.
 #labels Featured
 
+Note:
+The line count is calculated from the hole trunk, so jQuery is included.
+
 == Activity Timeline ==
 <wiki:gadget url="http://www.ohloh.net/p/65164/widgets/project_basic_stats.xml" height="220"  border="1" />
 
