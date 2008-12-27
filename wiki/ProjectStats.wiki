@@ -1,10 +1,6 @@
 #summary Project statistics.
 #labels Featured
 
-= Project Statistics =
-
-These gadgests are served by ohloh.
-
 == Activity Timeline ==
 <wiki:gadget url="http://www.ohloh.net/p/65164/widgets/project_basic_stats.xml" height="220"  border="1" />
 
