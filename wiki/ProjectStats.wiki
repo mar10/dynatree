@@ -1,4 +1,4 @@
-#summary Project statistics.
+#summary Project statistics, collected by Ohloh.
 #labels Featured
 
 == Activity Timeline ==
