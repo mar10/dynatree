@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+	<title>jquery.dynatree - Context Menu Example</title>
+	<script src='../jquery/jquery.js' type='text/javascript'></script>
+	<script src='../jquery/ui.core.js' type='text/javascript'></script>
+    <script src='../jquery/jquery.cookie.js' type='text/javascript'></script>
+
+	<link href='../src/skin/ui.dynatree.css' rel='stylesheet' type='text/css'>
+	<script src='../src/jquery.dynatree.js' type='text/javascript'></script>
+
+	<link href='../src/skin/ui.dynatree.css' rel='stylesheet' type='text/css'>
+	<script src='../src/jquery.dynatree.js' type='text/javascript'></script>
+<!--  
+	<script src="http://abeautifulsite.net/notebook_files/80/jquery.contextMenu.js" type="text/javascript"></script>
+	<link href="http://abeautifulsite.net/notebook_files/80/jquery.contextMenu.css" rel="stylesheet" type="text/css" />
+-->
+	<script src="jquery.contextMenu/jquery.contextMenu.js" type="text/javascript"></script>
+	<link href="jquery.contextMenu/jquery.contextMenu.css" rel="stylesheet" type="text/css" />
+
+	<script type='text/javascript'>
+	
+	function _showMenu(dtnode) {
+		$(dtnode.span).contextMenu({
+				menu: 'myMenu'
+			},
+			function(action, el, pos) {
+				alert(
+					'Action: ' + action + '\n\n' +
+					'Element ID: ' + $(el).attr('id') + '\n\n' + 
+					'X: ' + pos.x + '  Y: ' + pos.y + ' (relative to element)\n\n' + 
+					'X: ' + pos.docX + '  Y: ' + pos.docY+ ' (relative to document)'
+					);
+		});
+	};
+
+	$(function(){
+
+		$("#tree").dynatree({
+			persist: true,
+			onSelect: function(dtnode) {
+				$("#echoSelected").text(dtnode.data.title);
+			},
+			onKeypress: function(dtnode, event) {
+				// Eat keyboard events, when a menu is open
+				if( $(".contextMenu:visible").length > 0 )
+					return false;
+				// Open menu on [Space]
+				if( event.which == 32 ) {
+					// Simulate right click
+					logMsg("Menu 32: %o", dtnode.span);
+					$(dtnode.span).trigger("mousedown", {preventDefault: true, button: 2});
+					$(dtnode.span).trigger("mouseup");
+					return false; 
+				}
+			}
+		});
+		// Add context menu to document nodes:
+		$(".ui-dynatree-document").contextMenu({menu: "myMenu"}, function(action, el, pos) {
+			var dtnode = el.attr("dtnode");
+//			logMsg("ContextMenu dtnode=%s, action=%o, el=%o, pos=%o", dtnode, action, el, pos);
+			alert("Todo: appply action '" + action + "' to node " + dtnode);
+		});
+/*
+		$("#myMenu").bind("blur focus load unload mouseenter mouseleave show hide", function(e){
+			logMsg("Menu event: %o", e);
+		});
+*/
+	});
+</script>
+</head>
+
+<body>
+	<h1>jquery.dynatree - Context Menu Example</h1>
+	<p>This sample uses the jQuery Context Menu Plugin by Cory S.N. LaViska.<br>
+		Visit http://abeautifulsite.net/notebook/80 for usage and more information.
+	</p>
+	<p>TODO:<br>
+		Disable keys while menu is open.
+	</p>
+
+	<!-- Definition of context menu -->	
+	<ul id="myMenu" class="contextMenu">
+		<li class="edit"><a href="#edit">Edit</a></li>
+		<li class="cut separator"><a href="#cut">Cut</a></li>
+		<li class="copy"><a href="#copy">Copy</a></li>
+		<li class="paste"><a href="#paste">Paste</a></li>
+		<li class="delete"><a href="#delete">Delete</a></li>
+		<li class="quit separator"><a href="#quit">Quit</a></li>
+	</ul>
+
+	<!-- Definition tree structure -->	
+	<div id="tree">
+		<ul>
+			<li id="id1" title="Look, a tool tip!">item1 with key and tooltip
+			<li id="id2" class="selected">item2: selected on init
+			<li id="id3" class="folder">Folder with some children
+				<ul>
+					<li id="id3.1">Sub-item 3.1
+					<li id="id3.2">Sub-item 3.2
+				</ul>
+
+			<li id="id4" class="expanded">Document with some children (expanded on init)
+				<ul>
+					<li id="id4.1">Sub-item 4.1
+					<li id="id4.2">Sub-item 4.2
+				</ul>
+
+			<li id="id5" class="lazy folder">Lazy folder
+		</ul>
+	</div>
+
+	<div>Selected node: <span id="echoSelected">-</span></div>
+
+	<p><a href="http://dynatree.googlecode.com">jquery.dynatree.js</a></p>
+</body>
+</html>
