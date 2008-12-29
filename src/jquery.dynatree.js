@@ -36,15 +36,22 @@
  *   - issue #15: multi-select
  *   - issue #17: checkbox mode
  *   - use span + css backround-image: url()
+ *   - issue # : use effects for expanding 
  * TODO
+ *   - CSS überarbeiten (lücken raus!)
  *   - issue #61: allow image names + extensions
  *   - issue #56: <span class="ui-dynatree-title"> --> use a template?
  *   - data.isFolder -> folder, .isLazy -> lazy 
  *   - 'focus' attribute on init and in cookie
  *   - Test files for release: use minified libs 
- *   - issue # : use effects for expanding 
  *   - rework samples with better names and title, header explanation
  *   - remove focusRoot
+ *   
+ *   - onKeypress event wird in FF für [space] doppelt aufgerufen, weil erst keydown komt
+ *     http://www.quirksmode.org/js/keys.html
+ *     --> alles auf keydown umstellen (?), denn das kommt immer
+ *     Ausserdem charcode vermeiden und stattdessen keycode verwenden.
+ *     
  *   - unbind: auch focus handler entfernen
  *   - use opts.debugLevel instead of _bDebug
  *   - _expand wird für alle PArents 2x aufgerufen
@@ -55,7 +62,8 @@
  *     Stattdessen muss das render nur noch aufgerufen werden ,wenn sich die struktur ändert
  *     (remove() insert(), ...
  *   - unselect -> deselect
- *   - onDblClick(): lieber nicht den folder togglen; das sollte besser ein custom callback machen (toggle() sollte dann aber sicherstellen, dass mandatory rootnodes nicht kollabieren).
+ *   - onDblClick(): lieber nicht den folder togglen; das sollte besser ein custom callback machen 
+ *   (toggle() sollte dann aber sicherstellen, dass mandatory rootnodes nicht kollabieren).
  *   - onPostInit: setzt auch die Cookies (muss auch be lazyInit delayed aufgerufen werden
  *   - sample-options: mit reInit() und interaktiven options
  *   - $("#ui-dynatree-id-5").attr("dtnode").focus();
@@ -63,10 +71,13 @@
 	tree.isDisabled raus(?)
  
 	rootCollapsible --> minExpandLevel
-	focusRoot: --> use 'focus' style
+	focusRoot: --> use 'focus' style instead (aber auch lazy loading unterstützen)
 	clickFolderMode: --> nur im onClickHandler berücksichtigen
 	checkbox: false, // Show checkbox
+	
 	selectMode: 0, // 0:off, 1:single, 2:multi, 3:multi-hier
+	   die default click und keyhandler dürfen nicht ungewollt Selektoin setzen
+	
 	selectionVisible --> onSelect dtnode.makevisible
 	?? autoCollapse --> onExpand dtnode.collapseSiblilings
  
@@ -190,19 +201,6 @@ DynaTreeNode.prototype = {
 		}
 
 		// connector (expanded, expandable or simple)
-/*		
-		if ( bHideFirstConnector && bIsRoot  ) {
-			// skip connector
-		} else if ( this.childList && this.isExpanded  ) {
-			res += ( this.isLastSibling() ? cache.tagM_ne : cache.tagM_nes );
-		} else if (this.childList) {
-			res += ( this.isLastSibling() ? cache.tagP_ne : cache.tagP_nes );
-		} else if (this.data.isLazy) {
-			res += ( this.isLastSibling() ? cache.tagD_ne : cache.tagD_nes );
-		} else {
-			res += ( this.isLastSibling() ? cache.tagL_ne : cache.tagL_nes );
-		}
-*/
 		if ( bHideFirstConnector && bIsRoot  ) {
 			// skip connector
 		} else if ( this.childList || this.data.isLazy) {
@@ -523,7 +521,7 @@ DynaTreeNode.prototype = {
 	select: function(sel) {
 		// Select - but not focus - this node.
 		logMsg("dtnode.select(%o) - %o", sel, this);
-		return this._select(sel, true, true);
+		return this._select(sel!=false, true, true);
 	},
 
 	toggleSelect: function() {
@@ -1040,7 +1038,7 @@ DynaTree.prototype = {
 			logMsg("_changeNodeListCookie: %o", nodeList);
 		}
 	},
-
+/*
 	persist: function() {
 		logMsg("dynatree.persist(): active: %o, expanded: %o", this.activeNode, this.expandedNodes);
 		var opts = this.options;
@@ -1055,7 +1053,7 @@ DynaTree.prototype = {
 		$.cookie(opts.cookieId+"-select", keyList.join(","));
 		logMsg("Write cookie: <%s> = '%s'", opts.cookieId+"-select", keyList.join(","));
 	},
-
+*/
 	redraw: function() {
 		logMsg("dynatree.redraw()...");
 		this.tnRoot.render(true, true);
@@ -1317,13 +1315,10 @@ $.widget("ui.dynatree", {
 		$this.bind("click.dynatree dblclick.dynatree keypress.dynatree keydown.dynatree ", function(event){
 			var dtnode = __getNodeFromElement(event.target);
 			
-//			logMsg("bind(" + event.type + "): dtnode:" + this + ", charCode:" + event.charCode + ", keyCode: " + event.keyCode + ", which: " + event.which);
+			logMsg("bind(" + event.type + "): dtnode:" + this + ", charCode:" + event.charCode + ", keyCode: " + event.keyCode + ", which: " + event.which);
 			if( !dtnode )
 				return false;
-			// Handles keydown and keypressed, because IE and Safari don't fire keypress for cursor keys.
-			// ...but Firefox does, so ignore them:
-			if( event.type == "keypress" && event.charCode == 0 )
-				return;
+
 			switch(event.type) {
 			case "click":
 				return ( o.onClick && o.onClick(dtnode, event)===false ) ? false : dtnode.onClick(event);
@@ -1331,6 +1326,10 @@ $.widget("ui.dynatree", {
 				return ( o.onDblClick && o.onDblClick(dtnode, event)===false ) ? false : dtnode.onDblClick(event);
 			case "keydown":
 			case "keypress":
+				// Handles keydown and keypressed, because IE and Safari don't fire keypress for cursor keys.
+				// ...but Firefox does, so ignore them:
+				if( event.type == "keypress" && event.charCode == 0 )
+					return;
 				return ( o.onKeypress && o.onKeypress(dtnode, event)===false ) ? false : dtnode.onKeypress(event);
 			};
 		});
@@ -1370,7 +1369,7 @@ $.widget("ui.dynatree", {
 	},
 	
 	disable: function() {
-		this.unbind();
+//		this.unbind();
 		// Disable and add -disabled to css: 
 		this._setData("disabled", true);
 	},

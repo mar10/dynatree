@@ -1,33 +1,45 @@
+/******************************************************************************* 
+ * Tree container
+ */
 div.ui-dynatree-container
 {
 	font-family: tahoma, arial, helvetica;
 	font-size: 10pt; /* font size should not be too big */
-	white-space: nowrap; /* better to set it by default, imho */
+	white-space: nowrap; 
 	padding: 3px;
-	color: black;
 	
 	background-color: white; 
 	border: 1px dotted gray;
 }
 
 /* Style, when control is disabled */
-div.ui-dynatree-disabled
+.ui-dynatree-disabled div.ui-dynatree-container
 {
 	opacity: 0.5;
 	filter: alpha(opacity=50);
-	background-color: gray !important; 
-	/*	cursor: wait; */
+	background-color: silver; 
 }
 
-/** 
+
+/******************************************************************************* 
+ * Vertical line image
+ */
+div.ui-dynatree-container img
+{
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+}
+
+/******************************************************************************* 
  * Expander icon
  */
 span.ui-dynatree-expander
 {
 	width: 16px;
 	height: 16px;
-	display: inline-block;
-	vertical-align: center;
+	display: inline-block; /* required, to make a span sizeable */
+	vertical-align: top;
 	background-repeat: no-repeat;
 	background-position: left;
 	background-image: url("ltP_nes.gif");
@@ -46,19 +58,17 @@ span.ui-dynatree-expander
 	background-image: url("ltM_ne.gif");
 }
 
-/** 
+/******************************************************************************* 
  * Checkbox icon
  */
 span.ui-dynatree-checkbox
 {
 	width: 13px;
 	height: 13px;
-/*	padding-right: 16px; */
+	display: inline-block;
+	vertical-align: text-top;
 	margin-left: 3px;
 	margin-right: 3px;
-/*	padding-bottom: 2px;*/
-	vertical-align: center;
-	display: inline-block;
 	background-repeat: no-repeat;
 	background-position: left;
 	background-image: url("cbUnchecked.gif");
@@ -67,7 +77,6 @@ span.ui-dynatree-checkbox:hover
 {
 	background-image: url("cbUnchecked_hover.gif");
 }
-
 
 .ui-dynatree-partsel span.ui-dynatree-checkbox
 {
@@ -87,15 +96,19 @@ span.ui-dynatree-checkbox:hover
 	background-image: url("cbChecked_hover.gif");
 }
 
+/******************************************************************************* 
+ * Node type icon
+ */
 span.ui-dynatree-icon
 {
 	width: 16px;
 	height: 16px;
-	border-width: 0px;
-	margin: 0px;
+	display: inline-block;
+	vertical-align: top;
+/*	border-width: 0px;
+	margin: 0px;*/
 	margin-left: 3px;
 	margin-right: 3px;
-	display: inline-block;
 	background-repeat: no-repeat;
 	background-position: left;
 	background-image: url("ltDoc.gif");
@@ -112,73 +125,63 @@ span.ui-dynatree-icon
 }
 
 
+/******************************************************************************* 
+ * Node titles
+ */
 
-.ui-dynatree-document,
-.ui-dynatree-folder
+/* Remove blue color and underline from title links */
+div.ui-dynatree-container a 
 {
-/*	line-height: 16px; /* should be the same as img height, in case 16 px */
-/*	margin: 0px;
-	border: 0px;
-	color: black;*/
-}
-.ui-dynatree-folder
-{
-	font-weight: bold;
-}
-
-.ui-dynatree-container a,
-.ui-dynatree-container a:link,
-.ui-dynatree-container a:visited,
-.ui-dynatree-container a:active 
-{
-	color: inherit;
+	color: black; /* inherit doesn't work on IE */
 	text-decoration: none;
+	vertical-align: top;
+	margin: 0px;
 /*	outline: 0; /* @ Firefox, prevent dotted border after click */
 /*	margin-left: 5px;
 	padding: 0px 3px 0px 3px; */
 /*	vertical-align: text-top;*/
 /*	vertical-align: top; */
-	vertical-align: text-top;
+/*	display: inline-block; */ 
 }
 
-.ui-dynatree-container a:hover
+div.ui-dynatree-container a:hover
 {
 	text-decoration: underline;
 }
 
-.ui-dynatree-focused
+
+span.ui-dynatree-document a,
+span.ui-dynatree-folder a
 {
+	line-height: 16px; /* should be the same as img height, in case 16 px */
+	margin: 0px;
+	border: 0px;
+}
+span.ui-dynatree-folder a
+{
+	font-weight: bold;
 }
 
-.ui-dynatree-container a:focus
-{
-	background-color: #EFEBDE; /* light gray */
-}
 
-.ui-dynatree-container a:focus,
-.ui-dynatree-focused a,
-.ui-dynatree-focused a:link
+div.ui-dynatree-container a:focus,
+span.ui-dynatree-focused a:link  /* @IE */
 {
 	background-color: #EFEBDE; /* gray */
 }
 
-.ui-dynatree-expanded
+
+span.ui-dynatree-expanded a
 {
 }
 
-.ui-dynatree-selected
+span.ui-dynatree-selected a 
 {
-	color: blue;
+	color: green; 
 	font-style: italic;
 }
 
-.ui-dynatree-active
-{
-}
-
-.ui-dynatree-active a
+span.ui-dynatree-active a
 {
 	background-color: #3169C6 !important;
 	color: white !important; /* @ IE6 */
 }
-
