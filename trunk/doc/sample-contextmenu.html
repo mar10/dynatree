@@ -33,6 +33,7 @@
 				// Eat keyboard events, when a menu is open
 				if( $(".contextMenu:visible").length > 0 )
 					return false;
+				logMsg("clickevebnt:%o", event);
 			},
 			onKeypress: function(dtnode, event) {
 				// Eat keyboard events, when a menu is open
@@ -41,8 +42,18 @@
 				// Open menu on [Space] key (simulate right click)
 				if( event.which == 32 ) {
 					logMsg("Menu 32: %o", dtnode.span);
-					$(dtnode.span).trigger("mousedown", {preventDefault: true, button: 2});
-					$(dtnode.span).trigger("mouseup");
+					
+					$(dtnode.span).trigger("mousedown", {
+						preventDefault: true,
+						button: 2
+						});
+					$(dtnode.span).trigger("mouseup", {
+						preventDefault: true,
+						pageX: dtnode.span.offsetLeft,
+						pageY: dtnode.span.offsetTop, 
+						button: 2
+						});
+//					$(dtnode.span).trigger("mouseup");
 					return false; 
 				}
 			}

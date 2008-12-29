@@ -110,7 +110,11 @@
 			},
 			onKeypress: function(dtnode, event) {
 				logMsg("onKeypress(%o, %o)", dtnode, event);
-				if( event.which == 100 ) { // 'd'
+				switch( event.which ) {
+				case 32: // [space]
+					dtnode.toggleSelect();
+					return false;
+				case 100: // 'd'
 					$("#tree").dynatree("disable");
 					return false;
 				}
