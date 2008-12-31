@@ -8,13 +8,13 @@ Version 0.4 of dynatree adresses a lot of issues that came up with 0.3:
 
 Main changes:
 
-  * 'selected'/'select' was renamed to 'active'/'activate'<br>This is more precise and allowed implementation of the new selection feature.<br>A node may be active
+  * 'selected'/'select' was renamed to 'active'/'activate'<br>This is more precise and allowed implementation of the new selection feature.
   * Selection support<br>Avable  mode: single selection, multi selection and multi-hierarchical.
   * Support for checkboxes
   * Changed syntax when initializing from a UL tag.<br>Most status information can now be passed in the {{{class}}} attribute, e.g {{{class='expanded selected focused active lazy folder'}}}.<br>The {{{data}}} attribute is not valid in strict html and may be avoided most of the time. It is still supported however, and may be used to attach additional custom data to the nodes.
   * Persistence was extended to active, focus, expand and selection status.<br>Also, it is no longer required define node-keys, because dummy keys are assigned by default.
   * New API functions like {{{$("#tree").disable()}}}, {{{tree.visit()}}}, ...
-  * New callbacks like {{{onClick(dtnode, event)}}}, {{{onQueryActivate(activate, dtnode)}}}, and {{{onClick(dtnode, event)}}}, {{{onActivatedtnode)}}}.
+  * New callbacks like {{{onClick(dtnode, event)}}}, {{{onQueryActivate(activate, dtnode)}}}, and {{{onActivate(dtnode)}}}.
   * The tree images are now defined in CSS, instead of image name options.
   * New {{{fx}}} option for animation effects when expanding/collapsing.
 
@@ -25,4 +25,5 @@ When updating from version 0.3, the following aspects have changed and may have 
 
   * Replace onSelect with onActivate
   * Use the new class names instead of the {{{data}}} attribute when initializing from a UL tag.
-  * Define {{{onKeypress}}} or  {{{onDblClick}}} handlers to implement custom behaviour, like selecting a node with double click or expanding a document with [space] key.
+  * Define {{{onKeypress}}} or  {{{onDblClick}}} handlers to implement custom behaviour, like selecting a node with double click or expanding a document with {{{space}}} key.
+  * The css structure has changed and may have to be adjusted for custom skins.
