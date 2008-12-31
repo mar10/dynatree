@@ -5,6 +5,9 @@
 
 ==== Release 0.3 ====
 
+===== 0.3.1 (currently in the SVN manintenance branch only) =====
+  * Fixes: issue #64
+
 ===== 0.3.0 =====
   * Changes: selectExpandsFolders is deprecated. Use clickFolderMode instead.
   * Enhancements: issue #5, issue #57
