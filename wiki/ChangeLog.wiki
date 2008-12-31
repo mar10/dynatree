@@ -3,6 +3,11 @@
 
 <wiki:toc max_depth="4" />
 
+==== Release 0.4 ====
+
+Work in prgress, currently in the SVN trunk only.
+See UpdateToVersion04 for some infos.
+
 ==== Release 0.3 ====
 
 ===== 0.3.1 (currently in the SVN manintenance branch only) =====
