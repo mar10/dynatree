@@ -48,43 +48,38 @@
 					{title: "Node 1.3", select: true }
 					]
 					},
-				{title: "Node 2",
+				{title: "Node 2", isLazy: true,
 					children: [
 								{title: "Node 2.1" }
 						] 
 					}
 			],
 
-			onQueryActivate: function(dtnode, activate) {
-				logMsg("onQueryActivate(%o, %o)", dtnode, activate);
+			onQueryActivate: function(activate, dtnode) {
+				logMsg("onQueryActivate(%o, %o)", dtnode);
 			},
 			onActivate: function(dtnode) {
 				logMsg("onActivate(%o)", dtnode);
 				$("#echoActive").text(dtnode.data.title);
 			},
-			onDectivate: function(dtnode) {
+			onDeactivate: function(dtnode) {
 				logMsg("onDeactivate(%o)", dtnode);
 				$("#echoActive").text("-");
 			},
 			
-			onQuerySelect: function(dtnode, select) {
-				logMsg("onQuerySelect(%o, %o)", dtnode, select);
-				if( dtnode.isfolder )
+			onQuerySelect: function(select, dtnode) {
+				logMsg("onQuerySelect(%o, %o)", select, dtnode);
+				if( dtnode.isFolder )
 					return false;
 			},
-			onSelect: function(dtnode) {
-				logMsg("onSelect(%o)", dtnode);
-				var s = dtnode.tree.getSelectedNodes().join(", ");
-				$("#echoSelected").text(s);
-			},
-			onUnselect: function(dtnode) {
-				logMsg("onUnselect(%o)", dtnode);
+			onSelect: function(select, dtnode) {
+				logMsg("onSelect(%o, %o)", dtnode);
 				var s = dtnode.tree.getSelectedNodes().join(", ");
 				$("#echoSelected").text(s);
 			},
 			
-			onQueryExpand: function(dtnode, expand) {
-				logMsg("onQueryExpand(%o, %o)", dtnode, expand);
+			onQueryExpand: function(expand, dtnode) {
+				logMsg("onQueryExpand(%o, %o)", expand, dtnode);
 			},
 			onExpand: function(dtnode) {
 				logMsg("onExpand(%o)", dtnode);
@@ -93,6 +88,10 @@
 				logMsg("onCollapse(%o)", dtnode);
 			},
 			
+			onLazyRead: function(dtnode) {
+				logMsg("Benchmarking mode='" + dtnode.data.mode + "' done.");
+			},
+
 			onFocus: function(dtnode) {
 				$("#echoFocused").text(dtnode.data.title);
 			},
@@ -108,8 +107,8 @@
 				logMsg("onDblClick(%o, %o)", dtnode, event);
 				dtnode.toggleSelect();
 			},
-			onKeypress: function(dtnode, event) {
-				logMsg("onKeypress(%o, %o)", dtnode, event);
+			onKeydown: function(dtnode, event) {
+				logMsg("onKeydown(%o, %o)", dtnode, event);
 				switch( event.which ) {
 				case 32: // [space]
 					dtnode.toggleSelect();
@@ -119,9 +118,10 @@
 					return false;
 				}
 			},
-			onLazyRead: function(dtnode) {
-				logMsg("Benchmarking mode='" + dtnode.data.mode + "' done.");
+			onKeypress: function(dtnode, event) {
+				logMsg("onKeypress(%o, %o)", dtnode, event);
 			}
+
 		});
 
 		

@@ -32,9 +32,14 @@ div.ui-dynatree-container img
 }
 
 /******************************************************************************* 
- * Expander icon
+ * Common icon definitions
  */
-span.ui-dynatree-expander
+span.ui-dynatree-empty,
+span.ui-dynatree-vline,
+span.ui-dynatree-connector,
+span.ui-dynatree-expander,
+span.ui-dynatree-icon,
+span.ui-dynatree-checkbox
 {
 	width: 16px;
 	height: 16px;
@@ -42,12 +47,46 @@ span.ui-dynatree-expander
 	vertical-align: top;
 	background-repeat: no-repeat;
 	background-position: left;
+}
+
+/******************************************************************************* 
+ * Lines and connectors
+ */
+span.ui-dynatree-empty
+{
+}
+span.ui-dynatree-vline
+{
+	background-image: url("ltL_ns.gif");
+}
+span.ui-dynatree-connector
+{
+	background-image: url("ltL_nes.gif");
+}
+.ui-dynatree-lastsib span.ui-dynatree-connector
+{
+	background-image: url("ltL_ne.gif");
+}
+
+/******************************************************************************* 
+ * Expander icon
+ */
+span.ui-dynatree-expander
+{
 	background-image: url("ltP_nes.gif");
 	cursor: pointer;
 }
 .ui-dynatree-lastsib span.ui-dynatree-expander
 {
 	background-image: url("ltP_ne.gif");
+}
+.ui-dynatree-lazy span.ui-dynatree-expander
+{
+	background-image: url("ltD_nes.gif");
+}
+.ui-dynatree-lazy.ui-dynatree-lastsib span.ui-dynatree-expander
+{
+	background-image: url("ltD_ne.gif");
 }
 .ui-dynatree-expanded span.ui-dynatree-expander
 {
@@ -63,14 +102,10 @@ span.ui-dynatree-expander
  */
 span.ui-dynatree-checkbox
 {
-	width: 13px;
-	height: 13px;
-	display: inline-block;
-	vertical-align: text-top;
+/*	width: 13px;
+	height: 13px; */
 	margin-left: 3px;
-	margin-right: 3px;
-	background-repeat: no-repeat;
-	background-position: left;
+/*	margin-right: 3px; */
 	background-image: url("cbUnchecked.gif");
 }
 span.ui-dynatree-checkbox:hover
@@ -101,16 +136,8 @@ span.ui-dynatree-checkbox:hover
  */
 span.ui-dynatree-icon
 {
-	width: 16px;
-	height: 16px;
-	display: inline-block;
-	vertical-align: top;
-/*	border-width: 0px;
-	margin: 0px;*/
 	margin-left: 3px;
 	margin-right: 3px;
-	background-repeat: no-repeat;
-	background-position: left;
 	background-image: url("ltDoc.gif");
 }
 
@@ -153,9 +180,9 @@ div.ui-dynatree-container a:hover
 span.ui-dynatree-document a,
 span.ui-dynatree-folder a
 {
-	line-height: 16px; /* should be the same as img height, in case 16 px */
-	margin: 0px;
-	border: 0px;
+/*	line-height: 16px; /* should be the same as img height, in case 16 px */
+/*	margin: 0px;
+	border: 0px; */
 }
 span.ui-dynatree-folder a
 {
