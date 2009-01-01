@@ -57,15 +57,12 @@ span.ui-dynatree-empty
 }
 span.ui-dynatree-vline
 {
-	background-image: url("ltL_ns.gif");
 }
 span.ui-dynatree-connector
 {
-	background-image: url("ltL_nes.gif");
 }
 .ui-dynatree-lastsib span.ui-dynatree-connector
 {
-	background-image: url("ltL_ne.gif");
 }
 
 /******************************************************************************* 
@@ -73,28 +70,31 @@ span.ui-dynatree-connector
  */
 span.ui-dynatree-expander
 {
-	background-image: url("ltP_nes.gif");
-	cursor: pointer;
+	background-image: url("collapsed.gif");
+}
+span.ui-dynatree-expander:hover
+{
+	background-image: url("collapsed_hover.gif");
 }
 .ui-dynatree-lastsib span.ui-dynatree-expander
 {
-	background-image: url("ltP_ne.gif");
 }
 .ui-dynatree-lazy span.ui-dynatree-expander
 {
-	background-image: url("ltD_nes.gif");
 }
 .ui-dynatree-lazy.ui-dynatree-lastsib span.ui-dynatree-expander
 {
-	background-image: url("ltD_ne.gif");
 }
 .ui-dynatree-expanded span.ui-dynatree-expander
 {
-	background-image: url("ltM_nes.gif");
+	background-image: url("expanded.gif");
+}
+.ui-dynatree-expanded span.ui-dynatree-expander:hover
+{
+	background-image: url("expanded_hover.gif");
 }
 .ui-dynatree-expanded.ui-dynatree-lastsib span.ui-dynatree-expander
 {
-	background-image: url("ltM_ne.gif");
 }
 
 /******************************************************************************* 
@@ -102,10 +102,7 @@ span.ui-dynatree-expander
  */
 span.ui-dynatree-checkbox
 {
-/*	width: 13px;
-	height: 13px; */
 	margin-left: 3px;
-/*	margin-right: 3px; */
 	background-image: url("cbUnchecked.gif");
 }
 span.ui-dynatree-checkbox:hover
@@ -138,17 +135,16 @@ span.ui-dynatree-icon
 {
 	margin-left: 3px;
 	margin-right: 3px;
-	background-image: url("ltDoc.gif");
+	background-image: url("document.gif");
 }
 
 .ui-dynatree-folder span.ui-dynatree-icon
 {
-	background-image: url("ltFld.gif");
+	background-image: url("folder.gif");
 }
 
 .ui-dynatree-folder.ui-dynatree-expanded  span.ui-dynatree-icon
 {
-	background-image: url("ltFld_o.gif");
 }
 
 
@@ -163,12 +159,6 @@ div.ui-dynatree-container a
 	text-decoration: none;
 	vertical-align: top;
 	margin: 0px;
-/*	outline: 0; /* @ Firefox, prevent dotted border after click */
-/*	margin-left: 5px;
-	padding: 0px 3px 0px 3px; */
-/*	vertical-align: text-top;*/
-/*	vertical-align: top; */
-/*	display: inline-block; */ 
 }
 
 div.ui-dynatree-container a:hover
@@ -180,14 +170,11 @@ span.ui-dynatree-document a,
 span.ui-dynatree-folder a
 {
 	display: inline-block; /* Better alignment, when title contains <br> */  
-/*	vertical-align: top;*/
 	padding-left: 3px;
 	padding-right: 3px; /* Otherwise italic font will  */
-	/*	line-height: 16px; /* should be the same as img height, in case 16 px */
 }
 span.ui-dynatree-folder a
 {
-	font-weight: bold;
 }
 
 
@@ -210,6 +197,7 @@ span.ui-dynatree-selected a
 
 span.ui-dynatree-active a
 {
-	background-color: #3169C6 !important;
-	color: white !important; /* @ IE6 */
+	border: 1px solid #99DEFD;
+	background-color: #D8F0FA;
+/*	color: white !important; /* @ IE6 */
 }
