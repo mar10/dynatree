@@ -159,6 +159,8 @@ div.ui-dynatree-container a
 	text-decoration: none;
 	vertical-align: top;
 	margin: 0px;
+	/* Set transparent border to prevent jumping when active node gets a border (we can do this, because this theme doesn_'t use vertical lines) */
+	border: 1px solid transparent;
 }
 
 div.ui-dynatree-container a:hover
