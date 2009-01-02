@@ -28,6 +28,7 @@ div.ui-dynatree-container img
 {
 	width: 16px;
 	height: 16px;
+	margin-left: 3px;
 	vertical-align: top;
 }
 
@@ -134,7 +135,7 @@ span.ui-dynatree-checkbox:hover
 span.ui-dynatree-icon
 {
 	margin-left: 3px;
-	margin-right: 3px;
+/*	margin-right: 3px; */
 	background-image: url("document.gif");
 }
 
@@ -159,6 +160,7 @@ div.ui-dynatree-container a
 	text-decoration: none;
 	vertical-align: top;
 	margin: 0px;
+	margin-left: 3px;
 	/* Set transparent border to prevent jumping when active node gets a border (we can do this, because this theme doesn_'t use vertical lines) */
 	border: 1px solid transparent;
 }

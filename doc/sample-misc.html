@@ -8,47 +8,64 @@
 	<script src='../jquery/ui.core.js' type='text/javascript'></script>
     <script src='../jquery/jquery.cookie.js' type='text/javascript'></script>
 
+	<!-- Automatic TOC generator -->
+	<link rel='stylesheet' type='text/css' href='howto.css'>
+	<script src='./jquery.planize.js' type='text/javascript'></script>
+
 	<link href='../src/skin/ui.dynatree.css' rel='stylesheet' type='text/css'>
 	<script src='../src/jquery.dynatree.js' type='text/javascript'></script>
 
 <script type='text/javascript'>
 	$(function(){
 		
+		// Create TOC
+		$("html *").planize({
+			title: "Table of contents",
+		    min_level: 2,
+            generate_toc: true,
+            toc_elem: $("#toc")
+		});
+
+		// --- Initialize sample trees
 		$("#tree1").dynatree({
+			// The following options are only required, if we have more than one tree on one page: 
 			initId: "treeData",
 			idPrefix: "ui-dynatree-1-"
 		});
 
 		$("#tree2").dynatree({
-			initId: "treeData",
-			idPrefix: "ui-dynatree-2-",
 			persist: true,
 			onActivate: function(dtnode) {
 				$("#echoActive2").text(dtnode.data.title);
-			}
+			},
+			// The following options are only required, if we have more than one tree on one page: 
+			initId: "treeData",
+			idPrefix: "ui-dynatree-2-"
 		});
 
 		$("#tree3").dynatree({
-			initId: "treeData",
-			idPrefix: "ui-dynatree-3-",
 			persist: true,
 			title: "Sample 3",
 			rootVisible: true,
 			fx: { height: "toggle", duration: 200 },
 			onActivate: function(dtnode) {
 				$("#echoActive3").text(dtnode.data.title);
-			}
+			},
+			// The following options are only required, if we have more than one tree on one page: 
+			initId: "treeData",
+			idPrefix: "ui-dynatree-3-"
 		});
 
 		$("#treeCb").dynatree({
-			initId: "treeData",
-			idPrefix: "ui-dynatree-Cb-",
 			persist: true,
 			checkbox: true,
 			selectMode: 3,
 			onActivate: function(dtnode) {
 				$("#echoActiveCb").text(dtnode.data.title);
-			}
+			},
+			// The following options are only required, if we have more than one tree on one page: 
+			initId: "treeData",
+			idPrefix: "ui-dynatree-Cb-"
 		});
 	});
 </script>
@@ -58,6 +75,11 @@
 	<h1>jquery.dynatree - Misc. Examples</h1>
 	<p>This page shows different example trees, all initialized from a shared &lt;ul> element.</p>
 	
+	<!-- jquery.planize will generate a TOC here: -->
+	<div id="toc">
+	</div>
+	
+
 	<!-- Shared initialization data -->
 	
 	<ul id="treeData" style="display: none;">
@@ -99,6 +121,12 @@
 	<div id="treeCb"></div>
 	<div>Active node: <span id="echoActiveCb">-</span></div>
 	<div>Selection: <span id="echoSelectionCb">-</span></div>
+	
+	<h2>Theming</h2>
+	<p>See <a href="sample-theming.html">this page</a> for an example with different icons and style.</p>
+	
+	<h2>Context menu</h2>
+	<p>See <a href="sample-contextmenu.html">this page</a> for an example that uses a context menu plugin.</p>
 	
 	<hr>
 	<p><a href="http://dynatree.googlecode.com">jquery.dynatree.js</a></p>
