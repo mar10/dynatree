@@ -38,35 +38,31 @@
 			onActivate: function(dtnode) {
 				$("#echoActive2").text(dtnode.data.title);
 			},
+			onDblClick: function(dtnode, event) {
+				logMsg("onDblClick(%o, %o)", dtnode, event);
+				dtnode.toggleExpand();
+			},
 			// The following options are only required, if we have more than one tree on one page: 
 			initId: "treeData",
+			cookieId: "ui-dynatree-2",
 			idPrefix: "ui-dynatree-2-"
 		});
 
 		$("#tree3").dynatree({
-			persist: true,
 			title: "Sample 3",
 			rootVisible: true,
+			persist: true,
 			fx: { height: "toggle", duration: 200 },
+			autoCollapse: true,
 			onActivate: function(dtnode) {
 				$("#echoActive3").text(dtnode.data.title);
 			},
 			// The following options are only required, if we have more than one tree on one page: 
 			initId: "treeData",
+			cookieId: "ui-dynatree-3",
 			idPrefix: "ui-dynatree-3-"
 		});
 
-		$("#treeCb").dynatree({
-			persist: true,
-			checkbox: true,
-			selectMode: 3,
-			onActivate: function(dtnode) {
-				$("#echoActiveCb").text(dtnode.data.title);
-			},
-			// The following options are only required, if we have more than one tree on one page: 
-			initId: "treeData",
-			idPrefix: "ui-dynatree-Cb-"
-		});
 	});
 </script>
 </head>
@@ -80,24 +76,37 @@
 	</div>
 	
 
-	<!-- Shared initialization data -->
+	<!-- Shared initialization data for simple examples -->
 	
 	<ul id="treeData" style="display: none;">
 		<li id="id1" title="Look, a tool tip!">item1 with key and tooltip
-		<li id="id2" class="selected">item2: selected on init
+		<li id="id2">item2
 		<li id="id3" class="folder">Folder with some children
 			<ul>
 				<li id="id3.1">Sub-item 3.1
+					<ul>
+						<li id="id3.1.1">Sub-item 3.1.1
+						<li id="id3.1.2">Sub-item 3.1.2
+					</ul>
 				<li id="id3.2">Sub-item 3.2
+					<ul>
+						<li id="id3.2.1">Sub-item 3.2.1
+						<li id="id3.2.2">Sub-item 3.2.2
+					</ul>
 			</ul>
-
 		<li id="id4" class="expanded">Document with some children (expanded on init)
 			<ul>
 				<li id="id4.1"  class="active focused">Sub-item 4.1 (active and focus on init)
-				<li id="id4.2" class="selected">Sub-item 4.2: selected on init
+					<ul>
+						<li id="id4.1.1">Sub-item 4.1.1
+						<li id="id4.1.2">Sub-item 4.1.2
+					</ul>
+				<li id="id4.2">Sub-item 4.2
+					<ul>
+						<li id="id4.2.1">Sub-item 4.2.1
+						<li id="id4.2.2">Sub-item 4.2.2
+					</ul>
 			</ul>
-
-		<li id="id5" class="lazy folder">Lazy folder
 	</ul>
 
 	<!-- Tree containers -->
@@ -106,24 +115,37 @@
 	<p>This tree uses default options:</p>
 	<div id="tree1"></div>
 	
+	
 	<h2>Persistence</h2>
-	<p>Cookie persistence and a onActivate-handler are enabled here.</p>
+	<p>
+		Cookie persistence and a onActivate-handler are enabled here.<br>
+		A double-click handler expands document nodes.	
+	</p>
 	<div id="tree2"></div>
 	<div>Active node: <span id="echoActive2">-</span></div>
 	
+	
 	<h2>Effects and root</h2>
-	<p>.</p>
+	<p>
+		The root node is made visible.<br>
+		Enabled expand/collapse effects.<br>
+		autoCollapse is set to make sure only one branch is expanded at a time.
+	</p>
 	<div id="tree3"></div>
 	<div>Active node: <span id="echoActive3">-</span></div>
 	
+	
 	<h2>Checkbox and selction</h2>
-	<p>This tree has checkoxes and hierarchical multi-selection enabled.</p>
-	<div id="treeCb"></div>
-	<div>Active node: <span id="echoActiveCb">-</span></div>
-	<div>Selection: <span id="echoSelectionCb">-</span></div>
+	<p>See <a href="sample-select.html">this page</a> for an example with selection and checkoxes.</p>
+	
 	
 	<h2>Theming</h2>
 	<p>See <a href="sample-theming.html">this page</a> for an example with different icons and style.</p>
+	
+	
+	<h2>Lazy loading</h2>
+	<p>See <a href="sample-lazy.html">this page</a> for an example of delayed loading nodes using AJAX.</p>
+	
 	
 	<h2>Context menu</h2>
 	<p>See <a href="sample-contextmenu.html">this page</a> for an example that uses a context menu plugin.</p>

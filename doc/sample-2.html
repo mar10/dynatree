@@ -20,12 +20,12 @@
 			rootVisible: true,
 			autoCollapse: true,
 //			clickFolderMode: 3,
-			onSelect: function(dtnode) {
+			onActivate: function(dtnode) {
 				$("#echoSelected").text(dtnode.data.title);
 				if( dtnode.data.url )
 					window.open(dtnode.data.url, dtnode.data.target);
 			},
-			onUnselect: function(dtnode) {
+			onDeactivate: function(dtnode) {
 				$("#echoSelected").text("-");
 			},
 			onFocus: function(dtnode) {
@@ -37,7 +37,7 @@
 			onLazyRead: function(dtnode){
 				var fakeJsonResult = [
 				    { title: 'Lazy node 1', isLazy: true },
-				    { title: 'Simple node 2' }
+				    { title: 'Simple node 2', isSelected: true }
 				];
 //				alert ("Let's pretend we're using this AJAX response to load the branch:\n " + jsonResult);
 				function fakeAjaxResponse() {
@@ -90,17 +90,17 @@
 			$("#tree").dynatree("getRoot").append(obj);
 		});
 
-		$("#btnSelectNode").click(function(){
-			$("#tree").dynatree("getTree").selectKey("4.3.2");
-//			$("#tree").dynatree("getTree").getNodeByKey("4.3.2").select();
+		$("#btnActiveNode").click(function(){
+			$("#tree").dynatree("getTree").activateKey("4.3.2");
+//			$("#tree").dynatree("getTree").getNodeByKey("4.3.2").activate();
 		});
 
-		$("#btnShowSelected").click(function(){
-			var dtnode = $("#tree").dynatree("getSelectedNode");
+		$("#btnShowActive").click(function(){
+			var dtnode = $("#tree").dynatree("getActiveNode");
 			if( dtnode )
-				alert("Currently selected: " + dtnode.data.title);
+				alert("Currently active: " + dtnode.data.title);
 			else
-				alert("Nothing selected.");
+				alert("No active node.");
 		});
 	});
 </script>
@@ -157,8 +157,8 @@
 	<p>
 		<button id="btnAddCode">Add nodes programmatically</button>
 		<button id="btnAddObject">Add nodes using arrays</button>
-		<button id="btnSelectNode">Select item 4.3.2</button>
-		<button id="btnShowSelected">Show selected node...</button>
+		<button id="btnActiveNode">Activate item 4.3.2</button>
+		<button id="btnShowActive">Show active node...</button>
 	</p>
 	<p><a href="http://dynatree.googlecode.com">jquery.dynatree.js</a></p>
 </body>

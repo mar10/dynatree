@@ -15,7 +15,7 @@
 		$("#tree").dynatree({
 			title: "Sample Theming",
 			rootVisible: true,
-			imagePath: "custom-skin/", // Use a custom image folder
+			imagePath: "skin-vista/", // Use a custom image folder
 			onSelect: function(dtnode) {
 				alert ("You selected " + dtnode);
 			}
@@ -27,16 +27,21 @@
 <body>
 	<h1>sample-theming</h1>
 	<p>
-	Includes a custom CSS and sets options.imagePath to a custom theming folder.
+	Includes a custom CSS and sets options.imagePath to a custom theming folder (inspired by Windows Vista).
 	</p>
 	<div id="tree">
 		<ul>
 			<li>Node 1
 			<li data="icon: 'customdoc1.gif'">Node 2 (with custom icon)
-			<li data="isFolder: true">Folder 3
+			<li class="folder">Folder 3
 				<ul>
 					<li>Node 3.1
 					<li>Node 3.2
+				</ul>
+ 			<li data="isFolder: true, icon: 'folder_docs.gif'">Folder 4 (with custom icon)
+				<ul>
+					<li>Node 4.1
+					<li>Node 4.2
 				</ul>
 
 			<li>Document with some children
@@ -46,6 +51,6 @@
 				</ul>
 		</ul>
 	</div>
-	<p><a href="http://dynatree.googlecode.com">jquery.dynatree.js</a></p>
+	<p><a href="http://dynatree.googlecode.com">jquery.dynatree.js</a> - <a href="sample-misc.html">Example overview</a></p>
 </body>
 </html>
