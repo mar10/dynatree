@@ -20,7 +20,6 @@
 
 /* 
  * TODO
- *   - BUG: rightclick doesn't work for chrome
  *   - BUG: focus not persisted in Chrome
  *   - BUG: disable() hängt sich auf (replace with simple 'return false' in callbacks?)
  *          unbind: auch focus handler entfernen
