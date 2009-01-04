@@ -49,7 +49,7 @@
 					{title: "Node 1.3", select: true }
 					]
 					},
-				{title: "Node 2", isLazy: true,
+				{title: "Node 2",
 					children: [
 								{title: "Node 2.1" }
 						] 
@@ -88,15 +88,17 @@
 			onCollapse: function(dtnode) {
 				logMsg("onCollapse(%o)", dtnode);
 			},
-			
+/*			
 			onLazyRead: function(dtnode) {
-				logMsg("Benchmarking mode='" + dtnode.data.mode + "' done.");
+				logMsg("onLazyRead(%o)", dtnode);
 			},
-
+*/
 			onFocus: function(dtnode) {
+				logMsg("onFocus(%o)", dtnode);
 				$("#echoFocused").text(dtnode.data.title);
 			},
 			onBlur: function(dtnode) {
+				logMsg("onBlur(%o)", dtnode);
 				$("#echoFocused").text("-");
 			},
 			

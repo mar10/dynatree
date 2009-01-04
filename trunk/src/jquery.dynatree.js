@@ -2,7 +2,7 @@
 	jquery.dynatree.js
 	Dynamic tree view control, with support for lazy loading of branches.
 
-	Copyright (c) 2008  Martin Wendt (http://wwWendt.de)
+	Copyright (c) 2008-2009  Martin Wendt (http://wwWendt.de)
 	Licensed under the MIT License (MIT-License.txt)
 
 	A current version and some documentation is available at
@@ -18,7 +18,66 @@
     @depends: jquery.cookie.js
 *************************************************************************/
 
-/* Changelog 0.3 -> 0.4
+/* 
+ * TODO
+ *   - BUG: rightclick doesn't work for chrome
+ *   - BUG: focus not persisted in Chrome
+ *   - BUG: disable() hängt sich auf (replace with simple 'return false' in callbacks?)
+ *          unbind: auch focus handler entfernen
+ *          tree.isDisabled verwenden?
+ *   - BUG: context menu is not keyboard aware on IE, Safari, Chrome
+ *          (Seems to be a bug in the plugin: http://abeautifulsite.net/notebook_files/80/demo/jqueryContextMenu.html)
+ *      
+ *   - lazy mode, ajaxInit: 
+ *        focus ok?
+ *        postinit events ok?
+ *        select, .. flags ok?
+ *   - BUG: open lazy node, [F5] --> Node is marked open, but not expanded
+ *   - onPostInit: setzt auch die Cookies (muss auch be lazyInit delayed aufgerufen werden
+ *   
+ *   - implement  minExpandLevel > 1 
+ *   - options.hideCheckbox, class="hideCheckbox"
+ *
+ *   - use opts.debugLevel instead of _bDebug
+ *   - $(this.span) --> $span
+ *   - issue #56: <span class="ui-dynatree-title"> --> use a template?
+ *   - data.isFolder -> folder, .isLazy -> lazy 
+ *   - ltWait.gif and ltError.gif -> options
+ *
+ *	 - Root immer verstecken. 
+ *     (Man kann ja einen einzelnen node erstellen, um das zu erreichen)
+ *     Die Top-level Nodes expander sind nicht durch vlines verbunden.
+ *     --> Es wird ein neues Icon benötigt. 
+ *     Wenn minExpandLevel>=1, werden Die TL Expander nicht dargestellt, so dass
+ *     die gesammte Spalte verschwindet
+ *     
+ *   - Render überarbeiten (sollte nicht mehr als einmal nötig sein)
+ *     Ggf. muss noch remove, insert berücksichtigt werden
+ *     
+ *   Test and doc
+ *     - Test files for release: use minified libs 
+ *     - rework samples with better names and title, header explanation
+ *     - sample-options: mit reInit() und interaktiven options
+ *     
+ *   New options
+ *     - option node.unselectable, to hide checkbox
+ *     
+ *   - $("#ui-dynatree-id-5").attr("dtnode").focus();
+ *
+ * =============================================================================
+ * 
+ *	Später:
+ *	  - Drag'n'drop support vorbereiten:
+ * 	    Das jquery plugin muss sich leicht integreren lassen
+ * 	    - node.insertBefore
+ * 	      node.insertAfter
+ *   - Table-Tree: use CSS 2.1: display:table, display:table-row, display:table-cell 
+ *  - Tree <div> should behave like a control:
+ *    when we Tab into the tree, the last focused node should be focused
+ * 
+ * =============================================================================
+ * 
+ * Changelog 0.3 -> 0.4
  *   - New ui.core.js 1.5.2 -> 1.6 rc2
  *   - issue #59: 'expand' -> 'expanded'
  *     data.select and expand are commands(verbs) class="expanded selected" are adjectives  
@@ -47,70 +106,12 @@
  *   - focusRoot
  *     use 'focus' style for initial focus
  *     use autoFocus for runtime behaviour
- * TODO
- *   - BUG: rightclick doesn't work for chrome
- *   - BUG: disable() hängt sich auf (replace with simple 'return false' in callbacks?)
- *   - issue #56: <span class="ui-dynatree-title"> --> use a template?
- *   - data.isFolder -> folder, .isLazy -> lazy 
- *   - Render überarbeiten (sollte nicht mehr als einmal nötig sein)
- *     Ggf. muss noch remove, insert berücksichtigt werden
- *   - unbind: auch focus handler entfernen
- *   - use opts.debugLevel instead of _bDebug
- *   - _expand wird für alle Parents 2x aufgerufen
- *   - $(this.span) --> $span
- *     
- *   
- *   
  *   - onDblClick(): lieber nicht den folder togglen; das sollte besser ein custom callback machen 
- *   (toggle() sollte dann aber sicherstellen, dass mandatory rootnodes nicht kollabieren).
- *   
- *   - onPostInit: setzt auch die Cookies (muss auch be lazyInit delayed aufgerufen werden
- *   
- *   - sample-options: mit reInit() und interaktiven options
- *   - $("#ui-dynatree-id-5").attr("dtnode").focus();
+ *     (toggle() sollte dann aber sicherstellen, dass mandatory rootnodes nicht kollabieren).
+ *   - selectionVisible --> activeVisible
+ *   - expandOnAdd --> removed
+ *   - rootCollapsible --> minExpandLevel
  *
- *   Test and doc
- *     - Test files for release: use minified libs 
- *     - rework samples with better names and title, header explanation
- *     
- *   New options
- *     - option node.unselectable, to hide checkbox
- *     
- *   Replace this options with callback-programming
- *	   - rootVisible: false, // Set to true, to make the root node visible.
- *	   - rootCollapsible: false, // Prevent root node from being collapsed.
- *     - expandOnAdd
- *     - selectionVisible
- *       onSelect dtnode.makevisible
- *     - autoCollapse
- *       onExpand dtnode.collapseSiblilings
- *     - 'focus' attribute on init and in cookie
-
- *     
-
- *	 - Root immer verstecken. 
- *     (Man kann ja einen einzelnen node erstellen, um das zu erreichen)
- *     topLevelExpandable = true:
- *         Die Expander der Toplevel nodes lassen sich abschalten, wenn 
- *	       Die Top-level node expander sind nicht durch vlines verbunden 
-
-	tree.isDisabled raus(?)
- 
-	rootCollapsible --> minExpandLevel
-	
-	clickFolderMode: --> nur im onClickHandler berücksichtigen
-	checkbox: false, // Show checkbox
-	
-	selectMode: 0, // 0:off, 1:single, 2:multi, 3:multi-hier
-	   die default click und keyhandler dürfen nicht ungewollt Selektoin setzen
- 
- 	Später:
- 	  - Drag'n'drop support vorbereiten:
- 	    Das jquery plugin muss sich leicht integreren lassen
- 	    - node.insertBefore
- 	      node.insertAfter
- *   - Table-Tree: use CSS 2.1: display:table, display:table-row, display:table-cell 
- *     --
  */
 
 /*************************************************************************
@@ -138,6 +139,11 @@ function logMsg(msg) {
 /*************************************************************************
  *	
  */
+var DTNodeStatus_Error   = -1;
+var DTNodeStatus_Loading = 1;
+var DTNodeStatus_Ok      = 0;
+
+
 
 ;(function($) {
 
@@ -165,10 +171,6 @@ Array.prototype.remove = function(from, to) {
 /*************************************************************************
  *	DynaTreeNode
  */
-var DTNodeStatus_Error   = -1;
-var DTNodeStatus_Loading = 1;
-var DTNodeStatus_Ok      = 0;
-
 var DynaTreeNode = Class.create();
 
 DynaTreeNode.prototype = {
@@ -220,7 +222,8 @@ DynaTreeNode.prototype = {
 
 		// parent connectors
 		var bIsRoot = (this.parent==null);
-		var bHideFirstConnector = (!this.tree.options.rootVisible || !this.tree.options.rootCollapsible );
+//		var bHideFirstConnector = (!this.tree.options.rootVisible || !this.tree.options.rootCollapsible );
+		var bHideFirstConnector = (!this.tree.options.rootVisible || this.tree.options.minExpandLevel>0 );
 
 		var p = this.parent;
 		var cache = this.tree.cache;
@@ -236,12 +239,11 @@ DynaTreeNode.prototype = {
 		} else if ( this.childList || this.data.isLazy) {
    			res += cache.tagExpander;
 		} else {
-//			res += ( this.isLastSibling() ? cache.tagL_ne : cache.tagL_nes );
    			res += cache.tagConnector;
 		}
 		
 		// Checkbox mode
-		if( this.tree.options.checkbox && this.data.nocheckbox!=true && !this.data.isStatusNode) {
+		if( this.tree.options.checkbox && this.data.hideCheckbox!=true && !this.data.isStatusNode) {
    			res += cache.tagCheckbox;
 		}
 		
@@ -258,7 +260,6 @@ DynaTreeNode.prototype = {
 		// node name
 		var tooltip = ( this.data && typeof this.data.tooltip == "string" ) ? " title='" + this.data.tooltip + "'" : "";
 		res +=  "<a href='#'" + tooltip + ">" + this.data.title + "</a>";
-//		res +=  "<span href='#'" + tooltip + ">" + this.data.title + "</span>";
 		return res;
 	},
 
@@ -267,32 +268,30 @@ DynaTreeNode.prototype = {
 //		logMsg("%o.render()", this);
 		// --- create <div><span>..</span></div> tags for this node
 		if( ! this.div ) {
-			this.div  = document.createElement("div");
 			this.span = document.createElement("span");
 			this.span.dtnode = this;
 			if( this.data.key )
 				this.span.id = this.tree.options.idPrefix + this.data.key;
-			this.span.className = ( this.data.isFolder ) ? this.tree.options.classNames.folder : this.tree.options.classNames.document;
 
+			this.div  = document.createElement("div");
 			this.div.appendChild(this.span);
 			if ( this.parent )
 				this.parent.div.appendChild(this.div);
-		}
 
-		// TODO: this should only be neccessary on first-time
-		// hide root?
-		if( this.parent==null && !this.tree.options.rootVisible )
-			this.span.style.display = "none";
+			if( this.parent==null && !this.tree.options.rootVisible )
+				this.span.style.display = "none";
+		}
+		// set node connector images, links and text
+		this.span.innerHTML = this._getInnerHtml();
+
 		// hide this node, if parent is collapsed
 		this.div.style.display = ( this.parent==null || this.parent.isExpanded ? "" : "none");
 
-		// set node connector images, links and text
-		this.span.innerHTML = this._getInnerHtml();
-		
 		// Set classes for current status
+		this.span.className = ( this.data.isFolder ) ? this.tree.options.classNames.folder : this.tree.options.classNames.document;
 		if( this.isExpanded )
 			$(this.span).addClass(this.tree.options.classNames.expanded);
-		if( this.data.isLazy )
+		if( this.data.isLazy && !this.isRead )
 			$(this.span).addClass(this.tree.options.classNames.lazy);
 		if( this.isLastSibling() )
 			$(this.span).addClass(this.tree.options.classNames.lastsib);
@@ -352,7 +351,7 @@ DynaTreeNode.prototype = {
 		} else if ( firstChild ) {
 			data.isStatusNode = true;
 			firstChild.data = data;
-			firstChild.render (false, false);
+			firstChild.render(false, false);
 		} else {
 			data.isStatusNode = true;
 			firstChild = this._addChildNode (new DynaTreeNode (this.tree, data));
@@ -365,12 +364,14 @@ DynaTreeNode.prototype = {
 			case DTNodeStatus_Ok:
 				this._setStatusNode(null);
 				this.isRead = true;
-				if( this === this.tree.tnRoot && this.tree.options.autoFocus
-					&& !this.tree.options.rootVisible && this.childList ) {
-					// special case: using ajaxInit
-					this.childList[0].focus();
-				} else {
-					this.focus();
+				this.render(false, false);
+				if( this.tree.options.autoFocus ) {
+					if( this === this.tree.tnRoot && !this.tree.options.rootVisible && this.childList ) {
+						// special case: using ajaxInit
+						this.childList[0].focus();
+					} else {
+						this.focus();
+					}
 				}
 				break;
 			case DTNodeStatus_Loading:
@@ -417,7 +418,8 @@ DynaTreeNode.prototype = {
 	},
 
 	focus: function() {
-//		logMsg("dtnode.focus(): %o", this);
+		// TODO: check, if we already have focu
+		logMsg("dtnode.focus(): %o", this);
 		this.makeVisible();
 		try {
 			$(this.span).find(">a").focus();
@@ -451,14 +453,41 @@ DynaTreeNode.prototype = {
 
 	deactivate: function() {
 		logMsg("dtnode.deactivate(): %o", this);
-		var opts = this.tree.options;
-		$(this.span).removeClass(opts.classNames.active);
-        if( opts.persist )
-			$.cookie(opts.cookieId+"-active", "");
 		if( this.tree.activeNode === this ) {
+			var opts = this.tree.options;
+			$(this.span).removeClass(opts.classNames.active);
+	        if( opts.persist )
+				$.cookie(opts.cookieId+"-active", "");
 			this.tree.activeNode = null;
 			if ( opts.onDeactivate )
 				opts.onDeactivate.call(this.span, this);
+		}
+	},
+
+	_userActivate: function() {
+		// Handle user click / [space] / [enter], according to clickFolderMode.
+		var activate = true;
+		var expand = false;
+		if ( this.data.isFolder ) {
+			switch( this.tree.options.clickFolderMode ) {
+			case 2:
+				activate = false;
+				expand = true;
+				break;
+			case 3:
+				activate = expand = true;
+				break;
+			}
+		}
+		if( this.parent == null && this.tree.options.minExpandLevel>0 ) {
+			expand = false;
+		}
+		if( expand ) {
+			this.toggleExpand();
+			this.focus();
+		} 
+		if( activate ) {
+			this.activate();
 		}
 	},
 
@@ -487,15 +516,15 @@ DynaTreeNode.prototype = {
 		if ( fireEvents && opts.onQuerySelect && opts.onQuerySelect.call(this.span, sel, this) == false )
 			return; // Callback returned false
 		
+		// Force sinlge-selection
+		if( opts.selectMode==1 && this.tree.selectedNodes.length && sel ) 
+			this.tree.selectedNodes[0]._select(false, false, false);
+
 		this.isSelected = sel;
         this.tree._changeNodeList("select", this, sel);
 			
 		if( sel ) {
 			$(this.span).addClass(opts.classNames.selected);
-
-			// Force sinlge-selection
-			if( opts.selectMode==1 && this.tree.selectedNodes.length ) 
-				this.tree.selectedNodes[0]._select(false, false, false);
 
 			if( deep && opts.selectMode==3 ) {
 				// Select all children
@@ -618,20 +647,14 @@ DynaTreeNode.prototype = {
 		}else {
 			$(">DIV", this.div).toggle();
 		}
-/*		
-		// render expanded nodes
-		this.render (true, false);
-		// we didn't render collapsed nodes, so we have to update the visibility of direct childs
-		if( this.childList ) {
-			for (var i=0; i<this.childList.length; i++) {
-				this.childList[i].div.style.display = (this.isExpanded ? "" : "none");
-			}
-		}
-		*/
 	},
 
 	toggleExpand: function() {
 		logMsg("toggleExpand("+this.data.title+")...");
+		if( !this.childList && !this.data.isLazy )
+			return;
+		if( this.parent == null && this.tree.options.minExpandLevel>0 )
+			return;
 		this._expand( ! this.isExpanded);
 		logMsg("toggleExpand("+this.data.title+") done.");
 	},
@@ -646,77 +669,65 @@ DynaTreeNode.prototype = {
 		}
 	},
 
-	_activate: function() {
-		var activate = true;
-		var expand = false;
-		if ( this.data.isFolder ) {
-			switch( this.tree.options.clickFolderMode ) {
-			case 2:
-				activate = false;
-				expand = true;
-				break;
-			case 3:
-				activate = expand = true;
-				break;
-			}
-		}
-		if( this.parent == null && !this.tree.options.rootCollapsible ) {
-			expand = false;
-		}
-		if( expand ) {
-			this.toggleExpand();
-			this.focus();
-		} 
-		if( activate ) {
-			this.activate();
-		}
-	},
-
 	onClick: function(event) {
 		logMsg("dtnode.onClick(" + event.type + "): dtnode:" + this + ", button:" + event.button + ", which: " + event.which);
 
 		if( $(event.target).hasClass(this.tree.options.classNames.expander) ) {
-			// Clicking the [+] icon always expands/collapses
+			// Clicking the expander icon always expands/collapses
 			this.toggleExpand();
 		} else if( $(event.target).hasClass(this.tree.options.classNames.checkbox) ) {
-			// Clicking the checkbox image always (de)selects
+			// Clicking the checkbox always (de)selects
 			this.toggleSelect();
 		} else {
-			this._activate();
+			this._userActivate();
+			// Chrome and Safari don't focus the a-tag on click
+//			logMsg("a tag: ", this.span.getElementsByTagName("a")[0]);
+			this.span.getElementsByTagName("a")[0].focus();
+//			alert("hasFocus=" + this.span.getElementsByTagName("a")[0].focused);
 		}
-		// Make sure that clicks stop
+		// Make sure that clicks stop, otherwise <a href='#'> jumps to the top
 		return false;
 	},
 
 	onDblClick: function(event) {
 		logMsg("dtnode.onDblClick(" + event.type + "): dtnode:" + this + ", button:" + event.button + ", which: " + event.which);
+/*		
 		if ( this.data.isFolder && ( this.childList || this.data.isLazy )
 			&& (this.parent != null || this.tree.options.rootCollapsible)
 			) {
 			this.toggleExpand();
 		}
+*/
 	},
 
 	onKeydown: function(event) {
 		logMsg("dtnode.onKeydown(" + event.type + "): dtnode:" + this + ", charCode:" + event.charCode + ", keyCode: " + event.keyCode + ", which: " + event.which);
 		var handled = true;
+//		alert("keyDown" + event.which);
 
 		switch( event.which ) {
 			// charCodes:
-			case 43: // '+'
+//			case 43: // '+'
+			case 107: // '+'
+			case 187: // '+' @ Chrome, Safari
 				if( !this.isExpanded ) this.toggleExpand();
 				break;
-			case 45: // '-'
+//			case 45: // '-'
+			case 109: // '-'
+			case 189: // '+' @ Chrome, Safari
 				if( this.isExpanded ) this.toggleExpand();
 				break;
 			//~ case 42: // '*'
 				//~ break;
 			//~ case 47: // '/'
 				//~ break;
+			// case 13: // <enter>
+				// <enter> on a focused <a> tag seems to generate a click-event. 
+				// this._userActivate();
+				// break;
 			case 32: // <space>
-				this._activate();
+				this._userActivate();
 				break;
-			// keyCodes
 			case 08: // <backspace>
 				if( this.parent )
 					this.parent.focus();
@@ -758,9 +769,6 @@ DynaTreeNode.prototype = {
 				}
 				if( sib ) sib.focus();
 				break;
-			//~ case 13: // <enter>
-				//~ this.select();
-				//~ break;
 			default:
 				handled = false;
 		}
@@ -769,6 +777,8 @@ DynaTreeNode.prototype = {
 	},
 
 	onKeypress: function(event) {
+		// onKeypress is only hooked to allow user callbacks.
+		// We don't process it, because IE and Safari don't fire keypress for cursor keys.
 		logMsg("dtnode.onKeypress(" + event.type + "): dtnode:" + this + ", charCode:" + event.charCode + ", keyCode: " + event.keyCode + ", which: " + event.which);
 	},
 	
@@ -801,6 +811,11 @@ DynaTreeNode.prototype = {
 //		return false;
 	},
 
+	_postInit: function() {
+		// Called, when childs have been loaded.
+		
+	},
+		
 	visit: function(fn, data, includeSelf) {
 		// Call fn(dtnode, data) for all child nodes. Stop iteration, if fn() returns false.
 		var n = 0;
@@ -880,27 +895,13 @@ DynaTreeNode.prototype = {
 		dtnode.parent = this;
 
 		// Expand the parent, if
-		// 1. expandOnAdd is set
-		// 2. this is the root node, and the root node is invisible
-		// 3. this is the root node, and the root node is defined as always open
-		if ( this.tree.options.expandOnAdd
-			 || ( (!this.tree.options.rootCollapsible || !this.tree.options.rootVisible) && this.parent==null )
+		// 1. this is the root node, and the root node is invisible
+		// 2. this is the root node, and the root node is defined as always open
+		if ( ( (this.tree.options.minExpandLevel>0 || !this.tree.options.rootVisible) && this.parent==null )
 			 || ( dtnode.data.expand )
 			 ) {
 			this.isExpanded = true;
-//			if( this.tree.initCookie )
-//			if( this.tree.initMode == "data" && this.tree.options.persist )
-//				this.tree._changeExpandList(this.key, true, false);
 		}
-/*		
-//		logMsg("%o: %o, %o", this, this.tree.isInitializing, dtnode.data.select)
-		if( this.tree.isInitializing ) {
-			if( dtnode.data.focus )
-				this.tree.initFocusNode = dtnode;
-			if( dtnode.data.select )
-				this.tree.initSelectedNodes.push(dtnode);
-		}
-*/
 		if ( this.tree.bEnableUpdate )
 			this.render(true, true);
 
@@ -994,11 +995,6 @@ DynaTree.prototype = {
 		this.selectedNodes = new Array();
 		this.expandedNodes = new Array();
 
-//		this.initActiveNode = null;
-//		this.initFocusNode = null;
-//		this.initSelectedNodes = new Array();
-//		this.initExpandedNodes = new Array();
-
 		if( this.options.persist ) {
 			// Requires jquery.cookie.js:
 			this.initActiveKey = $.cookie(this.options.cookieId + "-active");
@@ -1023,21 +1019,6 @@ DynaTree.prototype = {
 			tagConnector: "<span class='" + options.classNames.connector + "'></span>",
 			tagNodeIcon: "<span class='" + options.classNames.nodeIcon + "'></span>",
 			tagCheckbox: "<span class='" + options.classNames.checkbox + "'></span>",
-/*			
-			tagFld: "<img src='" + options.imagePath + "ltFld.gif' alt='' />",
-			tagFld_o: "<img src='" + options.imagePath + "ltFld_o.gif' alt='' />",
-			tagDoc: "<img src='" + options.imagePath + "ltDoc.gif' alt='' />",
-			tagL_ns: "<img src='" + options.imagePath + "ltL_ns.gif' alt=' | ' />",
-			tagL_: "<img src='" + options.imagePath + "ltL_.gif' alt='   ' />",
-			tagL_ne: "<img src='" + options.imagePath + "ltL_ne.gif' alt=' + ' />",
-			tagL_nes: "<img src='" + options.imagePath + "ltL_nes.gif' alt=' + ' />",
-			tagM_ne: "<img src='" + options.imagePath + "ltM_ne.gif' alt='[-]' class='" + options.classNames.expander + "'/>",
-			tagM_nes: "<img src='" + options.imagePath + "ltM_nes.gif' alt='[-]' class='" + options.classNames.expander + "'/>",
-			tagP_ne: "<img src='" + options.imagePath + "ltP_ne.gif' alt='[+]' class='" + options.classNames.expander + "'/>",
-			tagP_nes: "<img src='" + options.imagePath + "ltP_nes.gif' alt='[+]' class='" + options.classNames.expander + "'/>",
-			tagD_ne: "<img src='" + options.imagePath + "ltD_ne.gif' alt='[?]' class='" + options.classNames.expander + "'/>",
-			tagD_nes: "<img src='" + options.imagePath + "ltD_nes.gif' alt='[?]' class='" + options.classNames.expander + "'/>",
-*/
 			lastentry: undefined
 		};
 
@@ -1085,6 +1066,7 @@ DynaTree.prototype = {
 			logMsg("_changeNodeListCookie: %o", nodeList);
 		}
 	},
+	
 /*
 	persist: function() {
 		logMsg("dynatree.persist(): active: %o, expanded: %o", this.activeNode, this.expandedNodes);
@@ -1275,17 +1257,15 @@ $.widget("ui.dynatree", {
 			this.tree._createFromTag(root, $ul);
 			$ul.remove();
 		}
+
 		// bind event handlers
 		this.bind();
-/*		
-		// We defined the first-time cookie from node.data, now store it
-        if( this.tree.initMode == "data" && opts.persist ) {
-        	this.tree.persist();
-        }
-*/        
+
         // Fire select events for all node that were initialized as 'selected'
 		this.tree.initMode = "postInit";
-
+		
+		root._postInit();
+		
 		var nodeList = this.tree.expandedNodes;
 		this.tree.expandedNode = [];
 		for(var i=0; i<nodeList.length; i++ ) {
@@ -1307,7 +1287,7 @@ $.widget("ui.dynatree", {
 			var dtnode = this.tree.activeNode;
 			this.tree.activeNode = null; // make sure this is not ignored
 			logMsg("Activate on init: %o", dtnode);
-			dtnode._activate();
+			dtnode._userActivate();
 		}
 		
 		// Focus, that was initialized as 'active'
@@ -1374,12 +1354,6 @@ $.widget("ui.dynatree", {
 			case "keydown":
 				return ( o.onKeydown && o.onKeydown(dtnode, event)===false ) ? false : dtnode.onKeydown(event);
 			case "keypress":
-				// Keydown is only hooked to allow user callbacks.
-				// We don't process it, because IE and Safari don't fire keypress for cursor keys.
-				// Handles keydown and keypress, because IE and Safari don't fire keypress for cursor keys.
-				// ...but Firefox does, so ignore them:
-//				if( event.type == "keypress" && event.charCode == 0 )
-//					return;
 				return ( o.onKeypress && o.onKeypress(dtnode, event)===false ) ? false : dtnode.onKeypress(event);
 			};
 		});
@@ -1433,8 +1407,12 @@ $.widget("ui.dynatree", {
 		return this.tree.getRoot();
 	},
 
-	getSelectedNode: function() {
-		return this.tree.getSelectedNode();
+	getActiveNode: function() {
+		return this.tree.getActiveNode();
+	},
+
+	getSelectedNodes: function() {
+		return this.tree.getSelectedNodes();
 	},
 
 	// ------------------------------------------------------------------------
@@ -1452,7 +1430,8 @@ $.ui.dynatree.getter = "getTree getRoot getActiveNode getSelectedNodes";
 $.ui.dynatree.defaults = {
 	title: "Dynatree root", // Name of the root node.
 	rootVisible: false, // Set to true, to make the root node visible.
-	rootCollapsible: false, // Prevent root node from being collapsed.
+//	rootCollapsible: false, // Prevent root node from being collapsed.
+ 	minExpandLevel: 1, // 1: root node is not collapsible
 	imagePath: null, // Path to a folder containing icons. Defaults to 'skin/' subdirectory.
 	children: null, // Init tree structure from this object array.
 	initId: null, // Init tree structure from a <ul> element with this ID.
@@ -1461,9 +1440,9 @@ $.ui.dynatree.defaults = {
 	autoFocus: true, // Set focus to first child, when expanding or lazy-loading.
 	keyboard: true, // Support keyboard navigation.
 	autoCollapse: false, // Automatically collapse all siblings, when a node is expanded.
-	expandOnAdd: false, // Automatically expand parent, when a child is added.
+//	expandOnAdd: false, // Automatically expand parent, when a child is added.
 	clickFolderMode: 3, // 1:activate, 2:expand, 3:activate and expand
-	selectionVisible: true, // Make sure, selected nodes are visible (expanded).
+	activeVisible: true, // Make sure, active nodes are visible (expanded).
 	checkbox: false, // Show checkbox
 	selectMode: 2, // 1:single, 2:multi, 3:multi-hier
 	fx: null, // Animations, e.g. null or { height: "toggle", duration: 200 }
@@ -1530,8 +1509,6 @@ $.ui.dynatree.defaults = {
 		secure: true
 	},
 */
-// 	minExpandLevel: 1, // Instead of rootCollapsible
-//	expandLevel: 1, // Expand all branches until level i (set to 0 to )
 
 	// ### copied from ui.tabs
 	// basic setup
@@ -1560,7 +1537,7 @@ $.ui.dynatree.nodedatadefaults = {
 	expand: false, // Initial expanded status.
 	select: false, // Initial selected status.
 //	hideCheckbox: null, // Suppress checkbox for this node.
-//	unselectable: false, // Initial selected status.
+//	unselectable: false, // Prevent selection.
 	// The following attributes are only valid if passed to some functions:
 	children: null, // Array of child nodes.
 	// NOTE: we can also add custom attributes here.

@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+	<title>jquery.dynatree - sample lazy</title>
+	<script src='../jquery/jquery.js' type='text/javascript'></script>
+	<script src='../jquery/ui.core.js' type='text/javascript'></script>
+    <script src='../jquery/jquery.cookie.js' type='text/javascript'></script>
+
+	<link href='../src/skin/ui.dynatree.css' rel='stylesheet' type='text/css'>
+	<script src='../src/jquery.dynatree.js' type='text/javascript'></script>
+
+<script type='text/javascript'>
+	$(function(){
+		
+		// --- Initialize sample trees
+		$("#tree").dynatree({
+			title: "Lazy loading sample",
+			rootVisible: true,
+			persist: true,
+			fx: { height: "toggle", duration: 200 },
+			// initAjax is hard to fake, so we us children:
+//			initAjax: { .. },
+			children: [
+				{title: "Simple node", key: "1" },
+				{title: "Lazy folder", isFolder: true, isLazy: true, key: "2"},
+				{title: "Lazy document", isLazy: true, key: "3"}
+				],
+			
+			onActivate: function(dtnode) {
+				$("#echoActive3").text(dtnode.data.title);
+			},
+			onLazyRead: function(dtnode){
+				// typically we would call something like this:
+//            	dtnode.appendAjax(
+//                	{url: "/getChildrenAsJson",
+//		             data: {key: dtnode.data.key,
+//		                    mode: "funnyMode"
+//                          }
+//                });
+				// ... but in this sample we just simulate the behaviour:			
+				var fakeJsonResult = [
+				    { title: 'Lazy node 1', isLazy: true },
+				    { title: 'Simple node 2', isSelected: true }
+				];
+//				alert ("Let's pretend we're using this AJAX response to load the branch:\n " + jsonResult);
+				function fakeAjaxResponse() {
+					return function() {
+						dtnode.append(fakeJsonResult);
+						// Remove the 'loading...' status:
+						dtnode.setLazyNodeStatus(DTNodeStatus_Ok);
+					};
+				}
+				window.setTimeout(fakeAjaxResponse(), 1500);
+			}
+			
+		});
+
+	});
+</script>
+</head>
+
+<body>
+	<h1>jquery.dynatree - Lazy tree sample</h1>
+	<p>
+		Using 'lazy' option to load the tree and to load the branches.<br>
+		Note: the AJAX call is only simulated.<br>
+		Also, the <code>initAjax</code> option is not used.
+	</p>
+	<div id="tree"">
+		<!-- When using initAjax, it may be nice to put a throbber here, that spins until the initial content is loaded: -->
+		<img src="../src/skin/ltWait.gif"> Loading...
+	</div>
+
+	<div>Active node: <span id="echoActive3">-</span></div>
+	<hr>
+	<p><a href="http://dynatree.googlecode.com">jquery.dynatree.js</a> - <a href="sample-misc.html">Example overview</a></p>
+</body>
+</html>

@@ -24,8 +24,8 @@
 
 		$("#tree").dynatree({
 			persist: true,
-			onSelect: function(dtnode) {
-				$("#echoSelected").text(dtnode.data.title);
+			onActivate: function(dtnode) {
+				$("#echoActivated").text(dtnode.data.title);
 			},
 			onClick: function(dtnode, event) {
 				// Eat keyboard events, when a menu is open
@@ -103,8 +103,8 @@
 		</ul>
 	</div>
 
-	<div>Selected node: <span id="echoSelected">-</span></div>
+	<div>Selected node: <span id="echoActivated">-</span></div>
 
-	<p><a href="http://dynatree.googlecode.com">jquery.dynatree.js</a></p>
+	<p><a href="http://dynatree.googlecode.com">jquery.dynatree.js</a> - <a href="sample-misc.html">Example overview</a></p>
 </body>
 </html>
