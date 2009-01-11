@@ -20,7 +20,7 @@
 			rootVisible: true,
 			persist: true,
 			fx: { height: "toggle", duration: 200 },
-			// initAjax is hard to fake, so we us children:
+			// initAjax is hard to fake, so we pass the children as objecz array:
 //			initAjax: { .. },
 			children: [
 				{title: "Simple node", key: "1" },
@@ -29,7 +29,7 @@
 				],
 			
 			onActivate: function(dtnode) {
-				$("#echoActive3").text(dtnode.data.title);
+				$("#echoActive").text(dtnode.data.title);
 			},
 			onLazyRead: function(dtnode){
 				// typically we would call something like this:
@@ -70,10 +70,9 @@
 	</p>
 	<div id="tree"">
 		<!-- When using initAjax, it may be nice to put a throbber here, that spins until the initial content is loaded: -->
-		<img src="../src/skin/ltWait.gif"> Loading...
 	</div>
 
-	<div>Active node: <span id="echoActive3">-</span></div>
+	<div>Active node: <span id="echoActive">-</span></div>
 	<hr>
 	<p><a href="http://dynatree.googlecode.com">jquery.dynatree.js</a> - <a href="sample-misc.html">Example overview</a></p>
 </body>
