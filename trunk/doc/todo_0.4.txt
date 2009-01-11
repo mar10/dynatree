@@ -1,0 +1,109 @@
+TODO
+  - BUG: disable() hängt sich auf (replace with simple 'return false' in callbacks?)
+         unbind: auch focus handler entfernen
+         tree.isDisabled verwenden?
+  
+  - test clickFolderModes
+  
+  Test and doc
+    - Test files for release: use minified libs 
+    - rework samples with better names and title, header explanation
+    - sample-options: mit reInit() und interaktiven options
+    
+  - use opts.debugLevel instead of _bDebug
+  - $(this.span) --> $span
+	
+  - ltWait.gif and ltError.gif -> options
+  - implement onQueryActivate and onQueryExpand
+  - implement  minExpandLevel > 1 
+  - data.isFolder -> folder, .isLazy -> lazy 
+
+  - BUG: Chrome doesn't store cookies: persistence doesn't work
+  - BUG: context menu is not keyboard aware on IE, Safari, Chrome
+         (Seems to be a bug in the plugin: http://abeautifulsite.net/notebook_files/80/demo/jqueryContextMenu.html)
+  
+
+  - Render überarbeiten (sollte nicht mehr als einmal nötig sein)
+    Ggf. muss noch remove, insert berücksichtigt werden
+    
+  - option node.unselectable, to hide checkbox
+  - options.hideCheckbox, class="hideCheckbox"
+    
+  - $("#ui-dynatree-id-5").attr("dtnode").focus();
+
+=============================================================================
+
+Später:
+  - Prepare for jQuery 1.3
+  - ISSUE: persistence doesn't work with lazy nodes
+ 	       E.g. open lazy node -> [F5] -> Node is marked open, but not expanded
+  
+ - Root immer verstecken. 
+    (Man kann ja einen einzelnen node erstellen, um das zu erreichen)
+    Die Top-level Nodes expander sind nicht durch vlines verbunden.
+    --> Es wird ein neues Icon benötigt. 
+    Wenn minExpandLevel>=1, werden Die TL Expander nicht dargestellt, so dass
+    die gesammte Spalte verschwindet
+    
+  - Drag'n'drop support vorbereiten:
+    Das jquery plugin muss sich leicht integreren lassen
+    - node.insertBefore
+      node.insertAfter
+
+  - Table-Tree: use CSS 2.1: display:table, display:table-row, display:table-cell
+   
+  - Tree <div> should behave like a control:
+    when we Tab into the tree, the last focused node should be focused
+    
+  - Cookie configurable (allow more than session lifetime)
+		cookie: {
+			expires: 7, // Days or Date; null: session cookie
+			path: "/", // Defaults to current page
+			domain: "jquery.com",
+			secure: true
+		},
+		
+  - issue #56: <span class="ui-dynatree-title"> --> use a template?
+		tabTemplate: '<li><a href="#{href}"><span>#{label}</span></a></li>',
+		var $li = $(o.tabTemplate.replace(/#\{href\}/g, url).replace(/#\{label\}/g, label));
+		panelTemplate: "<div></div>"
+
+  
+=============================================================================
+
+Changelog 0.3 -> 0.4
+  - New ui.core.js 1.5.2 -> 1.6 rc2
+  - issue #59: 'expand' -> 'expanded'
+    data.select and expand are commands(verbs) class="expanded selected" are adjectives  
+  - issue #54: class='selected expanded lazy folder'
+    Note: Cookie persistence overrides 'expanded' 
+    Note: data='...' overrides id, class, and title attributes
+    Note: id="" must begin with a character.  
+  - issue #53: 'selected'
+  - issue # : tree.visit
+  - tree.bind / unbind
+  - tree.enable / disable
+  - opts.onClick, ... to hook events
+  - issue #63: work with prototype
+  - distinguish 'active' and 'selected' 
+  - issue #15: multi-select
+  - issue #17: checkbox mode
+  - use span + css backround-image: url()
+  - issue # : use effects for expanding 
+  - image paths configurable using css
+  - issue #61: allow image names + extensions
+  - onKeypress event wird in FF für [space] doppelt aufgerufen, weil erst keydown kommt
+    http://www.quirksmode.org/js/keys.html
+    --> alles auf keydown umstellen (?), denn das kommt immer
+    Ausserdem charcode vermeiden und stattdessen keycode verwenden.
+  - unselect removed
+  - focusRoot
+    use 'focus' style for initial focus
+    use autoFocus for runtime behaviour
+  - onDblClick(): lieber nicht den folder togglen; das sollte besser ein custom callback machen 
+    (toggle() sollte dann aber sicherstellen, dass mandatory rootnodes nicht kollabieren).
+  - selectionVisible --> activeVisible
+  - expandOnAdd --> removed
+  - rootCollapsible --> minExpandLevel
+  - Grafik für Lazy-Expander verbessern
+  

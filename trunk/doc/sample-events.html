@@ -16,35 +16,71 @@
 		$("#tree").dynatree({
 			title: "Event samples",
 			rootVisible: true,
-			persist: true,
-			onSelect: function(dtnode) {
-				$("#echoSelected").text(dtnode.data.title);
-				if( dtnode.data.url )
-					window.open(dtnode.data.url);
+//			persist: true,
+			onQueryActivate: function(activate, dtnode) {
+				logMsg("onQueryActivate(%o, %o)", activate, dtnode);
 			},
-			onUnselect: function(dtnode) {
-				$("#echoSelected").text("-");
+			onActivate: function(dtnode) {
+				logMsg("onActivate(%o)", dtnode);
+				$("#echoActive").text(dtnode.data.title);
 			},
+			onDeactivate: function(dtnode) {
+				logMsg("onDeactivate(%o)", dtnode);
+				$("#echoActive").text("-");
+			},
+			
+			onQuerySelect: function(select, dtnode) {
+				logMsg("onQuerySelect(%o, %o)", select, dtnode);
+				if( dtnode.isFolder )
+					return false;
+			},
+			onSelect: function(select, dtnode) {
+				logMsg("onSelect(%o, %o)", dtnode);
+				var s = dtnode.tree.getSelectedNodes().join(", ");
+				$("#echoSelected").text(s);
+			},
+			
+			onQueryExpand: function(expand, dtnode) {
+				logMsg("onQueryExpand(%o, %o)", expand, dtnode);
+			},
+			onExpand: function(dtnode) {
+				logMsg("onExpand(%o)", dtnode);
+			},
+			onCollapse: function(dtnode) {
+				logMsg("onCollapse(%o)", dtnode);
+			},
+
+			onLazyRead: function(dtnode) {
+				logMsg("onLazyRead(%o)", dtnode);
+			},
+
 			onFocus: function(dtnode) {
+				logMsg("onFocus(%o)", dtnode);
 				$("#echoFocused").text(dtnode.data.title);
 			},
 			onBlur: function(dtnode) {
+				logMsg("onBlur(%o)", dtnode);
 				$("#echoFocused").text("-");
 			},
-			onLazyRead: function(dtnode){
-				var fakeJsonResult = [
-				    { title: 'Lazy node 1', isLazy: true },
-				    { title: 'Simple node 2' }
-				];
-//				alert ("Let's pretend we're using this AJAX response to load the branch:\n " + jsonResult);
-				function fakeAjaxResponse() {
-					return function() {
-						dtnode.append(fakeJsonResult);
-						// Remove the 'loading...' status:
-						dtnode.setLazyNodeStatus(DTNodeStatus_Ok);
-					};
+			
+			onClick: function(dtnode, event) {
+				logMsg("onClick(%o, %o)", dtnode, event);
+				//return false;
+			},
+			onDblClick: function(dtnode, event) {
+				logMsg("onDblClick(%o, %o)", dtnode, event);
+				dtnode.toggleSelect();
+			},
+			onKeydown: function(dtnode, event) {
+				logMsg("onKeydown(%o, %o)", dtnode, event);
+				switch( event.which ) {
+				case 32: // [space]
+					dtnode.toggleSelect();
+					return false;
 				}
-				window.setTimeout(fakeAjaxResponse(), 1500);
+			},
+			onKeypress: function(dtnode, event) {
+				logMsg("onKeypress(%o, %o)", dtnode, event);
 			}
 		});
 
@@ -53,28 +89,34 @@
 </head>
 
 <body>
+	<h1>jquery.dynatree - event handling sample</h1>
+	<p>
+		Implements all callbacks.<br>
+		Use the Firebug plugin in Firefox to see the event log.<br>
+	</p>
 	<div id="tree">
 		<ul>
-			<li data="isFolder: true">jQuery links
+			<li class="folder">jQuery links
 				<ul>
 					<li data="url: 'http://jquery.com'">jQuery home
 					<li data="url: 'http://docs.jquery.com'">jQuery docs
 				</ul>
 
-			<li data="isFolder: true">Other links
+			<li class="folder">Other links
 				<ul>
 					<li data="url: 'http://code.google.com'">Google Code
 				</ul>
 
-			<li data="isFolder: true">Lazy loading
+			<li class="folder">Lazy loading
 				<ul>
-					<li data="isLazy: true, key: '123'">This is a lazy loading document with key 123.
-					<li data="isLazy: true, key: '234', isFolder: true">This is a lazy loading folder with key 234.
+					<li id="k123" class="lazy">This is a lazy loading document with key k123.
+					<li id="k234" class="lazy folder">This is a lazy loading folder with key k234.
 				</ul>
 		</ul>
 	</div>
 
-	<div>Selected node: <span id="echoSelected">-</span></div>
+	<div>Active node: <span id="echoActive">-</span></div>
+	<div>Selected node list: <span id="echoSelected">-</span></div>
 	<div>Focused node: <span id="echoFocused">-</span></div>
 
 	<p><a href="http://dynatree.googlecode.com">jquery.dynatree.js</a></p>

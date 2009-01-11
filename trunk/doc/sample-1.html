@@ -15,8 +15,11 @@
 	$(function(){
 		$("#tree").dynatree({
 			persist: true,
-			onSelect: function(dtnode) {
-				$("#echoSelected").text(dtnode.data.title);
+			onActivate: function(dtnode) {
+				$("#echoActive").text(dtnode.data.title);
+			},
+			onDeactivate: function(dtnode) {
+				$("#echoActive").text("-");
 			}
 		});
 	});
@@ -45,8 +48,8 @@
 			<li id="id5" class="lazy folder">Lazy folder
 		</ul>
 	</div>
-	<div>Selected node: <span id="echoSelected">-</span></div>
-
-	<p><a href="http://dynatree.googlecode.com">jquery.dynatree.js</a></p>
+	<div>Active node: <span id="echoActive">-</span></div>
+	<hr>
+	<p><a href="http://dynatree.googlecode.com">jquery.dynatree.js</a> - <a href="sample-misc.html">Example overview</a></p>
 </body>
 </html>
