@@ -35,8 +35,9 @@ function logMsg(msg) {
 		arguments[0] = tag + " - " + arguments[0];
 		try {
 			// Safari gets here, but fails
-			window.console.log.apply(this, arguments);
+			window.console.log.apply(console, arguments);
 		} catch(e) {
+			//window.console.log(e);
 		}
 	}
 }
@@ -625,7 +626,7 @@ DynaTreeNode.prototype = {
 			case 32: // <space>
 				this._userActivate();
 				break;
-			case 08: // <backspace>
+			case 8: // <backspace>
 				if( this.parent )
 					this.parent.focus();
 				break;
@@ -871,12 +872,12 @@ DynaTreeNode.prototype = {
 
 var DynaTree = Class.create();
 
+// static members
+DynaTree.version = "$Version:$"; 
+
 DynaTree.prototype = {
-	// static members
-	version: "$Version:",
 	// Constructor
 	initialize: function(id, options) {
-//		logMsg ("DynaTree.initialize()");
 		// instance members
 		this.options = options;
 
@@ -1088,6 +1089,7 @@ $.widget("ui.dynatree", {
     },
 
 	_init: function() {
+		logMsg("Dynatree._init(): version='%s'.", DynaTree.version);
 		// The widget framework supplies this.element and this.options.
 		this.options.event += ".dynatree"; // namespace event
 
@@ -1095,10 +1097,6 @@ $.widget("ui.dynatree", {
 		var $this = this.element;
 		var opts = this.options;
 
-		//  Migration helper (2008-11-30)
-		if( opts.selectExpandsFolders == false )
-			alert("Dynatree option 'selectExpandsFolders' is deprecated. Use 'clickFolderMode' instead.");
-		
 		// Guess skin path, if not specified
 		if(!opts.imagePath) {
 			$("script").each( function () {
