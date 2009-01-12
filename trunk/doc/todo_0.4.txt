@@ -1,40 +1,35 @@
-TODO
-  - BUG: disable() hängt sich auf (replace with simple 'return false' in callbacks?)
-         unbind: auch focus handler entfernen
+== TODOs for 0.4 ==
+(This file will be removed on release)
+
+  - BUG: disable() hangs (replace with simple 'return false' in callbacks?)
+         unbind: also remove focus handler
          tree.isDisabled verwenden?
-  
-  - test clickFolderModes
+  - After clicking an expander icon the focus is gone
   
   Test and doc
     - Test files for release: use minified libs 
     - rework samples with better names and title, header explanation
     - sample-options: mit reInit() und interaktiven options
     
-  - use opts.debugLevel instead of _bDebug
-  - $(this.span) --> $span
-	
-  - ltWait.gif and ltError.gif -> options
+  - OPT: use opts.debugLevel instead of _bDebug
+  - OPT: $(this.span) --> $span
+  - ltWait.gif and ltError.gif -> use css
+  - CSS warning for   >>filter: alpha(opacity=50);<<
   - implement onQueryActivate and onQueryExpand
   - implement  minExpandLevel > 1 
   - data.isFolder -> folder, .isLazy -> lazy 
 
   - BUG: Chrome doesn't store cookies: persistence doesn't work
-  - BUG: context menu is not keyboard aware on IE, Safari, Chrome
-         (Seems to be a bug in the plugin: http://abeautifulsite.net/notebook_files/80/demo/jqueryContextMenu.html)
-  
-
-  - Render überarbeiten (sollte nicht mehr als einmal nötig sein)
-    Ggf. muss noch remove, insert berücksichtigt werden
-    
   - option node.unselectable, to hide checkbox
-  - options.hideCheckbox, class="hideCheckbox"
-    
-  - $("#ui-dynatree-id-5").attr("dtnode").focus();
+  - options.hideCheckbox, class="hideCheckbox"    
+  - test $("#ui-dynatree-id-5").attr("dtnode").focus();
 
 =============================================================================
 
 Später:
   - Prepare for jQuery 1.3
+  - Optimize rendering (called too often)
+  - Optimize html strucuture (don't nee two containers?) 
   - ISSUE: persistence doesn't work with lazy nodes
  	       E.g. open lazy node -> [F5] -> Node is marked open, but not expanded
   
