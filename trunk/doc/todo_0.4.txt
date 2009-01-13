@@ -10,6 +10,7 @@
     - Test files for release: use minified libs 
     - rework samples with better names and title, header explanation
     - sample-options: mit reInit() und interaktiven options
+    - Sample quick (und andere): schon beim LAden kommt ein onActivate event.
     
   - OPT: use opts.debugLevel instead of _bDebug
   - OPT: $(this.span) --> $span

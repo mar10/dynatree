@@ -23,6 +23,8 @@
 			onActivate: function(dtnode) {
 				logMsg("onActivate(%o)", dtnode);
 				$("#echoActive").text(dtnode.data.title);
+				if( dtnode.data.url )
+					window.open(dtnode.data.url);
 			},
 			onDeactivate: function(dtnode) {
 				logMsg("onDeactivate(%o)", dtnode);
@@ -93,6 +95,8 @@
 	<p>
 		Implements all callbacks.<br>
 		Use the Firebug plugin in Firefox to see the event log.<br>
+		The 'links' folders contain nodes with an custom data.url option. 
+		This is used to open the URL in the onActivate event.  
 	</p>
 	<div id="tree">
 		<ul>
