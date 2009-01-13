@@ -35,7 +35,7 @@ function logMsg(msg) {
 		arguments[0] = tag + " - " + arguments[0];
 		try {
 			// Safari gets here, but fails
-			window.console.log.apply(console, arguments);
+			window.console.log.apply(window.console, arguments);
 		} catch(e) {
 			//window.console.log(e);
 		}
@@ -487,6 +487,10 @@ DynaTreeNode.prototype = {
 		}
 	},
 
+	isSelected: function() {
+		return this.isSelected;
+	},
+	
 	select: function(sel) {
 		// Select - but not focus - this node.
 //		logMsg("dtnode.select(%o) - %o", sel, this);
@@ -1174,26 +1178,7 @@ $.widget("ui.dynatree", {
 		
 		this.tree.initMode = "running";
 		
-		//
-/*		
-		if( opts.focusRoot ) {
-			if( opts.rootVisible ) {
-				root.focus();
-			} else if( root.childList && ! (opts.initAjax && opts.initAjax.url) ) {
-				// Only if not lazy initing (Will be handled by setLazyNodeStatus(DTNodeStatus_Ok))
-				root.childList[0].focus();
-			}
-		}
-*/
-		// EVENTS
-/*
-		// clean up to avoid memory leaks in certain versions of IE 6
-		$(window).bind("unload", function() {
-			self.$tabs.unbind(".tabs");
-			self.$lis = self.$tabs = self.$panels = null;
-		});
-*/
-		logMsg("this.options: %o", this.options);
+//		logMsg("this.options: %o", this.options);
 	},
 
 	bind: function() {

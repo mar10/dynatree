@@ -21,7 +21,7 @@
 			autoCollapse: true,
 //			clickFolderMode: 3,
 			onActivate: function(dtnode) {
-				$("#echoSelected").text(dtnode.data.title);
+				$("#echoActive").text(dtnode.data.title);
 				if( dtnode.data.url )
 					window.open(dtnode.data.url, dtnode.data.target);
 			},
@@ -91,8 +91,8 @@
 		});
 
 		$("#btnActiveNode").click(function(){
-			$("#tree").dynatree("getTree").activateKey("4.3.2");
-//			$("#tree").dynatree("getTree").getNodeByKey("4.3.2").activate();
+			$("#tree").dynatree("getTree").activateKey("id4.3.2");
+//			$("#tree").dynatree("getTree").getNodeByKey("id4.3.2").activate();
 		});
 
 		$("#btnShowActive").click(function(){
@@ -108,58 +108,61 @@
 
 <body>
 	<h1>Advanced Dynatree example</h1>
+	<p>
+	Note: this example uses a data attribute in some places, so it is not strictly compliant. 
+	</p>
 	<div id="tree">
 		<ul>
 			<li>This simple node (and the following) have been created from html.
-			<li data="key: '1', tooltip: 'This is item #1'">item1 with key and tooltip
-			<li data="key: '2', tooltip: 'This is item #2'">item2
+			<li id="id1" title="This is item #1">item1 with key and tooltip
+			<li id="id2">item2 with key 'id2'
 
-			<li data="key: '3', isFolder: true">Standard Folder with some children
+			<li id="id3" class="folder">Standard Folder with some children
 				<ul>
-					<li data="key: '3.1'">Sub-item 3.1
-					<li data="key: '3.2'">Sub-item 3.2
+					<li id="id3.1">Sub-item 3.1
+					<li id="id3.2">Sub-item 3.2
 				</ul>
 
-			<li data="key: '4'">item 4. Note that also non-folders (i.e. 'documents') may have child nodes
+			<li id="id4">item 4. Note that also non-folders (i.e. 'documents') may have child nodes
 				<ul>
-					<li data="key: '4.1'">Sub-item 4.1
-					<li data="key: '4.2'">Sub-item 4.2
-					<li data="key: '4.3'">Sub-item 4.3
+					<li id="id4.1">Sub-item 4.1
+					<li id="id4.2">Sub-item 4.2
+					<li id="id4.3">Sub-item 4.3
 						<ul>
-							<li data="key: '4.3.1'">Sub-item 4.3.1
-							<li data="key: '4.3.2'">Sub-item 4.3.2
+							<li id="id4.3.1">Sub-item 4.3.1
+							<li id="id4.3.2">Sub-item 4.3.2
 							<ul>
-								<li data="key: '4.3.2.1'">Sub-item 4.3.2.1
-								<li data="key: '4.3.2.2'">Sub-item 4.3.2.2
+								<li id="id4.3.2.1">Sub-item 4.3.2.1
+								<li id="id4.3.2.2">Sub-item 4.3.2.2
 							</ul>
 						</ul>
-					<li data="key: '4.4'">Sub-item 4.4
+					<li id="id4.4">Sub-item 4.4
 				</ul>
 
-			<li data="key: '5', isFolder: true">Advanced examples
+			<li id="id5" class="expanded folder">Advanced examples
 				<ul>
-					<li id="node5.1">item5.1: Using id attribute as an alternative way to specify a key.
+					<li data="key: 'node5.1'">item5.1: Using data attribute as an alternative way to specify a key.
+					<li data="key: 'node5.3', isFolder: true">item5.1: Using data attribute as an alternative way to specify a folder.
+					<li id="id5.2">Sub-item 5.2
 					<li>Using some <b>bold</b> markup in the text (&lt;li&gt; tag only).
 					<li><span>Using some <b>bold</b> markup in the text (&lt;li&gt;&lt;span&gt; tag).</span>
 					<li><span>Using some extended markup in the text (&lt;li&gt;&lt;span&gt; tag).<button value="123">Click me</button>
 					</span>
-					<li class="folder">item6: Using class 'folder as an alternative way to specify data.isFolder.
-					<li>Item without a key. Keys are optional, but may be used in the callbacks
-					<li data="key: '5.2'">Sub-item 5.2
+					<li>Item without a key. Keys are optional (generated automatically), but may be used in the callbacks
 				</ul>
 
 			<li>item3
 		</ul>
 	</div>
 
-	<div>Selected node: <span id="echoSelected">-</span></div>
+	<div>Active node: <span id="echoActive">-</span></div>
 	<div>Focused node: <span id="echoFocused">-</span></div>
 	<p>
 		<button id="btnAddCode">Add nodes programmatically</button>
 		<button id="btnAddObject">Add nodes using arrays</button>
-		<button id="btnActiveNode">Activate item 4.3.2</button>
+		<button id="btnActiveNode">Activate item id4.3.2</button>
 		<button id="btnShowActive">Show active node...</button>
 	</p>
-	<p><a href="http://dynatree.googlecode.com">jquery.dynatree.js</a></p>
+	<p><a href="http://dynatree.googlecode.com">jquery.dynatree.js</a> - <a href="sample-misc.html">Example overview</a></p>
 </body>
 </html>

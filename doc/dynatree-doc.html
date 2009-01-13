@@ -4,8 +4,8 @@
     <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 	<title>jquery.dynatree.js documentation</title>
 
-	<meta name="keywords" content="dynatree JavaScript JS dynamic html tree view treeview widget plugin for jQuery data structure library ajax open source free">
-	<meta name="description" content="dynatree is a JavaScript treeview plugin for jQuery with support for lazy loading of branches.">
+	<meta name="keywords" content="dynatree JavaScript JS dynamic html tree view treeview checkbox widget plugin for jQuery data structure library ajax open source free">
+	<meta name="description" content="dynatree is a JavaScript treeview plugin for jQuery with support for checkboxes and lazy loading of branches.">
 
 	<script src="http://www.google-analytics.com/urchin.js" type="text/javascript"></script>
 
@@ -57,7 +57,7 @@
 	A current version may be found at the project site <a href="http://wwwendt.de/tech/dynatree/index.html">http://wwwendt.de/tech/dynatree/index.html</a>.
 </div>
 <p>
-	Dynatree is a dynamic JavaScript tree view control with support for lazy loading of branches.
+	Dynatree is a dynamic JavaScript tree view control with support for checkboxes and lazy loading.
 </p>
 <p>
 	Main features:
@@ -122,6 +122,7 @@
 		$("#tree").dynatree({
 			onActivate: function(dtnode) {
 				// A DynaTreeNode object is passed to the activation handler
+				// Note: we also get this event, if persistence is on, and the page is reloaded. 
 				alert("You activated " + dtnode.data.title);
 			},
 			persist: true,
@@ -152,7 +153,7 @@
 	See <a href="#initFromUl">Initializing the tree structure from a &lt;ul> element</a> for an example.
 </p>
 <p>
-	See here for a more <a href="sample-2.html">advanced example</a>.
+	See here for some more <a href="sample-misc.html">advanced examples</a>.
 </p>
 <p>
 	I am going into more details in the following sections.
@@ -207,7 +208,7 @@ $("#tree").dynatree({
  	minExpandLevel: 1, // 1: root node is not collapsible
 	imagePath: null, // Path to a folder containing icons. Defaults to 'skin/' subdirectory.
 	children: null, // Init tree structure from this object array.
-	initId: null, // Init tree structure from a <ul> element with this ID.
+	initId: null, // Init tree structure from a &lt;ul> element with this ID.
 	initAjax: null, // Ajax options used to initialize the tree strucuture.
 	autoFocus: true, // Set focus to first child, when expanding or lazy-loading.
 	keyboard: true, // Support keyboard navigation.
@@ -324,14 +325,19 @@ $("#tree").dynatree({
 children: [
 	{
 		title: null, // (required) Displayed name of the node (html is allowed here)
-		key: null, // May be used with activate(), select(), find(), ...
-		isFolder: false, // Use a folder icon. Also the node is expandable but not activatable.
-		isLazy: false, // Call onLazyRead() when the node is expanded for the first time to allow for delayed creation of children.
-		expand: false, // Initial expand status.
+		key: null, // May be used with select(), find(), ...
+		isFolder: false, // Use a folder icon. Also the node is expandable but not selectable.
+		isLazy: false, // Call onLazyRead(), when the node is expanded for the first time to allow for delayed creation of children.
 		tooltip: null, // Show this popup text.
 		icon: null, // Use a custom image (filename relative to tree.options.imagePath). 'null' for default icon, 'false' for no icon.
+		activate: false, // Initial active status.
+		focus: false, // Initial focused status.
+		expand: false, // Initial expanded status.
+		select: false, // Initial selected status.
+		// The following attributes are only valid if passed to some functions:
+		children: null // Array of child nodes.
 		// NOTE: we can also add custom attributes here.
-		// This may then also be used in the onActivate() or onLazyTree() callbacks.
+		// This may then also be used in the onSelect() or onLazyTree() callbacks.
 	},
 	[&#8230;]
 ]
@@ -473,8 +479,12 @@ $("#tree").dynatree({
 	All other node options are specified in the <code>data</code> attribute of a &lt;li> element.
 </p>
 <p class="info">
-	Note that the <code>data</code> attribute is not valid in &lt;li> elements in some doctypes (HTML 4.01 transitional and Strict and XHTML 1.0 Strict).<br>
-	Validators will complain about this.
+	Note that the <code>data</code> attribute is not valid in &lt;li> elements in 
+	some doctypes (HTML 4.01 transitional and Strict and XHTML 1.0 Strict).<br>
+	validators will complain about this.<br>
+	Also, if the <code>id</code> attribute is used to pass a key, it should be
+	alphanumeric and start with a letter be compliant.<br>
+	(This doesn't seem to affect the functionality however.) 
 </p>
 <p>
 	Nested &lt;ul> elements are used to build a hierarchical tree structure.<br>
@@ -506,21 +516,22 @@ $("#tree").dynatree({
 &lt;body>
 	&lt;!-- Add a &lt;div> element where the tree should appear: -->
 	&lt;div id="tree">
-		&lt;!-- Insert a &lt;ul> elemet to define the structure: -->
 		&lt;ul>
-			&lt;li data="key: '1'">item1 with key and tooltip
-			&lt;li data="key: '2'">item2
-			&lt;li data="key: '3', isFolder: true">&lt;span>Folder with some children&lt;/span>
+			&lt;li id="key1" title="Look, a tool tip!">item1 with key and tooltip
+			&lt;li id="key2" class="selected">item2: selected on init
+			&lt;li id="key3" class="folder">Folder with some children
 				&lt;ul>
-					&lt;li data="key: '3.1'">Sub-item 3.1
-					&lt;li data="key: '3.2'">Sub-item 3.2
+					&lt;li id="key3.1">Sub-item 3.1
+					&lt;li id="key3.2">Sub-item 3.2
 				&lt;/ul>
 
-			&lt;li data="key: '4', expand: true">&lt;span>Document with some children&lt;/span>
+			&lt;li id="key4" class="expanded">Document with some children (expanded on init)
 				&lt;ul>
-					&lt;li data="key: '4.1'">Sub-item 4.1
-					&lt;li data="key: '4.2'">Sub-item 4.2
+					&lt;li id="key4.1">Sub-item 4.1
+					&lt;li id="key4.2">Sub-item 4.2
 				&lt;/ul>
+
+			&lt;li id="key5" class="lazy folder">Lazy folder
 		&lt;/ul>
 	&lt;/div>
 &lt;/body>
@@ -761,6 +772,12 @@ $("#tree").dynatree({
 		For example <code>dtnode.data.title</code> or <code>dtnode.data.tooltip</code>.
 		See also <a href="#nodeOptions">Node options</a>.
 	</dd>
+	<dt>activate()
+	<dd>
+		Activate this node - according to flag - and fire a onActivate event.<br>
+		If <code>activeVisible</code> option is set, all parents will be expanded as necessary.<br>
+		Focus is <em>not</em> set.
+	</dd>
 	<dt>append(nodeArray)
 	<dd>
 		Accepts a node or an array of nodes to create child nodes.<br>
@@ -778,10 +795,26 @@ $("#tree").dynatree({
 		The request handler must return a JSON object, formatted like the data'a <code>children</code> object (see also <a href="#nodeOptions">Node options</a>.).<br>
 		Use the <code>setLazyNodeStatus()</code> function to display the result.<br>
 	</dd>
+	<dt>deactivate()
+	<dd>
+		Deactivate this node and fire an onDeactivate event.
+	</dd>
 	<dt>focus()
 	<dd>
 		Set focus to this node. Parent nodes are expanded, if this is necessary
 		to make it visible.
+	</dd>
+	<dt>hasChildren()
+	<dd>
+		Return true, if this node has child nodes.
+	</dd>
+	<dt>isActive()
+	<dd>
+		Return true, if this is the currently active node.
+	</dd>
+	<dt>isSelected()
+	<dd>
+		Return true, if the node is selected.
 	</dd>
 	<dt>makeVisible()
 	<dd>
@@ -795,11 +828,9 @@ $("#tree").dynatree({
 	<dd>
 		Remove all children and collpase this node.
 	</dd>
-	<dt>select()
+	<dt>select(flag)
 	<dd>
-		Select this node and fires a select event.<br>
-		If <code>selectionVisible</code> option is set, all parents will be expanded as necessary.<br>
-		Focus is <em>not</em> set.
+		Select or deselect this node - according to flag - and fire an onSelect event.
 	</dd>
 	<dt>setLazyNodeStatus(status)
 	<dd>
@@ -817,9 +848,14 @@ $("#tree").dynatree({
 		Toggle expansion state.<br>
 		Expanding a lazy node, fires a onLazyRead event.
 	</dd>
-	<dt>unselect()
+	<dt>toggleSelect()
 	<dd>
-		Unselect this node and fires an unselect event.
+		Toggle selection state.
+	</dd>
+	<dt>visit(fn, data, includeSelf)
+	<dd>
+		Call <code>fn(dtnode, data)</code>  for all child nodes.<br>
+		Stop iteration, if fn() returns false.
 	</dd>
 </dl>
 
@@ -835,12 +871,12 @@ $("#ui-dynatree-id-1234").attr("dtnode").select();
 </pre>
 
 <p>
-	Access the currently selected node:
+	Access the currently active node:
 </p>
 <pre class="prettyprint">
-var dtnode = $("#tree").dynatree("getSelectedNode");
+var dtnode = $("#tree").dynatree("getActiveNode");
 if( dtnode )
-	alert("Currently selected: " + dtnode.data.title);
+	alert("Currently active: " + dtnode.data.title);
 </pre>
 
 

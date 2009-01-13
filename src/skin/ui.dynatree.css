@@ -15,8 +15,8 @@ div.ui-dynatree-container
 /* Style, when control is disabled */
 .ui-dynatree-disabled div.ui-dynatree-container
 {
-	opacity: 0.5;
-	filter: alpha(opacity=50);
+/*	opacity: 0.5;
+	filter: alpha(opacity=50); */
 	background-color: silver; 
 }
 
