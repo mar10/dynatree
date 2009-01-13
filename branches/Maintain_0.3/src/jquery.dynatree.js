@@ -55,7 +55,7 @@ function logMsg(msg) {
 		arguments[0] = tag + " - " + arguments[0];
 		try {
 			// Safari gets here, but fails
-			window.console.log.apply(this, arguments);
+			window.console.log.apply(window.console, arguments);
 		} catch(e) {
 		}
 	}
