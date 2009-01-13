@@ -603,7 +603,7 @@ DynaTreeNode.prototype = {
 	},
 
 	onKeydown: function(event) {
-		logMsg("dtnode.onKeydown(" + event.type + "): dtnode:" + this + ", charCode:" + event.charCode + ", keyCode: " + event.keyCode + ", which: " + event.which);
+//		logMsg("dtnode.onKeydown(" + event.type + "): dtnode:" + this + ", charCode:" + event.charCode + ", keyCode: " + event.keyCode + ", which: " + event.which);
 		var handled = true;
 //		alert("keyDown" + event.which);
 
@@ -681,7 +681,7 @@ DynaTreeNode.prototype = {
 	onKeypress: function(event) {
 		// onKeypress is only hooked to allow user callbacks.
 		// We don't process it, because IE and Safari don't fire keypress for cursor keys.
-		logMsg("dtnode.onKeypress(" + event.type + "): dtnode:" + this + ", charCode:" + event.charCode + ", keyCode: " + event.keyCode + ", which: " + event.which);
+//		logMsg("dtnode.onKeypress(" + event.type + "): dtnode:" + this + ", charCode:" + event.charCode + ", keyCode: " + event.keyCode + ", which: " + event.which);
 	},
 	
 	onFocus: function(event) {
@@ -949,7 +949,7 @@ DynaTree.prototype = {
 		var cookieName = this.options.cookieId + "-" + mode;
 		var nodeList = ( mode=="expand" ) ? this.expandedNodes : this.selectedNodes;  
 		var idx = $.inArray(node, nodeList);
-		logMsg("_changeNodeList: nodeList:%o, idx:%o", nodeList, idx);
+//		logMsg("_changeNodeList: nodeList:%o, idx:%o", nodeList, idx);
 		if( bAdd ) {
 			if( idx >=0 )
 				return false;
@@ -959,13 +959,13 @@ DynaTree.prototype = {
 				return false;
 			nodeList.splice(idx, 1);
 		}
-		logMsg("  -->: nodeList:%o", nodeList);
+//		logMsg("  -->: nodeList:%o", nodeList);
 		if( this.options.persist ) {
 			var keyList = $.map(nodeList, function(e,i){return e.data.key});
-			logMsg("_changeNodeList: write cookie <%s> = '%s'", cookieName, keyList.join("', '"));
+//			logMsg("_changeNodeList: write cookie <%s> = '%s'", cookieName, keyList.join("', '"));
 			$.cookie(cookieName, keyList.join(","));
 		} else {
-			logMsg("_changeNodeListCookie: %o", nodeList);
+//			logMsg("_changeNodeListCookie: %o", nodeList);
 		}
 	},
 	
