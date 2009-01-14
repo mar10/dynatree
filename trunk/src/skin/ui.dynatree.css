@@ -45,7 +45,8 @@ span.ui-dynatree-checkbox
 {
 	width: 16px;
 	height: 16px;
-	display: inline-block; /* required, to make a span sizeable */
+	display: -moz-inline-box; /* @ FF 1+2 */
+	display: inline-block; /* Required to make a span sizeable */
 	vertical-align: top;
 	background-repeat: no-repeat;
 	background-position: left;
