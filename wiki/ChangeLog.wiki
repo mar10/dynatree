@@ -40,7 +40,7 @@ See the [http://code.google.com/p/dynatree/issues/list?can=1&q=milestone:Release
   * Enhancements: issue #40, issue #5 (experimental)
 
 ===== Main changes =====
-See the [http://code.google.com/p/dynatree/issues/list?can=1&q=milestone:Release0.3+status%3AFixed%2CVerified&sort=-modified&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary Release 0.4 fixlist] for details.
+See the [http://code.google.com/p/dynatree/issues/list?can=1&q=milestone:Release0.3+status%3AFixed%2CVerified&sort=-modified&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary Release 0.3 fixlist] for details.
 
   * jQuery plugin style: $(..).dynatree()
   * Keyboard navigation
