@@ -9,7 +9,6 @@ NOTE: This is under development (ALPHA status).
 See UpdateToVersion04 for some infos.
 
 ===== Main changes =====
-See the [http://code.google.com/p/dynatree/issues/list?can=1&q=milestone:Release0.4+status%3AFixed%2CVerified&sort=-modified&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary Release 0.4 fixlist] for details.
 
   * 'selected'/'select' was renamed to 'active'/'activate'<br>This is more precise and allowed implementation of the new selection feature.
   * Selection support<br>Avable  mode: single selection, multi selection and multi-hierarchical.
@@ -20,7 +19,7 @@ See the [http://code.google.com/p/dynatree/issues/list?can=1&q=milestone:Release
   * New callbacks like {{{onClick(dtnode, event)}}}, {{{onQueryActivate(activate, dtnode)}}}, and {{{onActivate(dtnode)}}}.
   * The tree images are now defined in CSS, instead of image name options.
   * New {{{fx}}} option for animation effects when expanding/collapsing.
-
+  * See the [http://code.google.com/p/dynatree/issues/list?can=1&q=milestone:Release0.4+status%3AFixed%2CVerified&sort=-modified&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary Release 0.4 fixlist] for details.
 
 ==== Release 0.3 ====
 
@@ -40,12 +39,12 @@ See the [http://code.google.com/p/dynatree/issues/list?can=1&q=milestone:Release
   * Enhancements: issue #40, issue #5 (experimental)
 
 ===== Main changes =====
-See the [http://code.google.com/p/dynatree/issues/list?can=1&q=milestone:Release0.3+status%3AFixed%2CVerified&sort=-modified&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary Release 0.3 fixlist] for details.
 
   * jQuery plugin style: $(..).dynatree()
   * Keyboard navigation
   * Improved documentation
   * Hosted on a public platform
+  * See the [http://code.google.com/p/dynatree/issues/list?can=1&q=milestone:Release0.3+status%3AFixed%2CVerified&sort=-modified&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary Release 0.3 fixlist] for details.
 
 
 ===== Updating from a previous release =====
