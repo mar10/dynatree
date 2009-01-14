@@ -19,6 +19,10 @@ See UpdateToVersion04 for some infos.
   * The tree images are now defined in CSS, instead of image name options.
   * New {{{fx}}} option for animation effects when expanding/collapsing.
 
+===== Details =====
+See the [http://code.google.com/p/dynatree/issues/list?can=1&q=milestone:Release0.4+status%3AFixed%2CVerified&sort=-modified&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary Issue List] for release 0.4.
+
+
 ==== Release 0.3 ====
 
 ===== 0.3.1 (currently in the SVN manintenance branch only) =====
@@ -43,7 +47,7 @@ See UpdateToVersion04 for some infos.
   * Hosted on a public platform
 
 ===== Details =====
-See the [http://code.google.com/p/dynatree/issues/list?can=1&q=milestone:Release0.3+status%3AFixed%2CVerified&sort=-modified&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary Issue List] for this release.
+See the [http://code.google.com/p/dynatree/issues/list?can=1&q=milestone:Release0.3+status%3AFixed%2CVerified&sort=-modified&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary Issue List] for release 0.3.
 
 ===== Updating from a previous release =====
 This is the first jQuery based release, so there is no update path.
