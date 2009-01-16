@@ -4,25 +4,28 @@
   - BUG: disable() hangs (replace with simple 'return false' in callbacks?)
          unbind: also remove focus handler
          tree.isDisabled verwenden?
+  - BUG: Expander (and checkbox) click doesn't work on FF 2
+  - BUG: context menu sample doesn't work in Opera
   - After clicking an expander icon the focus is gone
-  
-  Test and doc
-    - Test files for release: use minified libs 
-    - rework samples with better names and title, header explanation
-    - sample-options: mit reInit() und interaktiven options
-    - Sample quick (und andere): schon beim LAden kommt ein onActivate event.
-    
   - OPT: use opts.debugLevel instead of _bDebug
   - OPT: $(this.span) --> $span
   - ltWait.gif and ltError.gif -> use css
   - CSS warning for   >>filter: alpha(opacity=50);<<
   - implement onQueryActivate and onQueryExpand
   - implement  minExpandLevel > 1 
-  - data.isFolder -> folder, .isLazy -> lazy 
-
   - BUG: Chrome doesn't store cookies: persistence doesn't work
   - option node.unselectable, to hide checkbox
   - options.hideCheckbox, class="hideCheckbox"    
+  - easy way (or example) to ignore onActivate events during 'init' phase
+  
+  Test and doc
+    - Test files for release: use minified libs 
+    - rework samples with better names and title, header explanation
+    - sample-options: mit reInit() und interaktiven options
+    - Sample quick (und andere): schon beim LAden kommt ein onActivate event.
+    - Homepage: IE shows Javascript errors (prettify.js?) and code is not pretty printed
+    
+  - data.isFolder -> folder, .isLazy -> lazy 
   - test $("#ui-dynatree-id-5").attr("dtnode").focus();
 
 =============================================================================
@@ -34,17 +37,15 @@ Später:
   - ISSUE: persistence doesn't work with lazy nodes
  	       E.g. open lazy node -> [F5] -> Node is marked open, but not expanded
   
- - Root immer verstecken. 
-    (Man kann ja einen einzelnen node erstellen, um das zu erreichen)
-    Die Top-level Nodes expander sind nicht durch vlines verbunden.
-    --> Es wird ein neues Icon benötigt. 
-    Wenn minExpandLevel>=1, werden Die TL Expander nicht dargestellt, so dass
-    die gesammte Spalte verschwindet
+  - Always hide root.
+    Options .rootVisible and .title could be removed.
+    If a single visible root is wanted, one could always create one using <ul>
+    Top level node expanders are not connected by vlines (requires additional expander icon).
+    If minExpandLevel>=1, also the expander icons are hidden, so the first icon colmun can be removed.
     
-  - Drag'n'drop support vorbereiten:
-    Das jquery plugin muss sich leicht integreren lassen
-    - node.insertBefore
-      node.insertAfter
+  - Prepare for drag'n'drop support:
+    The jquery plugin must be easily integrated.
+    Add functions node.insertBefore, node.insertAfter
 
   - Table-Tree: use CSS 2.1: display:table, display:table-row, display:table-cell
    
@@ -60,9 +61,9 @@ Später:
 		},
 		
   - issue #56: <span class="ui-dynatree-title"> --> use a template?
-		tabTemplate: '<li><a href="#{href}"><span>#{label}</span></a></li>',
-		var $li = $(o.tabTemplate.replace(/#\{href\}/g, url).replace(/#\{label\}/g, label));
-		panelTemplate: "<div></div>"
+	tabTemplate: '<li><a href="#{href}"><span>#{label}</span></a></li>',
+	var $li = $(o.tabTemplate.replace(/#\{href\}/g, url).replace(/#\{label\}/g, label));
+	panelTemplate: "<div></div>"
 
   
 =============================================================================
