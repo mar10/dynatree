@@ -16,7 +16,7 @@ div.ui-dynatree-container
 .ui-dynatree-disabled div.ui-dynatree-container
 {
 	opacity: 0.5;
-	filter: alpha(opacity=50);
+/*	filter: alpha(opacity=50); /* Yields a css warning */
 	background-color: silver; 
 }
 

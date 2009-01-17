@@ -67,6 +67,8 @@
 			
 			onClick: function(dtnode, event) {
 				logMsg("onClick(%o, %o)", dtnode, event);
+				if( event.shiftKey && dtnode.isLazy )
+					alert("ctrl");
 				//return false;
 			},
 			onDblClick: function(dtnode, event) {

@@ -4,13 +4,16 @@
   - BUG: disable() hangs (replace with simple 'return false' in callbacks?)
          unbind: also remove focus handler
          tree.isDisabled verwenden?
+  - lazy re-read with [shift]:
+		if( event.shiftKey && dtnode.isLazy )
+			alert("ctrl");
+  - tree.isInitializing()
   - BUG: Expander (and checkbox) click doesn't work on FF 2
   - BUG: context menu sample doesn't work in Opera
   - After clicking an expander icon the focus is gone
   - OPT: use opts.debugLevel instead of _bDebug
   - OPT: $(this.span) --> $span
   - ltWait.gif and ltError.gif -> use css
-  - CSS warning for   >>filter: alpha(opacity=50);<<
   - implement onQueryActivate and onQueryExpand
   - implement  minExpandLevel > 1 
   - BUG: Chrome doesn't store cookies: persistence doesn't work
