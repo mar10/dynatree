@@ -1,25 +1,25 @@
 == TODOs for 0.4 ==
 (This file will be removed on release)
 
-  - BUG: disable() hangs (replace with simple 'return false' in callbacks?)
-         unbind: also remove focus handler
-         tree.isDisabled verwenden?
-  - lazy re-read with [shift]:
-		if( event.shiftKey && dtnode.isLazy )
-			alert("ctrl");
-  - tree.isInitializing()
-  - BUG: Expander (and checkbox) click doesn't work on FF 2
-  - BUG: context menu sample doesn't work in Opera
-  - After clicking an expander icon the focus is gone
-  - OPT: use opts.debugLevel instead of _bDebug
-  - OPT: $(this.span) --> $span
   - ltWait.gif and ltError.gif -> use css
   - implement onQueryActivate and onQueryExpand
   - implement  minExpandLevel > 1 
+  - lazy re-read with [shift]:
+		if( event.shiftKey && dtnode.isLazy )
+			alert("ctrl");
+  - BUG: Expander (and checkbox) click doesn't work on FF 2
+  - BUG: context menu sample doesn't work in Opera
   - BUG: Chrome doesn't store cookies: persistence doesn't work
-  - option node.unselectable, to hide checkbox
+  - After clicking an expander icon the focus is gone
+  - OPT: use opts.debugLevel instead of _bDebug
+  - OPT: $(this.span) --> $span
+  - option node.unselectable
   - options.hideCheckbox, class="hideCheckbox"    
-  - easy way (or example) to ignore onActivate events during 'init' phase
+  - issue #56: <span class="ui-dynatree-title"> --> use a template?
+	tabTemplate: '<li><a href="#{href}"><span>#{label}</span></a></li>',
+	var $li = $(o.tabTemplate.replace(/#\{href\}/g, url).replace(/#\{label\}/g, label));
+	panelTemplate: "<div></div>"
+	
   
   Test and doc
     - Test files for release: use minified libs 
@@ -27,13 +27,14 @@
     - sample-options: mit reInit() und interaktiven options
     - Sample quick (und andere): schon beim LAden kommt ein onActivate event.
     - Homepage: IE shows Javascript errors (prettify.js?) and code is not pretty printed
+    - Url-Tree as an own sample (currently in sample-events)
+	- Mention $("#ui-dynatree-id-12").attr("dtnode").activate();
     
   - data.isFolder -> folder, .isLazy -> lazy 
-  - test $("#ui-dynatree-id-5").attr("dtnode").focus();
 
 =============================================================================
 
-Später:
+Later:
   - Prepare for jQuery 1.3
   - Optimize rendering (called too often)
   - Optimize html strucuture (don't nee two containers?) 
@@ -63,10 +64,12 @@ Später:
 			secure: true
 		},
 		
-  - issue #56: <span class="ui-dynatree-title"> --> use a template?
-	tabTemplate: '<li><a href="#{href}"><span>#{label}</span></a></li>',
-	var $li = $(o.tabTemplate.replace(/#\{href\}/g, url).replace(/#\{label\}/g, label));
-	panelTemplate: "<div></div>"
+  - Implement Unit Testing: 
+    http://www.jsunit.net/
+    http://www.jsunit.net/talks/jsunit.ppt
+    
+  - Get rid of Protoype.js Class pattern. Use standard instead:
+    http://www.crockford.com/javascript/private.html
 
   
 =============================================================================
@@ -106,4 +109,8 @@ Changelog 0.3 -> 0.4
   - expandOnAdd --> removed
   - rootCollapsible --> minExpandLevel
   - Grafik für Lazy-Expander verbessern
+  
+  - tree.isInitializing()
+    easy way (or example) to ignore onActivate events during 'init' phase
+  - tree.toDict(), node.toDict(recursive)
   
