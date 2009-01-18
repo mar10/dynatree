@@ -139,6 +139,10 @@
 				logMsg("%o", dtnode);
 			});
 		});
+		$("#btnSerialize").click(function(){
+			var dict = $("#tree").dynatree("getTree").toDict();
+			logMsg("Serialized: %o", dict);
+		});
 		$("#btnEnable").click(function(){
 			$("#tree").dynatree(this.checked ? "enable" : "disable");
 		});
@@ -166,6 +170,7 @@
     </p>
     <p>
         <button id="btnVisit">visit</button>
+        <button id="btnSerialize">serialize</button>
     </p>
 
 

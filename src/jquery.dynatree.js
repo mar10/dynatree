@@ -122,6 +122,22 @@ DynaTreeNode.prototype = {
 		return "dtnode<" + this.data.key + ">: '" + this.data.title + "'";
 	},
 
+	toDict: function(recursive) {
+		var dict = $.extend({}, this.data);
+		dict.activate = ( this.tree.activeNode === this );
+		dict.focus = ( this.tree.focusNode === this );
+		dict.expand = this.isExpanded;
+		dict.select = this.isSelected;
+		if( recursive && this.childList ) {
+			dict.children = [];
+			for(var i=0; i<this.childList.length; i++ )
+				dict.children.push(this.childList[i].toDict(true));
+		} else {
+			delete dict.children;
+		}
+		return dict;
+	},
+
 	_getInnerHtml: function() {
 		var res = "";
 
@@ -941,6 +957,14 @@ DynaTree.prototype = {
 	toString: function() {
 		return "DynaTree '" + this.options.title + "'";
 	},
+
+	toDict: function() {
+		return this.tnRoot.toDict(true);
+	},
+
+	isInitializing: function() {
+		return ( this.initMode=="data" || this.initMode=="cookie" || this.initMode=="postInit" );
+	},
 	
 	_changeNodeList: function(mode, node, bAdd) {
 		// Add or remove key from a key list and optionally write cookie.
@@ -1184,10 +1208,7 @@ $.widget("ui.dynatree", {
 	bind: function() {
 		var $this = this.element;
 		var o = this.options;
-		// EVENTS
-		// Register events sources
-//		this.$tabs.unbind(".tabs").bind(o.event, function() {
-//		}
+
 		// Prevent duplicate binding
 		this.unbind();
 		
@@ -1201,7 +1222,7 @@ $.widget("ui.dynatree", {
 			return null;
 		}
 
-		$this.bind("click.dynatree dblclick.dynatree keypress.dynatree keydown.dynatree ", function(event){
+		$this.bind("click.dynatree dblclick.dynatree keypress.dynatree keydown.dynatree", function(event){
 			var dtnode = __getNodeFromElement(event.target);
 			
 			logMsg("bind(" + event.type + "): dtnode:" + this + ", charCode:" + event.charCode + ", keyCode: " + event.keyCode + ", which: " + event.which);
