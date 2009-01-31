@@ -758,6 +758,7 @@ DynaTreeNode.prototype = {
 	},
 
 	removeChild: function(tn) {
+		// Remove tn from list of direct children.
 		var ac = this.childList;
 		if( ac.length == 1 ) {
 			if( tn !== ac[0] )
@@ -766,6 +767,10 @@ DynaTreeNode.prototype = {
 		}
         if ( tn === this.tree.activeNode )
         	tn.deactivate();
+        if ( tn.isSelected )
+        	this.tree._changeNodeList("select", tn, false);
+        if ( tn.isExpanded )
+        	this.tree._changeNodeList("expand", tn, false);
 		tn.removeChildren(true);
 		this.div.removeChild(tn.div);
 		for(var i=0; i<ac.length; i++) {
@@ -778,7 +783,7 @@ DynaTreeNode.prototype = {
 	},
 
 	removeChildren: function(recursive) {
-        // Remove all child nodes (more efficient than recursive remove())
+        // Remove all child nodes (more efficiently than recursive remove())
 //		logMsg ("%o.removeChildren(%o)", this, recursive);
 		var tree = this.tree;
         var ac = this.childList;
@@ -788,6 +793,10 @@ DynaTreeNode.prototype = {
 //        		logMsg ("del %o", tn);
                 if ( tn === tree.activeNode )
                 	tn.deactivate();
+                if ( tn.isSelected )
+                	this.tree._changeNodeList("select", tn, false);
+                if ( tn.isExpanded )
+                	this.tree._changeNodeList("expand", tn, false);
                 tn.removeChildren(true);
 				this.div.removeChild(tn.div);
                 delete tn;
@@ -1172,7 +1181,7 @@ $.widget("ui.dynatree", {
 		this.tree.initMode = "postInit";
 		
 		var nodeList = this.tree.expandedNodes;
-		this.tree.expandedNode = [];
+		this.tree.expandedNodes = [];
 		for(var i=0; i<nodeList.length; i++ ) {
 			var dtnode = nodeList[i];
 			logMsg("Expand on init: %o", dtnode);
