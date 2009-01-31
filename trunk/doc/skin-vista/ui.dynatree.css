@@ -130,6 +130,7 @@ span.ui-dynatree-checkbox:hover
 	background-image: url("cbChecked_hover.gif");
 }
 
+
 /******************************************************************************* 
  * Node type icon
  */
@@ -147,6 +148,19 @@ span.ui-dynatree-icon
 
 .ui-dynatree-folder.ui-dynatree-expanded  span.ui-dynatree-icon
 {
+}
+
+
+/* Status node icons */
+
+.ui-dynatree-statusnode-wait span.ui-dynatree-icon
+{
+	background-image: url("ltWait.gif");
+}
+
+.ui-dynatree-statusnode-error span.ui-dynatree-icon
+{
+	background-image: url("ltError.gif");
 }
 
 

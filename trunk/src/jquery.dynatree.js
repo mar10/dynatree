@@ -297,13 +297,15 @@ DynaTreeNode.prototype = {
 			case DTNodeStatus_Loading:
 				this._setStatusNode({
 					title: this.tree.options.strings.loading,
-					icon: "ltWait.gif"
+//					icon: "ltWait.gif"
+					addClass: this.tree.options.classNames.nodeWait
 				});
 				break;
 			case DTNodeStatus_Error:
 				this._setStatusNode({
 					title: this.tree.options.strings.loadError,
-					icon: "ltError.gif"
+//					icon: "ltError.gif"
+					addClass: this.tree.options.classNames.nodeError
 				});
 				break;
 			default:
@@ -1380,6 +1382,8 @@ $.ui.dynatree.defaults = {
 		connector: "ui-dynatree-connector",
 		checkbox: "ui-dynatree-checkbox",
 		nodeIcon: "ui-dynatree-icon",
+		nodeError: "ui-dynatree-statusnode-error",
+		nodeWait: "ui-dynatree-statusnode-wait",
 		hidden: "ui-dynatree-hidden",
 //		disabled: "ui-dynatree-disabled",
 		active: "ui-dynatree-active",
