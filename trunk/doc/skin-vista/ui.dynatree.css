@@ -206,3 +206,14 @@ span.ui-dynatree-active a
 	background-color: #D8F0FA;
 /*	color: white !important; /* @ IE6 */
 }
+
+
+/******************************************************************************* 
+ * Custom node classes
+ */
+
+span.custom1 a
+{
+	background-color: maroon;
+	color: yellow;
+}
