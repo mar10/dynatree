@@ -100,21 +100,21 @@ DynaTreeNode.prototype = {
 				this.tree.activeNode = this;
 			if( this.tree.initFocusKey == this.data.key )
 				this.tree.focusNode = this;
-			this.isExpanded = ($.inArray(this.data.key, this.tree.initExpandedKeys) >= 0);
-			this.isSelected = ($.inArray(this.data.key, this.tree.initSelectedKeys) >= 0);
-//			logMsg("this.data.key=%o, this.tree.initSelectedKeys=%o --> %o", this.data.key, this.tree.initSelectedKeys, this.isSelected);
+			this.bExpanded = ($.inArray(this.data.key, this.tree.initExpandedKeys) >= 0);
+			this.bSelected = ($.inArray(this.data.key, this.tree.initSelectedKeys) >= 0);
+//			logMsg("this.data.key=%o, this.tree.initSelectedKeys=%o --> %o", this.data.key, this.tree.initSelectedKeys, this.bSelected);
 		} else {
 			// Init status from data (write to cookie after init phase)
 			if( data.activate )
 				this.tree.activeNode = this;
 			if( data.focus )
 				this.tree.focusNode = this;
-			this.isExpanded = ( data.expand == true );// Collapsed by default
-			this.isSelected = ( data.select == true ); // Deselected by default
+			this.bExpanded = ( data.expand == true );// Collapsed by default
+			this.bSelected = ( data.select == true ); // Deselected by default
 		}
-		if( this.isExpanded )
+		if( this.bExpanded )
 			this.tree.expandedNodes.push(this);
-		if( this.isSelected )
+		if( this.bSelected )
 			this.tree.selectedNodes.push(this);
 	},
 
@@ -126,8 +126,8 @@ DynaTreeNode.prototype = {
 		var dict = $.extend({}, this.data);
 		dict.activate = ( this.tree.activeNode === this );
 		dict.focus = ( this.tree.focusNode === this );
-		dict.expand = this.isExpanded;
-		dict.select = this.isSelected;
+		dict.expand = this.bExpanded;
+		dict.select = this.bSelected;
 		if( recursive && this.childList ) {
 			dict.children = [];
 			for(var i=0; i<this.childList.length; i++ )
@@ -206,24 +206,24 @@ DynaTreeNode.prototype = {
 		this.span.innerHTML = this._getInnerHtml();
 
 		// hide this node, if parent is collapsed
-		this.div.style.display = ( this.parent==null || this.parent.isExpanded ? "" : "none");
+		this.div.style.display = ( this.parent==null || this.parent.bExpanded ? "" : "none");
 
 		// Set classes for current status
 		this.span.className = ( this.data.isFolder ) ? this.tree.options.classNames.folder : this.tree.options.classNames.document;
-		if( this.isExpanded )
+		if( this.bExpanded )
 			$(this.span).addClass(this.tree.options.classNames.expanded);
 		if( this.data.isLazy && !this.isRead )
 			$(this.span).addClass(this.tree.options.classNames.lazy);
 		if( this.isLastSibling() )
 			$(this.span).addClass(this.tree.options.classNames.lastsib);
-		if( this.isSelected )
+		if( this.bSelected )
 			$(this.span).addClass(this.tree.options.classNames.selected);
 		if( this.hasSubSel )
 			$(this.span).addClass(this.tree.options.classNames.partsel);
 		if( this.tree.activeNode === this )
 			$(this.span).addClass(this.tree.options.classNames.active);
 
-		if( bDeep && this.childList && (bHidden || this.isExpanded) ) {
+		if( bDeep && this.childList && (bHidden || this.bExpanded) ) {
 			for(var i=0; i<this.childList.length; i++) {
 				this.childList[i].render(bDeep, bHidden)
 			}
@@ -327,7 +327,7 @@ DynaTreeNode.prototype = {
 		// Return true, if all parents are expanded.
 		var parents = this._parentList(true, false);
 		for(var i=0; i<parents.length; i++)
-			if( ! parents[i].isExpanded ) return false;
+			if( ! parents[i].bExpanded ) return false;
 		return true;
 	},
 
@@ -429,7 +429,7 @@ DynaTreeNode.prototype = {
 		if( this.data.isStatusNode )
 			return;
 		// 
-		if( this.isSelected == sel ) {
+		if( this.bSelected == sel ) {
 			logMsg("dtnode._select(%o) IGNORED - %o", sel, this);
 			return;
 		}
@@ -441,7 +441,7 @@ DynaTreeNode.prototype = {
 		if( opts.selectMode==1 && this.tree.selectedNodes.length && sel ) 
 			this.tree.selectedNodes[0]._select(false, false, false);
 
-		this.isSelected = sel;
+		this.bSelected = sel;
         this.tree._changeNodeList("select", this, sel);
 			
 		if( sel ) {
@@ -459,7 +459,7 @@ DynaTreeNode.prototype = {
 					p._setSubSel(true);
 					var allChildsSelected = true;
 					for(var i=0; i<p.childList.length;  i++) {
-						if( !p.childList[i].isSelected ) {
+						if( !p.childList[i].bSelected ) {
 							allChildsSelected = false;
 							break;
 						}
@@ -489,7 +489,7 @@ DynaTreeNode.prototype = {
 					p._select(false, false, false);
 					var isPartSel = false;
 					for(var i=0; i<p.childList.length;  i++) {
-						if( p.childList[i].isSelected || p.childList[i].hasSubSel ) {
+						if( p.childList[i].bSelected || p.childList[i].hasSubSel ) {
 							isPartSel = true;
 							break;
 						}
@@ -504,7 +504,7 @@ DynaTreeNode.prototype = {
 	},
 
 	isSelected: function() {
-		return this.isSelected;
+		return this.bSelected;
 	},
 	
 	select: function(sel) {
@@ -515,16 +515,16 @@ DynaTreeNode.prototype = {
 
 	toggleSelect: function() {
 //		logMsg("dtnode.toggleSelect() - %o", this);
-		return this.select(!this.isSelected);
+		return this.select(!this.bSelected);
 	},
 
 	_expand: function(bExpand) {
 //		logMsg("dtnode._expand(%o) - %o", bExpand, this);
-		if( this.isExpanded == bExpand ) {
+		if( this.bExpanded == bExpand ) {
 			logMsg("dtnode._expand(%o) IGNORED - %o", bExpand, this);
 			return;
 		}
-		this.isExpanded = bExpand;
+		this.bExpanded = bExpand;
 		var opts = this.tree.options;
 		// Persist expand state
     	this.tree._changeNodeList("expand", this, bExpand);
@@ -535,7 +535,7 @@ DynaTreeNode.prototype = {
 			$(this.span).removeClass(opts.classNames.expanded);
         }
         // Auto-collapse mode: collapse all siblings
-		if( this.isExpanded && this.parent && opts.autoCollapse ) {
+		if( this.bExpanded && this.parent && opts.autoCollapse ) {
 			var parents = this._parentList(false, true);
 			for(var i=0; i<parents.length; i++)
 				parents[i].collapseSiblings();
@@ -543,7 +543,7 @@ DynaTreeNode.prototype = {
 		// If current focus is now hidden, focus the first visible parent.
 		// TODO: doesn't make sense here(?) we should check if the currently focused node (not <this>) is visible.
 		// At the moment, _expand gets only called, after focus was set to <this>.
-		if( ! this.isExpanded && ! this.isVisible() ) {
+		if( ! this.bExpanded && ! this.isVisible() ) {
 			logMsg("Focus became invisible: setting to this.");
 			this.focus();
 		}
@@ -578,9 +578,9 @@ DynaTreeNode.prototype = {
 //		logMsg("toggleExpand("+this.data.title+")...");
 		if( !this.childList && !this.data.isLazy )
 			return;
-		if( this.parent == null && this.tree.options.minExpandLevel>0 && this.isExpanded)
+		if( this.parent == null && this.tree.options.minExpandLevel>0 && this.bExpanded)
 			return; // Prevent collapsing the root
-		this._expand( ! this.isExpanded);
+		this._expand( ! this.bExpanded);
 //		logMsg("toggleExpand("+this.data.title+") done.");
 	},
 
@@ -589,7 +589,7 @@ DynaTreeNode.prototype = {
 			return;
 		var ac = this.parent.childList;
 		for (var i=0; i<ac.length; i++) {
-			if ( ac[i] !== this && ac[i].isExpanded )
+			if ( ac[i] !== this && ac[i].bExpanded )
 				ac[i]._expand(false);
 		}
 	},
@@ -628,12 +628,12 @@ DynaTreeNode.prototype = {
 //			case 43: // '+'
 			case 107: // '+'
 			case 187: // '+' @ Chrome, Safari
-				if( !this.isExpanded ) this.toggleExpand();
+				if( !this.bExpanded ) this.toggleExpand();
 				break;
 //			case 45: // '-'
 			case 109: // '-'
 			case 189: // '+' @ Chrome, Safari
-				if( this.isExpanded ) this.toggleExpand();
+				if( this.bExpanded ) this.toggleExpand();
 				break;
 			//~ case 42: // '*'
 				//~ break;
@@ -651,7 +651,7 @@ DynaTreeNode.prototype = {
 					this.parent.focus();
 				break;
 			case 37: // <left>
-				if( this.isExpanded ) {
+				if( this.bExpanded ) {
 					this.toggleExpand();
 					this.focus();
 				} else if( this.parent && (this.tree.options.rootVisible || this.parent.parent) ) {
@@ -659,7 +659,7 @@ DynaTreeNode.prototype = {
 				}
 				break;
 			case 39: // <right>
-				if( !this.isExpanded && (this.childList || this.data.isLazy) ) {
+				if( !this.bExpanded && (this.childList || this.data.isLazy) ) {
 					this.toggleExpand();
 					this.focus();
 				} else if( this.childList ) {
@@ -668,7 +668,7 @@ DynaTreeNode.prototype = {
 				break;
 			case 38: // <up>
 				var sib = this.prevSibling();
-				while( sib && sib.isExpanded )
+				while( sib && sib.bExpanded )
 					sib = sib.childList[sib.childList.length-1];
 				if( !sib && this.parent && (this.tree.options.rootVisible || this.parent.parent) )
 					sib = this.parent;
@@ -676,7 +676,7 @@ DynaTreeNode.prototype = {
 				break;
 			case 40: // <down>
 				var sib;
-				if( this.isExpanded ) {
+				if( this.bExpanded ) {
 					sib = this.childList[0];
 				} else {
 					var parents = this._parentList(false, true);
@@ -767,9 +767,9 @@ DynaTreeNode.prototype = {
 		}
         if ( tn === this.tree.activeNode )
         	tn.deactivate();
-        if ( tn.isSelected )
+        if ( tn.bSelected )
         	this.tree._changeNodeList("select", tn, false);
-        if ( tn.isExpanded )
+        if ( tn.bExpanded )
         	this.tree._changeNodeList("expand", tn, false);
 		tn.removeChildren(true);
 		this.div.removeChild(tn.div);
@@ -793,9 +793,9 @@ DynaTreeNode.prototype = {
 //        		logMsg ("del %o", tn);
                 if ( tn === tree.activeNode )
                 	tn.deactivate();
-                if ( tn.isSelected )
+                if ( tn.bSelected )
                 	this.tree._changeNodeList("select", tn, false);
-                if ( tn.isExpanded )
+                if ( tn.bExpanded )
                 	this.tree._changeNodeList("expand", tn, false);
                 tn.removeChildren(true);
 				this.div.removeChild(tn.div);
@@ -828,7 +828,7 @@ DynaTreeNode.prototype = {
 		if ( ( (this.tree.options.minExpandLevel>0 || !this.tree.options.rootVisible) && this.parent==null )
 			 || ( dtnode.data.expand )
 			 ) {
-			this.isExpanded = true;
+			this.bExpanded = true;
 		}
 		if ( this.tree.bEnableUpdate )
 			this.render(true, true);
@@ -1185,7 +1185,7 @@ $.widget("ui.dynatree", {
 		for(var i=0; i<nodeList.length; i++ ) {
 			var dtnode = nodeList[i];
 			logMsg("Expand on init: %o", dtnode);
-//			dtnode.isExpanded = false; // make sure this is not ignored
+//			dtnode.bExpanded = false; // make sure this is not ignored
 			dtnode._expand(true);
 		}
 		nodeList = this.tree.selectedNodes;
@@ -1193,7 +1193,7 @@ $.widget("ui.dynatree", {
 		for(var i=0; i<nodeList.length; i++ ) {
 			var dtnode = nodeList[i];
 			logMsg("Select on init: %o", dtnode);
-			dtnode.isSelected = false; // make sure this is not ignored
+			dtnode.bSelected = false; // make sure this is not ignored
 			dtnode.select(true);
 		}
 		// Focus, that was initialized as 'active'
