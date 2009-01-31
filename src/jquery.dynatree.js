@@ -92,7 +92,6 @@ DynaTreeNode.prototype = {
 		this.childList = null; // no subnodes yet
 		this.isRead = false; // Lazy content not yet read
 		this.hasSubSel = false;
-		
 
 		if( tree.initMode == "cookie" ) {
 			// Init status from cookies
@@ -102,14 +101,13 @@ DynaTreeNode.prototype = {
 				this.tree.focusNode = this;
 			this.bExpanded = ($.inArray(this.data.key, this.tree.initExpandedKeys) >= 0);
 			this.bSelected = ($.inArray(this.data.key, this.tree.initSelectedKeys) >= 0);
-//			logMsg("this.data.key=%o, this.tree.initSelectedKeys=%o --> %o", this.data.key, this.tree.initSelectedKeys, this.bSelected);
 		} else {
 			// Init status from data (write to cookie after init phase)
 			if( data.activate )
 				this.tree.activeNode = this;
 			if( data.focus )
 				this.tree.focusNode = this;
-			this.bExpanded = ( data.expand == true );// Collapsed by default
+			this.bExpanded = ( data.expand == true ); // Collapsed by default
 			this.bSelected = ( data.select == true ); // Deselected by default
 		}
 		if( this.bExpanded )
@@ -222,6 +220,8 @@ DynaTreeNode.prototype = {
 			$(this.span).addClass(this.tree.options.classNames.partsel);
 		if( this.tree.activeNode === this )
 			$(this.span).addClass(this.tree.options.classNames.active);
+		if( this.data.addClass )
+			$(this.span).addClass(this.data.addClass);
 
 		if( bDeep && this.childList && (bHidden || this.bExpanded) ) {
 			for(var i=0; i<this.childList.length; i++) {
@@ -275,8 +275,7 @@ DynaTreeNode.prototype = {
 			firstChild.render(false, false);
 		} else {
 			data.isStatusNode = true;
-			firstChild = this._addChildNode (new DynaTreeNode (this.tree, data));
-//			firstChild.data.isStatusNode = true;
+			firstChild = this._addChildNode(new DynaTreeNode(this.tree, data));
 		}
 	},
 
@@ -1407,6 +1406,7 @@ $.ui.dynatree.nodedatadefaults = {
 	isLazy: false, // Call onLazyRead(), when the node is expanded for the first time to allow for delayed creation of children.
 	tooltip: null, // Show this popup text.
 	icon: null, // Use a custom image (filename relative to tree.options.imagePath). 'null' for default icon, 'false' for no icon.
+	addClass: null, // Class name added to the node's span tag.  
 	activate: false, // Initial active status.
 	focus: false, // Initial focused status.
 	expand: false, // Initial expanded status.

@@ -150,6 +150,17 @@ span.ui-dynatree-icon
 	background-image: url("ltFld_o.gif");
 }
 
+/* Status node icons */
+
+.ui-dynatree-statusnode-wait span.ui-dynatree-icon
+{
+	background-image: url("ltWait.gif");
+}
+
+.ui-dynatree-statusnode-error span.ui-dynatree-icon
+{
+	background-image: url("ltError.gif");
+}
 
 /******************************************************************************* 
  * Node titles
@@ -207,3 +218,4 @@ span.ui-dynatree-active a
 	background-color: #3169C6 !important;
 	color: white !important; /* @ IE6 */
 }
+
