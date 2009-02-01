@@ -353,6 +353,8 @@ DynaTreeNode.prototype = {
 		// Select - but not focus - this node.
 //		logMsg("dtnode.activate(): %o", this);
 		var opts = this.tree.options;
+		if ( opts.onQueryActivate && opts.onQueryActivate.call(this.span, true, this) == false )
+			return; // Callback returned false
 		if( this.data.isStatusNode )
 			return;
 		if( this.tree.activeNode ) {
@@ -374,6 +376,8 @@ DynaTreeNode.prototype = {
 //		logMsg("dtnode.deactivate(): %o", this);
 		if( this.tree.activeNode === this ) {
 			var opts = this.tree.options;
+			if ( opts.onQueryActivate && opts.onQueryActivate.call(this.span, false, this) == false )
+				return; // Callback returned false
 			$(this.span).removeClass(opts.classNames.active);
 	        if( opts.persist )
 				$.cookie(opts.cookieId+"-active", "");
@@ -522,8 +526,10 @@ DynaTreeNode.prototype = {
 			logMsg("dtnode._expand(%o) IGNORED - %o", bExpand, this);
 			return;
 		}
-		this.bExpanded = bExpand;
 		var opts = this.tree.options;
+		if ( opts.onQueryExpand && opts.onQueryExpand.call(this.span, bExpand, this) == false )
+			return; // Callback returned false
+		this.bExpanded = bExpand;
 		// Persist expand state
     	this.tree._changeNodeList("expand", this, bExpand);
 

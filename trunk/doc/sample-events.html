@@ -19,6 +19,7 @@
 //			persist: true,
 			onQueryActivate: function(activate, dtnode) {
 				logMsg("onQueryActivate(%o, %o)", activate, dtnode);
+//				return false;
 			},
 			onActivate: function(dtnode) {
 				logMsg("onActivate(%o)", dtnode);
@@ -44,6 +45,7 @@
 			
 			onQueryExpand: function(expand, dtnode) {
 				logMsg("onQueryExpand(%o, %o)", expand, dtnode);
+//				return false;
 			},
 			onExpand: function(dtnode) {
 				logMsg("onExpand(%o)", dtnode);
