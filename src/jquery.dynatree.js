@@ -27,14 +27,11 @@ _bDebug = true;
 
 function logMsg(msg) {
 	// Usage: logMsg("%o was toggled", this);
-	// See http://michaelsync.net/2007/09/09/firebug-tutorial-logging-profiling-and-commandline-part-i
-	// for details (logInfo, logWarning, logGroup, ...)
 	if ( _bDebug  && window.console && window.console.log ) {
 		var dt = new Date();
 		var tag = dt.getHours()+":"+dt.getMinutes()+":"+dt.getSeconds()+"."+dt.getMilliseconds();
 		arguments[0] = tag + " - " + arguments[0];
 		try {
-			// Safari gets here, but fails
 			window.console.log.apply(window.console, arguments);
 		} catch(e) {
 			//window.console.log(e);
@@ -50,7 +47,7 @@ var DTNodeStatus_Loading = 1;
 var DTNodeStatus_Ok      = 0;
 
 
-
+// Start of local namespace
 ;(function($) {
 
 /*************************************************************************

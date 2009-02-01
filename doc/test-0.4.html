@@ -134,12 +134,6 @@
 		});
 
 		
-		$("#btnEnable").click(function(){
-			$("#tree").dynatree(this.checked ? "enable" : "disable");
-		});
-		$("#btnBind").click(function(){
-			$("#tree").dynatree(this.checked ? "bind" : "unbind");
-		});
 		$("#btnVisit").click(function(){
 			$("#tree").dynatree("getRoot").visit(function(dtnode){
 				logMsg("%o", dtnode);
@@ -149,11 +143,16 @@
 			var dict = $("#tree").dynatree("getTree").toDict();
 			logMsg("Serialized: %o", dict);
 		});
-		$("#btnRemove").click(function(){
-			var dtnode = $("#tree").dynatree("getTree").getActiveNode();
-			logMsg("Removing: %o", dtnode);
-			dtnode.remove();
-			logMsg("Removing: done.");
+		$("#btnModify").click(function(){
+			var dtnode= $("#tree").dynatree("getTree").getNodeByKey("1");
+           dtnode.data.title = "New title: " + Date();
+           dtnode.render();           
+		});
+		$("#btnEnable").click(function(){
+			$("#tree").dynatree(this.checked ? "enable" : "disable");
+		});
+		$("#btnBind").click(function(){
+			$("#tree").dynatree(this.checked ? "bind" : "unbind");
 		});
 	});
 
@@ -177,7 +176,7 @@
     <p>
         <button id="btnVisit">visit</button>
         <button id="btnSerialize">serialize</button>
-        <button id="btnRemove">remove cur</button>
+        <button id="btnModify">Change node title</button>
     </p>
 
 
