@@ -363,7 +363,11 @@ onActivate: function(dtnode) {
 	</dd>
 	<dt>addClass
 	<dd>
-		Class name that is added to the node's &lt; span> element.
+		Class name that is added to the node's &lt;span> element.<br>
+		Example:
+		<pre class="prettyprint">&lt;li data="addClass: 'customClass1'">Pretty node</pre>
+		can be styled using css as  
+		<pre class="prettyprint">span.customClass1 a { background-color: maroon; color: yellow; }</pre>
 	</dd>
 	<dt>children
 	<dd>
@@ -894,6 +898,11 @@ $("#tree").dynatree({
 	<dd>
 		Set focus to this node. Parent nodes are expanded, if this is necessary
 		to make it visible.
+	</dd>
+	<dt>getLevel()
+	<dd>
+		Return the depth (i.e. number of parent nodes).<br>
+		0 is returned for the root node.
 	</dd>
 	<dt>hasChildren()
 	<dd>

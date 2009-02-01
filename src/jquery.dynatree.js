@@ -134,23 +134,25 @@ DynaTreeNode.prototype = {
 	},
 
 	_getInnerHtml: function() {
-		var res = "";
-
-		// parent connectors
-		var bIsRoot = (this.parent==null);
-//		var bHideFirstConnector = (!this.tree.options.rootVisible || !this.tree.options.rootCollapsible );
-		var bHideFirstConnector = (!this.tree.options.rootVisible || this.tree.options.minExpandLevel>0 );
-
-		var p = this.parent;
+		var opts = this.tree.options;
 		var cache = this.tree.cache;
-		while ( p ) {
-			if ( ! (bHideFirstConnector && p.parent==null ) )
-				res = ( p.isLastSibling() ? cache.tagEmpty : cache.tagVline) + res ;
+		// parent connectors
+		var rootParent = opts.rootVisible ? null : this.tree.tnRoot; 
+		var bHideFirstExpander = (opts.rootVisible && opts.minExpandLevel>0) || opts.minExpandLevel>1;
+		var bHideFirstConnector = opts.rootVisible || opts.minExpandLevel>0;
+
+		var res = "";
+		var p = this.parent;
+		while( p ) {
+			// Suppress first connector column, if visible top level is always expanded
+			if ( bHideFirstConnector && (p==rootParent  ) )
+				break;
+			res = ( p.isLastSibling() ? cache.tagEmpty : cache.tagVline) + res ;
 			p = p.parent;
 		}
 
 		// connector (expanded, expandable or simple)
-		if ( bHideFirstConnector && bIsRoot  ) {
+		if( bHideFirstExpander && this.parent==rootParent ) { 
 			// skip connector
 		} else if ( this.childList || this.data.isLazy) {
    			res += cache.tagExpander;
@@ -159,13 +161,13 @@ DynaTreeNode.prototype = {
 		}
 		
 		// Checkbox mode
-		if( this.tree.options.checkbox && this.data.hideCheckbox!=true && !this.data.isStatusNode) {
+		if( opts.checkbox && this.data.hideCheckbox!=true && !this.data.isStatusNode) {
    			res += cache.tagCheckbox;
 		}
 		
 		// folder or doctype icon
    		if ( this.data.icon ) {
-    		res += "<img src='" + this.tree.options.imagePath + this.data.icon + "' alt='' />";
+    		res += "<img src='" + opts.imagePath + this.data.icon + "' alt='' />";
    		} else if ( this.data.icon == false ) {
         	// icon == false means 'no icon'
 		} else {
@@ -319,6 +321,16 @@ DynaTreeNode.prototype = {
 			dtn = dtn.parent;
 		};
 		return l;
+	},
+
+	getLevel: function() {
+		var level = 0;
+		var dtn = this.parent;
+		while( dtn ) {
+			level++;
+			dtn = dtn.parent;
+		};
+		return level;
 	},
 
 	isVisible: function() {
@@ -527,6 +539,10 @@ DynaTreeNode.prototype = {
 			return;
 		}
 		var opts = this.tree.options;
+		if( !bExpand && this.getLevel()<opts.minExpandLevel ) {
+			logMsg("dtnode._expand(%o) forced expand - %o", bExpand, this);
+			return;
+		}
 		if ( opts.onQueryExpand && opts.onQueryExpand.call(this.span, bExpand, this) == false )
 			return; // Callback returned false
 		this.bExpanded = bExpand;
@@ -1420,6 +1436,7 @@ $.ui.dynatree.nodedatadefaults = {
 	select: false, // Initial selected status.
 //	hideCheckbox: null, // Suppress checkbox for this node.
 //	unselectable: false, // Prevent selection.
+//  disabled: null,	
 	// The following attributes are only valid if passed to some functions:
 	children: null, // Array of child nodes.
 	// NOTE: we can also add custom attributes here.
