@@ -76,14 +76,14 @@ Array.prototype.remove = function(from, to) {
 var DynaTreeNode = Class.create();
 
 DynaTreeNode.prototype = {
-	initialize: function(tree, data) {
+	initialize: function(parent, tree, data) {
+		this.parent = parent; 
 		this.tree = tree;
 		if ( typeof data == "string" ) 
 			data = { title: data };
 		if( data.key == undefined )
 			data.key = "_" + tree._nodeCount++;
 		this.data = $.extend({}, $.ui.dynatree.nodedatadefaults, data);
-		this.parent = null; // not yet added to a parent
 		this.div = null; // not yet created
 		this.span = null; // not yet created
 		this.childList = null; // no subnodes yet
@@ -92,25 +92,25 @@ DynaTreeNode.prototype = {
 
 		if( tree.initMode == "cookie" ) {
 			// Init status from cookies
-			if( this.tree.initActiveKey == this.data.key )
-				this.tree.activeNode = this;
-			if( this.tree.initFocusKey == this.data.key )
-				this.tree.focusNode = this;
+			if( tree.initActiveKey == this.data.key )
+				tree.activeNode = this;
+			if( tree.initFocusKey == this.data.key )
+				tree.focusNode = this;
 			this.bExpanded = ($.inArray(this.data.key, this.tree.initExpandedKeys) >= 0);
 			this.bSelected = ($.inArray(this.data.key, this.tree.initSelectedKeys) >= 0);
 		} else {
 			// Init status from data (write to cookie after init phase)
 			if( data.activate )
-				this.tree.activeNode = this;
+				tree.activeNode = this;
 			if( data.focus )
-				this.tree.focusNode = this;
+				tree.focusNode = this;
 			this.bExpanded = ( data.expand == true ); // Collapsed by default
 			this.bSelected = ( data.select == true ); // Deselected by default
 		}
 		if( this.bExpanded )
-			this.tree.expandedNodes.push(this);
+			tree.expandedNodes.push(this);
 		if( this.bSelected )
-			this.tree.selectedNodes.push(this);
+			tree.selectedNodes.push(this);
 	},
 
 	toString: function() {
@@ -274,7 +274,8 @@ DynaTreeNode.prototype = {
 			firstChild.render(false, false);
 		} else {
 			data.isStatusNode = true;
-			firstChild = this._addChildNode(new DynaTreeNode(this.tree, data));
+//			firstChild = this._addChildNode(new DynaTreeNode(this, this.tree, data));
+			firstChild = this._addNode(data);
 		}
 	},
 
@@ -365,10 +366,10 @@ DynaTreeNode.prototype = {
 		// Select - but not focus - this node.
 //		logMsg("dtnode.activate(): %o", this);
 		var opts = this.tree.options;
-		if ( opts.onQueryActivate && opts.onQueryActivate.call(this.span, true, this) == false )
-			return; // Callback returned false
 		if( this.data.isStatusNode )
 			return;
+		if ( opts.onQueryActivate && opts.onQueryActivate.call(this.span, true, this) == false )
+			return; // Callback returned false
 		if( this.tree.activeNode ) {
 			if( this.tree.activeNode === this )
 				return;
@@ -435,6 +436,55 @@ DynaTreeNode.prototype = {
 			$(this.span).removeClass(this.tree.options.classNames.partsel);
 		}
 	},
+
+	_fixSelectionState: function() {
+		// fix selection status, for multi-hier mode 
+		logMsg("_fixSelectionState(%o) - %o", this.bSelected, this);
+		if( this.bSelected ) {
+			// Select all children
+			this.visit(function(dtnode){
+				dtnode.parent._setSubSel(true);
+				dtnode._select(true, false, false);
+			});
+			// Select parents, if all children are selected
+			var p = this.parent;
+			while( p ) {
+				p._setSubSel(true);
+				var allChildsSelected = true;
+				for(var i=0; i<p.childList.length;  i++) {
+					var n = p.childList[i]; 
+					if( !n.bSelected && !n.data.isStatusNode ) {
+						allChildsSelected = false;
+						break;
+					}
+				}
+				if( allChildsSelected )
+					p._select(true, false, false);
+				p = p.parent;
+			}
+		} else {
+			// Deselect all children
+			this._setSubSel(false);
+			this.visit(function(dtnode){
+				dtnode._setSubSel(false);
+				dtnode._select(false, false, false);
+			});
+			// Deselect parents, and recalc hasSubSel
+			var p = this.parent;
+			while( p ) {
+				p._select(false, false, false);
+				var isPartSel = false;
+				for(var i=0; i<p.childList.length;  i++) {
+					if( p.childList[i].bSelected || p.childList[i].hasSubSel ) {
+						isPartSel = true;
+						break;
+					}
+				}
+				p._setSubSel(isPartSel);
+				p = p.parent;
+			}
+		}
+	},
 	
 	_select: function(sel, fireEvents, deep) {
 		// Select - but not focus - this node.
@@ -461,28 +511,8 @@ DynaTreeNode.prototype = {
 		if( sel ) {
 			$(this.span).addClass(opts.classNames.selected);
 
-			if( deep && opts.selectMode==3 ) {
-				// Select all children
-				this.visit(function(dtnode){
-					dtnode.parent._setSubSel(true);
-					dtnode._select(true, false, false);
-				});
-				// Select parents, if all children are selected
-				var p = this.parent;
-				while( p ) {
-					p._setSubSel(true);
-					var allChildsSelected = true;
-					for(var i=0; i<p.childList.length;  i++) {
-						if( !p.childList[i].bSelected ) {
-							allChildsSelected = false;
-							break;
-						}
-					}
-					if( allChildsSelected )
-						p._select(true, false, false);
-					p = p.parent;
-				}
-			}
+			if( deep && opts.selectMode==3 )
+				this._fixSelectionState();
 
 			if ( fireEvents && opts.onSelect )
 				opts.onSelect.call(this.span, true, this);
@@ -490,29 +520,10 @@ DynaTreeNode.prototype = {
 		} else {
 			$(this.span).removeClass(opts.classNames.selected);
 
-	    	if( deep && opts.selectMode==3 ) {
-				// Deselect all children
-				this._setSubSel(false);
-				this.visit(function(dtnode){
-					dtnode._setSubSel(false);
-					dtnode._select(false, false, false);
-				});
-				// Deselect parents, and recalc hasSubSel
-				var p = this.parent;
-				while( p ) {
-					p._select(false, false, false);
-					var isPartSel = false;
-					for(var i=0; i<p.childList.length;  i++) {
-						if( p.childList[i].bSelected || p.childList[i].hasSubSel ) {
-							isPartSel = true;
-							break;
-						}
-					}
-					p._setSubSel(isPartSel);
-					p = p.parent;
-				}
-			}
-			if ( fireEvents && opts.onSelect )
+	    	if( deep && opts.selectMode==3 )
+				this._fixSelectionState();
+
+	    	if ( fireEvents && opts.onSelect )
 				opts.onSelect.call(this.span, false, this);
 		}
 	},
@@ -832,24 +843,26 @@ DynaTreeNode.prototype = {
 
 	_addChildNode: function (dtnode) {
 //		logMsg ("%o._addChildNode(%o)", this, dtnode);
+		var opts = this.tree.options;
 		if ( this.childList==null ) {
 			this.childList = new Array();
 		} else {
 			// Fix 'lastsib'
-			$(this.childList[this.childList.length-1].span).removeClass(this.tree.options.classNames.lastsib);
+			$(this.childList[this.childList.length-1].span).removeClass(opts.classNames.lastsib);
 		}
 
 		this.childList.push (dtnode);
-		dtnode.parent = this;
+		dtnode.parent = this; // TODO: only need to assert this
 
-		// Expand the parent, if
-		// 1. this is the root node, and the root node is invisible
-		// 2. this is the root node, and the root node is defined as always open
-		if ( ( (this.tree.options.minExpandLevel>0 || !this.tree.options.rootVisible) && this.parent==null )
-			 || ( dtnode.data.expand )
-			 ) {
+		// Expand the parent, if it's below minExpandLevel, or marked as expanded
+//		logMsg ("%o._addChildNode(%o), l=%o", this, dtnode, dtnode.getLevel());
+		if ( dtnode.data.expand || opts.minExpandLevel >= dtnode.getLevel() )
 			this.bExpanded = true;
-		}
+
+		// In multi-hier mode, update the parents selction state
+		if( !dtnode.data.isStatusNode && opts.selectMode==3 )
+			dtnode._fixSelectionState();
+
 		if ( this.tree.bEnableUpdate )
 			this.render(true, true);
 
@@ -857,9 +870,7 @@ DynaTreeNode.prototype = {
 	},
 
 	_addNode: function(data) {
-//		logMsg ("%o._addNode(%o)", this, data);
-		var dtnode = new DynaTreeNode(this.tree, data);
-		return this._addChildNode(dtnode);
+		return this._addChildNode(new DynaTreeNode(this, this.tree, data));
 	},
 
 	append: function(obj) {
@@ -926,7 +937,7 @@ DynaTree.version = "$Version:$";
 
 DynaTree.prototype = {
 	// Constructor
-	initialize: function(id, options) {
+	initialize: function(divContainer, options) {
 		// instance members
 		this.options = options;
 
@@ -970,9 +981,10 @@ DynaTree.prototype = {
 		};
 
 		// find container element
-		this.divTree = document.getElementById(id);
+//		this.divTree = document.getElementById(id);
+		this.divTree = divContainer;
 		// create the root element
-		this.tnRoot = new DynaTreeNode(this, {title: this.options.title, key: this.options.idPrefix+"root"});
+		this.tnRoot = new DynaTreeNode(null, this, {title: this.options.title, key: this.options.idPrefix+"root"});
 		this.tnRoot.data.isFolder = true;
 		this.tnRoot.render(false, false);
 		this.divRoot = this.tnRoot.div;
@@ -1043,8 +1055,19 @@ DynaTree.prototype = {
 		return this.activeNode;
 	},
 
-	getSelectedNodes: function() {
-		return this.selectedNodes;
+	getSelectedNodes: function(stopOnParents) {
+		if( stopOnParents == true ) {
+			var nodeList = [];
+			this.tnRoot.visit(function(dtnode){
+				if( dtnode.bSelected ) {
+					nodeList.push(dtnode);
+					return false; // stop processing this branch
+				}
+			});
+			return nodeList;
+		} else {
+			return this.selectedNodes;
+		}
 	},
 
 	activateKey: function(key) {
@@ -1168,13 +1191,15 @@ $.widget("ui.dynatree", {
 			});
 		}
 		// Attach the tree object to parent element
-		var id = $this.attr("id");
-		this.tree = new DynaTree(id, opts);
+//		var id = $this.attr("id");
+//		this.tree = new DynaTree(id, opts);
+		var divContainer = $this.get(0);
+		// Clear container, in case it contained some 'waiting' or 'error' message
+		$(divContainer).empty();
+		this.tree = new DynaTree(divContainer, opts);
 		var root = this.tree.getRoot();
 
 		// Init tree structure
-//		this.tree.isInitializing = true;
-
 		if( opts.children ) {
 			// Read structure from node array
 			root.append(opts.children);
@@ -1228,10 +1253,7 @@ $.widget("ui.dynatree", {
 			logMsg("Activate on init: %o", dtnode);
 			dtnode._userActivate();
 		}
-		
 		this.tree.initMode = "running";
-		
-//		logMsg("this.options: %o", this.options);
 	},
 
 	bind: function() {
@@ -1342,18 +1364,15 @@ $.ui.dynatree.getter = "getTree getRoot getActiveNode getSelectedNodes";
 $.ui.dynatree.defaults = {
 	title: "Dynatree root", // Name of the root node.
 	rootVisible: false, // Set to true, to make the root node visible.
-//	rootCollapsible: false, // Prevent root node from being collapsed.
  	minExpandLevel: 1, // 1: root node is not collapsible
 	imagePath: null, // Path to a folder containing icons. Defaults to 'skin/' subdirectory.
 	children: null, // Init tree structure from this object array.
 	initId: null, // Init tree structure from a <ul> element with this ID.
 	initAjax: null, // Ajax options used to initialize the tree strucuture.
-//	focusRoot: true, // Set focus to root node on init.
 	autoFocus: true, // Set focus to first child, when expanding or lazy-loading.
 	keyboard: true, // Support keyboard navigation.
     persist: false, // Persist expand-status to a cookie
 	autoCollapse: false, // Automatically collapse all siblings, when a node is expanded.
-//	expandOnAdd: false, // Automatically expand parent, when a child is added.
 	clickFolderMode: 3, // 1:activate, 2:expand, 3:activate and expand
 	activeVisible: true, // Make sure, active nodes are visible (expanded).
 	checkbox: false, // Show checkbox

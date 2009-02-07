@@ -835,9 +835,11 @@ $("#tree").dynatree({
 		If key is null, the current activation is removed.<br>
 		Return the active DynaTreeNode.
 	</dd>
-	<dt>getSelectedNodes()
+	<dt>getSelectedNodes(stopOnParents)
 	<dd>
-		Return a list of currently selected DynaTreeNodes (may be an empty array).
+		Return a list of currently selected DynaTreeNodes (may be an empty array).<br>
+		If stopOnParents is set to <code>true</code>, children of selected nodes 
+		are skipped. This may be convenient in selectMode:3 (multi-hier).
 	</dd>
 	<dt>isInitializing()
 	<dd>
@@ -955,7 +957,7 @@ $("#tree").dynatree({
 	<dt>visit(fn, data, includeSelf)
 	<dd>
 		Call <code>fn(dtnode, data)</code>  for all child nodes.<br>
-		Stop iteration, if fn() returns false.
+		Stop iteration of the current branch, if fn() returns false.
 	</dd>
 </dl>
 

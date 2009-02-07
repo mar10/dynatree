@@ -29,7 +29,7 @@
 			rootVisible: true,
 			rootCollapsible: false,
 			keyboard: true,
-			persist: true,
+//			persist: true,
 			clickFolderMode: 1, //3, //2,
 			checkbox: true,
 			selectMode: 3,
@@ -52,7 +52,8 @@
 									}
 									]
 						 },
-					{title: "Node 1.3", select: true }
+					{title: "Node 1.3", select: true },
+					{title: "Node 1.4", isLazy: true }
 					]
 					},
 				{title: "Node 2",
@@ -94,11 +95,23 @@
 			onCollapse: function(dtnode) {
 				logMsg("onCollapse(%o)", dtnode);
 			},
-/*			
+			
 			onLazyRead: function(dtnode) {
 				logMsg("onLazyRead(%o)", dtnode);
+				var fakeJsonResult = [
+  				    { title: 'Lazy node 1', isLazy: true, select: false },
+  				    { title: 'Simple node 2', select: true }
+  				];
+  				function fakeAjaxResponse() {
+  					return function() {
+  						dtnode.append(fakeJsonResult);
+  						// Remove the 'loading...' status:
+  						dtnode.setLazyNodeStatus(DTNodeStatus_Ok);
+  					};
+  				}
+  				window.setTimeout(fakeAjaxResponse(), 1500);
 			},
-*/
+
 			onFocus: function(dtnode) {
 				logMsg("onFocus(%o)", dtnode);
 				$("#echoFocused").text(dtnode.data.title);
@@ -139,6 +152,10 @@
 				logMsg("%o", dtnode);
 			});
 		});
+		$("#btnGetSelected").click(function(){
+			var nodeList = $("#tree").dynatree("getTree").getSelectedNodes(true);
+			logMsg(nodeList)
+		});
 		$("#btnSerialize").click(function(){
 			var dict = $("#tree").dynatree("getTree").toDict();
 			logMsg("Serialized: %o", dict);
@@ -163,7 +180,7 @@
 <body>
 	<P>This file is only temporarily used to reproduce issues.</P>
 	<p style="color: red;">Using doctype HTML 4.01 Strict.</p>
-	<div id='tree'> </div>
+	<div id="tree">ERROR: Tree could not be loaded (requires JavaScript)!</div>
 
 	<div>Active node: <span id="echoActive">-</span></div>
 	<div>Selected nodes: <span id="echoSelected">-</span></div>
@@ -177,6 +194,7 @@
         <button id="btnVisit">visit</button>
         <button id="btnSerialize">serialize</button>
         <button id="btnModify">Change node title</button>
+        <button id="btnGetSelected">Selected (stopOnParent)</button>
     </p>
 
 
