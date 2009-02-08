@@ -85,6 +85,8 @@
 				// Display list of selected nodes
 				var s = dtnode.tree.getSelectedNodes().join(", ");
 				$("#echoSelection3").text(s);
+				s = dtnode.tree.getSelectedNodes(true).join(", ");
+				$("#echoSelectionRoots3").text(s);
 			},
 			onDblClick: function(dtnode, event) {
 				dtnode.toggleSelect();
@@ -151,6 +153,7 @@
 	<div>Active node: <span id="echoActive1">-</span></div>
 	<div>Selection: <span id="echoSelection1">-</span></div>
 	
+	
 	<p class="description">
 		This tree has <b>multi-selection</b> enabled, but no checkboxes.<br>
 		A single-click handler selects the node. A keydown handler selects on [space].<br>
@@ -166,7 +169,8 @@
 		A double-click handler selects the node. A keydown handler selects on [space].
 	</p>
 	<div id="tree3"></div>
-	<div>Selection: <span id="echoSelection3">-</span></div>
+	<div>Selected nodes: <span id="echoSelection3">-</span></div>
+	<div>Selected root nodes: <span id="echoSelectionRoots3">-</span></div>
 		
 	<hr>
 	<p class="sample-links">
