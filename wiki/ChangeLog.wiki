@@ -8,6 +8,16 @@
 NOTE: This is under development (BETA status).
 See UpdateToVersion04 for some infos.
 
+===== 0.4 beta-2 =====
+
+  * Adding a node (e.g. by lazy read) now sets the multi-hier selection status correctly
+  * New parameter for tree.getSelectedNodes(stopOnParents)
+  * minExpandLevel > 1 now forces expansion when initializing 
+  * Clear container div on create, so we can put 'ERROR: need JavaScript' here
+  * Updated to jQuery 1.3.1 
+  * Downgraded to jQuery UI 1.5.3 (1.6 is not yet released)
+  * Example Browser
+  
 ===== Main changes =====
 
   * 'selected'/'select' was renamed to 'active'/'activate'<br>This is more precise and allowed implementation of the new selection feature.
