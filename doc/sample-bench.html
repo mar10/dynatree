@@ -19,6 +19,7 @@
     $(function(){
 		$("#tree").dynatree({
 			children: [
+				{title: "Add 100 nodes (flat, force update)...", isFolder: true, isLazy: true, mode: "add100_flat_u" },
 				{title: "Add 100 nodes (flat)...", isFolder: true, isLazy: true, mode: "add100_flat" },
 				{title: "Add 1.000 nodes (flat)...", isFolder: true, isLazy: true, mode: "add1000_flat" },
 				{title: "Add 1.000 nodes (deep)...", isFolder: true, isLazy: true, mode: "add1000_deep" },
@@ -31,27 +32,26 @@
 				var tree = dtnode.tree;
 				logMsg("Benchmarking mode='" + dtnode.data.mode + "'...");
 				switch( dtnode.data.mode ) {
+					case "add100_flat_u":
+						addNodes(dtnode, 100, 0, 0, true)
+						break;
 					case "add100_flat":
 						addNodes(dtnode, 100, 0, 0)
 						break;
 					case "add1000_flat":
-						tree.enableUpdate (false);
 						addNodes(dtnode, 1000, 0, 0)
-						tree.enableUpdate (true);
 						break;
 					case "add1000_deep":
-						tree.enableUpdate (false);
 						addNodes(dtnode, 10, 10, 10)
-						tree.enableUpdate (true);
 						break;
 					case "add10000_deep":
-						tree.enableUpdate (false);
 						addNodes(dtnode, 10, 100, 10)
-						tree.enableUpdate (true);
 						break;
 				}
-				dtnode.setLazyNodeStatus(DTNodeStatus_Ok);
+//				dtnode.setLazyNodeStatus(DTNodeStatus_Ok);
 				logMsg("Benchmarking mode='" + dtnode.data.mode + "' done.");
+				// Return true, to show we're finished
+				return true;
 			}
 		});
 
@@ -62,7 +62,10 @@
 		});
 	});
 
-	function addNodes(dtnode, level1, level2, level3) {
+	function addNodes(dtnode, level1, level2, level3, forceUpdate) {
+		if( forceUpdate != true )
+			dtnode.tree.enableUpdate(false);
+		
 		var key;
 		for (var i=0; i<level1; i++) {
 			key = "" + (i+1);
@@ -83,6 +86,7 @@
 				}
 			}
 		}
+		dtnode.tree.enableUpdate(true);
 	}
 
     </script>
