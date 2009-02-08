@@ -2,15 +2,18 @@
 <html>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
-	<title>dynatree sample - 2</title>
+	<title>Dynatree - Example</title>
 
 	<script src='../jquery/jquery.js' type='text/javascript'></script>
 	<script src='../jquery/ui.core.js' type='text/javascript'></script>
     <script src='../jquery/jquery.cookie.js' type='text/javascript'></script>
 
-	<link href='../src/skin/ui.dynatree.css' rel='stylesheet' type='text/css' >
+	<link href='../src/skin/ui.dynatree.css' rel='stylesheet' type='text/css'>
 	<script src='../src/jquery.dynatree.js' type='text/javascript'></script>
 
+	<link href='sample.css' rel='stylesheet' type='text/css'>
+    <script src='sample.js' type='text/javascript'></script>
+    
 <script type='text/javascript'>
 	$(function(){
 		// Initialize the tree inside the <div>element.
@@ -106,11 +109,13 @@
 </script>
 </head>
 
-<body>
-	<h1>Advanced Dynatree example</h1>
-	<p>
-	Note: this example uses a data attribute in some places, so it is not strictly compliant. 
+<body class="example">
+	<h1>Example: Programming</h1>
+	<p class="description">
+		Note: this example uses a data attribute in some places, so it is not 
+		strictly compliant. 
 	</p>
+	
 	<div id="tree">
 		<ul>
 			<li>This simple node (and the following) have been created from html.
@@ -167,6 +172,11 @@
 		<button id="btnActiveNode">Activate item id4.3.2</button>
 		<button id="btnShowActive">Show active node...</button>
 	</p>
-	<p><a href="http://dynatree.googlecode.com">jquery.dynatree.js</a> - <a href="sample-misc.html">Example overview</a></p>
+	<hr>
+	<p class="sample-links">
+		<a class="hideInsideFS" href="http://dynatree.googlecode.com">jquery.dynatree.js project home</a>
+		&nbsp; <a class="hideOutsideFS" href="#">Link to this page</a>
+		&nbsp; <a class="hideInsideFS" href="samples.html">Example Browser</a>
+	 </p>
 </body>
 </html>

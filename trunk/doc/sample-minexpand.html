@@ -2,16 +2,18 @@
 <html>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+	<title>Dynatree - Example</title>
 
-	<title>dynatree - Quick example</title>
-    <!-- Include the required JavaScript libraries: -->
-    <script src='../jquery/jquery.js' type='text/javascript'></script>
-    <script src='../jquery/ui.core.js' type='text/javascript'></script>
+	<script src='../jquery/jquery.js' type='text/javascript'></script>
+	<script src='../jquery/ui.core.js' type='text/javascript'></script>
     <script src='../jquery/jquery.cookie.js' type='text/javascript'></script>
 
-    <link rel='stylesheet' type='text/css' href='../src/skin/ui.dynatree.css' >
+	<link href='../src/skin/ui.dynatree.css' rel='stylesheet' type='text/css'>
 	<script src='../src/jquery.dynatree.js' type='text/javascript'></script>
 
+	<link href='sample.css' rel='stylesheet' type='text/css'>
+    <script src='sample.js' type='text/javascript'></script>
+    
     <!-- Add code to initialize the tree when the document is loaded: -->
     <script type='text/javascript'>
     $(function(){
@@ -68,25 +70,33 @@
     });
     </script>
 </head>
-<body>
+
+<body class="example">
+	<h1>Example: Expand level</h1>
+
     <!-- Add a <div> element where the tree should appear: -->
-    <p>Root visible, minExpandLevel=0</p>
+	<p class="description">Root visible, minExpandLevel=0</p>
     <div id="tree1"> </div>
 
 	<hr>
-    <p>Root visible, minExpandLevel=1</p>
+    <p class="description">Root visible, minExpandLevel=1</p>
     <div id="tree2"> </div>
 
 	<hr>
-    <p>Root hidden, minExpandLevel=1<br>
+    <p class="description">Root hidden, minExpandLevel=1<br>
     This is the default option:</p>
     <div id="tree3"> </div>
 
 	<hr>
-    <p>Root hidden, minExpandLevel=2<br>
+    <p class="description">Root hidden, minExpandLevel=2<br>
     Note, that you cannot collapse the top-level nodes:</p>
     <div id="tree4"> </div>
 
-	<p><a href="http://dynatree.googlecode.com">jquery.dynatree.js</a> - <a href="sample-misc.html">Example overview</a></p>
+	<hr>
+	<p class="sample-links">
+		<a class="hideInsideFS" href="http://dynatree.googlecode.com">jquery.dynatree.js project home</a>
+		&nbsp; <a class="hideOutsideFS" href="#">Link to this page</a>
+		&nbsp; <a class="hideInsideFS" href="samples.html">Example Browser</a>
+	 </p>
 </body>
 </html>
