@@ -1,19 +1,23 @@
 /*************************************************************************
-	jquery.toc.js
-	Generates a table of contents from <Hn> elements.
-
-	(c) 2008 martin@wwWendt.de
+	(c) 2008-2009 Martin Wendt
  *************************************************************************/
 
 $(function(){
-	// replace tabs insode <pre> with 4 spaces, because browsers use 8 characters
+	// Replace tabs insode <pre> with 4 spaces, because browsers use 8 characters
 	$("pre.codesample, div.codesample pre, pre.prettyprint").each(function(){
 		var text = $(this).text();
 		text2 = text.replace(/\t/g, "    ");
-//		alert(text2);
 		$(this).text(text2)
 	});
+	
+	// Show some elements only, if (not) inside the Example Browser
+	if (top.location == self.location) 
+		$(".hideOutsideFS").hide();
+	else
+		$(".hideInsideFS").hide();
 });
+
+
 (function($) {
 
 $.widget("ui.toc", {

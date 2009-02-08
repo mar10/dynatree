@@ -2,8 +2,8 @@
 <html>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+	<title>Dynatree - Example</title>
 
-	<title>jquery.dynatree - Context Menu Example</title>
 	<script src='../jquery/jquery.js' type='text/javascript'></script>
 	<script src='../jquery/ui.core.js' type='text/javascript'></script>
     <script src='../jquery/jquery.cookie.js' type='text/javascript'></script>
@@ -11,9 +11,9 @@
 	<link href='../src/skin/ui.dynatree.css' rel='stylesheet' type='text/css'>
 	<script src='../src/jquery.dynatree.js' type='text/javascript'></script>
 
-	<link href='../src/skin/ui.dynatree.css' rel='stylesheet' type='text/css'>
-	<script src='../src/jquery.dynatree.js' type='text/javascript'></script>
-	
+	<link href='sample.css' rel='stylesheet' type='text/css'>
+    <script src='sample.js' type='text/javascript'></script>
+    
     <!-- jquery.contextmenu (using online libs ) -->
 	<script src="http://abeautifulsite.net/notebook_files/80/jquery.contextMenu.js" type="text/javascript"></script>
 	<link href="http://abeautifulsite.net/notebook_files/80/jquery.contextMenu.css" rel="stylesheet" type="text/css" >
@@ -61,13 +61,13 @@
 </script>
 </head>
 
-<body>
-	<h1>jquery.dynatree - Context Menu Example</h1>
-	<p>This sample uses the jQuery Context Menu Plugin by Cory S.N. LaViska.<br>
+<body class="example">
+	<h1>Example: Context Menu</h1>
+	<p class="description">
+		This sample uses the jQuery Context Menu Plugin by Cory S.N. LaViska.<br>
 		Visit http://abeautifulsite.net/notebook/80 for usage and more information.<br>
-		(An online connection is required, because this lib is included from the server.) 
-	</p>
-    <p>
+		(An online connection is required, because this lib is included from the server.)
+		<br> 
 		Right-click a document node and see what happens.<br>
     	Also [space] key is supported.
 	</p>
@@ -105,6 +105,11 @@
 
 	<div>Selected node: <span id="echoActivated">-</span></div>
 
-	<p><a href="http://dynatree.googlecode.com">jquery.dynatree.js</a> - <a href="sample-misc.html">Example overview</a></p>
+	<hr>
+	<p class="sample-links">
+		<a class="hideInsideFS" href="http://dynatree.googlecode.com">jquery.dynatree.js project home</a>
+		&nbsp; <a class="hideOutsideFS" href="#">Link to this page</a>
+		&nbsp; <a class="hideInsideFS" href="samples.html">Example Browser</a>
+	 </p>
 </body>
 </html>
