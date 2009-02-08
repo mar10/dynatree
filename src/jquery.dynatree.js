@@ -1164,7 +1164,7 @@ TODO: better?
 $.widget("ui.dynatree", {
 	init: function() {
         // ui.core 1.6 renamed init() to _init(): this stub assures backward compatibility
-        logMsg("ui.dynatree.init() was called, you should upgrade to ui.core.js v1.6 or higher.");
+//        logMsg("ui.dynatree.init() was called, you should upgrade to ui.core.js v1.6 or higher.");
         return this._init();
     },
 
@@ -1194,8 +1194,12 @@ $.widget("ui.dynatree", {
 //		var id = $this.attr("id");
 //		this.tree = new DynaTree(id, opts);
 		var divContainer = $this.get(0);
-		// Clear container, in case it contained some 'waiting' or 'error' message
-		$(divContainer).empty();
+
+		// Clear container, in case it contained some 'waiting' or 'error' 
+		// for clients that don't support JS
+		if( opts.children || (opts.initAjax && opts.initAjax.url) || opts.initId )
+			$(divContainer).empty();
+
 		this.tree = new DynaTree(divContainer, opts);
 		var root = this.tree.getRoot();
 
