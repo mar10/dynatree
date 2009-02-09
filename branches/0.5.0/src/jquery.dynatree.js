@@ -84,8 +84,9 @@ DynaTreeNode.prototype = {
 		if( data.key == undefined )
 			data.key = "_" + tree._nodeCount++;
 		this.data = $.extend({}, $.ui.dynatree.nodedatadefaults, data);
-		this.div = null; // not yet created
+		this.li = null; // not yet created
 		this.span = null; // not yet created
+		this.ul = null; // not yet created
 		this.childList = null; // no subnodes yet
 		this.isRead = false; // Lazy content not yet read
 		this.hasSubSel = false;
@@ -181,61 +182,78 @@ DynaTreeNode.prototype = {
 		return res;
 	},
 
-	render: function(bDeep, bHidden) {
+	render: function() {
 		/**
-		 * create <div><span>..</span> .. </div> tags for this node.
+		 * create <li><span>..</span> .. </li> tags for this node.
 		 * 
-		 * <div> // This div contains the node's span and list of child div's.
-		 *   <span>S S S A</span> // Span contains graphic spans and title <a> tag 
-		 *   <div>child1</div>
-		 *   <div>child2</div>
-		 * </div>
+		 * <li id='key'> // This div contains the node's span and list of child div's.
+		 *   <span class='title'>S S S A</span> // Span contains graphic spans and title <a> tag 
+		 *   <ul> // only present, when node has childs 
+		 *   	<li>child1</li>
+		 *   	<li>child2</li>
+		 *   </ul>
+		 * </li>
 		 */
-//		logMsg("%o.render()", this);
+//		logMsg("render() - %o", this);
 		// --- 
-		if( ! this.div ) {
-			this.span = document.createElement("span");
-			this.span.dtnode = this;
-			if( this.data.key )
-				this.span.id = this.tree.options.idPrefix + this.data.key;
+		var opts = this.tree.options;
+		var cn = opts.classNames;
 
-			this.div  = document.createElement("div");
-			this.div.appendChild(this.span);
-			if ( this.parent )
-				this.parent.div.appendChild(this.div);
+		if( !this.parent && !this.ul ) {
+			// Root node has only a <ul>
+			this.li = this.span = null;
+			this.ul = document.createElement("ul");
+			this.ul.className = cn.container;
 
-			if( this.parent==null && !this.tree.options.rootVisible )
-				this.span.style.display = "none";
+		} else if( this.parent ) {
+			// Create <li><span /> </li>
+			if( ! this.li ) {
+				this.li = document.createElement("li");
+				this.li.dtnode = this;
+				if( this.data.key )
+					this.li.id = opts.idPrefix + this.data.key;
+	
+				this.span = document.createElement("span");
+				this.span.className = cn.title;
+				this.li.appendChild(this.span);
+				
+				if( !this.parent.ul ) {
+					this.parent.ul = document.createElement("ul");
+					this.parent.li.appendChild(this.parent.ul);
+				}
+				this.parent.ul.appendChild(this.li); 
+			}
+			// set node connector images, links and text
+			this.span.innerHTML = this._getInnerHtml();
+	
+			// Set classes for current status
+			var cnList = [];
+			cnList.push( ( this.data.isFolder ) ? cn.folder : cn.document );
+			if( this.bExpanded )
+				cnList.push(cn.expanded);
+			if( this.data.isLazy && !this.isRead )
+				cnList.push(cn.lazy);
+			if( this.isLastSibling() )
+				cnList.push(cn.lastsib);
+			if( this.bSelected )
+				cnList.push(cn.selected);
+			if( this.hasSubSel )
+				cnList.push(cn.partsel);
+			if( this.tree.activeNode === this )
+				cnList.push(cn.active);
+			if( this.data.addClass )
+				cnList.push(this.data.addClass);
+			this.span.className = cnList.join(" ");
+
+			// Hide children, if node is collapsed
+			if( this.ul ) {
+				this.ul.style.display = ( this.bExpanded || !this.parent ) ? "" : "none";
+			}
 		}
-		// set node connector images, links and text
-		this.span.innerHTML = this._getInnerHtml();
 
-		// hide this node, if parent is collapsed
-		this.div.style.display = ( this.parent==null || this.parent.bExpanded ? "" : "none");
-
-		// Set classes for current status
-		var cn = this.tree.options.classNames;
-		var cnList = [];
-		cnList.push( ( this.data.isFolder ) ? cn.folder : cn.document );
-		if( this.bExpanded )
-			cnList.push(cn.expanded);
-		if( this.data.isLazy && !this.isRead )
-			cnList.push(cn.lazy);
-		if( this.isLastSibling() )
-			cnList.push(cn.lastsib);
-		if( this.bSelected )
-			cnList.push(cn.selected);
-		if( this.hasSubSel )
-			cnList.push(cn.partsel);
-		if( this.tree.activeNode === this )
-			cnList.push(cn.active);
-		if( this.data.addClass )
-			cnList.push(this.data.addClass);
-		this.span.className = cnList.join(" ");
-
-		if( bDeep && this.childList && (bHidden || this.bExpanded) ) {
+		if( this.bExpanded ) {
 			for(var i=0; i<this.childList.length; i++) {
-				this.childList[i].render(bDeep, bHidden)
+				this.childList[i].render();
 			}
 		}
 	},
@@ -562,7 +580,7 @@ DynaTreeNode.prototype = {
 		}
 		var opts = this.tree.options;
 		if( !bExpand && this.getLevel()<opts.minExpandLevel ) {
-			logMsg("dtnode._expand(%o) forced expand - %o", bExpand, this);
+			logMsg("dtnode._expand(%o) prevented collapse - %o", bExpand, this);
 			return;
 		}
 		if ( opts.onQueryExpand && opts.onQueryExpand.call(this.span, bExpand, this) == false )
@@ -614,12 +632,16 @@ DynaTreeNode.prototype = {
 
 		if( opts.fx ) {
 			var duration = opts.fx.duration || 200;
-			$(">DIV", this.div).animate(opts.fx, duration);
+//			$(">DIV", this.div).animate(opts.fx, duration);
+			$(this.ul).animate(opts.fx, duration);
 		} else {
 //			$(">DIV", this.div).toggle();
-			var $d = $(">DIV", this.div);
+//			this.ul.style.display = bExpand ? "" : "none";
+//			$(this.ul).toggle();
+			this.render();
+//			var $d = $(">DIV", this.div);
 			logMsg("_expand: got div, start toggle - %o", this);
-			$d.toggle();
+//			$d.toggle();
 		}
 		logMsg("_expand: end div toggle - %o", this);
 	},
@@ -1001,14 +1023,11 @@ DynaTree.prototype = {
 
 		// find container element
 		this.divTree = divContainer;
+
 		// create the root element
-		this.tnRoot = new DynaTreeNode(null, this, {title: this.options.title, key: this.options.idPrefix+"root"});
-		this.tnRoot.data.isFolder = true;
+		this.tnRoot = new DynaTreeNode(null, this, {});
 		this.tnRoot.render(false, false);
-		this.divRoot = this.tnRoot.div;
-		this.divRoot.className = this.options.classNames.container;
-		// add root to container
-		this.divTree.appendChild(this.divRoot);
+		this.divTree.appendChild(this.tnRoot.ul);
 	},
 
 	// member functions
@@ -1498,3 +1517,4 @@ $.ui.dynatree.nodedatadefaults = {
 
 // ---------------------------------------------------------------------------
 })(jQuery);
+
