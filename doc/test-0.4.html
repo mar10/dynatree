@@ -194,8 +194,8 @@
 				});
 			logMsg("cb=%o", clipboard);
 			var node11 = tree.getNodeByKey("11");
-			node11.append([clipboard]);  // beta-2: we need [] to force creation of sub-nodes
-			logMsg("target=%o", node11.toDict());
+			node11.append(clipboard);  // beta-2: we need [] to force creation of sub-nodes
+			logMsg("target2=%o", node11.toDict());
 			
           	//dtnode.data.title = "New title: " + Date();
 	        //dtnode.render();           
