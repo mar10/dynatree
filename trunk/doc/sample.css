@@ -27,8 +27,19 @@ p.sample-links a:visited
 {
 	color: navy;
 	text-decoration: none;
+	margin-left: 15px;
+	padding: 1px 3px;
+/*	border: 1pt solid white;*/
 }
 p.sample-links a:hover
 {
 	text-decoration: underline;
+}
+
+pre{
+  background:#eee;
+  border:1px solid #999;
+  padding:.5em;
+  margin:.5em;
+  font-size:.9em;
 }
