@@ -912,7 +912,8 @@ DynaTreeNode.prototype = {
 		if( !obj || obj.length==0 ) // Passed null or undefined or empty array
 			return;
 		if( !obj.length ) // Passed a single node
-			return this._addNode(obj);
+			obj = [ obj ];
+//			return this._addNode(obj);
 
 		var prevFlag = this.tree.enableUpdate(false);
 
