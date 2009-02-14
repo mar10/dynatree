@@ -576,7 +576,7 @@ $("#tree").dynatree({
 </p>
 
 <div class="codesample">
-	<a href="sample-2.html">Try this example...</a>
+	<a href="sample-api.html">Try this example...</a>
 <pre class="prettyprint">
 $(function(){
 	// Initialize the tree in the onload event
@@ -859,9 +859,15 @@ $("#tree").dynatree({
 		Select or deselect node with a given key and fire focus and select events.<br>
 		Return the selected DynaTreeNode.
 	</dd>
-	<dt>toDict()
+	<dt>toDict(recursive, callback)
 	<dd>
-		Convert the tree into a JavaScript object.
+		Convert the tree into a JavaScript object.<br>
+		<code>recursive</code>: set to true, to include child nodes.<br>
+		<code>callback</code>: (optional) function to allow modifications.<br>
+		Example <pre>var cb = node.toDict(true, function(dict){
+    dict.title = "Copy of " + dict.title;
+    delete dict.key; // prevent duplicate keys
+});</pre>
 	</dd>
 </dl>
 

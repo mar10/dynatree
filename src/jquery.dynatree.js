@@ -117,16 +117,18 @@ DynaTreeNode.prototype = {
 		return "dtnode<" + this.data.key + ">: '" + this.data.title + "'";
 	},
 
-	toDict: function(recursive) {
+	toDict: function(recursive, callback) {
 		var dict = $.extend({}, this.data);
 		dict.activate = ( this.tree.activeNode === this );
 		dict.focus = ( this.tree.focusNode === this );
 		dict.expand = this.bExpanded;
 		dict.select = this.bSelected;
+		if( callback )
+			callback(dict);
 		if( recursive && this.childList ) {
 			dict.children = [];
 			for(var i=0; i<this.childList.length; i++ )
-				dict.children.push(this.childList[i].toDict(true));
+				dict.children.push(this.childList[i].toDict(true, callback));
 		} else {
 			delete dict.children;
 		}
