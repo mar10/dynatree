@@ -258,6 +258,12 @@ $("#tree").dynatree({
 	},
 	idPrefix: "ui-dynatree-id-", // Used to generate node id's like &lt;span id="ui-dynatree-id-&lt;key>">.
     cookieId: "ui-dynatree-cookie", // Choose a more unique name, to allow multiple trees.
+	cookie: { // Options passed to $.cookie (see jquery.cookie.js)
+		expires: null, // Days or Date; null: session cookie
+		path: undefined, // String; Defaults to current page
+		domain: undefined, // String; Defaults to creator's domain
+		secure: undefined // Boolean; Defaults to false
+	},
 });
 </pre>
 
