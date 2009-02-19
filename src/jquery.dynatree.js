@@ -392,7 +392,7 @@ DynaTreeNode.prototype = {
 			this.makeVisible();
 		this.tree.activeNode = this;
         if( opts.persist )
-			$.cookie(opts.cookieId+"-active", this.data.key);
+			$.cookie(opts.cookieId+"-active", this.data.key, opts.cookie);
 		$(this.span).addClass(opts.classNames.active);
 		if ( opts.onActivate ) // Pass element as 'this' (jQuery convention)
 			opts.onActivate.call(this.span, this);
@@ -406,7 +406,7 @@ DynaTreeNode.prototype = {
 				return; // Callback returned false
 			$(this.span).removeClass(opts.classNames.active);
 	        if( opts.persist )
-				$.cookie(opts.cookieId+"-active", "");
+				$.cookie(opts.cookieId+"-active", "", opts.cookie);
 			this.tree.activeNode = null;
 			if ( opts.onDeactivate )
 				opts.onDeactivate.call(this.span, this);
@@ -763,7 +763,7 @@ DynaTreeNode.prototype = {
 				$(this.tree.tnFocused.span).removeClass(opts.classNames.focused);
 			this.tree.tnFocused = null;
 	        if( opts.persist )
-				$.cookie(opts.cookieId+"-focus", null);
+				$.cookie(opts.cookieId+"-focus", null, opts.cookie);
 		} else if ( event.type=="focus" || event.type=="focusin") {
 			// Fix: sometimes the blur event is not generated
 			if( this.tree.tnFocused && this.tree.tnFocused !== this ) {
@@ -775,7 +775,7 @@ DynaTreeNode.prototype = {
 				opts.onFocus.call(this.span, this);
 			$(this.tree.tnFocused.span).addClass(opts.classNames.focused);
 	        if( opts.persist )
-				$.cookie(opts.cookieId+"-focus", this.data.key);
+				$.cookie(opts.cookieId+"-focus", this.data.key, opts.cookie);
 		}
 		// TODO: return anything?
 //		return false;
@@ -984,6 +984,8 @@ DynaTree.prototype = {
 			this.initFocusKey = $.cookie(this.options.cookieId + "-focus");
 
 			var cookie = $.cookie(this.options.cookieId + "-expand");
+            if( cookie != null )
+                this.initMode = "cookie";
 			this.initExpandedKeys = cookie ? cookie.split(",") : [];
 
 			cookie = $.cookie(this.options.cookieId + "-select");
@@ -1048,8 +1050,8 @@ DynaTree.prototype = {
 //		logMsg("  -->: nodeList:%o", nodeList);
 		if( this.options.persist ) {
 			var keyList = $.map(nodeList, function(e,i){return e.data.key});
-//			logMsg("_changeNodeList: write cookie <%s> = '%s'", cookieName, keyList.join("', '"));
-			$.cookie(cookieName, keyList.join(","));
+			logMsg("_changeNodeList: write cookie <%s> = '%s'", cookieName, keyList.join("', '"));
+			$.cookie(cookieName, keyList.join(","), this.options.cookie);
 		} else {
 //			logMsg("_changeNodeListCookie: %o", nodeList);
 		}
@@ -1444,6 +1446,13 @@ $.ui.dynatree.defaults = {
 	},
 	idPrefix: "ui-dynatree-id-", // Used to generate node id's like <span id="ui-dynatree-id-<key>">.
     cookieId: "ui-dynatree-cookie", // Choose a more unique name, to allow multiple trees.
+	cookie: {
+		expires: null //7, // Days or Date; null: session cookie
+//		path: "/", // Defaults to current page
+//		domain: "jquery.com",
+//		secure: true
+	},
+    
 	classNames: {
 		container: "ui-dynatree-container",
 		folder: "ui-dynatree-folder",
