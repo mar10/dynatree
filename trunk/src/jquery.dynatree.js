@@ -22,22 +22,44 @@
 /*************************************************************************
  *	Debug functions
  */
-var _bDebug = false;
-_bDebug = true;
 
-function logMsg(msg) {
-	// Usage: logMsg("%o was toggled", this);
-	if ( _bDebug  && window.console && window.console.log ) {
-		var dt = new Date();
-		var tag = dt.getHours()+":"+dt.getMinutes()+":"+dt.getSeconds()+"."+dt.getMilliseconds();
-		arguments[0] = tag + " - " + arguments[0];
-		try {
-			window.console.log.apply(window.console, arguments);
-		} catch(e) {
-			//window.console.log(e);
+var _canLog = true;
+
+function _log(mode, msg) {
+	/**
+	 * Usage: logMsg("%o was toggled", this);
+	 */
+	if( !_canLog ) 
+		return;
+	// Remove first argument
+	var args = Array.prototype.slice.apply(arguments, [1]); 
+	// Prepend timestamp
+	var dt = new Date();
+	var tag = dt.getHours()+":"+dt.getMinutes()+":"+dt.getSeconds()+"."+dt.getMilliseconds();
+	args[0] = tag + " - " + args[0];
+
+	try {
+		switch( mode ) {
+		case "info":
+			window.console.info.apply(window.console, args);
+			break;
+		case "warn":
+			window.console.warn.apply(window.console, args);
+			break;
+		default:
+			window.console.log.apply(window.console, args);
 		}
+	} catch(e) {
+		if( !window.console )
+			_canLog = false; // Permanently disable, when logging is not supported by the browser 
 	}
 }
+
+function logMsg(msg) {
+	Array.prototype.unshift.apply(arguments, ["debug"]);
+	_log.apply(this, arguments);
+}
+
 
 /*************************************************************************
  *	Constants
@@ -61,14 +83,6 @@ var Class = {
 		}
 	}
 }
-/*
-Array.prototype.remove = function(from, to) {
-	// Array Remove - By John Resig (MIT Licensed)
-	var rest = this.slice((to || from) + 1 || this.length);
-	this.length = from < 0 ? this.length + from : from;
-	return this.push.apply(this, rest);
-};
-*/
 
 /*************************************************************************
  *	Class DynaTreeNode
@@ -193,7 +207,7 @@ DynaTreeNode.prototype = {
 		 *   <div>child2</div>
 		 * </div>
 		 */
-//		logMsg("%o.render()", this);
+//		this.tree.logDebug("%o.render()", this);
 		// --- 
 		if( ! this.div ) {
 			this.span = document.createElement("span");
@@ -364,7 +378,7 @@ DynaTreeNode.prototype = {
 
 	focus: function() {
 		// TODO: check, if we already have focu
-//		logMsg("dtnode.focus(): %o", this);
+//		this.tree.logDebug("dtnode.focus(): %o", this);
 		this.makeVisible();
 		try {
 			$(this.span).find(">a").focus();
@@ -377,7 +391,7 @@ DynaTreeNode.prototype = {
 	
 	activate: function() {
 		// Select - but not focus - this node.
-//		logMsg("dtnode.activate(): %o", this);
+//		this.tree.logDebug("dtnode.activate(): %o", this);
 		var opts = this.tree.options;
 		if( this.data.isStatusNode )
 			return;
@@ -399,7 +413,7 @@ DynaTreeNode.prototype = {
 	},
 
 	deactivate: function() {
-//		logMsg("dtnode.deactivate(): %o", this);
+//		this.tree.logDebug("dtnode.deactivate(): %o", this);
 		if( this.tree.activeNode === this ) {
 			var opts = this.tree.options;
 			if ( opts.onQueryActivate && opts.onQueryActivate.call(this.span, false, this) == false )
@@ -452,7 +466,7 @@ DynaTreeNode.prototype = {
 
 	_fixSelectionState: function() {
 		// fix selection status, for multi-hier mode 
-//		logMsg("_fixSelectionState(%o) - %o", this.bSelected, this);
+//		this.tree.logDebug("_fixSelectionState(%o) - %o", this.bSelected, this);
 		if( this.bSelected ) {
 			// Select all children
 			this.visit(function(dtnode){
@@ -501,13 +515,13 @@ DynaTreeNode.prototype = {
 	
 	_select: function(sel, fireEvents, deep) {
 		// Select - but not focus - this node.
-//		logMsg("dtnode._select(%o) - %o", sel, this);
+//		this.tree.logDebug("dtnode._select(%o) - %o", sel, this);
 		var opts = this.tree.options;
 		if( this.data.isStatusNode )
 			return;
 		// 
 		if( this.bSelected == sel ) {
-//			logMsg("dtnode._select(%o) IGNORED - %o", sel, this);
+//			this.tree.logDebug("dtnode._select(%o) IGNORED - %o", sel, this);
 			return;
 		}
 		// Allow event listener to abort selection
@@ -547,24 +561,24 @@ DynaTreeNode.prototype = {
 	
 	select: function(sel) {
 		// Select - but not focus - this node.
-//		logMsg("dtnode.select(%o) - %o", sel, this);
+//		this.tree.logDebug("dtnode.select(%o) - %o", sel, this);
 		return this._select(sel!=false, true, true);
 	},
 
 	toggleSelect: function() {
-//		logMsg("dtnode.toggleSelect() - %o", this);
+//		this.tree.logDebug("dtnode.toggleSelect() - %o", this);
 		return this.select(!this.bSelected);
 	},
 
 	_expand: function(bExpand) {
-//		logMsg("dtnode._expand(%o) - %o", bExpand, this);
+//		this.tree.logDebug("dtnode._expand(%o) - %o", bExpand, this);
 		if( this.bExpanded == bExpand ) {
-//			logMsg("dtnode._expand(%o) IGNORED - %o", bExpand, this);
+//			this.tree.logDebug("dtnode._expand(%o) IGNORED - %o", bExpand, this);
 			return;
 		}
 		var opts = this.tree.options;
 		if( !bExpand && this.getLevel()<opts.minExpandLevel ) {
-			logMsg("dtnode._expand(%o) forced expand - %o", bExpand, this);
+			this.tree.logDebug("dtnode._expand(%o) forced expand - %o", bExpand, this);
 			return;
 		}
 		if ( opts.onQueryExpand && opts.onQueryExpand.call(this.span, bExpand, this) == false )
@@ -588,7 +602,7 @@ DynaTreeNode.prototype = {
 		// TODO: doesn't make sense here(?) we should check if the currently focused node (not <this>) is visible.
 		// At the moment, _expand gets only called, after focus was set to <this>.
 		if( ! this.bExpanded && ! this.isVisible() ) {
-			logMsg("Focus became invisible: setting to this.");
+			this.tree.logDebug("Focus became invisible: setting to this.");
 			this.focus();
 		}
 		// If currently active node is now hidden, deactivate it
@@ -598,21 +612,21 @@ DynaTreeNode.prototype = {
 		// Expanding a lazy node: set 'loading...' and call callback
 		if( bExpand && this.data.isLazy && !this.isRead ) {
 			try {
-				logMsg("_expand: start lazy - %o", this);
+				this.tree.logDebug("_expand: start lazy - %o", this);
 				this.setLazyNodeStatus(DTNodeStatus_Loading);
 				if( true == opts.onLazyRead.call(this.span, this) ) {
 					// If function returns 'true', we assume that the loading is done:
 					this.setLazyNodeStatus(DTNodeStatus_Ok);
 					// Otherwise (i.e. if the loading was started as an asynchronous process)
 					// the onLazyRead(dtnode) handler is expected to call dtnode.setLazyNodeStatus(DTNodeStatus_Ok/_Error) when done.
-					logMsg("_expand: lazy succeeded - %o", this);
+					this.tree.logDebug("_expand: lazy succeeded - %o", this);
 				}
 			} catch(e) {
 				this.setLazyNodeStatus(DTNodeStatus_Error);
 			}
 			return;
 		}
-		logMsg("_expand: start div toggle - %o", this);
+		this.tree.logDebug("_expand: start div toggle - %o", this);
 
 		if( opts.fx ) {
 			var duration = opts.fx.duration || 200;
@@ -620,20 +634,20 @@ DynaTreeNode.prototype = {
 		} else {
 //			$(">DIV", this.div).toggle();
 			var $d = $(">DIV", this.div);
-			logMsg("_expand: got div, start toggle - %o", this);
+			this.tree.logDebug("_expand: got div, start toggle - %o", this);
 			$d.toggle();
 		}
-		logMsg("_expand: end div toggle - %o", this);
+		this.tree.logDebug("_expand: end div toggle - %o", this);
 	},
 
 	toggleExpand: function() {
-//		logMsg("toggleExpand("+this.data.title+")...");
+//		this.tree.logDebug("toggleExpand("+this.data.title+")...");
 		if( !this.childList && !this.data.isLazy )
 			return;
 		if( this.parent == null && this.tree.options.minExpandLevel>0 && this.bExpanded)
 			return; // Prevent collapsing the root
 		this._expand( ! this.bExpanded);
-//		logMsg("toggleExpand("+this.data.title+") done.");
+//		this.tree.logDebug("toggleExpand("+this.data.title+") done.");
 	},
 
 	collapseSiblings: function() {
@@ -647,7 +661,7 @@ DynaTreeNode.prototype = {
 	},
 
 	onClick: function(event) {
-//		logMsg("dtnode.onClick(" + event.type + "): dtnode:" + this + ", button:" + event.button + ", which: " + event.which);
+//		this.tree.logDebug("dtnode.onClick(" + event.type + "): dtnode:" + this + ", button:" + event.button + ", which: " + event.which);
 
 		if( $(event.target).hasClass(this.tree.options.classNames.expander) ) {
 			// Clicking the expander icon always expands/collapses
@@ -658,7 +672,7 @@ DynaTreeNode.prototype = {
 		} else {
 			this._userActivate();
 			// Chrome and Safari don't focus the a-tag on click
-//			logMsg("a tag: ", this.span.getElementsByTagName("a")[0]);
+//			this.tree.logDebug("a tag: ", this.span.getElementsByTagName("a")[0]);
 			this.span.getElementsByTagName("a")[0].focus();
 //			alert("hasFocus=" + this.span.getElementsByTagName("a")[0].focused);
 		}
@@ -667,11 +681,11 @@ DynaTreeNode.prototype = {
 	},
 
 	onDblClick: function(event) {
-//		logMsg("dtnode.onDblClick(" + event.type + "): dtnode:" + this + ", button:" + event.button + ", which: " + event.which);
+//		this.tree.logDebug("dtnode.onDblClick(" + event.type + "): dtnode:" + this + ", button:" + event.button + ", which: " + event.which);
 	},
 
 	onKeydown: function(event) {
-//		logMsg("dtnode.onKeydown(" + event.type + "): dtnode:" + this + ", charCode:" + event.charCode + ", keyCode: " + event.keyCode + ", which: " + event.which);
+//		this.tree.logDebug("dtnode.onKeydown(" + event.type + "): dtnode:" + this + ", charCode:" + event.charCode + ", keyCode: " + event.keyCode + ", which: " + event.which);
 		var handled = true;
 //		alert("keyDown" + event.which);
 
@@ -749,12 +763,12 @@ DynaTreeNode.prototype = {
 	onKeypress: function(event) {
 		// onKeypress is only hooked to allow user callbacks.
 		// We don't process it, because IE and Safari don't fire keypress for cursor keys.
-//		logMsg("dtnode.onKeypress(" + event.type + "): dtnode:" + this + ", charCode:" + event.charCode + ", keyCode: " + event.keyCode + ", which: " + event.which);
+//		this.tree.logDebug("dtnode.onKeypress(" + event.type + "): dtnode:" + this + ", charCode:" + event.charCode + ", keyCode: " + event.keyCode + ", which: " + event.which);
 	},
 	
 	onFocus: function(event) {
 		// Handles blur and focus events.
-//		logMsg("dtnode.onFocus(%o): %o", event, this);
+//		this.tree.logDebug("dtnode.onFocus(%o): %o", event, this);
 		var opts = this.tree.options;
 		if ( event.type=="blur" || event.type=="focusout" ) {
 			if ( opts.onBlur ) // Pass element as 'this' (jQuery convention)
@@ -767,7 +781,7 @@ DynaTreeNode.prototype = {
 		} else if ( event.type=="focus" || event.type=="focusin") {
 			// Fix: sometimes the blur event is not generated
 			if( this.tree.tnFocused && this.tree.tnFocused !== this ) {
-				logMsg("dtnode.onFocus: out of sync: curFocus: %o", this.tree.tnFocused);
+				this.tree.logDebug("dtnode.onFocus: out of sync: curFocus: %o", this.tree.tnFocused);
 				$(this.tree.tnFocused.span).removeClass(opts.classNames.focused);
 			}
 			this.tree.tnFocused = this;
@@ -803,7 +817,7 @@ DynaTreeNode.prototype = {
 
 	remove: function() {
         // Remove this node
-//		logMsg ("%o.remove()", this);
+//		this.tree.logDebug ("%o.remove()", this);
         if ( this === this.tree.root )
             return false;
         return this.parent.removeChild(this);
@@ -836,13 +850,13 @@ DynaTreeNode.prototype = {
 
 	removeChildren: function(recursive) {
         // Remove all child nodes (more efficiently than recursive remove())
-//		logMsg ("%o.removeChildren(%o)", this, recursive);
+//		this.tree.logDebug ("%o.removeChildren(%o)", this, recursive);
 		var tree = this.tree;
         var ac = this.childList;
         if( ac ) {
         	for(var i=0; i<ac.length; i++) {
 				var tn=ac[i];
-//        		logMsg ("del %o", tn);
+//        		this.tree.logDebug ("del %o", tn);
                 if ( tn === tree.activeNode )
                 	tn.deactivate();
                 if ( tn.bSelected )
@@ -863,7 +877,7 @@ DynaTreeNode.prototype = {
 	},
 
 	_addChildNode: function (dtnode) {
-//		logMsg ("%o._addChildNode(%o)", this, dtnode);
+//		this.tree.logDebug ("%o._addChildNode(%o)", this, dtnode);
 		var opts = this.tree.options;
 		if ( this.childList==null ) {
 			this.childList = new Array();
@@ -876,7 +890,7 @@ DynaTreeNode.prototype = {
 		dtnode.parent = this; // TODO: only need to assert this
 
 		// Expand the parent, if it's below minExpandLevel, or marked as expanded
-//		logMsg ("%o._addChildNode(%o), l=%o", this, dtnode, dtnode.getLevel());
+//		this.tree.logDebug ("%o._addChildNode(%o), l=%o", this, dtnode, dtnode.getLevel());
 		if ( dtnode.data.expand || opts.minExpandLevel >= dtnode.getLevel() )
 			this.bExpanded = true;
 
@@ -908,7 +922,7 @@ DynaTreeNode.prototype = {
 		]
 		A simple object is also accepted instead of an array.
 		*/
-//		logMsg ("%o.append(%o)", this, obj);
+//		this.tree.logDebug ("%o.append(%o)", this, obj);
 		if( !obj || obj.length==0 ) // Passed null or undefined or empty array
 			return;
 		if( !obj.length ) // Passed a single node
@@ -991,7 +1005,7 @@ DynaTree.prototype = {
 			cookie = $.cookie(this.options.cookieId + "-select");
 			this.initSelectedKeys = cookie ? cookie.split(",") : [];
 		}
-		logMsg("initMode: %o, active: %o, expanded: %o, selected: %o", this.initMode, this.initActiveKey, this.initExpandedKeys, this.initSelectedKeys);
+		this.logDebug("initMode: %o, active: %o, expanded: %o, selected: %o", this.initMode, this.initActiveKey, this.initExpandedKeys, this.initSelectedKeys);
 
 		// Cached tag strings
 		this.cache = {
@@ -1025,6 +1039,25 @@ DynaTree.prototype = {
 	toDict: function() {
 		return this.tnRoot.toDict(true);
 	},
+	
+	logDebug: function(msg) {
+		if( this.options.debugLevel >= 2 ) {
+			Array.prototype.unshift.apply(arguments, ["debug"]);
+			_log.apply(this, arguments);
+		}
+	},
+
+	logInfo: function(msg) {
+		if( this.options.debugLevel >= 1 ) {
+			Array.prototype.unshift.apply(arguments, ["info"]);
+			_log.apply(this, arguments);
+		}
+	},
+
+	logWarning: function(msg) {
+		Array.prototype.unshift.apply(arguments, ["warn"]);
+		_log.apply(this, arguments);
+	},
 
 	isInitializing: function() {
 		return ( this.initMode=="data" || this.initMode=="cookie" || this.initMode=="postInit" );
@@ -1037,7 +1070,7 @@ DynaTree.prototype = {
 		var cookieName = this.options.cookieId + "-" + mode;
 		var nodeList = ( mode=="expand" ) ? this.expandedNodes : this.selectedNodes;  
 		var idx = $.inArray(node, nodeList);
-//		logMsg("_changeNodeList(%o): nodeList:%o, idx:%o", mode, nodeList, idx);
+//		this.logDebug("_changeNodeList(%o): nodeList:%o, idx:%o", mode, nodeList, idx);
 		if( bAdd ) {
 			if( idx >=0 )
 				return false;
@@ -1047,20 +1080,20 @@ DynaTree.prototype = {
 				return false;
 			nodeList.splice(idx, 1);
 		}
-//		logMsg("  -->: nodeList:%o", nodeList);
+//		this.logDebug("  -->: nodeList:%o", nodeList);
 		if( this.options.persist ) {
 			var keyList = $.map(nodeList, function(e,i){return e.data.key});
-			logMsg("_changeNodeList: write cookie <%s> = '%s'", cookieName, keyList.join("', '"));
+//			this.logDebug("_changeNodeList: write cookie <%s> = '%s'", cookieName, keyList.join("', '"));
 			$.cookie(cookieName, keyList.join(","), this.options.cookie);
 		} else {
-//			logMsg("_changeNodeListCookie: %o", nodeList);
+//			this.logDebug("_changeNodeListCookie: %o", nodeList);
 		}
 	},
 	
 	redraw: function() {
-		logMsg("dynatree.redraw()...");
+		this.logDebug("dynatree.redraw()...");
 		this.tnRoot.render(true, true);
-		logMsg("dynatree.redraw() done.");
+		this.logDebug("dynatree.redraw() done.");
 	},
 
 	getRoot: function() {
@@ -1192,7 +1225,8 @@ $.widget("ui.dynatree", {
     },
 
 	_init: function() {
-		logMsg("Dynatree._init(): version='%s'.", DynaTree.version);
+		logMsg("Dynatree._init(): version='%s', debugLevel=%o.", DynaTree.version, this.options.debugLevel);
+
 		// The widget framework supplies this.element and this.options.
 		this.options.event += ".dynatree"; // namespace event
 
@@ -1272,21 +1306,21 @@ $.widget("ui.dynatree", {
 		this.tree.selectedNodes = [];
 		for(var i=0; i<nodeList.length; i++ ) {
 			var dtnode = nodeList[i];
-			logMsg("Re-select on init: %o", dtnode);
+			this.tree.logDebug("Re-select on init: %o", dtnode);
 			dtnode.bSelected = false; // make sure this is not ignored
 			dtnode.select(true);
 		}
 
 		// Focus, that was initialized as 'active'
 		if( this.tree.focusNode ) {
-			logMsg("Focus on init: %o", this.tree.focusNode);
+			this.tree.logDebug("Focus on init: %o", this.tree.focusNode);
 			this.tree.focusNode.focus();
 		}
 		// Activate node, that was initialized as 'active'
 		if( this.tree.activeNode ) {
 			var dtnode = this.tree.activeNode;
 			this.tree.activeNode = null; // make sure this is not ignored
-			logMsg("Activate on init: %o", dtnode);
+			this.tree.logDebug("Activate on init: %o", dtnode);
 			dtnode._userActivate();
 		}
 		this.tree.initMode = "running";
@@ -1312,9 +1346,9 @@ $.widget("ui.dynatree", {
 		$this.bind("click.dynatree dblclick.dynatree keypress.dynatree keydown.dynatree", function(event){
 			var dtnode = __getNodeFromElement(event.target);
 			
-			logMsg("bind(" + event.type + "): dtnode:" + this + ", charCode:" + event.charCode + ", keyCode: " + event.keyCode + ", which: " + event.which);
 			if( !dtnode )
 				return false;
+			dtnode.tree.logDebug("bind(" + event.type + "): dtnode:" + this + ", charCode:" + event.charCode + ", keyCode: " + event.keyCode + ", which: " + event.which);
 
 			switch(event.type) {
 			case "click":
@@ -1475,7 +1509,7 @@ $.ui.dynatree.defaults = {
 		partsel: "ui-dynatree-partsel",
 		lastsib: "ui-dynatree-lastsib"
 	},
-	debugLevel: 0,
+	debugLevel: 2, // 0:quiet, 1:normal, 2:debug $REPLACE:	debugLevel: 1,
 
 	// ------------------------------------------------------------------------
 	lastentry: undefined
