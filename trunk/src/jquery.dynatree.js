@@ -1021,7 +1021,7 @@ DynaTree.prototype = {
 		// find container element
 		this.divTree = divContainer;
 		// create the root element
-		this.tnRoot = new DynaTreeNode(null, this, {title: this.options.title, key: this.options.idPrefix+"root"});
+		this.tnRoot = new DynaTreeNode(null, this, {title: this.options.title, key: "root"});
 		this.tnRoot.data.isFolder = true;
 		this.tnRoot.render(false, false);
 		this.divRoot = this.tnRoot.div;
