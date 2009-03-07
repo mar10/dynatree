@@ -377,7 +377,7 @@ DynaTreeNode.prototype = {
 	},
 
 	focus: function() {
-		// TODO: check, if we already have focu
+		// TODO: check, if we already have focus
 //		this.tree.logDebug("dtnode.focus(): %o", this);
 		this.makeVisible();
 		try {
@@ -640,7 +640,17 @@ DynaTreeNode.prototype = {
 		this.tree.logDebug("_expand: end div toggle - %o", this);
 	},
 
+	expand: function(flag) {
+		if( !this.childList && !this.data.isLazy )
+			return;
+		if( this.parent == null && this.tree.options.minExpandLevel>0 && !flag)
+			return; // Prevent collapsing the root
+		this._expand(flag);
+	},
+
 	toggleExpand: function() {
+		this.expand(!this.bExpanded);
+/*		
 //		this.tree.logDebug("toggleExpand("+this.data.title+")...");
 		if( !this.childList && !this.data.isLazy )
 			return;
@@ -648,6 +658,7 @@ DynaTreeNode.prototype = {
 			return; // Prevent collapsing the root
 		this._expand( ! this.bExpanded);
 //		this.tree.logDebug("toggleExpand("+this.data.title+") done.");
+*/
 	},
 
 	collapseSiblings: function() {
@@ -1152,6 +1163,10 @@ DynaTree.prototype = {
 		if ( bEnable )
 			this.redraw();
 		return !bEnable; // return previous value
+	},
+
+	visit: function(fn, data, includeRoot) {
+		return this.tnRoot.visit(fn, data, includeRoot);
 	},
 
 	_createFromTag: function(parentTreeNode, $ulParent) {
