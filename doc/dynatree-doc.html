@@ -477,10 +477,7 @@ $("#tree").dynatree({
 
 <p>
 	Instead of passing an array of data objects, we can pass a url in the <code>initAjax</code>
-	option that will be used to contact a Ajax webservice.
-</p>
-<p>
-	This webservice is expected to return an JSON object response, formatted like a <code>children</code> object as explained in <a href="#nodeOptions">Node options</a>.
+	option that will be used to contact an Ajax webservice.
 </p>
 
 <pre class="prettyprint">
@@ -494,6 +491,10 @@ $("#tree").dynatree({
 });
 </pre>
 
+<p>
+	The webservice is expected to return a JSON node list, formatted like this:<br>
+	<code>[ { ... }, { ... }, ... ]</code>.
+</p>
 <p>
 	Because the data request is performed asynchronously, the document will load faster.
 	Dynatree will display a spinning wheel, while waiting for the request to complete.
@@ -708,14 +709,18 @@ $("#tree").dynatree({
 <h3 id="lazyLoading">Loading child nodes on demand ('lazy loading')</h3>
 
 <p>
-	Dynatree supports delayed loading of tree nodes, which means we read the nodes only when the parent is expanded.
+	Dynatree supports delayed loading of tree nodes, which means we read the 
+	nodes only when the parent is expanded.<br>
+	Because the data request is performed asynchronously, the browser will not 
+	block and is still responsive. Dynatree will display a spinning wheel, while waiting for the request to 
+	complete.
 </p>
 <p>
 	We have to
 </p>
 <ul>
-	<li>Mark some or all nodes as lazy, by setting the isLazy option to true.
-	<li>Implement the onLazyRead callback to send an Ajax request, create the child nodes, and set the 'ok' status.
+	<li>Mark some or all nodes as lazy, by setting the <code>isLazy</code> option to true.
+	<li>Implement the <code>onLazyRead</code> callback to send an Ajax request, create the child nodes, and set the 'ok' status.
 </ul>
 
 <div class="codesample">
@@ -737,13 +742,13 @@ $("#tree").dynatree({
 </div>
 
 <p>
-	Because the data request is performed asynchronously, the browser will not 
-	block and is still responsive. Dynatree will display a spinning wheel, while waiting for the request to 
-	complete.<br>
-	This webservice is expected to return an JSON object response, as explained 
-	in <a href="#nodeOptions">Node options</a>.<br>
-	See also <a href="#ajaxResponse">Initializing the structure from an Ajax response</a> 
-	for a sample to initialize the whole tree with an Ajax request.<br>
+	The webservice is expected to return a JSON node list, formatted like this:<br>
+	<code>[ { ... }, { ... }, ... ]</code>
+</p>
+<p>
+	See <a href="#nodeOptions">Node options</a> for details.<br>
+	See <a href="#ajaxResponse">Initializing the structure from an Ajax response</a> 
+	for a sample to initialize the whole tree with an Ajax request.
 </p>
 
 
