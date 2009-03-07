@@ -1258,6 +1258,8 @@ $.widget("ui.dynatree", {
 		this.tree = new DynaTree(divContainer, opts);
 		var root = this.tree.getRoot();
 
+		var prevFlag = this.tree.enableUpdate(false); // Speedup by 13s -> 1,5 s 
+		this.tree.logDebug("Start init tree structure...");
 		// Init tree structure
 		if( opts.children ) {
 			// Read structure from node array
@@ -1277,6 +1279,8 @@ $.widget("ui.dynatree", {
 			this.tree._createFromTag(root, $ul);
 			$ul.remove();
 		}
+		this.tree.enableUpdate(prevFlag);
+		this.tree.logDebug("Init tree structure... done.");
 
 		// bind event handlers
 		this.bind();
