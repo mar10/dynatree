@@ -871,15 +871,15 @@ $("#tree").dynatree({
 		Select or deselect node with a given key and fire focus and select events.<br>
 		Return the selected DynaTreeNode.
 	</dd>
-	<dt>toDict(recursive, callback)
+	<dt>toDict()
 	<dd>
 		Convert the tree into a JavaScript object.<br>
-		<code>recursive</code>: set to true, to include child nodes.<br>
-		<code>callback</code>: (optional) function to allow modifications.<br>
-		Example <pre>var cb = node.toDict(true, function(dict){
-    dict.title = "Copy of " + dict.title;
-    delete dict.key; // prevent duplicate keys
-});</pre>
+		See <code>node.toDict()</code> for details.
+	</dd>
+	<dt>visit(fn, data, includeRoot)
+	<dd>
+		Call <code>fn(dtnode, data)</code>  for all nodes.<br>
+		Stop iteration of the current branch, if fn() returns false.
 	</dd>
 </dl>
 
@@ -920,6 +920,10 @@ $("#tree").dynatree({
 	<dt>deactivate()
 	<dd>
 		Deactivate this node and fire an onDeactivate event.
+	</dd>
+	<dt>expand(flag)
+	<dd>
+		Expand or collapse this node - according to flag.
 	</dd>
 	<dt>focus()
 	<dd>
@@ -969,6 +973,16 @@ $("#tree").dynatree({
 		<li><code>DTNodeStatus_Ok</code>: Remove the status node.
 		</ul>
 		Messages may be customized using the <code>strings.loading</code> and <code>strings.loadError</code> options.
+	</dd>
+	<dt>toDict(recursive, callback)
+	<dd>
+		Convert the node into a JavaScript object.<br>
+		<code>recursive</code>: set to true, to include child nodes.<br>
+		<code>callback</code>: (optional) function to allow modifications.<br>
+		Example <pre>var cb = node.toDict(true, function(dict){
+    dict.title = "Copy of " + dict.title;
+    delete dict.key; // prevent duplicate keys
+});</pre>
 	</dd>
 	<dt>toggleExpand()
 	<dd>
@@ -1067,6 +1081,14 @@ $("#tree").dynatree({
 
 <h2><a id="issues"></a>Feedback, version history, credits and known issues</h2>
 
+<h3>Credits</h3>
+<p>
+	I am using the <a href="http://prendreuncafe.com/work/jqplanize/">planize plugin</a> 
+	by Nicolas Perriault for the table of contents.<br>
+	I am using the <a href="http://code.google.com/p/google-code-prettify/">prettify.js</a> 
+	by Mike Samuel for syntax highlighting in the of source code samples.
+</p>
+
 <h3>Feedback</h3>
 <p>
 	First of all: this is work in progress.<br>
@@ -1076,12 +1098,7 @@ $("#tree").dynatree({
 	<li>A <a href="http://groups.google.com/group/dynatree">discussion forum</a> is in place to ask questions or discuss features.
 	<li>Use the <a href="http://code.google.com/p/dynatree/issues/list">Issue Tracker</a> to get a list of known bugs, or vote for a feature.<br>
 		Please make sure you searched the group and issue tracker, before adding a new request.
-	<li>You may also contact me directly at <i>martin at_sign wwWendt.de</i>.
 </ul>
-<h3>Credits</h3>
-<p>
-	I am using the <a href="http://prendreuncafe.com/work/jqplanize/">planize plugin</a> by Nicolas Perriault for the table of contents.<br>
-	I am using the <a href="http://code.google.com/p/google-code-prettify/">prettify.js</a> by Mike Samuel for syntax highlighting in the of source code samples.<br>
-</p>
+
 </body>
 </html>
