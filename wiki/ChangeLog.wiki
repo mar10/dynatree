@@ -8,6 +8,17 @@
 NOTE: This is under development (BETA status).
 See UpdateToVersion04 for some infos.
 
+===== 0.4 rc-2 =====
+
+  * node.toDict() has a calbback function, for example to convert the keys, ..
+  * 'view-source:' link on sample pages
+  * dropped _bDebug; logMsg() now logs unconditionally. Use tree.logDebug() instead.
+  * Cookie path configurable
+  * Optimized loading time of large trees.
+  * New functions node.expand(flag) and tree.visit(callback)
+  * New css classes ui-dynatree-exp-c and ui-dynatree-ico-cf so we don't have to use mutliple class names in CSS (doesn't work with IE6) 
+  * Implemented onExpand callback
+
 ===== 0.4 beta-2 =====
 
   * Adding a node (e.g. by lazy read) now sets the multi-hier selection status correctly
