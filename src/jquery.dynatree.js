@@ -1205,7 +1205,13 @@ TODO: better?
 				title = $liSpan.html();
 			} else {
 				// If only a <li> tag is specified, use the trimmed string up to the next child <ul> tag.
-				title = $.trim($li.html().match(/.*(<ul)?/)[0]);
+				title = $li.html();
+				var iPos = title.search(/<ul/i);
+				if( iPos>=0 )
+					title = $.trim(title.substring(0, iPos));
+				else
+					title = $.trim(title);
+//				self.logDebug("%o", title);
 			}
 			// Parse node options from ID, title and class attributes
 			var data = {
