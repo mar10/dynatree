@@ -230,14 +230,16 @@ DynaTreeNode.prototype = {
 		this.div.style.display = ( this.parent==null || this.parent.bExpanded ? "" : "none");
 
 		// Set classes for current status
-		var cn = this.tree.options.classNames;
+		var opts = this.tree.options;
+		var cn = opts.classNames;
+		var isLastSib = this.isLastSibling();
 		var cnList = [];
 		cnList.push( ( this.data.isFolder ) ? cn.folder : cn.document );
 		if( this.bExpanded )
 			cnList.push(cn.expanded);
 		if( this.data.isLazy && !this.isRead )
 			cnList.push(cn.lazy);
-		if( this.isLastSibling() )
+		if( isLastSib )
 			cnList.push(cn.lastsib);
 		if( this.bSelected )
 			cnList.push(cn.selected);
@@ -247,6 +249,17 @@ DynaTreeNode.prototype = {
 			cnList.push(cn.active);
 		if( this.data.addClass )
 			cnList.push(this.data.addClass);
+		// IE6 doesn't correctly evaluate multiples class names,
+		// so we create combined class names that can be used in the CSS
+		cnList.push(cn.combinedExpanderPrefix
+				+ (this.bExpanded ? "e" : "c")
+				+ (this.data.isLazy && !this.isRead ? "d" : "")
+				+ (isLastSib ? "l" : "")
+				);
+		cnList.push(cn.combinedIconPrefix
+				+ (this.bExpanded ? "e" : "c")
+				+ (this.data.isFolder ? "f" : "")
+				);
 		this.span.className = cnList.join(" ");
 
 		if( bDeep && this.childList && (bHidden || this.bExpanded) ) {
@@ -586,12 +599,15 @@ DynaTreeNode.prototype = {
 		this.bExpanded = bExpand;
 		// Persist expand state
     	this.tree._changeNodeList("expand", this, bExpand);
-
+/*
         if( bExpand ) {
 			$(this.span).addClass(opts.classNames.expanded);
         } else {
 			$(this.span).removeClass(opts.classNames.expanded);
         }
+*/
+        this.render(false);
+
         // Auto-collapse mode: collapse all siblings
 		if( this.bExpanded && this.parent && opts.autoCollapse ) {
 			var parents = this._parentList(false, true);
@@ -1485,8 +1501,8 @@ $.ui.dynatree.defaults = {
 	onActivate: null, // Callback(dtnode) when a node is activated.
 	onDeactivate: null, // Callback(dtnode) when a node is deactivated.
 	onSelect: null, // Callback(flag, dtnode) when a node is (de)selected.
-	onExpand: null, // Callback(dtnode) when a node is expanded.
-	onCollapse: null, // Callback(dtnode) when a node is collapsed.
+	onExpand: null, // Callback(dtnode) when a node is expanded/collapsed.
+//	onCollapse: null, // Callback(dtnode) when a node is collapsed.
 	onLazyRead: null, // Callback(dtnode) when a lazy node is expanded for the first time.
 	
 	ajaxDefaults: { // Used by initAjax option
@@ -1519,7 +1535,10 @@ $.ui.dynatree.defaults = {
 		nodeError: "ui-dynatree-statusnode-error",
 		nodeWait: "ui-dynatree-statusnode-wait",
 		hidden: "ui-dynatree-hidden",
+		combinedExpanderPrefix: "ui-dynatree-exp-",
+		combinedIconPrefix: "ui-dynatree-ico-",
 //		disabled: "ui-dynatree-disabled",
+//		hasChildren: "ui-dynatree-has-children",
 		active: "ui-dynatree-active",
 		selected: "ui-dynatree-selected",
 		expanded: "ui-dynatree-expanded",
