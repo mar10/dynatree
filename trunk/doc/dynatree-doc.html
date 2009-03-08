@@ -635,7 +635,7 @@ onActivate: function(dtnode) {
 <h3>Handling activate/click</h3>
 
 <p>
-	The following example handles a activation event by opening a url in a new window.<br>
+	The following example handles an activation event by opening a url in a new window.<br>
 	This assumes, that we have defined an additional custom attribute 'url' in the node options, like so:
 </p>
 
@@ -675,6 +675,32 @@ $("#tree").dynatree({
 	[&#8230;]
 });
 </pre>
+</div>
+
+
+<h3>Handling selection events</h3>
+
+<p>
+	The following example writes the title of the currently focused node to the &lt;span id='echoFocused'> element:
+</p>
+
+<div class="codesample">
+	<a href="sample-select.html">Try this example...</a>
+	<pre class="prettyprint">
+	$("#tree").dynatree({
+		[&#8230;]
+		onSelect: function(flag, dtnode) {
+			if( ! flag )
+				alert("You deselected node with title " + dtnode.data.title);
+			var selectedNodes = dtnode.tree.getSelectedNodes();
+			var selectedKeys = $.map(selectedNodes, function(node){
+				return node.data.key;
+			});
+			alert("Selected keys: " + selectedKeys.join(", "));
+		},
+		[&#8230;]
+	});
+	</pre>
 </div>
 
 
