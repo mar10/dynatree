@@ -5,7 +5,7 @@
 
 ==== Release 0.4 ====
 
-NOTE: This is under development (BETA status).
+NOTE: This is under development (Release Candidate status).
 See UpdateToVersion04 for some infos.
 
 ===== 0.4 rc-2 =====
