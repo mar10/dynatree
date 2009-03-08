@@ -642,7 +642,7 @@ DynaTreeNode.prototype = {
 			}
 			return;
 		}
-		this.tree.logDebug("_expand: start div toggle - %o", this);
+//		this.tree.logDebug("_expand: start div toggle - %o", this);
 
 		if( opts.fx ) {
 			var duration = opts.fx.duration || 200;
@@ -650,10 +650,13 @@ DynaTreeNode.prototype = {
 		} else {
 //			$(">DIV", this.div).toggle();
 			var $d = $(">DIV", this.div);
-			this.tree.logDebug("_expand: got div, start toggle - %o", this);
+//			this.tree.logDebug("_expand: got div, start toggle - %o", this);
 			$d.toggle();
 		}
-		this.tree.logDebug("_expand: end div toggle - %o", this);
+//		this.tree.logDebug("_expand: end div toggle - %o", this);
+
+		if ( opts.onExpand )
+			opts.onExpand.call(this.span, bExpand, this);
 	},
 
 	expand: function(flag) {

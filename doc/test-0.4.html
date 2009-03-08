@@ -89,11 +89,8 @@
 			onQueryExpand: function(expand, dtnode) {
 				logMsg("onQueryExpand(%o, %o)", expand, dtnode);
 			},
-			onExpand: function(dtnode) {
-				logMsg("onExpand(%o)", dtnode);
-			},
-			onCollapse: function(dtnode) {
-				logMsg("onCollapse(%o)", dtnode);
+			onExpand: function(expand, dtnode) {
+				logMsg("onExpand(%o, %o)", expand, dtnode);
 			},
 			
 			onLazyRead: function(dtnode) {
