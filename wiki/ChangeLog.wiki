@@ -5,10 +5,12 @@
 
 ==== Release 0.4 ====
 
-NOTE: This is under development (Release Candidate status).
 See UpdateToVersion04 for some infos.
 
-===== 0.4 rc-2 =====
+===== 0.4.0 =====
+  * Minor fixes
+
+===== 0.4 rc-1 =====
 
   * node.toDict() has a calbback function, for example to convert the keys, ..
   * 'view-source:' link on sample pages
