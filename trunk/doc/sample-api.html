@@ -26,7 +26,6 @@
 			title: "Programming Sample",
 			rootVisible: true,
 			autoCollapse: true,
-//			clickFolderMode: 3,
 			onActivate: function(dtnode) {
 				$("#echoActive").text(dtnode.data.title);
 				if( dtnode.data.url )
@@ -88,9 +87,9 @@
 									children: [
 										{ title: 'node 3.2.2.1' }
 									]
-								},
+								}
 							]
-						},
+						}
 					]
 				}
 			];
@@ -155,10 +154,6 @@
 					<li id="id5.2">Sub-item 5.2
 					<li>Using some <b>bold</b> markup in the text (&lt;li&gt; tag only).
 					<li><span>Using some <b>bold</b> markup in the text (&lt;li&gt;&lt;span&gt; tag).</span>
-					<li><span><h3>Title</h3>
-                        <p>Some text longer text. Some text longer text. Some text <br>
-                        longer text. Some text longer text. Some text longer text. </p>
-                        </span>
 					<li><span>Using some extended markup in the text (&lt;li&gt;&lt;span&gt; tag).<button value="123">Click me</button>
 					</span>
 					<li>Item without a key. Keys are optional (generated automatically), but may be used in the callbacks
