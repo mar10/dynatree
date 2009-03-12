@@ -75,9 +75,9 @@
 </ul>
 
 <p class="info">
-	This document describes the new alpha release 0.4.<br>
-	The <a href="http://wwWendt.de/tech/dynatree-0.3/doc/dynatree-doc.html">0.3 documentation</a> is  still available.<br>
+	This document describes release 0.4.<br>
 	If you are updating from version 0.3 please read the <a href="http://code.google.com/p/dynatree/wiki/UpdateToVersion04">migration hints</a> first.
+	The <a href="http://wwWendt.de/tech/dynatree-0.3/doc/dynatree-doc.html">0.3 documentation</a> is  still available.
 </p>
 
 <!-- jquery.planize will generate a TOC here: -->
@@ -342,8 +342,8 @@ children: [
 		isFolder: false, // Use a folder icon. Also the node is expandable but not selectable.
 		isLazy: false, // Call onLazyRead(), when the node is expanded for the first time to allow for delayed creation of children.
 		tooltip: null, // Show this popup text.
-		icon: null, // Use a custom image (filename relative to tree.options.imagePath). 'null' for default icon, 'false' for no icon.
 		addClass: null, // Class name added to the node's span tag.  
+		icon: null, // (deprecated: consider using addClass) Use a custom image (filename relative to tree.options.imagePath). 'null' for default icon, 'false' for no icon.
 		activate: false, // Initial active status.
 		focus: false, // Initial focused status.
 		expand: false, // Initial expanded status.
@@ -1049,12 +1049,35 @@ if( dtnode )
 <h2>Theming and translation</h2>
 
 <p>
-	Changing the icon for distinct nodes is done by defining the 'icon' option:
+	The tree's fonts, colors, and icons are defined using CSS, so changing the 
+	appearance is simply a matter of including a custom stylesheet.
 </p>
+<div class="codesample">
+<a href="sample-theming.html">Try this example...</a>
+<pre class="prettyprint">
+&lt;script src='../jquery/jquery.js' type='text/javascript'>&lt;/script>
+&lt;script src='../jquery/ui.core.js' type='text/javascript'>&lt;/script>
+&lt;script src='../src/jquery.dynatree.js' type='text/javascript'>&lt;/script>
+&lt;!-- Include a customized stylesheet: -->
+&lt;link href='custom-skin/ui.dynatree.css' rel='stylesheet' type='text/css' >
 
+&lt;script type='text/javascript'>
+	$(function(){
+		$("#tree").dynatree({
+			[&#8230;]
+		});
+	});
+&lt;/script>
+</pre>
+</div>
+
+<p>
+	Changing the appearance and icons of single nodes is done by assigning a 
+	custom class: 
+</p>
 <pre class="prettyprint">
 &lt;ul>
-	&lt;li data="icon: 'customdoc1.gif'">Node 2 (with custom icon)
+	&lt;li data="addClass: 'custom1'">Document with custom class
 </pre>
 
 <p>
@@ -1063,31 +1086,24 @@ if( dtnode )
 
 <pre class="prettyprint">
 children: [
-	{ title: "Node 2", icon: "customdoc1.gif" },
+	{ title: "Document with custom class", addClass: "custom1" },
 </pre>
 
 <p>
-	To apply a custom skin, we would change the image folder and include a custom .css file:
+	we would then add CSS definitions for the new node to our stylesheet:
 </p>
-<div class="codesample">
-<a href="sample-theming.html">Try this example...</a>
 <pre class="prettyprint">
-&lt;script src='../jquery/jquery.js' type='text/javascript'>&lt;/script>
-&lt;script src='../jquery/ui.core.js' type='text/javascript'>&lt;/script>
-&lt;!-- Include a customized stylesheet: -->
-&lt;link href='custom-skin/ui.dynatree.css' rel='stylesheet' type='text/css' >
-&lt;script src='../src/jquery.dynatree.js' type='text/javascript'>&lt;/script>
-
-&lt;script type='text/javascript'>
-	$(function(){
-		$("#tree").dynatree({
-			imagePath: "custom-skin/", // Use a custom image folder
-			[&#8230;]
-		});
-	});
-&lt;/script>
+span.custom1 a
+{
+	background-color: maroon;
+	color: yellow;
+}
+span.custom1 span.ui-dynatree-icon
+{
+	background-image: url("doc_with_children.gif");
+}
 </pre>
-</div>
+
 
 <p>
 	Strings can be translated in the tree options:
@@ -1102,6 +1118,7 @@ $("#tree").dynatree({
 	},
 });
 </pre>
+
 
 
 <h2><a id="issues"></a>Feedback, version history, credits and known issues</h2>
