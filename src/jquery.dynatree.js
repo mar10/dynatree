@@ -1392,7 +1392,8 @@ $.widget("ui.dynatree", {
 			
 			if( !dtnode )
 				return false;
-			dtnode.tree.logDebug("bind(" + event.type + "): dtnode:" + this + ", charCode:" + event.charCode + ", keyCode: " + event.keyCode + ", which: " + event.which);
+//			dtnode.tree.logDebug("bind(" + event.type + "): dtnode:" + this + ", charCode:" + event.charCode + ", keyCode: " + event.keyCode + ", which: " + event.which);
+			dtnode.tree.logDebug("bind(%o): dtnode: %o", event, dtnode);
 
 			switch(event.type) {
 			case "click":
