@@ -25,7 +25,7 @@
 		$("#tree").dynatree({
 			title: "Programming Sample",
 			rootVisible: true,
-			autoCollapse: true,
+//			autoCollapse: true,
 			onActivate: function(dtnode) {
 				$("#echoActive").text(dtnode.data.title);
 				if( dtnode.data.url )
@@ -108,6 +108,34 @@
 			else
 				alert("No active node.");
 		});
+
+		$("#btnDisable").toggle(function(){
+		        $("#tree").dynatree("disable");
+		        $(this).text("Enable");
+	            return false;
+			}, function(){
+		        $("#tree").dynatree("enable");
+		        $(this).text("Disable");
+	            return false;
+			});
+        $("#btnToggleExpand").click(function(){
+            $("#tree").dynatree("getRoot").visit(function(dtnode){
+                dtnode.toggleExpand();
+            });
+            return false;
+        });
+        $("#btnCollapseAll").click(function(){
+            $("#tree").dynatree("getRoot").visit(function(dtnode){
+                dtnode.expand(false);
+            });
+            return false;
+        });
+        $("#btnExpandAll").click(function(){
+            $("#tree").dynatree("getRoot").visit(function(dtnode){
+                dtnode.expand(true);
+            });
+            return false;
+        });
 	});
 </script>
 </head>
@@ -119,6 +147,13 @@
 		strictly compliant. 
 	</p>
 	
+	<p>
+		<a href="#" id="btnExpandAll">Expand all</a> -
+		<a href="#" id="btnCollapseAll">Collapse all</a> -
+		<a href="#" id="btnToggleExpand">Toggle expand</a>
+		<br>
+		<a href="#" id="btnDisable">Disable</a>
+	</p>
 	<div id="tree">
 		<ul>
 			<li>This simple node (and the following) have been created from html.
@@ -152,14 +187,8 @@
 					<li data="key: 'node5.1'">item5.1: Using data attribute as an alternative way to specify a key.
 					<li data="key: 'node5.3', isFolder: true">item5.1: Using data attribute as an alternative way to specify a folder.
 					<li id="id5.2">Sub-item 5.2
-					<li>Using some <b>bold</b> markup in the text (&lt;li&gt; tag only).
-					<li><span>Using some <b>bold</b> markup in the text (&lt;li&gt;&lt;span&gt; tag).</span>
-					<li><span>Using some extended markup in the text (&lt;li&gt;&lt;span&gt; tag).<button value="123">Click me</button>
-					</span>
 					<li>Item without a key. Keys are optional (generated automatically), but may be used in the callbacks
 				</ul>
-
-			<li>item3
 		</ul>
 	</div>
 

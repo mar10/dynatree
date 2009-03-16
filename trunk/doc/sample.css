@@ -13,6 +13,18 @@ body.example h2
 	font-size: 1em;
 }
 
+a,
+a:visited
+{
+	color: navy;
+	text-decoration: none;
+	font-size: small;
+}
+a:hover
+{
+	text-decoration: underline;
+}
+
 body.example p.description,
 body.example p.sample-links
 {
@@ -31,6 +43,7 @@ p.sample-links a:visited
 	padding: 1px 3px;
 /*	border: 1pt solid white;*/
 }
+
 p.sample-links a:hover
 {
 	text-decoration: underline;

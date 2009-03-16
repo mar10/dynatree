@@ -19,6 +19,22 @@
 	<!-- End_Exclude -->
     
 <script type='text/javascript'>
+    function drawCanvas() {
+        var canvas = document.getElementById("canvas1");
+        if(canvas && canvas.getContext) {
+            canvas = canvas.getContext("2d");
+            var lingrad = canvas.createLinearGradient( 0, 0, 0, 150 );  
+            lingrad.addColorStop( 0, "#0099cc" );  
+            lingrad.addColorStop( 0.5, "#fff" );  
+            lingrad.addColorStop( 0.5, "#99cc00");  
+            lingrad.addColorStop( 1, "#0099ff");  
+            canvas.fillStyle = lingrad;  
+            canvas.fillRect(0, 0, 400 ,100 );              
+            canvas.fillStyle = "rgb(200,0,0)";
+            canvas.fillRect( 10, 10, 55, 55 );
+        }  
+    }  
+
 	$(function(){
 		// Initialize the tree inside the <div>element.
 		// The tree structure is read from the contained <ul> tag.
@@ -36,7 +52,7 @@
 			var obj = [
 				{ title: 'Folder node 3', isFolder: true,
 					children: [
-						{ title: 'node 3.1 line1\line2' },
+						{ title: 'node 3.1 line1\nline2' },
 						{ title: '<h2>node 3.2</h2>',
 							children: [
 								{ title: 'node 3.2.1' },
@@ -52,6 +68,8 @@
 			];
 			$("#tree").dynatree("getRoot").append(obj);
 		});
+        
+        drawCanvas();
 	});
 </script>
 </head>
@@ -59,7 +77,7 @@
 <body class="example">
 	<h1>Example: formatted and multi-line titles</h1>
 	<p class="description">
-		This example shows how mult-iline and high lines are displayed. 
+		This example shows how multi-line and non-text contents is displayed. 
 	</p>
 	
 	<div id="tree">
@@ -67,14 +85,114 @@
 			<li>Using some <b>bold</b> markup in the text (&lt;li&gt; tag only).
 			<li><span>Using some <b>bold</b> markup in the text (&lt;li&gt;&lt;span&gt; tag).</span>
 
-			<li id="id5" class="expanded folder">Advanced examples
+			<li class="folder">Long paragraph, with H3, P, and BR
 				<ul>
 					<li><span><h3>Title</h3>
-                        <p>Some text longer text. Some text longer text. Some text <br>
-                        longer text. Some text longer text. Some text longer text. </p>
-                        </span>
-					<li><span>Using some extended markup in the text (&lt;li&gt;&lt;span&gt; tag).<button value="123">Click me</button>
+                    <p>
+                    Lorem ipsum dolor sit amet, consectetuer sadipscing elitr, sed 
+                    diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
+                    sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. 
+                    <br>
+                    Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit 
+                    amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam 
+                    nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
+                    sed diam voluptua. 
+                    <br>
+                    At vero eos et accusam et justo duo dolores et ea rebum. 
+                    Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. 
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
+                    tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. 
+                    At vero eos et accusam et justo duo dolores et ea rebum. 
+                    <br>
+                    Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                    </p>
 					</span>
+				</ul>
+
+			<li class="folder">Long line
+				<ul>
+					<li><span>
+                    Lorem ipsum dolor sit amet, consectetuer sadipscing elitr, sed 
+                    diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
+                    sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. 
+                    Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit 
+                    amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam 
+                    nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
+                    sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. 
+                    Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. 
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
+                    tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. 
+                    At vero eos et accusam et justo duo dolores et ea rebum. 
+                    Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                    </span>
+				</ul>
+
+			<li class="folder">Long text using BR and P
+				<ul>
+					<li><span>
+                    <p>
+                    Lorem ipsum dolor sit amet, consectetuer sadipscing elitr, sed <br>
+                    diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,  <br>
+                    sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. <br>
+                    </p>
+                    <p>
+                    Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit  <br>
+                    amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam  <br>
+                    nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,  <br>
+                    sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. <br>
+                    Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. <br>
+                    </p>
+                    <p>
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod  <br>
+                    tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.  <br>
+                    At vero eos et accusam et justo duo dolores et ea rebum.  <br>
+                    </p>
+                    <p>
+                    Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. <br>
+                    </p>
+                    </span>
+				</ul>
+
+			<li class="folder">Form elements
+				<ul>
+					<li><span>
+						Click here: <button value="123">Click me</button>
+						</span>
+					<li data="icon: false"><span>
+                        <input type="radio" name="rb1" value="v1" checked> Umschlag 1<br>
+                        <input type="radio" name="rb1" value="v2"> Umschlag 2<br>
+                        <input type="radio" name="rb1" value="v3"> Umschlag 3
+                        </span>
+				</ul>
+
+            <li class="folder">Canvas
+				<ul>
+					<li data="icon: false"><span>
+						<canvas id="canvas1" width="400" height="100">
+						Your browser does not support the <code>canvas</code> element.
+						</canvas> 
+						</span>
+				</ul>
+
+			<li class="folder">Video
+				<ul>
+                    <li><span>
+                        <video autoplay>
+                          <source src="foo.ogg" type="video/ogg">
+                          <source src="foo.mov">
+                          Your browser does not support the <code>video</code> element.
+                        </video>
+                    	</span>
+				</ul>
+
+			<li class="folder">Audio
+				<ul>
+                    <li><span>
+                        <audio src="http://developer.mozilla.org/@api/deki/files/2926/=AudioTest_(1).ogg"
+                               autoplay>
+                          Your browser does not support the <code>audio</code> element.
+                        </audio>
+                    </span>
 				</ul>
 
 			<li>item3
