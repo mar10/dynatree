@@ -617,10 +617,10 @@ DynaTreeNode.prototype = {
 		// If current focus is now hidden, focus the first visible parent.
 		// TODO: doesn't make sense here(?) we should check if the currently focused node (not <this>) is visible.
 		// At the moment, _expand gets only called, after focus was set to <this>.
-		if( ! this.bExpanded && ! this.isVisible() ) {
-			this.tree.logDebug("Focus became invisible: setting to this.");
-			this.focus();
-		}
+//		if( ! this.bExpanded && ! this.isVisible() ) {
+//			this.tree.logDebug("Focus became invisible: setting to this.");
+//			this.focus();
+//		}
 		// If currently active node is now hidden, deactivate it
 		if( opts.activeVisible && this.tree.activeNode && ! this.tree.activeNode.isVisible() ) {
 			this.tree.activeNode.deactivate();
@@ -660,8 +660,8 @@ DynaTreeNode.prototype = {
 	},
 
 	expand: function(flag) {
-		if( !this.childList && !this.data.isLazy )
-			return;
+		if( !this.childList && !this.data.isLazy && flag )
+			return; // Prevent expanding empty nodes
 		if( this.parent == null && this.tree.options.minExpandLevel>0 && !flag)
 			return; // Prevent collapsing the root
 		this._expand(flag);
@@ -1438,13 +1438,13 @@ $.widget("ui.dynatree", {
 	enable: function() {
 		this.bind();
 		// Enable and remove -disabled from css: 
-		this._setData("disabled", false);
+		this.setData("disabled", false);
 	},
 	
 	disable: function() {
 		this.unbind();
 		// Disable and add -disabled to css: 
-		this._setData("disabled", true);
+		this.setData("disabled", true);
 	},
 	
 	// --- getter methods (i.e. NOT returning a reference to $)
