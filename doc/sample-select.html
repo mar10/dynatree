@@ -116,6 +116,26 @@
 			cookieId: "ui-dynatree-Cb3",
 			idPrefix: "ui-dynatree-Cb3-"
 		});
+
+        $("#btnToggleSelect").click(function(){
+            $("#tree2").dynatree("getRoot").visit(function(dtnode){
+                dtnode.toggleSelect();
+            });
+            return false;
+        });
+        $("#btnDeselectAll").click(function(){
+            $("#tree2").dynatree("getRoot").visit(function(dtnode){
+                dtnode.select(false);
+            });
+            return false;
+        });
+        $("#btnSelectAll").click(function(){
+            $("#tree2").dynatree("getRoot").visit(function(dtnode){
+                dtnode.select(true);
+            });
+            return false;
+        });
+		
 	});
 </script>
 </head>
@@ -173,6 +193,11 @@
 		A single-click handler selects the node. A keydown handler selects on [space].<br>
 		A double-click handler expands documents.<br>
 		A onQuerySelect handler prevents selection of folders.
+	</p>
+	<p>
+		<a href="#" id="btnSelectAll">Select all</a> -
+		<a href="#" id="btnDeselectAll">Deselect all</a> -
+		<a href="#" id="btnToggleSelect">Toggle select</a>
 	</p>
 	<div id="tree2"></div>
 	<div>Selected keys: <span id="echoSelection2">-</span></div>
