@@ -121,6 +121,7 @@ DynaTreeNode.prototype = {
 			this.bExpanded = ( data.expand == true ); // Collapsed by default
 			this.bSelected = ( data.select == true ); // Deselected by default
 		}
+		// Add this node to a list, so we can fire events after initialization phase
 		if( this.bExpanded )
 			tree.expandedNodes.push(this);
 		if( this.bSelected )
@@ -908,7 +909,8 @@ DynaTreeNode.prototype = {
 
 	_addChildNode: function (dtnode) {
 //		this.tree.logDebug ("%o._addChildNode(%o)", this, dtnode);
-		var opts = this.tree.options;
+		var tree = this.tree;
+		var opts = tree.options;
 		if ( this.childList==null ) {
 			this.childList = new Array();
 		} else {
@@ -920,15 +922,17 @@ DynaTreeNode.prototype = {
 		dtnode.parent = this; // TODO: only need to assert this
 
 		// Expand the parent, if it's below minExpandLevel, or marked as expanded
-//		this.tree.logDebug ("%o._addChildNode(%o), l=%o", this, dtnode, dtnode.getLevel());
+//		tree.logDebug ("%o._addChildNode(%o), l=%o", this, dtnode, dtnode.getLevel());
 		if ( dtnode.data.expand || opts.minExpandLevel >= dtnode.getLevel() )
 			this.bExpanded = true;
 
-		// In multi-hier mode, update the parents selction state
-		if( !dtnode.data.isStatusNode && opts.selectMode==3 )
+		// In multi-hier mode, update the parents selection state
+		// issue #82: only if not initializing, because the children may not exist yet
+//		if( !dtnode.data.isStatusNode && opts.selectMode==3 )
+		if( !dtnode.data.isStatusNode && opts.selectMode==3 && !tree.isInitializing() )
 			dtnode._fixSelectionState();
 
-		if ( this.tree.bEnableUpdate )
+		if ( tree.bEnableUpdate )
 			this.render(true, true);
 
 		return dtnode;
