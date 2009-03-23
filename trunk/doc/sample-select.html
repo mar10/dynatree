@@ -19,12 +19,49 @@
 	<!-- End_Exclude -->
     
 <script type='text/javascript'>
+	var treeData = [
+		{title: "item1 with key and tooltip", tooltip: "Look, a tool tip!" },
+		{title: "item2: selected on init", select: true },
+		{title: "Folder with some children", isFolder: true, key: "id3",
+			children: [
+				{title: "Sub-item 3.1",
+					children: [
+						{title: "Sub-item 3.1.1", key: "id3.1.1" },
+						{title: "Sub-item 3.1.2", key: "id3.1.2" }
+					]
+				},
+				{title: "Sub-item 3.2",
+					children: [
+						{title: "Sub-item 3.2.1", key: "id3.2.1" },
+						{title: "Sub-item 3.2.2", key: "id3.2.2" }
+					]
+				}
+			]
+		},
+		{title: "Documnent with some children (expanded on init)", key: "id4", expand: true,
+			children: [
+				{title: "Sub-item 4.1 (active on init)", activate: true,
+					children: [
+						{title: "Sub-item 4.1.1", key: "id4.1.1" },
+						{title: "Sub-item 4.1.2", key: "id4.1.2" }
+					]
+				},
+				{title: "Sub-item 4.2 (selected on init)", select: true,
+					children: [
+						{title: "Sub-item 4.2.1", key: "id4.2.1" },
+						{title: "Sub-item 4.2.2", key: "id4.2.2" }
+					]
+				}
+			]
+		}
+	];
 	$(function(){
 		
 		// --- Initialize sample trees
 		$("#tree1").dynatree({
 			checkbox: true,
 			selectMode: 1,
+			children: treeData,
 			onActivate: function(dtnode) {
 				$("#echoActive1").text(dtnode.data.title);
 			},
@@ -43,18 +80,15 @@
 				}
 			},
 			// The following options are only required, if we have more than one tree on one page: 
-			initId: "treeData",
+//			initId: "treeData",
 			cookieId: "ui-dynatree-Cb1",
 			idPrefix: "ui-dynatree-Cb1-"
 		});
 
 		$("#tree2").dynatree({
-			checkbox: false,
+			checkbox: true,
 			selectMode: 2,
-			onQuerySelect: function(select, dtnode) {
-				if( dtnode.data.isFolder )
-					return false;
-			},
+			children: treeData,
 			onSelect: function(select, dtnode) {
 				// Display list of selected nodes
 				var selNodes = dtnode.tree.getSelectedNodes();
@@ -65,11 +99,7 @@
 				$("#echoSelection2").text(selKeys.join(", "));
 			},
 			onClick: function(dtnode, event) {
-				if( ! dtnode.data.isFolder )
-					dtnode.toggleSelect();
-			},
-			onDblClick: function(dtnode, event) {
-				dtnode.toggleExpand();
+				dtnode.toggleSelect();
 			},
 			onKeydown: function(dtnode, event) {
 				if( event.which == 32 ) {
@@ -78,7 +108,6 @@
 				}
 			},
 			// The following options are only required, if we have more than one tree on one page: 
-			initId: "treeData",
 			cookieId: "ui-dynatree-Cb2",
 			idPrefix: "ui-dynatree-Cb2-"
 		});
@@ -86,6 +115,7 @@
 		$("#tree3").dynatree({
 			checkbox: true,
 			selectMode: 3,
+			children: treeData,
 			onSelect: function(select, dtnode) {
 				// Get a list of all selected nodes, and convert to a key array:
 				var selKeys = $.map(dtnode.tree.getSelectedNodes(), function(node){
@@ -112,9 +142,45 @@
 				}
 			},
 			// The following options are only required, if we have more than one tree on one page: 
-			initId: "treeData",
+//				initId: "treeData",
 			cookieId: "ui-dynatree-Cb3",
 			idPrefix: "ui-dynatree-Cb3-"
+		});
+
+		$("#tree4").dynatree({
+			checkbox: false,
+			selectMode: 2,
+			children: treeData,
+			onQuerySelect: function(select, dtnode) {
+				if( dtnode.data.isFolder )
+					return false;
+			},
+			onSelect: function(select, dtnode) {
+				// Display list of selected nodes
+				var selNodes = dtnode.tree.getSelectedNodes();
+				// convert to title/key array
+				var selKeys = $.map(selNodes, function(node){
+					   return "[" + node.data.key + "]: '" + node.data.title + "'";
+				});
+				$("#echoSelection4").text(selKeys.join(", "));
+			},
+			onClick: function(dtnode, event) {
+				if( ! dtnode.data.isFolder )
+					dtnode.toggleSelect();
+			},
+			onDblClick: function(dtnode, event) {
+				dtnode.toggleExpand();
+			},
+			onKeydown: function(dtnode, event) {
+				if( event.which == 32 ) {
+					dtnode.toggleSelect();
+					return false;
+				}
+			},
+			// The following options are only required, if we have more than one tree on one page: 
+//			initId: "treeData",
+			cookieId: "ui-dynatree-Cb4",
+			idPrefix: "ui-dynatree-Cb4-"
 		});
 
         $("#btnToggleSelect").click(function(){
@@ -143,56 +209,22 @@
 <body class="example">
 	<h1>Example: Selection and checkbox</h1>
 	
-	<!-- Shared initialization data for select/checkbox examples -->
-	
-	<ul id="treeData" style="display: none;">
-		<li id="id1" title="Look, a tool tip!">item1 with key and tooltip
-		<li id="id2" class="selected">item2: selected on init
-		<li id="id3" class="folder">Folder with some children
-			<ul>
-				<li id="id3.1">Sub-item 3.1
-					<ul>
-						<li id="id3.1.1">Sub-item 3.1.1
-						<li id="id3.1.2">Sub-item 3.1.2
-					</ul>
-				<li id="id3.2">Sub-item 3.2
-					<ul>
-						<li id="id3.2.1">Sub-item 3.2.1
-						<li id="id3.2.2">Sub-item 3.2.2
-					</ul>
-			</ul>
-
-		<li id="id4" class="expanded">Document with some children (expanded on init)
-			<ul>
-				<li id="id4.1"  class="active">Sub-item 4.1 (active on init)
-					<ul>
-						<li id="id4.1.1">Sub-item 4.1.1
-						<li id="id4.1.2">Sub-item 4.1.2
-					</ul>
-				<li id="id4.2" class="selected">Sub-item 4.2 (selected on init)
-					<ul>
-						<li id="id4.2.1">Sub-item 4.2.1
-						<li id="id4.2.2">Sub-item 4.2.2
-					</ul>
-			</ul>
-	</ul>
-
-	<!-- Tree containers -->
+	<!-- Tree #1 -->
 		
 	<p class="description">
-		This tree has <b>checkoxes and single-selection</b> enabled.<br>
-		A double-click handler selects the node. A keydown handler selects on [space].<br>
+		This tree has <b>checkoxes and selectMode 1 (single-selection)</b> enabled.<br>
+		A double-click handler selects the node. A keydown handler selects on [space].
 	</p>
 	<div id="tree1"></div>
 	<div>Active node: <span id="echoActive1">-</span></div>
 	<div>Selection: <span id="echoSelection1">-</span></div>
 	
 	
+	<!-- Tree #2 -->
+		
 	<p class="description">
-		This tree has <b>multi-selection</b> enabled, but no checkboxes.<br>
-		A single-click handler selects the node. A keydown handler selects on [space].<br>
-		A double-click handler expands documents.<br>
-		A onQuerySelect handler prevents selection of folders.
+		This tree has <b>selectMode 2 (multi-selection)</b> enabled.<br>
+		A single-click handler selects the node. A keydown handler selects on [space].
 	</p>
 	<p>
 		<a href="#" id="btnSelectAll">Select all</a> -
@@ -203,14 +235,29 @@
 	<div>Selected keys: <span id="echoSelection2">-</span></div>
 	
 		
+	<!-- Tree #3 -->
+		
 	<p class="description">
-		This tree has <b>checkoxes and hierarchical multi-selection</b> enabled.<br>
+		This tree has <b>checkoxes and selectMode 3 (hierarchical multi-selection)</b> enabled.<br>
 		A double-click handler selects the node. A keydown handler selects on [space].
 	</p>
 	<div id="tree3"></div>
 	<div>Selected keys: <span id="echoSelection3">-</span></div>
 	<div>Selected root keys: <span id="echoSelectionRootKeys3">-</span></div>
 	<div>Selected root nodes: <span id="echoSelectionRoots3">-</span></div>
+		
+
+	<!-- Tree #4 -->
+		
+	<p class="description">
+		This tree has selectMode 2 (multi-selection) enabled, but <b>no checkboxes</b>.<br>
+		A single-click handler selects the node. A keydown handler selects on [space].<br>
+		A double-click handler expands documents.<br>
+		A onQuerySelect handler prevents selection of folders.
+	</p>
+	<div id="tree4"></div>
+	<div>Selected keys: <span id="echoSelection4">-</span></div>
+	
 		
 	<!-- Start_Exclude: This block is not part of the sample code -->
 	<hr>
