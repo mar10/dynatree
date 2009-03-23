@@ -197,6 +197,14 @@
           	//dtnode.data.title = "New title: " + Date();
 	        //dtnode.render();           
 		});
+
+		$("#tree a").hover(function(){
+				var dtnode = $(this).parent("[dtnode]").attr("dtnode");
+				logMsg("Hover in %o", dtnode);
+			}, function(){
+				var dtnode = $(this).parent("[dtnode]").attr("dtnode");
+				logMsg("Hover out %o", dtnode);
+			});
 	});
 
 

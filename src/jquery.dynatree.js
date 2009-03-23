@@ -1494,7 +1494,7 @@ $.ui.dynatree.defaults = {
 	autoCollapse: false, // Automatically collapse all siblings, when a node is expanded.
 	clickFolderMode: 3, // 1:activate, 2:expand, 3:activate and expand
 	activeVisible: true, // Make sure, active nodes are visible (expanded).
-	checkbox: false, // Show checkbox
+	checkbox: false, // Show checkboxes.
 	selectMode: 2, // 1:single, 2:multi, 3:multi-hier
 	fx: null, // Animations, e.g. null or { height: "toggle", duration: 200 }
 
@@ -1572,7 +1572,7 @@ $.ui.dynatree.defaults = {
  */
 $.ui.dynatree.nodedatadefaults = {
 	title: null, // (required) Displayed name of the node (html is allowed here)
-	key: null, // May be used with select(), find(), ...
+	key: null, // May be used with activate(), select(), find(), ...
 	isFolder: false, // Use a folder icon. Also the node is expandable but not selectable.
 	isLazy: false, // Call onLazyRead(), when the node is expanded for the first time to allow for delayed creation of children.
 	tooltip: null, // Show this popup text.
@@ -1588,7 +1588,7 @@ $.ui.dynatree.nodedatadefaults = {
 	// The following attributes are only valid if passed to some functions:
 	children: null, // Array of child nodes.
 	// NOTE: we can also add custom attributes here.
-	// This may then also be used in the onSelect() or onLazyTree() callbacks.
+	// This may then also be used in the onActivate(), onSelect() or onLazyTree() callbacks.
 	// ------------------------------------------------------------------------
 	lastentry: undefined
 };
