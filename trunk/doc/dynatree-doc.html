@@ -89,7 +89,7 @@
 
 <p>
 	You can download the current dynatree package at
-	<a href="http://wwwendt.de/tech/dynatree/index.html">http://wwwendt.de/tech/dynatree/index.html</a>.
+	<a href="http://code.google.com/p/dynatree/downloads">http://code.google.com/p/dynatree/downloads</a>.
 	It contains everything needed including the source, some documentation and examples.<br>
 	jQuery is already included, but you can check the <a href="http://www.jquery.com">jQuery site</a>
 	for the latest versions of jquery.js and ui.core.js.
@@ -99,7 +99,7 @@
 <h2>Examples</h2>
 
 <p>
-	This documentation contains some script examples and links.<br>
+	This documentation contains script examples and links.<br>
 	See also the <a href="samples.html">Example Browser</a> for some more advanced live demos.
 </p>
 
@@ -141,8 +141,8 @@
 					children: [
 						{title: "Sub-item 2.1"},
 						{title: "Sub-item 2.2"}
-						]
-					},
+					]
+				},
 				{title: "Item 3"}
 			]
 		});
@@ -212,7 +212,7 @@
 $("#tree").dynatree({
 	title: "Dynatree root", // Name of the root node.
 	rootVisible: false, // Set to true, to make the root node visible.
- 	minExpandLevel: 1, // 1: root node is not collapsible
+	minExpandLevel: 1, // 1: root node is not collapsible
 	imagePath: null, // Path to a folder containing icons. Defaults to 'skin/' subdirectory.
 	children: null, // Init tree structure from this object array.
 	initId: null, // Init tree structure from a &lt;ul> element with this ID.
@@ -223,7 +223,7 @@ $("#tree").dynatree({
 	autoCollapse: false, // Automatically collapse all siblings, when a node is expanded.
 	clickFolderMode: 3, // 1:activate, 2:expand, 3:activate and expand
 	activeVisible: true, // Make sure, active nodes are visible (expanded).
-	checkbox: false, // Show checkbox
+	checkbox: false, // Show checkboxes.
 	selectMode: 2, // 1:single, 2:multi, 3:multi-hier
 	fx: null, // Animations, e.g. null or { height: "toggle", duration: 200 }
 
@@ -273,7 +273,7 @@ $("#tree").dynatree({
 <dl class="optionList">
 	<dt>clickFolderMode
 	<dd>
-		Type: integer, default: 3.<br>
+		Type: <code>integer</code>, default: <code>3</code>.<br>
 		Define, how a mouse click will change a folder status.
 		<ol>
 		<li>Single-clicking a folder title (or pressing the [enter] or [space] key) will activate it.<br>
@@ -285,11 +285,11 @@ $("#tree").dynatree({
 	</dd>
 	<dt>persist
 	<dd>
-		Type: boolean, default: false.<br>
-		True: the tree's expand state is saved to a session cookie, so reloading 
-		the page will not collapse all nodes.<br>
-		Notes: the nodes must have a key defined. Also, it will not work with 
-		lazy nodes. 
+		Type: <code>boolean</code>, default: <code>false</code>.<br>
+		True: the tree's expansion, activation, focus and selection state is saved 
+		to a session cookie, so reloading the page will restore the status.<br>
+		Notes: this may not work with lazy nodes.<br>
+		See <code>cookie</code> option. 
 	</dd>
 </dl>
 
@@ -300,7 +300,7 @@ $("#tree").dynatree({
 	A tree structure is made of <i>nodes</i>. Every node may in turn contain
 	a list child nodes.<br>
 	A dynatree always has exactly one <i>root node</i>, and all top level nodes
-	of our tree are added below.<br>
+	of our tree are created as direct descendants.<br>
 	The root node is usually hidden, so we only see the nodes that we have added.
 </p>
 <p>
@@ -338,7 +338,7 @@ $("#tree").dynatree({
 children: [
 	{
 		title: null, // (required) Displayed name of the node (html is allowed here)
-		key: null, // May be used with select(), find(), ...
+		key: null, // May be used with activate(), select(), find(), ...
 		isFolder: false, // Use a folder icon. Also the node is expandable but not selectable.
 		isLazy: false, // Call onLazyRead(), when the node is expanded for the first time to allow for delayed creation of children.
 		tooltip: null, // Show this popup text.
@@ -351,7 +351,7 @@ children: [
 		// The following attributes are only valid if passed to some functions:
 		children: null // Array of child nodes.
 		// NOTE: we can also add custom attributes here.
-		// This may then also be used in the onSelect() or onLazyTree() callbacks.
+		// This may then also be used in the onActivate(), onSelect(), or onLazyTree() callbacks.
 	},
 	[&#8230;]
 ]
@@ -378,6 +378,8 @@ onActivate: function(dtnode) {
 	<dd>
 		Class name that is added to the node's &lt;span> element.<br>
 		Example:
+		<pre class="prettyprint">{ title: "Pretty node", addClass: "customClass1" }</pre>
+		or
 		<pre class="prettyprint">&lt;li data="addClass: 'customClass1'">Pretty node</pre>
 		can be styled using css as  
 		<pre class="prettyprint">span.customClass1 a { background-color: maroon; color: yellow; }</pre>
@@ -404,13 +406,8 @@ onActivate: function(dtnode) {
 	</dd>
 	<dt>isFolder
 	<dd>
-		When a node is of type <i>folder</i>, it get's a special folder icon and class name.<br>
-		We usually use them to hold child nodes.<br>
-		Also, folders can be expanded by clicking the title text (this behavior 
-		can be controlled using the <code>clickFolderMode</code> option).<br>
-		<br>
-		Non-folders ('documents') may also contain child nodes.<br>
-		Clicking on a child node activates it, so we have to click the small [+] icon in front to expand such a document node.
+		Marks node as folder (treated as a document otherwise).<br>
+		See <a href="#foldersAndDocs">Folders and Documents</a>
 	</dd>
 	<dt>isLazy
 	<dd>
@@ -422,7 +419,8 @@ onActivate: function(dtnode) {
 		Uniquely identifies this node. It is optional, but we need it for some
 		functions like <code>tree.activateKey()</code>.<br>
 		If specified, the node's element id is generated by prepending a prefix
-		like this: <code>ui-dynatree-id-<i>1234</i></code>.
+		like this: <code>ui-dynatree-id-<i>1234</i></code>.<br>
+		If <i>not</i> specified, a random key id is generated.
 	</dd>
 	<dt>select
 	<dd>
@@ -453,6 +451,19 @@ onActivate: function(dtnode) {
 			rootVisible: false,
 			[...]
 </pre>
+
+
+<h4 id="foldersAndDocs">Folders and documents</h4>
+
+<p>
+	When a node is of type <i>folder</i>, it get's a special folder icon and class name.<br>
+	We usually use them to hold child nodes.<br>
+	Also, folders can be expanded by clicking the title text (this behavior 
+	can be controlled using the <code>clickFolderMode</code> option).
+</p><p>
+	Non-folders ('documents') may also contain child nodes.<br>
+	Clicking on a child node activates it, so we have to click the small [+] icon in front to expand such a document node.
+</p>
 
 
 <h4>Initializing the tree structure from an object array</h4>
@@ -506,19 +517,19 @@ $("#tree").dynatree({
 <h4 id="initFromUl">Initializing the tree structure from a &lt;ul> element</h4>
 
 <p>
-	If the container &lt;div> contains a &lt;ul> element, the node titles are 
-	read from the &lt;li> tags.<br>
+	If the container <code>&lt;div></code> contains a <code>&lt;ul></code> element, 
+	the node titles are read from the <code>&lt;li></code> tags.<br>
 	If the title contains html markup, it may be better to wrap it inside a span element.
 </p>
 <p>
 	All other node options are specified in the <code>data</code> attribute of a &lt;li> element.
 </p>
 <p class="info">
-	Note that the <code>data</code> attribute is not valid in &lt;li> elements in 
-	some doctypes (HTML 4.01 transitional and Strict and XHTML 1.0 Strict).<br>
-	validators will complain about this.<br>
+	Note that the <code>data</code> attribute is not valid in <code>&lt;li></code> elements in 
+	some doctypes (HTML 4.01 transitional and Strict and XHTML 1.0 Strict). 
+	Validators will complain about this.<br>
 	Also, if the <code>id</code> attribute is used to pass a key, it should be
-	alphanumeric and start with a letter be compliant.<br>
+	alphanumeric and start with a letter to be compliant.<br>
 	(This doesn't seem to affect the functionality however.) 
 </p>
 <p>
@@ -613,7 +624,7 @@ $(function(){
 <h2>Handling events</h2>
 
 <p>
-	When a user clicks a node, we want to react in some  way. So at least we want to implement a <code>onActivate</code>
+	When a user clicks a node, we want to react in some  way. So at least we want to implement an <code>onActivate</code>
 	handler.
 </p>
 <p>
@@ -636,7 +647,8 @@ onActivate: function(dtnode) {
 
 <p>
 	The following example handles an activation event by opening a url in a new window.<br>
-	This assumes, that we have defined an additional custom attribute 'url' in the node options, like so:
+	This assumes, that we have defined an additional custom attribute named 
+	'url' in the node options, like so:
 </p>
 
 <pre class="prettyprint">
@@ -1025,9 +1037,14 @@ $("#tree").dynatree({
 	</dd>
 </dl>
 
+<h3>Programming examples</h3>
+
 <p>
-	Examples for selecting a node with key '1234':
+	The follwing code snippets should give an idea on how to use the API.
 </p>
+
+<h4>Example: Select a node with key '1234'</h4>
+
 <pre class="prettyprint">
 $("#tree").dynatree("getTree").selectKey("1234");
 // or another way:
@@ -1036,13 +1053,62 @@ $("#tree").dynatree("getTree").getNodeByKey("1234").select();
 $("#ui-dynatree-id-1234").attr("dtnode").select();
 </pre>
 
-<p>
-	Access the currently active node:
-</p>
+
+<h4>Example: Access the currently active node</h4>
+
 <pre class="prettyprint">
 var dtnode = $("#tree").dynatree("getActiveNode");
 if( dtnode )
 	alert("Currently active: " + dtnode.data.title);
+</pre>
+
+
+<h4>Example: Add a child to the active node</h4>
+
+<pre class="prettyprint">
+var dtnode = $("#tree").dynatree("getActiveNode");
+var childNode = dtnode.append({
+	title: "My new node",
+	tooltip: "This folder and all child nodes were added programmatically."
+});
+</pre>
+<p>
+	Note: instead of passing a single child object, we could also pass an array
+	of objects.<br>
+	Also, the children may again contain <code>children</code> attributes, thus
+	defining a sub tree. 
+</p>
+
+
+<h4>Example: Add a hover handler and find the hovered node from any sub element</h4>
+
+<pre class="prettyprint">
+// Bind hover events to the tree's &lt;a> tags:
+$("#tree a").hover(function(){
+		// Find dtnode object for this &lt;a> tag
+		var dtnode = $(this).parent("[dtnode]").attr("dtnode");
+		// (...) for example open a tooltip.
+	}, function(){
+		// (...) for example remove the tooltip.
+	}); 
+</pre>
+
+
+<h4>Example: Expand all nodes</h4>
+
+<pre class="prettyprint">
+$("#tree").dynatree("getRoot").visit(function(dtnode){
+    dtnode.expand(true);
+});
+</pre>
+
+
+<h4>Example: Save current tree status to the backend</h4>
+
+<pre class="prettyprint">
+// Get a JavaScript object copy of the tree
+var dict = $("#tree").dynatree("getTree").toDict();
+// ... then use Ajax to send this to your server...
 </pre>
 
 
@@ -1127,7 +1193,7 @@ $("#tree").dynatree({
 <p>
 	I am using the <a href="http://prendreuncafe.com/work/jqplanize/">planize plugin</a> 
 	by Nicolas Perriault for the table of contents.<br>
-	I am using the <a href="http://code.google.com/p/google-code-prettify/">prettify.js</a> 
+	I am using <a href="http://code.google.com/p/google-code-prettify/">prettify.js</a> 
 	by Mike Samuel for syntax highlighting in the of source code samples.
 </p>
 
