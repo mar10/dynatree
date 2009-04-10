@@ -24,7 +24,7 @@
 
     <script type='text/javascript'>
 
-    // Implement Cut/Copy/Paste
+    // --- Implement Cut/Copy/Paste --------------------------------------------
 	var clipboardNode = null;
 	var pasteMode = null;
 	
@@ -41,32 +41,67 @@
 				break;
 			}
 			if( pasteMode == "cut" ) {
-				// TODO: check for recursion
-				alert("TODO.");
+				// Cut mode: check for recursion and remove source
+				var isRecursive = false;
+				var cb = clipboardNode.toDict(true, function(dict){
+					// If one of the source nodes is the target, we must not move
+					if( dict.key == dtnode.data.key )
+						isRecursive = true;
+				});
+				if( isRecursive ) {
+					alert("Cannot move a node to a sub node.");
+					return;
+				}
+				dtnode.append(cb);
+				clipboardNode.remove();
 			} else {
 				// Copy mode: prevent duplicate keys:
 				var cb = clipboardNode.toDict(true, function(dict){
 					dict.title = "Copy of " + dict.title;
-					delete dict.key; // prevent duplicta keys
+					delete dict.key; // Remove key, so a new one will be created
 				});
 				dtnode.append(cb);
 			}
 			clipboardNode = pasteMode = null;
+			// Must enable context menu for new nodes
+			bindContextMenu();
 			break;
 		default:
-			alert("Unknown action '" + action + "'");
+			alert("Unhandled clipboard action '" + action + "'");
 		}
 	};
+
+	// --- Contextmenu helper --------------------------------------------------
+	
+	function bindContextMenu() {
+		// Add context menu to document nodes:
+		$(".ui-dynatree-document")
+			.destroyContextMenu() // unbind first, to prevent duplicates			
+			.contextMenu({menu: "myMenu"}, function(action, el, pos) {
+			var dtnode = el.attr("dtnode");
+			switch( action ) {
+			case "cut":
+			case "copy":
+			case "paste":
+				copyPaste(action, dtnode);
+				break;
+			default:
+				alert("Todo: appply action '" + action + "' to node " + dtnode);
+			}
+		});
+	};
+	
+	// --- Init dynatree during startup ----------------------------------------
 	
 	$(function(){
 
 		$("#tree").dynatree({
 			persist: true,
 			onActivate: function(dtnode) {
-				$("#echoActivated").text(dtnode.data.title);
+				$("#echoActivated").text(dtnode.data.title + ", key=" + dtnode.data.key);
 			},
 			onClick: function(dtnode, event) {
-				// Eat keyboard events, when a menu is open
+				// Eat keyboard events, while a menu is open
 				if( $(".contextMenu:visible").length > 0 )
 					return false;
 			},
@@ -74,6 +109,7 @@
 				// Eat keyboard events, when a menu is open
 				if( $(".contextMenu:visible").length > 0 )
 					return false;
+				
 				switch( event.which ) {
 
 				// Open context menu on [Space] key (simulate right click)
@@ -103,7 +139,7 @@
 						return false;
 					}
 					break;
-				case 120:
+				case 88:
 					if( event.ctrlKey ) { // Ctrl-X
 						copyPaste("cut", dtnode);
 						return false;
@@ -112,38 +148,8 @@
 				}
 			}
 		});
-		
-		// Add context menu to document nodes:
-		$(".ui-dynatree-document").contextMenu({menu: "myMenu"}, function(action, el, pos) {
-			var dtnode = el.attr("dtnode");
-			switch( action ) {
-			case "cut":
-			case "copy":
-				clipboardNode = dtnode;
-				pasteMode = action;
-				break;
-			case "paste":
-				if( !clipboardNode ) {
-					alert("Clipoard is empty.");
-					break;
-				}
-				if( pasteMode == "cut" ) {
-					// TODO: check for recursion
-					alert("TODO.");
-				} else {
-					// Copy mode: prevent duplicate keys:
-					var cb = clipboardNode.toDict(true, function(dict){
-						dict.title = "Copy of " + dict.title;
-						delete dict.key; // prevent duplicta keys
-					});
-					dtnode.append(cb);
-				}
-				clipboardNode = pasteMode = null;
-				break;
-			default:
-				alert("Todo: appply action '" + action + "' to node " + dtnode);
-			}
-		});
+		// Add context menu handler to tree nodes
+		bindContextMenu();
 	});
 </script>
 </head>
@@ -154,7 +160,11 @@
 		Implementation of a context menu. Right-click a <i>document</i> node and see what happens.<br>
     	Also [space] key is supported to open the menu.<br>
     	<br>
-    	A keyboard handler implements Copy and Paste with <code>Ctrl-C</code>, <code>Ctrl-V</code>.
+    	This example also demonstrates, how to copy or move branches and how
+    	to implement clipboard functionality.
+    	<br>
+    	A keyboard handler implements Cup, Copy, and Paste with <code>Ctrl-X</code>, 
+    	<code>Ctrl-C</code>, <code>Ctrl-V</code>.<br>
 	</p>
 
 	<!-- Definition of context menu -->	
