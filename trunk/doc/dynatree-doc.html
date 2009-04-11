@@ -768,6 +768,13 @@ $("#tree").dynatree({
 	                       data: {"key": dtnode.data.key, // Optional url arguments
 		                          "mode": "all"
 		                          },
+		                   success: function(data, textStatus) {
+					           // Called after nodes have been created and waiting icon was removed.
+					           // 'this' is the options for this Ajax request
+					           },
+				           error: function(XMLHttpRequest, textStatus, errorThrown) { 
+							   // Called on error, after error icon was created. 
+				               },
 		                   cache: false // Append random '_' argument to url to prevent caching.
 		                  });
 	},
@@ -785,6 +792,11 @@ $("#tree").dynatree({
 	When the response was received, <code>appendAjax()</code> appends the child 
 	nodes and calls <code>node.setLazyNodeStatus(DTNodeStatus_Ok)</code> to
 	remove the wait icon. 
+</p>
+<p>
+	The optional <code>success</code> callback may be used to apply any custom 
+	postprocessing <strong>after</strong> the data was loaded, for example activating 
+	a node or binding events.  
 </p>
 <p>
 	See <a href="#nodeOptions">Node options</a> for details.<br>
@@ -955,8 +967,9 @@ $("#tree").dynatree({
 		Accepts a standard jQuery Ajax option object.<br>
 		An asynchronous request is started, so this function returns immediately.
 		While loading, a spinning wheel is displayed. On error, a red icon is shown.<br>
-		The request handler must return a JSON object, formatted like the data'a <code>children</code> object (see also <a href="#nodeOptions">Node options</a>.).<br>
+		The request handler must return a JSON object, formatted like the data'a <code>children</code> object.<br>
 		Use the <code>setLazyNodeStatus()</code> function to display the result.<br>
+		See <a href="#lazyLoading">Loading child nodes on demand ('lazy loading')</a> for details.
 	</dd>
 	<dt>deactivate()
 	<dd>

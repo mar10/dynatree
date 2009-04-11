@@ -981,13 +981,21 @@ DynaTreeNode.prototype = {
 		this.setLazyNodeStatus(DTNodeStatus_Loading);
 		// Ajax option inheritance: $.ajaxSetup < $.ui.dynatree.defaults.ajaxDefaults < tree.options.ajaxDefaults < ajaxOptions
 		var self = this;
+		var orgSuccess = ajaxOptions.success;
+		var orgError = ajaxOptions.error;
 		var ajaxOptions = $.extend({}, this.tree.options.ajaxDefaults, ajaxOptions, {
        		success: function(data, textStatus){
+     		    // <this> is the request options  
 				self.append(data);
 				self.setLazyNodeStatus(DTNodeStatus_Ok);
+				if( orgSuccess )
+					orgSuccess.call(ajaxOptions, data, textStatus);
        			},
        		error: function(XMLHttpRequest, textStatus, errorThrown){
+       		    // <this> is the request options  
 				self.setLazyNodeStatus(DTNodeStatus_Error);
+				if( orgError )
+					orgError.call(ajaxOptions, XMLHttpRequest, textStatus, errorThrown);
        			}
 		});
        	$.ajax(ajaxOptions);
