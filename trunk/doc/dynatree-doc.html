@@ -768,11 +768,11 @@ $("#tree").dynatree({
 	                       data: {"key": dtnode.data.key, // Optional url arguments
 		                          "mode": "all"
 		                          },
-		                   success: function(data, textStatus) {
-					           // Called after nodes have been created and waiting icon was removed.
+		                   success: function(dtnode) {
+					           // Called after nodes have been created and the waiting icon was removed.
 					           // 'this' is the options for this Ajax request
 					           },
-				           error: function(XMLHttpRequest, textStatus, errorThrown) { 
+				           error: function(dtnode, XMLHttpRequest, textStatus, errorThrown) { 
 							   // Called on error, after error icon was created. 
 				               },
 		                   cache: false // Append random '_' argument to url to prevent caching.
@@ -794,9 +794,13 @@ $("#tree").dynatree({
 	remove the wait icon. 
 </p>
 <p>
-	The optional <code>success</code> callback may be used to apply any custom 
-	postprocessing <strong>after</strong> the data was loaded, for example activating 
-	a node or binding events.  
+	<code>appendAjax</code> expects one option object argument, as described 
+	in the <a href="http://docs.jquery.com/Ajax">jQuery.ajax()</a> command.<br>
+	Note however, that the optional <code>success</code> and <code>error</code> callbacks 
+	pass different arguments and are called <strong>after</strong> the Dynatree
+	default processing took place.<br>
+	The <code>success</code> callback may be used to apply any custom postprocessing, 
+	for example activating a node or binding events.  
 </p>
 <p>
 	See <a href="#nodeOptions">Node options</a> for details.<br>

@@ -983,22 +983,22 @@ DynaTreeNode.prototype = {
 		var self = this;
 		var orgSuccess = ajaxOptions.success;
 		var orgError = ajaxOptions.error;
-		var ajaxOptions = $.extend({}, this.tree.options.ajaxDefaults, ajaxOptions, {
+		var options = $.extend({}, this.tree.options.ajaxDefaults, ajaxOptions, {
        		success: function(data, textStatus){
      		    // <this> is the request options  
 				self.append(data);
 				self.setLazyNodeStatus(DTNodeStatus_Ok);
 				if( orgSuccess )
-					orgSuccess.call(ajaxOptions, data, textStatus);
+					orgSuccess.call(options, self);
        			},
        		error: function(XMLHttpRequest, textStatus, errorThrown){
        		    // <this> is the request options  
 				self.setLazyNodeStatus(DTNodeStatus_Error);
 				if( orgError )
-					orgError.call(ajaxOptions, XMLHttpRequest, textStatus, errorThrown);
+					orgError.call(options, self, XMLHttpRequest, textStatus, errorThrown);
        			}
 		});
-       	$.ajax(ajaxOptions);
+       	$.ajax(options);
 	},
 	// --- end of class
 	lastentry: undefined
