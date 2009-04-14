@@ -355,7 +355,7 @@ DynaTreeNode.prototype = {
 	},
 
 	_parentList: function(includeRoot, includeSelf) {
-		var l = new Array();
+		var l = [];
 		var dtn = includeSelf ? this : this.parent;
 		while( dtn ) {
 			if( includeRoot || dtn.parent )
@@ -433,8 +433,11 @@ DynaTreeNode.prototype = {
 			if ( opts.onQueryActivate && opts.onQueryActivate.call(this.span, false, this) == false )
 				return; // Callback returned false
 			$(this.span).removeClass(opts.classNames.active);
-	        if( opts.persist )
+	        if( opts.persist ) {
+	        	// Note: we don't pass null, but ''. So the cookie is not deleted.
+	        	// If we pass null, we also have to pass a COPY of opts, because $cookie will override opts.expires (issue 84)
 				$.cookie(opts.cookieId+"-active", "", opts.cookie);
+	        }
 			this.tree.activeNode = null;
 			if ( opts.onDeactivate )
 				opts.onDeactivate.call(this.span, this);
@@ -807,8 +810,11 @@ DynaTreeNode.prototype = {
 			if( this.tree.tnFocused )
 				$(this.tree.tnFocused.span).removeClass(opts.classNames.focused);
 			this.tree.tnFocused = null;
-	        if( opts.persist )
-				$.cookie(opts.cookieId+"-focus", null, opts.cookie);
+	        if( opts.persist ) {
+	        	// Must pass a COPY of options, because $cookie will override opts.expires (issue 84)
+//				$.cookie(opts.cookieId+"-focus", null, opts.cookie);
+				$.cookie(opts.cookieId+"-focus", null, $.extend({}, opts.cookie));
+	        }
 		} else if ( event.type=="focus" || event.type=="focusin") {
 			// Fix: sometimes the blur event is not generated
 			if( this.tree.tnFocused && this.tree.tnFocused !== this ) {
@@ -912,7 +918,7 @@ DynaTreeNode.prototype = {
 		var tree = this.tree;
 		var opts = tree.options;
 		if ( this.childList==null ) {
-			this.childList = new Array();
+			this.childList = [];
 		} else {
 			// Fix 'lastsib'
 			$(this.childList[this.childList.length-1].span).removeClass(opts.classNames.lastsib);
@@ -1028,8 +1034,8 @@ DynaTree.prototype = {
 		this.initMode = "data";
 
 		this.activeNode = null;
-		this.selectedNodes = new Array();
-		this.expandedNodes = new Array();
+		this.selectedNodes = [];
+		this.expandedNodes = [];
 
 		if( this.options.persist ) {
 			// Requires jquery.cookie.js:
@@ -1047,7 +1053,8 @@ DynaTree.prototype = {
 			cookie = $.cookie(this.options.cookieId + "-select");
 			this.initSelectedKeys = cookie ? cookie.split(",") : [];
 		}
-		this.logDebug("initMode: %o, active: %o, expanded: %o, selected: %o", this.initMode, this.initActiveKey, this.initExpandedKeys, this.initSelectedKeys);
+		this.logDebug("initMode: %o, active: %o, focus: %o, expanded: %o, selected: %o", 
+				this.initMode, this.initActiveKey, this.initFocusKey, this.initExpandedKeys, this.initSelectedKeys);
 
 		// Cached tag strings
 		this.cache = {
@@ -1125,7 +1132,8 @@ DynaTree.prototype = {
 //		this.logDebug("  -->: nodeList:%o", nodeList);
 		if( this.options.persist ) {
 			var keyList = $.map(nodeList, function(e,i){return e.data.key});
-//			this.logDebug("_changeNodeList: write cookie <%s> = '%s'", cookieName, keyList.join("', '"));
+			this.logDebug("_changeNodeList: write cookie <%s> = '%s'", cookieName, keyList.join("', '"));
+			this.logDebug("_changeNodeList: opts=%o", this.options.cookie);
 			$.cookie(cookieName, keyList.join(","), this.options.cookie);
 		} else {
 //			this.logDebug("_changeNodeListCookie: %o", nodeList);
