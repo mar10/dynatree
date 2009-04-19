@@ -1132,8 +1132,8 @@ DynaTree.prototype = {
 //		this.logDebug("  -->: nodeList:%o", nodeList);
 		if( this.options.persist ) {
 			var keyList = $.map(nodeList, function(e,i){return e.data.key});
-			this.logDebug("_changeNodeList: write cookie <%s> = '%s'", cookieName, keyList.join("', '"));
-			this.logDebug("_changeNodeList: opts=%o", this.options.cookie);
+//			this.logDebug("_changeNodeList: write cookie <%s> = '%s'", cookieName, keyList.join("', '"));
+//			this.logDebug("_changeNodeList: opts=%o", this.options.cookie);
 			$.cookie(cookieName, keyList.join(","), this.options.cookie);
 		} else {
 //			this.logDebug("_changeNodeListCookie: %o", nodeList);
