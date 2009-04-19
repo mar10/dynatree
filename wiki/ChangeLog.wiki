@@ -14,10 +14,10 @@ Also support persistence for lazy trees.
 
 See UpdateToVersion04 for some infos.
 
-===== 0.4.2 (not yet released) =====
+===== 0.4.2 =====
   * Added support for callbacks after lazy loading.
-  * Fixed a persistence bug
-  * Added a cut/copy/paste sample.
+  * Fixed a persistence bug.
+  * Implemented cut/copy/paste in the context menu example.
   * See the [http://code.google.com/p/dynatree/issues/list?can=1&q=milestone:Release0.4.2+status%3AFixed%2CVerified&sort=-modified&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary fix list].
 
 ===== 0.4.1 =====
