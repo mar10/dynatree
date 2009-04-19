@@ -1,0 +1,10 @@
+#summary Migration hints for updating from 0.4 to 0.5.
+
+*Note that version 0.5 is still under development.*
+
+When updating from version 0.4 to 0.5, the following aspects have changed and may have to be adjusted.
+
+  * The {{{onActivate}}} event is no longer fired, when a page was (re)loaded
+  * Define a {{{onPostInit}}} handler to implement ....
+  * In lazy mode, define a {{{success}}} handler to implement ....
+  * Read the documentation: there are lots of other changes and improvemnts
