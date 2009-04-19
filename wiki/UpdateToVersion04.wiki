@@ -1,7 +1,5 @@
 #summary Migration hints for updating from 0.3 to 0.4.
 
-*Note that version 0.4 is still alpha.*
-
 When updating from version 0.3 to 0.4, the following aspects have changed and may have to be adjusted.
 
   * Replace onSelect with onActivate
