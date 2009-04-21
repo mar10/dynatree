@@ -559,8 +559,15 @@ DynaTreeNode.prototype = {
 			return; // Callback returned false
 		
 		// Force single-selection
-		if( opts.selectMode==1 && this.tree.selectedNodes.length && sel ) 
-			this.tree.selectedNodes[0]._select(false, false, false);
+		if( opts.selectMode==1 && sel ) { 
+			this.tree.visit(function(dtnode){
+				if( dtnode.bSelected ) {
+					// Deselect; assuming that in selectMode:1 there's max. one other selected node
+					dtnode._select(false, false, false);
+					return false;
+				}
+			});
+		}
 
 		this.bSelected = sel;
 //        this.tree._changeNodeList("select", this, sel);
@@ -1246,18 +1253,15 @@ DynaTree.prototype = {
 	},
 
 	getSelectedNodes: function(stopOnParents) {
-		if( stopOnParents == true ) {
-			var nodeList = [];
-			this.tnRoot.visit(function(dtnode){
-				if( dtnode.bSelected ) {
-					nodeList.push(dtnode);
+		var nodeList = [];
+		this.tnRoot.visit(function(dtnode){
+			if( dtnode.bSelected ) {
+				nodeList.push(dtnode);
+				if( stopOnParents == true )
 					return false; // stop processing this branch
-				}
-			});
-			return nodeList;
-		} else {
-			return this.selectedNodes;
-		}
+			}
+		});
+		return nodeList;
 	},
 
 	activateKey: function(key) {
