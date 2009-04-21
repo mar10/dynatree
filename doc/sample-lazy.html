@@ -27,7 +27,7 @@
 			rootVisible: true,
 			persist: true,
 			fx: { height: "toggle", duration: 200 },
-			// initAjax is hard to fake, so we pass the children as objecz array:
+			// initAjax is hard to fake, so we pass the children as object array:
 //			initAjax: { .. },
 			children: [
 				{title: "Simple node", key: "1" },
@@ -51,7 +51,6 @@
 				    { title: 'Lazy node 1', isLazy: true },
 				    { title: 'Simple node 2', select: true }
 				];
-//				alert ("Let's pretend we're using this AJAX response to load the branch:\n " + jsonResult);
 				function fakeAjaxResponse() {
 					return function() {
 						dtnode.append(fakeJsonResult);

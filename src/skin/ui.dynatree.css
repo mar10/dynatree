@@ -185,7 +185,8 @@ span.ui-dynatree-icon /* Default icon */
  */
 
 /* Remove blue color and underline from title links */
-div.ui-dynatree-container a 
+div.ui-dynatree-container a, 
+div.ui-dynatree-container a:visited
 {
 	color: black; /* inherit doesn't work on IE */
 	text-decoration: none;

@@ -69,6 +69,7 @@
                 logMsg("onPostInit(): tree:%o, isReloading:%o, isError:%o", this, isReloading, isError);
                 var persistData = this.getPersistData();
                 logMsg("persistData: %o", persistData);
+                this.reactivate();
             },
             onActivate: function(dtnode) {
                 $("#echoActive").text(dtnode.data.title);
