@@ -213,7 +213,8 @@
 		
 	<p class="description">
 		This tree has <b>checkoxes and selectMode 1 (single-selection)</b> enabled.<br>
-		A double-click handler selects the node. A keydown handler selects on [space].
+		A double-click handler selects a document node (not folders).<br>
+		A keydown handler selects on [space].
 	</p>
 	<div id="tree1"></div>
 	<div>Active node: <span id="echoActive1">-</span></div>
@@ -224,7 +225,8 @@
 		
 	<p class="description">
 		This tree has <b>selectMode 2 (multi-selection)</b> enabled.<br>
-		A single-click handler selects the node. A keydown handler selects on [space].
+		A single-click handler selects the node.<br>
+		A keydown handler selects on [space].
 	</p>
 	<p>
 		<a href="#" id="btnSelectAll">Select all</a> -
@@ -239,7 +241,8 @@
 		
 	<p class="description">
 		This tree has <b>checkoxes and selectMode 3 (hierarchical multi-selection)</b> enabled.<br>
-		A double-click handler selects the node. A keydown handler selects on [space].
+		A double-click handler selects the node.<br>
+		A keydown handler selects on [space].
 	</p>
 	<div id="tree3"></div>
 	<div>Selected keys: <span id="echoSelection3">-</span></div>
@@ -251,7 +254,8 @@
 		
 	<p class="description">
 		This tree has selectMode 2 (multi-selection) enabled, but <b>no checkboxes</b>.<br>
-		A single-click handler selects the node. A keydown handler selects on [space].<br>
+		A single-click handler selects the node.<br>
+		A keydown handler selects on [space].<br>
 		A double-click handler expands documents.<br>
 		A onQuerySelect handler prevents selection of folders.
 	</p>
