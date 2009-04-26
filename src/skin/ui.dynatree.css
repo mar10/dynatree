@@ -73,43 +73,32 @@ span.ui-dynatree-connector
 
 /******************************************************************************* 
  * Expander icon
- * Note: IE6 doesn't correctly evaluate multiples class names,
- *		 so we create combined class names that can be used in the CSS.
- *
- * Prefix: ui-dynatree-exp-
- * 1st character: 'e': expanded, 'c': collapsed
- * 2nd character (optional): 'd': lazy (Delayed)
- * 3rd character (optional): 'l': Last sibling       
  */
- 
 span.ui-dynatree-expander
 {
 	background-image: url("ltP_nes.gif");
 	cursor: pointer;
 }
-.ui-dynatree-exp-cl span.ui-dynatree-expander /* Collapsed, not delayed, last sibling */
+.ui-dynatree-lastsib span.ui-dynatree-expander
 {
 	background-image: url("ltP_ne.gif");
 }
-.ui-dynatree-exp-cd span.ui-dynatree-expander /* Collapsed, delayed, not last sibling */
+.ui-dynatree-lazy span.ui-dynatree-expander
 {
 	background-image: url("ltD_nes.gif");
 }
-.ui-dynatree-exp-cdl span.ui-dynatree-expander /* Collapsed, delayed, last sibling */
+.ui-dynatree-lazy.ui-dynatree-lastsib span.ui-dynatree-expander
 {
 	background-image: url("ltD_ne.gif");
 }
-.ui-dynatree-exp-e span.ui-dynatree-expander,  /* Expanded, not delayed, not last sibling */
-.ui-dynatree-exp-ed span.ui-dynatree-expander  /* Expanded, delayed, not last sibling */
+.ui-dynatree-expanded span.ui-dynatree-expander
 {
 	background-image: url("ltM_nes.gif");
 }
-.ui-dynatree-exp-el span.ui-dynatree-expander,  /* Expanded, not delayed, last sibling */
-.ui-dynatree-exp-edl span.ui-dynatree-expander  /* Expanded, delayed, last sibling */
+.ui-dynatree-expanded.ui-dynatree-lastsib span.ui-dynatree-expander
 {
 	background-image: url("ltM_ne.gif");
 }
-
 
 /******************************************************************************* 
  * Checkbox icon
@@ -144,26 +133,19 @@ span.ui-dynatree-checkbox:hover
 
 /******************************************************************************* 
  * Node type icon
- * Note: IE6 doesn't correctly evaluate multiples class names,
- *		 so we create combined class names that can be used in the CSS.
- *
- * Prefix: ui-dynatree-ico-
- * 1st character: 'e': expanded, 'c': collapsed
- * 2nd character (optional): 'f': folder
  */
- 
-span.ui-dynatree-icon /* Default icon */
+span.ui-dynatree-icon
 {
 	margin-left: 3px;
 	background-image: url("ltDoc.gif");
 }
 
-.ui-dynatree-ico-cf span.ui-dynatree-icon  /* Collapsed Folder */
+.ui-dynatree-folder span.ui-dynatree-icon
 {
 	background-image: url("ltFld.gif");
 }
 
-.ui-dynatree-ico-ef span.ui-dynatree-icon  /* Expanded Folder */
+.ui-dynatree-folder.ui-dynatree-expanded  span.ui-dynatree-icon
 {
 	background-image: url("ltFld_o.gif");
 }
@@ -185,8 +167,7 @@ span.ui-dynatree-icon /* Default icon */
  */
 
 /* Remove blue color and underline from title links */
-div.ui-dynatree-container a, 
-div.ui-dynatree-container a:visited
+div.ui-dynatree-container a 
 {
 	color: black; /* inherit doesn't work on IE */
 	text-decoration: none;

@@ -58,7 +58,6 @@ jQuery.cookie = function(name, value, options) {
         options = options || {};
         if (value === null) {
             value = '';
-            options = $.extend({}, options); // clone object since it's unexpected behavior if the expired property were changed
             options.expires = -1;
         }
         var expires = '';
@@ -72,7 +71,7 @@ jQuery.cookie = function(name, value, options) {
             }
             expires = '; expires=' + date.toUTCString(); // use expires attribute, max-age is not supported by IE
         }
-        // NOTE Needed to parenthesize options.path and options.domain
+        // CAUTION: Needed to parenthesize options.path and options.domain
         // in the following expressions, otherwise they evaluate to undefined
         // in the packed version for some reason...
         var path = options.path ? '; path=' + (options.path) : '';

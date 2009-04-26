@@ -26,17 +26,17 @@
 
 	$(function(){
 		$("#tree").dynatree({
-//			rootVisible: true,
+			rootVisible: true,
 			rootCollapsible: false,
 			keyboard: true,
 //			persist: true,
 			clickFolderMode: 1, //3, //2,
 			checkbox: true,
-			selectMode: 2,
+			selectMode: 3,
 			children: [
 				{title: "Node 1", expand: true, key: "1",
 				 children: [
-					{title: "Node 1.1", key: "11" },
+					{title: "Node 1.1" },
 					{title: "Node 1.2", isFolder: true, expand: true, key: "12",
 						 children: [
 									{title: "Node 1.2.1<br>Multi-line test" },
@@ -89,8 +89,11 @@
 			onQueryExpand: function(expand, dtnode) {
 				logMsg("onQueryExpand(%o, %o)", expand, dtnode);
 			},
-			onExpand: function(expand, dtnode) {
-				logMsg("onExpand(%o, %o)", expand, dtnode);
+			onExpand: function(dtnode) {
+				logMsg("onExpand(%o)", dtnode);
+			},
+			onCollapse: function(dtnode) {
+				logMsg("onCollapse(%o)", dtnode);
 			},
 			
 			onLazyRead: function(dtnode) {
@@ -144,18 +147,6 @@
 		});
 
 		
-		$("#btnSelectAll").click(function(){
-			$("#tree").dynatree("getRoot").visit(function(dtnode){
-				dtnode.select(true);
-			});
-//			return false;
-		});
-		$("#btnDeselectAll").click(function(){
-			$("#tree").dynatree("getRoot").visit(function(dtnode){
-				dtnode.select(false);
-			});
-			return false;
-		});
 		$("#btnVisit").click(function(){
 			$("#tree").dynatree("getRoot").visit(function(dtnode){
 				logMsg("%o", dtnode);
@@ -180,31 +171,6 @@
 		$("#btnBind").click(function(){
 			$("#tree").dynatree(this.checked ? "bind" : "unbind");
 		});
-		$("#btnTest").click(function(){
-			var tree = $("#tree").dynatree("getTree");
-			var rootNode = $("#tree").dynatree("getRoot");
-			var node122 = tree.getNodeByKey("122");
-//			var clipboard = node122.toDict(true);
-			var clipboard = node122.toDict(true, function(dict){
-					dict.title = "Copy of " + dict.title;
-					delete dict.key; // prevent duplicta keys
-				});
-			logMsg("cb=%o", clipboard);
-			var node11 = tree.getNodeByKey("11");
-			node11.append(clipboard);  // beta-2: we need [] to force creation of sub-nodes
-			logMsg("target2=%o", node11.toDict());
-			
-          	//dtnode.data.title = "New title: " + Date();
-	        //dtnode.render();           
-		});
-
-		$("#tree a").hover(function(){
-				var dtnode = $(this).parent("[dtnode]").attr("dtnode");
-				logMsg("Hover in %o", dtnode);
-			}, function(){
-				var dtnode = $(this).parent("[dtnode]").attr("dtnode");
-				logMsg("Hover out %o", dtnode);
-			});
 	});
 
 
@@ -225,15 +191,10 @@
         <input type="checkbox" id="btnBind" checked="checked"><label for="btnBind">Bind events</label>
     </p>
     <p>
-		<a href="#" id="btnSelectAll">Select all</a>
-		<a href="#" id="btnDeselectAll">Deselect all</a>
-		<br>
         <button id="btnVisit">visit</button>
         <button id="btnSerialize">serialize</button>
         <button id="btnModify">Change node title</button>
         <button id="btnGetSelected">Selected (stopOnParent)</button>
-		<br>
-        <button id="btnTest">Test</button>
     </p>
 
 

@@ -176,10 +176,8 @@ div.ui-dynatree-container a
 	vertical-align: top;
 	margin: 0px;
 	margin-left: 3px;
-	/* Set transparent border to prevent jumping when active node gets a border 
-	   (we can do this, because this theme doesn't use vertical lines) 
-	   */
-	border: 1px solid white; /* Note: 'transparent' would not work in IE6 */
+	/* Set transparent border to prevent jumping when active node gets a border (we can do this, because this theme doesn_'t use vertical lines) */
+	border: 1px solid transparent;
 }
 
 div.ui-dynatree-container a:hover
@@ -192,7 +190,7 @@ span.ui-dynatree-folder a
 {
 	display: inline-block; /* Better alignment, when title contains <br> */  
 	padding-left: 3px;
-	padding-right: 3px; /* Otherwise italic font will be accross borders */
+	padding-right: 3px; /* Otherwise italic font will  */
 }
 span.ui-dynatree-folder a
 {
@@ -230,21 +228,6 @@ span.ui-dynatree-active a
 
 span.custom1 a
 {
-	background-color: #ffffbb;
-	color: maroon;
-}
-span.custom1 span.ui-dynatree-icon
-{
-	background-image: url("doc_with_children.gif");
-}
-
-span.custom2 a
-{
-	font-weight: bold;
-	background-color: silver;
-	color: navy;
-}
-span.custom2 span.ui-dynatree-icon
-{
-	background-image: url("folder_page.gif");
+	background-color: maroon;
+	color: yellow;
 }
