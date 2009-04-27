@@ -23,6 +23,7 @@ New optionse for initAjax:
   * addExpandedKeyList
 
 Other Changes:
+  * The default cookie name prefix was changed from 'ui-dynatree-cookie-' to 'dynatree-'.
   * `_`nodeCount starts with 1, so first auto - key is 1
   * tree.iniMode was dropped (now tree.phase)
 
