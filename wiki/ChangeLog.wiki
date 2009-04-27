@@ -19,7 +19,7 @@ Main Changes:
 
 ==== Release 0.4 ====
 
-See UpdateToVersion04 for some infos.
+See [UpdateToVersion04 Migration hints] for details.
 
 ===== 0.4.2 =====
   * Added support for callbacks after lazy loading.
