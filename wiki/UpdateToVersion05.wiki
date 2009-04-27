@@ -4,7 +4,101 @@
 
 When updating from version 0.4 to 0.5, the following aspects have changed and may have to be adjusted.
 
-  * The {{{onActivate}}} event is no longer fired, when a page was (re)loaded
-  * Define a {{{onPostInit}}} handler to implement ....
-  * In lazy mode, define a {{{success}}} handler to implement ....
-  * Read the documentation: there are lots of other changes and improvemnts
+Main Changes:
+  * Persistence has changed (no longer fires events)
+  * Support for persistence with lazy trees
+
+New functions:
+  * onPostInit(isReloading, isError)
+  * tree.reactivate(setFocus)
+  * tree.isInitializing()
+  * tree.isReloading()
+  * tree.isUserEvent()
+  * tree.getPersistData
+  * Global: getDynaTreePersistData(cookieId, cookieOpts)
+
+New optionse for initAjax:
+  * addActiveKey
+  * addFocusedKey
+  * addExpandedKeyList
+
+Other Changes:
+  * `_`nodeCount starts with 1, so first auto - key is 1
+  * tree.iniMode was dropped (now tree.phase)
+
+
+=== Persistence has changed ===
+
+When initializing a tree in persist mode, we first check, if existing persistence cookies are found.<br>
+In this case we assume *re*-loading, ignore the source node attributes and override them using the cookie info.
+
+Otherwise we assume first-time initilaizing, read the status from the tree source, and store it into new cookies.
+
+After loading, the 'active' status of a node is restored.
+But *we no longer fire onActivate events*. 
+(The only event that may be fired is `onFocus`.)
+
+In order to generate these events on reload, use the new callback function `onPostInit()` and `tree.reactivate()`.
+
+Example
+{{{
+    onPostInit: function(isReloading, isError) {
+        // 'this' is the current tree
+        // isReloading is set, if status wss read from existing cookies
+        // isError is only used in Ajay mode
+        // Fire an onActivate() event for the currently active node
+        this.reactivate();
+    },
+    onActivate: function(dtnode) {
+        // Use status functions to find out about the calling context
+        var isInitializing = dtnode.tree.isInitializing(); // Tree loading phase
+        var isReloading = dtnode.tree.isReloading(); // Loading phase, and reading status from cookies
+        var isUserEvent = dtnode.tree.isUserEvent(); // Event was triggered by mouse or keyboard
+        
+        $("#echoActive").text(dtnode.data.title);
+    },
+}}}	  
+
+
+=== Support for persistence with lazy trees ===
+
+The problem with restoring the status of a _lazy_ tree is, that the currently active 
+or selected nodes may not be part of the tree, when it is freshly re-loaded.
+
+The basic idea is to leave it up to the backend webservice to deliver not only the
+top-level nodes, but also all nodes that are required to display the current status.
+
+For example, it may be neccessary to render 3 parent nodes, if the active node is at level # 4.<br>
+The backend may also deliver all child nodes of expanded parents.<br>
+Or in selectMode 3 (hierarchical) we may want to send all nodes, that are partly selected.
+
+initAjax (and appendAjax) have 3 new options, that allow to pass the persistence
+information to the web service handler.
+
+{{{
+[...]
+    initAjax: {url: "/ajaxTree",
+               data: {key: key,
+                      mode: mode,
+                      filter: filter
+                      },
+               addActiveKey: true,  // add &activeKey= parameter to URL
+               addFocusedKey: true, // add &focusedKey= parameter to URL
+               addExpandedKeyList: true // add &expandedKeyList= parameter to URL
+               },
+    onPostInit: function(isReloading, isError) {
+        // In lazy mode, this will be called *after* the initAjax request returned.
+        // 'this' is the current tree
+        // isReloading is set, if status wss read from existing cookies
+        // isError is set, if Ajax failed
+        // Fire an onActivate() event for the currently active node
+        this.reactivate();
+    },
+    onActivate: function(dtnode) {
+        // Use status functions to find out about the calling context
+        var isUserEvent = dtnode.tree.isUserEvent(); // Event was triggered by mouse or keyboard
+        
+        $("#echoActive").text(dtnode.data.title);
+    },
+           [...]
+}}}	
