@@ -985,7 +985,6 @@ DynaTreeNode.prototype = {
 
 		// In multi-hier mode, update the parents selection state
 		// issue #82: only if not initializing, because the children may not exist yet
-//		if( !dtnode.data.isStatusNode && opts.selectMode==3 )
 		if( !dtnode.data.isStatusNode && opts.selectMode==3 && !tree.isInitializing() )
 			dtnode._fixSelectionState();
 
@@ -1684,8 +1683,8 @@ $.ui.dynatree.defaults = {
 	onDblClick: null, // (No default actions.)
 	onKeydown: null, // null: generate keyboard navigation (focus, expand, activate).
 	onKeypress: null, // (No default actions.)
-	onFocus: null, // null: handle focus.
-	onBlur: null, // null: handle unfocus.
+	onFocus: null, // null: set focus to node.
+	onBlur: null, // null: remove focus from node.
 
 	// Pre-event handlers onQueryEvent(flag, dtnode): return false, to stop processing
 	onQueryActivate: null, // Callback(flag, dtnode) before a node is (de)activated.
@@ -1698,7 +1697,6 @@ $.ui.dynatree.defaults = {
 	onDeactivate: null, // Callback(dtnode) when a node is deactivated.
 	onSelect: null, // Callback(flag, dtnode) when a node is (de)selected.
 	onExpand: null, // Callback(dtnode) when a node is expanded/collapsed.
-//	onCollapse: null, // Callback(dtnode) when a node is collapsed.
 	onLazyRead: null, // Callback(dtnode) when a lazy node is expanded for the first time.
 	
 	ajaxDefaults: { // Used by initAjax option
