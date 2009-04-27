@@ -23,8 +23,12 @@
 		$("#tree").dynatree({
 			persist: true,
 			checkbox: true,
-//			clickFolderMode: 1,
-			selectMode: 2,
+			selectMode: 3,
+			onPostInit: function(isReloading, isError) {
+               logMsg("onPostInit(%o, %o)", isReloading, isError);
+               // Re-fire onActivate, so the text is update  
+			   this.reactivate();
+		    }, 
 			onActivate: function(dtnode) {
 				$("#echoActive").text(dtnode.data.title);
 			},
@@ -43,8 +47,8 @@
 <body class="example">
 	<h1>Example: Persist</h1>
 	<p class="description">
-		Cookie persistence and is enabled here.<br>
-		(Also, double-click handler expands document nodes.)<br>
+		Cookie persistence is enabled here.<br>
+		Also, double-click handler expands document nodes.<br>
 		Select a node and hit [F5] to refresh, to see how the active node and 
 		expansion and selection states are restored.<br>	
 		<br>

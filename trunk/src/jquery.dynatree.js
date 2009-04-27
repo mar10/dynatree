@@ -96,6 +96,9 @@ var DynaTreeNode = Class.create();
 
 DynaTreeNode.prototype = {
 	initialize: function(parent, tree, data) {
+		/**
+		 * @constructor 
+		 */
 		this.parent = parent; 
 		this.tree = tree;
 		if ( typeof data == "string" ) 
@@ -108,37 +111,6 @@ DynaTreeNode.prototype = {
 		this.childList = null; // no subnodes yet
 		this.isRead = false; // Lazy content not yet read
 		this.hasSubSel = false;
-
-		// Initial status is read from cookies, if persistence is active and 
-		// cookies are already present.
-		// Otherwise the status is read from the data attributes and then persisted.
-		if( tree.options.persist && tree.persistence.cookiesFound ) {
-			// Init status from cookies
-			if( tree.persistence.activeKey == this.data.key )
-				tree.activeNode = this;
-			if( tree.persistence.focusedKey == this.data.key )
-				tree.focusNode = this;
-			this.bExpanded = ($.inArray(this.data.key, tree.persistence.expandedKeyList) >= 0);
-			this.bSelected = ($.inArray(this.data.key, tree.persistence.selectedKeyList) >= 0);
-		} else {
-			// Init status from data (write cookies after init phase)
-			if( data.activate ) {
-				tree.activeNode = this;
-				if( tree.options.persist )
-					tree.persistence.activeKey = this.data.key;
-			}
-			if( data.focus ) {
-				tree.focusNode = this;
-				if( tree.options.persist )
-					tree.persistence.focusedKey = this.data.key;
-			}
-			this.bExpanded = ( data.expand == true ); // Collapsed by default
-			if( this.bExpanded && tree.options.persist )
-				tree.persistence.addExpand(this.data.key);
-			this.bSelected = ( data.select == true ); // Deselected by default
-			if( this.bSelected && tree.options.persist )
-				tree.persistence.addSelect(this.data.key);
-		}
 	},
 
 	toString: function() {
@@ -328,8 +300,7 @@ DynaTreeNode.prototype = {
 			firstChild.render(false, false);
 		} else {
 			data.isStatusNode = true;
-//			firstChild = this._addChildNode(new DynaTreeNode(this, this.tree, data));
-			firstChild = this._addNode(data);
+			firstChild = this.addChild(data);
 		}
 	},
 
@@ -413,7 +384,7 @@ DynaTreeNode.prototype = {
 	},
 
 	_activate: function(flag, fireEvents) {
-		// Activate - but not focus - this node.
+		// (De)Activate - but not focus - this node.
 		this.tree.logDebug("dtnode._activate(%o, fireEvents=%o) - %o", flag, fireEvents, this);
 		var opts = this.tree.options;
 		if( this.data.isStatusNode )
@@ -459,47 +430,11 @@ DynaTreeNode.prototype = {
 		// Select - but not focus - this node.
 //		this.tree.logDebug("dtnode.activate(): %o", this);
 		this._activate(true, true);
-/*
-		var opts = this.tree.options;
-		if( this.data.isStatusNode )
-			return;
-		if ( opts.onQueryActivate && opts.onQueryActivate.call(this.span, true, this) == false )
-			return; // Callback returned false
-		if( this.tree.activeNode ) {
-			if( this.tree.activeNode === this )
-				return;
-			this.tree.activeNode.deactivate();
-		}
-		if( opts.activeVisible )
-			this.makeVisible();
-		this.tree.activeNode = this;
-        if( opts.persist )
-			$.cookie(opts.cookieId+"-active", this.data.key, opts.cookie);
-		$(this.span).addClass(opts.classNames.active);
-		if ( opts.onActivate ) // Pass element as 'this' (jQuery convention)
-			opts.onActivate.call(this.span, this);
-*/
 	},
 
 	deactivate: function() {
 //		this.tree.logDebug("dtnode.deactivate(): %o", this);
 		this._activate(false, true);
-/*
-		if( this.tree.activeNode === this ) {
-			var opts = this.tree.options;
-			if ( opts.onQueryActivate && opts.onQueryActivate.call(this.span, false, this) == false )
-				return; // Callback returned false
-			$(this.span).removeClass(opts.classNames.active);
-	        if( opts.persist ) {
-	        	// Note: we don't pass null, but ''. So the cookie is not deleted.
-	        	// If we pass null, we also have to pass a COPY of opts, because $cookie will override opts.expires (issue 84)
-				$.cookie(opts.cookieId+"-active", "", opts.cookie);
-	        }
-			this.tree.activeNode = null;
-			if ( opts.onDeactivate )
-				opts.onDeactivate.call(this.span, this);
-		}
-*/
 	},
 
 	isActive: function() {
@@ -964,73 +899,144 @@ DynaTreeNode.prototype = {
         }
 	},
 
-	_addChildNode: function (dtnode) {
-//		this.tree.logDebug ("%o._addChildNode(%o)", this, dtnode);
+	_addChildNode: function(dtnode, insertBefore) {
+		/** 
+		 * Internal function to add one single DynatreeNode as a child.
+		 * 
+		 */
 		var tree = this.tree;
 		var opts = tree.options;
+		var pers = tree.persistence;
+//		var data = dtnode.data;
+		
+		tree.logDebug ("%o._addChildNode(%o)", this, dtnode);
+		
+		// --- Add dtnode as a child
+		// TODO: implement insertBefore
+
 		if ( this.childList==null ) {
 			this.childList = [];
 		} else {
 			// Fix 'lastsib'
 			$(this.childList[this.childList.length-1].span).removeClass(opts.classNames.lastsib);
 		}
-
 		this.childList.push (dtnode);
-		dtnode.parent = this; // TODO: only need to assert this
 
-		// Expand the parent, if it's below minExpandLevel, or marked as expanded
+		// --- Update and fix dtnode attributes if necessary 
+		dtnode.parent = this;
+
+		// --- Handle persistence 
+		// Initial status is read from cookies, if persistence is active and 
+		// cookies are already present.
+		// Otherwise the status is read from the data attributes and then persisted.
+		var isInitializing = tree.isInitializing();
+		if( opts.persist && pers.cookiesFound && isInitializing ) {
+			// Init status from cookies
+			if( pers.activeKey == dtnode.data.key )
+				tree.activeNode = dtnode;
+			if( pers.focusedKey == dtnode.data.key )
+				tree.focusNode = dtnode;
+			dtnode.bExpanded = ($.inArray(dtnode.data.key, pers.expandedKeyList) >= 0);
+			dtnode.bSelected = ($.inArray(dtnode.data.key, pers.selectedKeyList) >= 0);
+		} else {
+			// Init status from data (Note: we write the cookies after the init phase)
+			if( dtnode.data.activate ) {
+				tree.activeNode = dtnode;
+				if( opts.persist )
+					pers.activeKey = dtnode.data.key;
+			}
+			if( dtnode.data.focus ) {
+				tree.focusNode = dtnode;
+				if( opts.persist )
+					pers.focusedKey = dtnode.data.key;
+			}
+			dtnode.bExpanded = ( dtnode.data.expand == true ); // Collapsed by default
+			if( dtnode.bExpanded && opts.persist )
+				pers.addExpand(dtnode.data.key);
+			dtnode.bSelected = ( dtnode.data.select == true ); // Deselected by default
+			if( dtnode.bSelected && opts.persist )
+				pers.addSelect(dtnode.data.key);
+		}
+
+		// Always expand, if it's below minExpandLevel
 //		tree.logDebug ("%o._addChildNode(%o), l=%o", this, dtnode, dtnode.getLevel());
-		if ( dtnode.data.expand || opts.minExpandLevel >= dtnode.getLevel() )
+		if ( opts.minExpandLevel >= dtnode.getLevel() ) {
+			tree.logDebug ("Force expand for %o", dtnode);
 			this.bExpanded = true;
+		}
 
 		// In multi-hier mode, update the parents selection state
 		// issue #82: only if not initializing, because the children may not exist yet
-		if( !dtnode.data.isStatusNode && opts.selectMode==3 && !tree.isInitializing() )
-			dtnode._fixSelectionState();
+//		if( !dtnode.data.isStatusNode && opts.selectMode==3 && !isInitializing )
+//			dtnode._fixSelectionState();
 
+		// In multi-hier mode, update the parents selection state
+		if( dtnode.bSelected && opts.selectMode==3 ) {
+			var p = this;
+			while( p ) {
+				if( !p.hasSubSel )
+					p._setSubSel(true);
+				p = p.parent;
+			}
+		}
+		// render this node and the new child
 		if ( tree.bEnableUpdate )
 			this.render(true, true);
 
 		return dtnode;
 	},
 
-	_addNode: function(data) {
-		return this._addChildNode(new DynaTreeNode(this, this.tree, data));
-	},
-
-	append: function(obj) {
-		/*
-		Data format: array of node objects, with optional 'children' attributes.
-		[
-			{ title: "t1", isFolder: true, ... }
-			{ title: "t2", isFolder: true, ...,
-				children: [
-					{title: "t2.1", ..},
-					{..}
-					]
-			}
-		]
-		A simple object is also accepted instead of an array.
-		*/
-//		this.tree.logDebug ("%o.append(%o)", this, obj);
+	addChild: function(obj, insertBefore) {
+		/**
+		 * Add a node object as child.
+		 * 
+		 * This should be the only place, where a DynaTreeNode is constructed!
+		 * (Except for the root node creation in the tree constructor)
+		 * 
+		 * @param obj A JS object (may be recursive) or an array of those.
+		 * @param {DynaTreeNode} insertBefore (optional) sibling node.
+		 *     
+		 * Data format: array of node objects, with optional 'children' attributes.
+		 * [
+		 *	{ title: "t1", isFolder: true, ... }
+		 *	{ title: "t2", isFolder: true, ...,
+		 *		children: [
+		 *			{title: "t2.1", ..},
+		 *			{..}
+		 *			]
+		 *	}
+		 * ]
+		 * A simple object is also accepted instead of an array.
+		 * 
+		 */
+		this.tree.logDebug("%o.addChild(%o, %o)", this, obj, insertBefore);
 		if( !obj || obj.length==0 ) // Passed null or undefined or empty array
 			return;
-		if( !obj.length ) // Passed a single node
+		if( obj instanceof DynaTreeNode )
+			return this._addChildNode(obj, insertBefore);
+		if( !obj.length ) // Passed a single data object
 			obj = [ obj ];
-//			return this._addNode(obj);
 
 		var prevFlag = this.tree.enableUpdate(false);
 
 		var tnFirst = null;
 		for (var i=0; i<obj.length; i++) {
 			var data = obj[i];
-			var dtnode = this._addNode(data);
+			var dtnode = this._addChildNode(new DynaTreeNode(this, this.tree, data), insertBefore);
 			if( !tnFirst ) tnFirst = dtnode;
+			// Add child nodes recursively
 			if( data.children )
-				dtnode.append(data.children);
+				dtnode.addChild(data.children, null);
 		}
 		this.tree.enableUpdate(prevFlag);
 		return tnFirst;
+	},
+
+	append: function(obj) {
+		/**
+		 * @deprecated 
+		 */
+		return this.addChild(obj, null);
 	},
 
 	appendAjax: function(ajaxOptions) {
@@ -1400,7 +1406,7 @@ TODO: better?
 					}
 				}
 			}
-			childNode = parentTreeNode._addNode(data);
+			childNode = parentTreeNode.addChild(data);
 			// Recursive reading of child nodes, if LI tag contains an UL tag
 			var $ul = $li.find(">ul:first");
 			if( $ul.length ) {
@@ -1523,17 +1529,16 @@ $.widget("ui.dynatree", {
     	this.tree.logDebug("Dynatree._init(): bind events...");
     	this.bind();
 
-        // Fire expand/select/focus/activate events for all nodes that were initialized
+        // --- Post-load processing
     	this.tree.logDebug("Dynatree._init(): postInit...");
     	this.tree.phase = "postInit";
     	
     	// In persist mode, make sure that cookies are written, even if they are empty
         if( opts.persist ) { 
-//			$.cookie(opts.cookieId+"-active", "", opts.cookie);
 			this.tree.persistence.write();
         }
+        
     	// Set focus, if possible (this will also fire an event and write a cookie)
-
     	if( this.tree.focusNode && this.tree.focusNode.isVisible() ) {
     		this.tree.logDebug("Focus on init: %o", this.tree.focusNode);
     		this.tree.focusNode.focus();
