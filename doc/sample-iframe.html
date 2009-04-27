@@ -33,6 +33,12 @@
 		// Attach the dynatree widget to an existing <div id="tree"> element
 		// and pass the tree options as an argument to the dynatree() function:
 		$("#tree").dynatree({
+			rootVisible: false,
+//			autoCollapse: true,
+			persist: true,
+			onPostInit: function(isReloading, isError) {
+			   this.reactivate();
+			},
 			onActivate: function(dtnode) {
 				// Use our custom attribute to load the new target content:
 				if( dtnode.data.url )
