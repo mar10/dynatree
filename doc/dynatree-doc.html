@@ -241,6 +241,7 @@ $("#tree").dynatree({
 	onQueryExpand: null, // Callback(flag, dtnode) before a node is expanded/collpsed.
 	
 	// High level event handlers
+    onPostInit: null, // Callback(isReloading, isError) when tree was (re)loaded.
 	onActivate: null, // Callback(dtnode) when a node is activated.
 	onDeactivate: null, // Callback(dtnode) when a node is deactivated.
 	onSelect: null, // Callback(flag, dtnode) when a node is (de)selected.
@@ -488,7 +489,7 @@ $("#tree").dynatree({
 
 <p>
 	Instead of passing an array of data objects, we can pass a url in the <code>initAjax</code>
-	option that will be used to contact an Ajax webservice.
+	option that will be used to contact an Ajax web service.
 </p>
 
 <pre class="prettyprint">
@@ -503,7 +504,7 @@ $("#tree").dynatree({
 </pre>
 
 <p>
-	The webservice is expected to return a JSON node list, formatted like this:<br>
+	The web service is expected to return a JSON node list, formatted like this:<br>
 	<code>[ { ... }, { ... }, ... ]</code>.
 </p>
 <p>
@@ -511,7 +512,9 @@ $("#tree").dynatree({
 	Dynatree will display a spinning wheel, while waiting for the request to complete.
 </p>
 <p>
-	See <a href="#lazyLoading">Loading child nodes on demand</a> for details.
+	See <a href="#lazyLoading">Loading child nodes on demand</a> for details.<br>
+    See <a href="#lazyPersist">Persistence for lazy trees</a> for a sample on 
+    how to combine this with persistence.
 </p>
 
 
@@ -788,7 +791,7 @@ $("#tree").dynatree({
 	Because the data request is performed asynchronously, the browser will not 
 	block and is still responsive. Dynatree will display a spinning wheel, while waiting for the request to 
 	complete.<br>
-	The webservice is expected to return a JSON node list, formatted like this:<br>
+	The web service is expected to return a JSON node list, formatted like this:<br>
 	<code>[ { ... }, { ... }, ... ]</code><br>
 	When the response was received, <code>appendAjax()</code> appends the child 
 	nodes and calls <code>node.setLazyNodeStatus(DTNodeStatus_Ok)</code> to
@@ -808,6 +811,91 @@ $("#tree").dynatree({
 	See <a href="#ajaxResponse">Initializing the structure from an Ajax response</a> 
 	for a sample to initialize the whole tree with an Ajax request.
 </p>
+
+
+<h2 id="persistence">Persistence</h2>
+
+<p>
+When initializing a tree in persist mode, we first check, if persistence 
+cookies already exist.<br>
+If not, we assume first-time initializing, read the status from the tree source, 
+and store it into new cookies. 
+</p><p>
+Otherwise we assume re-loading, ignore the source node attributes and override 
+them using the cookie info.
+</p><p>
+In either case, the 'active', 'expand' and 'select' status of a node is read from 
+the data or restored from the cookies.<br> 
+However, no onQueryActivate, onActivate, onExpand, onSelect, etc. events are fired. 
+(The only event that may be fired is onFocus.)<br>
+In order to generate these events on reload, we may use the callback function onPostInit() 
+and tree.reactivate().
+</p>
+
+<pre class="prettyprint">
+$("#tree").dynatree({
+    [&#8230;]
+    onPostInit: function(isReloading, isError) {
+        // 'this' is the current tree
+        // isReloading is set, if status wss read from existing cookies
+        // isError is only used in Ajay mode
+        // Fire an onActivate() event for the currently active node
+        this.reactivate();
+    },
+    onActivate: function(dtnode) {
+        // Use status functions to find out about the calling context
+        var isInitializing = dtnode.tree.isInitializing(); // Tree loading phase
+        var isReloading = dtnode.tree.isReloading(); // Loading phase, and reading status from cookies
+        var isUserEvent = dtnode.tree.isUserEvent(); // Event was triggered by mouse or keyboard
+        
+        $("#echoActive").text(dtnode.data.title);
+    },     
+</pre>
+
+
+<h3 id="lazyPersist">Persistence for lazy trees</h3>
+<p>
+The problem with restoring the status of a <b>lazy</b> tree is, that the currently active 
+or selected nodes may not be part of the tree, when it is freshly re-loaded.
+</p><p>
+The basic idea is to leave it up to the backend web service to deliver not only 
+the top-level nodes, but also all nodes that are required to display the current status.
+</p><p>
+For example, it may be neccessary to render 3 parent nodes, if the active node is at level # 4.<br>
+The backend may also deliver all child nodes of expanded parents.<br>
+Or in selectMode 3 (hierarchical) we may want to send all nodes, that are partly selected.
+</p><p>
+initAjax (and appendAjax) have 3 new options, that make it easy to pass persistence 
+information to the web service handler.
+</p>
+
+<pre class="prettyprint">
+$("#tree").dynatree({
+    [&#8230;]
+    initAjax: {url: "/ajaxTree",
+               data: {key: key,
+                      mode: mode,
+                      filter: filter
+                      },
+               addActiveKey: true,  // add &activeKey= parameter to URL
+               addFocusedKey: true, // add &focusedKey= parameter to URL
+               addExpandedKeyList: true // add &expandedKeyList= parameter to URL
+               },
+    onPostInit: function(isReloading, isError) {
+        // In lazy mode, this will be called *after* the initAjax request returned.
+        // 'this' is the current tree
+        // isReloading is set, if status wss read from existing cookies
+        // isError is set, if Ajax failed
+        // Fire an onActivate() event for the currently active node
+        this.reactivate();
+    },
+    onActivate: function(dtnode) {
+        // Use status functions to find out about the calling context
+        var isUserEvent = dtnode.tree.isUserEvent(); // Event was triggered by mouse or keyboard
+        
+        $("#echoActive").text(dtnode.data.title);
+    },
+</pre>
 
 
 <h2 id="programming">Programming dynatree</h2>
@@ -888,29 +976,34 @@ $("#tree").dynatree({
 <h3><code>DynaTree</code> class members</h3>
 
 <dl class="optionList">
+    <dt>activateKey(key)
+    <dd>
+        Activate and focus node with a given key and fire focus and activate events.<br>
+        If <code>activeVisible</code> option is set, all parents will be expanded as necessary.<br>
+        If key is null, the current activation is removed.<br>
+        Return the active DynaTreeNode.
+    </dd>
 	<dt>enableUpdate(enable)
 	<dd>
 		Turn rendering on or off. Disabling update may speedup processing, when adding lots of nodes.<br>
 		Don't forget to turn rendering back on, after applying the changes. 
 	</dd>
+    <dt>getActiveNode()
+    <dd>
+        Return the currently active DynaTreeNode or null.
+    </dd>
 	<dt>getNodeByKey(key)
 	<dd>
 		Return DynaTreeNode with a given key or 'null' if not found.
 	</dd>
+    <dt>getPersistData()
+    <dd>
+        Return cookie persistence info as dictionary.<br>
+        There is also a global function available: getDynaTreePersistData(cookieId, cookieOpts) 
+    </dd>
 	<dt>getRoot()
 	<dd>
 		Return the root DynaTreeNode object.
-	</dd>
-	<dt>getActiveNode()
-	<dd>
-		Return the currently active DynaTreeNode or null.
-	</dd>
-	<dt>activateKey(key)
-	<dd>
-		Activate and focus node with a given key and fire focus and activate events.<br>
-		If <code>activeVisible</code> option is set, all parents will be expanded as necessary.<br>
-		If key is null, the current activation is removed.<br>
-		Return the active DynaTreeNode.
 	</dd>
 	<dt>getSelectedNodes(stopOnParents)
 	<dd>
@@ -924,11 +1017,30 @@ $("#tree").dynatree({
 		Use this function in an event handler, to check if the event was fired 
 		during a page reload, when the cookie persistence is applied.   
 	</dd>
+    <dt>isReloading()
+    <dd>
+        Return true, if the tree is in the init phase and persistence is on,
+        and the current status was read from existing cookies.<br>
+        Use this function in an event handler, to check if the event was fired 
+        during a page reload, when the cookie persistence is applied.   
+    </dd>
+    <dt>isUserEvent()
+    <dd>
+        Return true, if the tree is processing a user event.<br>
+        Use this function in an event handler, to check if the event was fired 
+        in response to a mouse click or key stroke.   
+    </dd>
 	<dt>selectKey(key, flag)
 	<dd>
 		Select or deselect node with a given key and fire focus and select events.<br>
 		Return the selected DynaTreeNode.
 	</dd>
+    <dt>reactivate(setFocus)
+    <dd>
+        Fire onQueryActivate and onActivate events for the currently active node
+        (if there is one).<br>
+        This may be useful when processing an onPostInit callback.
+    </dd>
 	<dt>toDict()
 	<dd>
 		Convert the tree into a JavaScript object.<br>
