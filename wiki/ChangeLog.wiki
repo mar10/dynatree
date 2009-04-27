@@ -3,12 +3,19 @@
 
 <wiki:toc max_depth="4" />
 
+
 ==== Release 1.0 (planned) ====
 Drag'n'drop support.
 
+
 ==== Release 0.5 (planned) ====
-Change how persistance and related events are working.
-Also support persistence for lazy trees.
+
+Main Changes:
+  * Change how persistance and related events are working (no longer fires events)
+  * Support for persistence with lazy trees
+  * Se the [http://code.google.com/p/dynatree/wiki/UpdateToVersion05 Migration hints] for details.
+  * See also the [http://code.google.com/p/dynatree/issues/list?can=1&q=milestone:Release0.5+status%3AFixed%2CVerified&sort=-modified&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary fix list].
+
 
 ==== Release 0.4 ====
 
