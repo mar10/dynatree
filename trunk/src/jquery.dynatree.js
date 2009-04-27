@@ -412,9 +412,54 @@ DynaTreeNode.prototype = {
 		} catch(e) { }
 	},
 
+	_activate: function(flag, fireEvents) {
+		// Activate - but not focus - this node.
+		this.tree.logDebug("dtnode._activate(%o, fireEvents=%o) - %o", flag, fireEvents, this);
+		var opts = this.tree.options;
+		if( this.data.isStatusNode )
+			return;
+		if ( fireEvents && opts.onQueryActivate && opts.onQueryActivate.call(this.span, flag, this) == false )
+			return; // Callback returned false
+		
+		if( flag ) {
+			// Activate
+			if( this.tree.activeNode ) {
+				if( this.tree.activeNode === this )
+					return;
+				this.tree.activeNode.deactivate();
+			}
+			if( opts.activeVisible )
+				this.makeVisible();
+			this.tree.activeNode = this;
+	        if( opts.persist )
+				$.cookie(opts.cookieId+"-active", this.data.key, opts.cookie);
+			$(this.span).addClass(opts.classNames.active);
+			if ( fireEvents && opts.onActivate ) // Pass element as 'this' (jQuery convention)
+				opts.onActivate.call(this.span, this);
+		} else {
+			// Deactivate
+			if( this.tree.activeNode === this ) {
+				var opts = this.tree.options;
+				if ( opts.onQueryActivate && opts.onQueryActivate.call(this.span, false, this) == false )
+					return; // Callback returned false
+				$(this.span).removeClass(opts.classNames.active);
+		        if( opts.persist ) {
+		        	// Note: we don't pass null, but ''. So the cookie is not deleted.
+		        	// If we pass null, we also have to pass a COPY of opts, because $cookie will override opts.expires (issue 84)
+					$.cookie(opts.cookieId+"-active", "", opts.cookie);
+		        }
+				this.tree.activeNode = null;
+				if ( fireEvents && opts.onDeactivate )
+					opts.onDeactivate.call(this.span, this);
+			}
+		}
+	},
+
 	activate: function() {
 		// Select - but not focus - this node.
 //		this.tree.logDebug("dtnode.activate(): %o", this);
+		this._activate(true, true);
+/*
 		var opts = this.tree.options;
 		if( this.data.isStatusNode )
 			return;
@@ -433,10 +478,13 @@ DynaTreeNode.prototype = {
 		$(this.span).addClass(opts.classNames.active);
 		if ( opts.onActivate ) // Pass element as 'this' (jQuery convention)
 			opts.onActivate.call(this.span, this);
+*/
 	},
 
 	deactivate: function() {
 //		this.tree.logDebug("dtnode.deactivate(): %o", this);
+		this._activate(false, true);
+/*
 		if( this.tree.activeNode === this ) {
 			var opts = this.tree.options;
 			if ( opts.onQueryActivate && opts.onQueryActivate.call(this.span, false, this) == false )
@@ -451,6 +499,7 @@ DynaTreeNode.prototype = {
 			if ( opts.onDeactivate )
 				opts.onDeactivate.call(this.span, this);
 		}
+*/
 	},
 
 	isActive: function() {
@@ -1217,7 +1266,9 @@ DynaTree.prototype = {
 	isInitializing: function() {
 		return ( this.phase=="init" || this.phase=="postInit" );
 	},
-
+	isReloading: function() {
+		return ( this.phase=="init" || this.phase=="postInit" ) && this.options.persist && this.persistence.cookiesFound;
+	},
 	isUserEvent: function() {
 		return ( this.phase=="userEvent" );
 	},
@@ -1243,12 +1294,14 @@ DynaTree.prototype = {
 		return this.activeNode;
 	},
 	
-	reactivate: function() {
+	reactivate: function(setFocus) {
 		// Re-fire onQueryActivate and onActivate events.
-		if( this.activeNode ) {
-			var node = this.activeNode;
-			this.activeNode = null;
+		var node = this.activeNode;
+		if( node ) {
+			this.activeNode = null; // Force re-activating
 			node.activate();
+			if( setFocus )
+				node.focus();
 		}
 	},
 
@@ -1358,7 +1411,7 @@ TODO: better?
 	},
 
 	_checkConsistency: function() {
-		this.logDebug("tree._checkConsistency() NOT IMPLEMENTED - %o", this);
+//		this.logDebug("tree._checkConsistency() NOT IMPLEMENTED - %o", this);
 	},
 	
 	// --- end of class
@@ -1416,8 +1469,9 @@ $.widget("ui.dynatree", {
     	var isReloading = ( opts.persist && this.tree.persistence.isReloading() );
     	var isLazy = false;
 
-    	var prevFlag = this.tree.enableUpdate(false); // Speedup by 13s -> 1,5 s 
-    	this.tree.logDebug("Start init tree structure...");
+    	var prevFlag = this.tree.enableUpdate(false);  
+
+    	this.tree.logDebug("Dynatree._init(): read tree structure...");
 
     	// Init tree structure
     	if( opts.children ) {
@@ -1426,10 +1480,9 @@ $.widget("ui.dynatree", {
 
     	} else if( opts.initAjax && opts.initAjax.url ) {
     		// Init tree from AJAX request
-    		// Register onPostInit callback to be called when Ajax returns
     		isLazy = true;
-    		ajaxOpts = $.extend({}, opts.initAjax);
-    		
+    		var ajaxOpts = $.extend({}, opts.initAjax);
+    		// Append cookie info to the request
     		if( ajaxOpts.addActiveKey )
     			ajaxOpts.data.activeKey = this.tree.persistence.activeKey; 
     		if( ajaxOpts.addFocusedKey )
@@ -1439,14 +1492,16 @@ $.widget("ui.dynatree", {
     		if( ajaxOpts.addSelectedKeyList )
     			ajaxOpts.data.selectedKeyList = this.tree.persistence.selectedKeyList.join(","); 
 
+    		// Setup onPostInit callback to be called when Ajax returns
     		if( opts.onPostInit ) {
     			if( ajaxOpts.success )
-    				this.tree.logWarning("success callback is ignored, when onPostInit was specified.");
+    				this.tree.logWarning("initAjax: success callback is ignored when onPostInit was specified.");
     			if( ajaxOpts.error )
-    				this.tree.logWarning("error callback is ignored, when onPostInit was specified.");
+    				this.tree.logWarning("initAjax: error callback is ignored when onPostInit was specified.");
     			ajaxOpts["success"] = function() { opts.onPostInit.call(this.tree, isReloading, false); }; 
     			ajaxOpts["error"] = function() { opts.onPostInit.call(this.tree, isReloading, true); }; 
     		}
+        	this.tree.logDebug("Dynatree._init(): send Ajax request...");
     		root.appendAjax(ajaxOpts);
 
     	} else if( opts.initId ) {
@@ -1461,15 +1516,16 @@ $.widget("ui.dynatree", {
     	}
     	
     	this.tree._checkConsistency();
-    	
+    	// Render html markup
+    	this.tree.logDebug("Dynatree._init(): render nodes...");
     	this.tree.enableUpdate(prevFlag);
     	
-    	this.tree.logDebug("Init tree structure... done.");
-
     	// bind event handlers
+    	this.tree.logDebug("Dynatree._init(): bind events...");
     	this.bind();
 
         // Fire expand/select/focus/activate events for all nodes that were initialized
+    	this.tree.logDebug("Dynatree._init(): postInit...");
     	this.tree.phase = "postInit";
     	
     	// In persist mode, make sure that cookies are written, even if they are empty
@@ -1478,16 +1534,18 @@ $.widget("ui.dynatree", {
 			this.tree.persistence.write();
         }
     	// Set focus, if possible (this will also fire an event and write a cookie)
+
     	if( this.tree.focusNode && this.tree.focusNode.isVisible() ) {
     		this.tree.logDebug("Focus on init: %o", this.tree.focusNode);
     		this.tree.focusNode.focus();
     	}
 
-    	this.tree.phase = "idle";
-
     	if( !isLazy && opts.onPostInit ) {
     		opts.onPostInit.call(this.tree, isReloading, false);
     	}
+
+    	this.tree.logDebug("Dynatree._init(): done.");
+    	this.tree.phase = "idle";
 	},
 
 	bind: function() {
@@ -1512,19 +1570,26 @@ $.widget("ui.dynatree", {
 			
 			if( !dtnode )
 				return false;
-//			dtnode.tree.logDebug("bind(" + event.type + "): dtnode:" + this + ", charCode:" + event.charCode + ", keyCode: " + event.keyCode + ", which: " + event.which);
-			dtnode.tree.logDebug("bind(%o): dtnode: %o", event, dtnode);
+			var prevPhase = dtnode.tree.phase;
+			dtnode.tree.phase = "userEvent";
+			try {
+				dtnode.tree.logDebug("bind(%o): dtnode: %o", event, dtnode);
 
-			switch(event.type) {
-			case "click":
-				return ( o.onClick && o.onClick(dtnode, event)===false ) ? false : dtnode.onClick(event);
-			case "dblclick":
-				return ( o.onDblClick && o.onDblClick(dtnode, event)===false ) ? false : dtnode.onDblClick(event);
-			case "keydown":
-				return ( o.onKeydown && o.onKeydown(dtnode, event)===false ) ? false : dtnode.onKeydown(event);
-			case "keypress":
-				return ( o.onKeypress && o.onKeypress(dtnode, event)===false ) ? false : dtnode.onKeypress(event);
-			};
+				switch(event.type) {
+				case "click":
+					return ( o.onClick && o.onClick(dtnode, event)===false ) ? false : dtnode.onClick(event);
+				case "dblclick":
+					return ( o.onDblClick && o.onDblClick(dtnode, event)===false ) ? false : dtnode.onDblClick(event);
+				case "keydown":
+					return ( o.onKeydown && o.onKeydown(dtnode, event)===false ) ? false : dtnode.onKeydown(event);
+				case "keypress":
+					return ( o.onKeypress && o.onKeypress(dtnode, event)===false ) ? false : dtnode.onKeypress(event);
+				};
+//			} catch(e) {
+//				dtnode.tree.logError("bind(%o): dtnode: %o", event, dtnode);
+			} finally {
+				dtnode.tree.phase = prevPhase;
+			}
 		});
 		
 		// focus/blur don't bubble, i.e. are not delegated to parent <div> tags,

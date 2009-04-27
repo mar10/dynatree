@@ -67,11 +67,13 @@
             selectMode: 2,
             onPostInit: function(isReloading, isError) {
                 logMsg("onPostInit(): tree:%o, isReloading:%o, isError:%o", this, isReloading, isError);
+                logMsg("onPostInit(): tree.isReloading:%o, tree.isInitializing:%o", this.isReloading(), this.isInitializing());
                 var persistData = this.getPersistData();
                 logMsg("persistData: %o", persistData);
                 this.reactivate();
             },
             onActivate: function(dtnode) {
+                logMsg("onActivate: %o, userEvent:%o", dtnode, dtnode.tree.isUserEvent());
                 $("#echoActive").text(dtnode.data.title);
             },
             onDeactivate: function(dtnode) {
@@ -82,6 +84,7 @@
                 dtnode.toggleExpand();
             }
         });
+        logMsg("after widget init: %o", this);
     });
 </script>
 </head>
