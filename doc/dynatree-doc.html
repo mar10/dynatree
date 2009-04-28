@@ -751,13 +751,19 @@ $("#tree").dynatree({
 
 <p>
 	Dynatree supports delayed loading of tree nodes, which means we read the 
-	nodes only when the parent is expanded.
+	child nodes only when their parent is expanded.
+</p>
+<p>
+    Because the data request is performed asynchronously, the browser will not 
+    block and is still responsive. Dynatree will display a spinning wheel, while 
+    waiting for the request to complete. 
 </p>
 <p>
 	To make this happen, we have to
 </p>
 <ul>
 	<li>Mark some or all nodes as lazy, by setting the <code>isLazy</code> option to true.
+    <li>Implement a backend web service that delivers a JSON formatted node list. 
 	<li>Implement the <code>onLazyRead</code> callback to send an Ajax request, 
 	    create the child nodes, and set the 'ok' status.
 </ul>
@@ -771,15 +777,7 @@ $("#tree").dynatree({
 		dtnode.appendAjax({url: "/sendData",
 	                       data: {"key": dtnode.data.key, // Optional url arguments
 		                          "mode": "all"
-		                          },
-		                   success: function(dtnode) {
-					           // Called after nodes have been created and the waiting icon was removed.
-					           // 'this' is the options for this Ajax request
-					           },
-				           error: function(dtnode, XMLHttpRequest, textStatus, errorThrown) { 
-							   // Called on error, after error icon was created. 
-				               },
-		                   cache: false // Append random '_' argument to url to prevent caching.
+		                          }
 		                  });
 	},
 	[&#8230;]
@@ -788,28 +786,57 @@ $("#tree").dynatree({
 </div>
 
 <p>
-	Because the data request is performed asynchronously, the browser will not 
-	block and is still responsive. Dynatree will display a spinning wheel, while waiting for the request to 
-	complete.<br>
-	The web service is expected to return a JSON node list, formatted like this:<br>
-	<code>[ { ... }, { ... }, ... ]</code><br>
-	When the response was received, <code>appendAjax()</code> appends the child 
-	nodes and calls <code>node.setLazyNodeStatus(DTNodeStatus_Ok)</code> to
-	remove the wait icon. 
+    Typically we would implement <code>onLazyRead</code> by calling the  
+	<code>dtnode.appendAjax()</code> function.<br>
+	It expects one option object argument, as described in the documentation for 
+	the <a href="http://docs.jquery.com/Ajax/jQuery.ajax">jQuery.ajax()</a>	command.<br>
+</p><p>
+    These options are set by default:<br>
+    <code>cache: false</code> and <code>dataType: "json"</code>.
+</p><p>
+	Note that the <code>success</code> and <code>error</code> options 
+	are implemented differently from the jQuery standard:<br>
+	They pass different arguments and are called <strong>after</strong> the 
+	Dynatree default processing took place.<br>
+	This makes it easy to use the <code>success</code> callback to apply any 
+	custom postprocessing, for example activating a node or binding events.  
+</p>
+<pre class="prettyprint">
+$("#tree").dynatree({
+    [&#8230;]
+    onLazyRead: function(dtnode){
+        dtnode.appendAjax({url: "/sendData",
+                           data: {"key": dtnode.data.key, // Optional url arguments
+                                  "mode": "all"
+                                  },
+                           success: function(dtnode) {
+                               // Called after nodes have been created and the waiting icon was removed.
+                               // 'this' is the options for this Ajax request
+                               },
+                           error: function(dtnode, XMLHttpRequest, textStatus, errorThrown) { 
+                               // Called on error, after error icon was created. 
+                               },
+                           cache: false // Append random '_' argument to url to prevent caching.
+                          });
+    },
+    [&#8230;]
+});
+</pre>
+<p>
+    The web service is expected to return a JSON node list, formatted like this:<br>
+    <code>[ { "title": "Node1", "isLazy": true, "key": "BC13B21636CD6D5C", &#8230; }, { &#8230; }, &#8230; ]</code><br>
+    See <a href="#nodeOptions">Node options</a> for a list of supported attributes.
 </p>
 <p>
-	<code>appendAjax</code> expects one option object argument, as described 
-	in the <a href="http://docs.jquery.com/Ajax">jQuery.ajax()</a> command.<br>
-	Note however, that the optional <code>success</code> and <code>error</code> callbacks 
-	pass different arguments and are called <strong>after</strong> the Dynatree
-	default processing took place.<br>
-	The <code>success</code> callback may be used to apply any custom postprocessing, 
-	for example activating a node or binding events.  
+    When the response was received, <code>appendAjax()</code> appends the child 
+    nodes and calls <code>node.setLazyNodeStatus(DTNodeStatus_Ok)</code> to
+    remove the wait icon. 
 </p>
 <p>
-	See <a href="#nodeOptions">Node options</a> for details.<br>
-	See <a href="#ajaxResponse">Initializing the structure from an Ajax response</a> 
-	for a sample to initialize the whole tree with an Ajax request.
+    Note that <code>initAjax</code> is simply a special case, where the tree's
+    root node is loaded on startup.<br> 
+    See <a href="#ajaxResponse">Initializing the structure from an Ajax response</a> 
+    for a sample to initialize the whole tree with an Ajax request.
 </p>
 
 
