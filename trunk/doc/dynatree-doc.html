@@ -826,17 +826,20 @@ $("#tree").dynatree({
     The web service is expected to return a JSON node list, formatted like this:<br>
     <code>[ { "title": "Node1", "isLazy": true, "key": "BC13B21636CD6D5C", &#8230; }, { &#8230; }, &#8230; ]</code><br>
     See <a href="#nodeOptions">Node options</a> for a list of supported attributes.
-</p>
-<p>
+</p><p>
     When the response was received, <code>appendAjax()</code> appends the child 
     nodes and calls <code>node.setLazyNodeStatus(DTNodeStatus_Ok)</code> to
     remove the wait icon. 
-</p>
-<p>
+</p><p>
     Note that <code>initAjax</code> is simply a special case, where the tree's
     root node is loaded on startup.<br> 
     See <a href="#ajaxResponse">Initializing the structure from an Ajax response</a> 
     for a sample to initialize the whole tree with an Ajax request.
+</p><p>
+    See <a href="dynatree_server.py">dynatree_server.py</a> for a sample 
+    implementation of a web server that handles this (~150 lines of Python code).<br>
+    When this server is running, you can try this <a href="sample-lazy-persist.html">live example</a>
+    of a lazy tree.
 </p>
 
 
@@ -892,8 +895,13 @@ For example, it may be neccessary to render 3 parent nodes, if the active node i
 The backend may also deliver all child nodes of expanded parents.<br>
 Or in selectMode 3 (hierarchical) we may want to send all nodes, that are partly selected.
 </p><p>
-initAjax (and appendAjax) have 3 new options, that make it easy to pass persistence 
-information to the web service handler.
+initAjax (and appendAjax) have 3 options, that make it easy to pass persistence 
+information to the web service.
+</p><p>
+    See <a href="dynatree_server.py">dynatree_server.py</a> for a sample 
+    implementation of a web server that handles this (~150 lines of Python code).<br>
+    When this server is running, you can try this <a href="sample-lazy-persist.html">live example</a>
+    of a lazy tree.
 </p>
 
 <pre class="prettyprint">

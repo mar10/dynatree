@@ -167,6 +167,7 @@ class DynaTreeWsgiApp(object):
             key = _keyFromString(fullPath)
             size = os.path.getsize(fullPath)
             date = time.ctime(os.path.getmtime(fullPath))
+            # Create a node dictionary and append it to the child list
             node = {"title": fn,
                     "key": key,
                     "isFolder": isFolder,
