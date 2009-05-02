@@ -907,9 +907,8 @@ DynaTreeNode.prototype = {
 		var tree = this.tree;
 		var opts = tree.options;
 		var pers = tree.persistence;
-//		var data = dtnode.data;
 		
-		tree.logDebug ("%o._addChildNode(%o)", this, dtnode);
+//		tree.logDebug("%o._addChildNode(%o)", this, dtnode);
 		
 		// --- Add dtnode as a child
 		// TODO: implement insertBefore
@@ -932,6 +931,7 @@ DynaTreeNode.prototype = {
 		var isInitializing = tree.isInitializing();
 		if( opts.persist && pers.cookiesFound && isInitializing ) {
 			// Init status from cookies
+//			tree.logDebug("init from cookie, pa=%o, dk=%o", pers.activeKey, dtnode.data.key);
 			if( pers.activeKey == dtnode.data.key )
 				tree.activeNode = dtnode;
 			if( pers.focusedKey == dtnode.data.key )
@@ -940,6 +940,7 @@ DynaTreeNode.prototype = {
 			dtnode.bSelected = ($.inArray(dtnode.data.key, pers.selectedKeyList) >= 0);
 		} else {
 			// Init status from data (Note: we write the cookies after the init phase)
+//			tree.logDebug("init from data");
 			if( dtnode.data.activate ) {
 				tree.activeNode = dtnode;
 				if( opts.persist )
@@ -1047,11 +1048,15 @@ DynaTreeNode.prototype = {
 		var orgError = ajaxOptions.error;
 		var options = $.extend({}, this.tree.options.ajaxDefaults, ajaxOptions, {
        		success: function(data, textStatus){
-     		    // <this> is the request options  
+     		    // <this> is the request options
+				var prevPhase = self.tree.phase;
+				self.tree.phase = "init";
 				self.append(data);
+				self.tree.phase = "postInit";
 				self.setLazyNodeStatus(DTNodeStatus_Ok);
 				if( orgSuccess )
 					orgSuccess.call(options, self);
+				self.tree.phase = prevPhase;
        			},
        		error: function(XMLHttpRequest, textStatus, errorThrown){
        		    // <this> is the request options  
@@ -1503,8 +1508,8 @@ $.widget("ui.dynatree", {
     				this.tree.logWarning("initAjax: success callback is ignored when onPostInit was specified.");
     			if( ajaxOpts.error )
     				this.tree.logWarning("initAjax: error callback is ignored when onPostInit was specified.");
-    			ajaxOpts["success"] = function() { opts.onPostInit.call(this.tree, isReloading, false); }; 
-    			ajaxOpts["error"] = function() { opts.onPostInit.call(this.tree, isReloading, true); }; 
+    			ajaxOpts["success"] = function(dtnode) { opts.onPostInit.call(dtnode.tree, isReloading, false); }; 
+    			ajaxOpts["error"] = function(dtnode) { opts.onPostInit.call(dtnode.tree, isReloading, true); }; 
     		}
         	this.tree.logDebug("Dynatree._init(): send Ajax request...");
     		root.appendAjax(ajaxOpts);
@@ -1549,6 +1554,8 @@ $.widget("ui.dynatree", {
     	}
 
     	this.tree.logDebug("Dynatree._init(): done.");
+
+//    	this.tree.phase = isLazy ? "waiting" : "idle";
     	this.tree.phase = "idle";
 	},
 
