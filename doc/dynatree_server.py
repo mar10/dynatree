@@ -190,6 +190,7 @@ class DynaTreeWsgiApp(object):
 
 # Requires Python >= 2.5
 from wsgiref.simple_server import WSGIServer, WSGIRequestHandler 
+from tempfile import gettempdir
 
 def make_server(host, port, app, server_class=WSGIServer, handler_class=WSGIRequestHandler):
     """Create a new WSGI server listening on 'host' and 'port' for 'app'."""
@@ -199,7 +200,8 @@ def make_server(host, port, app, server_class=WSGIServer, handler_class=WSGIRequ
 
 
 def main():  
-    rootPath = r"c:\temp"
+#    rootPath = "/temp"
+    rootPath = gettempdir() 
     hostname = "127.0.0.1" # Use empty string for localhost
     port = 8001
 
