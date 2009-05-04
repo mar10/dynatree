@@ -200,9 +200,13 @@ def make_server(host, port, app, server_class=WSGIServer, handler_class=WSGIRequ
 
 
 def main():  
+    # Configure root directory that will be exported:
 #    rootPath = "/temp"
-    rootPath = gettempdir() 
-    hostname = "127.0.0.1" # Use empty string for localhost
+    rootPath = gettempdir()
+
+    # Configure hostname and port on which the server will listen
+#    hostname = "127.0.0.1" # Use empty string for localhost (local access only)
+    hostname = "" # Use empty string for 0.0.0.0 (allows remote access)
     port = 8001
 
     wsgi_app = DynaTreeWsgiApp({"rootPath": rootPath})
