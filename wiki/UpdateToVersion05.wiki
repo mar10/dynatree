@@ -18,15 +18,15 @@ New functions:
   * tree.getPersistData
   * Global: getDynaTreePersistData(cookieId, cookieOpts)
 
-New optionse for initAjax:
+New options for initAjax:
   * addActiveKey
   * addFocusedKey
   * addExpandedKeyList
 
 Other Changes:
   * The default cookie name prefix was changed from 'ui-dynatree-cookie-' to 'dynatree-'.
-  * `_`nodeCount starts with 1, so first auto - key is 1
-  * tree.iniMode was dropped (now tree.phase)
+  * `_`nodeCount starts with 1, so first auto - key is '_1'
+  * tree.initMode was dropped (now tree.phase)
 
 
 === Persistence has changed ===
