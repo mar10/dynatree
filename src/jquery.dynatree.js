@@ -854,12 +854,12 @@ DynaTreeNode.prototype = {
 				throw "removeChild: invalid child";
 			return this.removeChildren();
 		}
-        if ( tn === this.tree.activeNode )
+        if( tn === this.tree.activeNode )
         	tn.deactivate();
-        if ( tn.bSelected )
-        	this.tree._changeNodeList("select", tn, false);
+        if( tn.bSelected )
+            this.tree.persistence.clearSelect(tn.data.key);
         if ( tn.bExpanded )
-        	this.tree._changeNodeList("expand", tn, false);
+            this.tree.persistence.clearExpand(tn.data.key);
 		tn.removeChildren(true);
 		this.div.removeChild(tn.div);
 		for(var i=0; i<ac.length; i++) {
@@ -881,11 +881,11 @@ DynaTreeNode.prototype = {
 				var tn=ac[i];
 //        		this.tree.logDebug ("del %o", tn);
                 if ( tn === tree.activeNode )
-                	tn.deactivate();
-                if ( tn.bSelected )
-                	this.tree._changeNodeList("select", tn, false);
+                tn.deactivate();
+                if( tn.bSelected )
+                    this.tree.persistence.clearSelect(tn.data.key);
                 if ( tn.bExpanded )
-                	this.tree._changeNodeList("expand", tn, false);
+                    this.tree.persistence.clearExpand(tn.data.key);
                 tn.removeChildren(true);
 				this.div.removeChild(tn.div);
                 delete tn;
