@@ -11,13 +11,14 @@ Main Changes:
   * Using jQuery 1.3.2 and jQuery UI 1.7.1
 
 New functions:
-  * onPostInit(isReloading, isError)
+  * Callback function onPostInit(isReloading, isError)
   * tree.reactivate(setFocus)ui.core 1.7.1
   * tree.isInitializing()
   * tree.isReloading()
   * tree.isUserEvent()
-  * tree.getPersistData
+  * tree.getPersistData()
   * Global: getDynaTreePersistData(cookieId, cookieOpts)
+  * dtnode.getEventTargetType(event)
 
 New options for initAjax:
   * addActiveKey
@@ -26,6 +27,7 @@ New options for initAjax:
 
 Other Changes:
   * The default cookie name prefix was changed from 'ui-dynatree-cookie-' to 'dynatree-'.
+  * The A tag containing the title now has a class name assigned ('ui-dynatree-title')
   * `_`nodeCount starts with 1, so first auto - key is '_1'
   * tree.initMode was dropped (now tree.phase)
 
