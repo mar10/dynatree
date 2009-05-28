@@ -38,6 +38,12 @@
 			onActivate: function(dtnode) {
 				$("#echoActive").text(dtnode.data.title);
 			},
+/*
+			onExpand: function(flag, dtnode) {
+                if( !flag && dtnode.data.isLazy ) // Unload lazy nodes on collapse (so they are reloaded next time)
+                    dtnode.removeChildren();
+			},
+*/
 			onLazyRead: function(dtnode){
 				// typically we would call something like this:
 //            	dtnode.appendAjax(
