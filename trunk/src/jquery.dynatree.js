@@ -147,23 +147,23 @@ DynaTreeNode.prototype = {
 		var p = this.parent;
 		while( p ) {
 			// Suppress first connector column, if visible top level is always expanded
-			if ( bHideFirstConnector && (p==rootParent  ) )
+			if ( bHideFirstConnector && p==rootParent  )
 				break;
-			res = ( p.isLastSibling() ? cache.tagEmpty : cache.tagVline) + res ;
+			res = ( p.isLastSibling() ? cache.tagEmpty : cache.tagVline) + res;
 			p = p.parent;
 		}
 
 		// connector (expanded, expandable or simple)
 		if( bHideFirstExpander && this.parent==rootParent ) { 
 			// skip connector
-		} else if ( this.childList || this.data.isLazy) {
+		} else if ( this.childList || this.data.isLazy ) {
    			res += cache.tagExpander;
 		} else {
    			res += cache.tagConnector;
 		}
 		
 		// Checkbox mode
-		if( opts.checkbox && this.data.hideCheckbox!=true && !this.data.isStatusNode) {
+		if( opts.checkbox && this.data.hideCheckbox!=true && !this.data.isStatusNode ) {
    			res += cache.tagCheckbox;
 		}
 		
@@ -179,7 +179,7 @@ DynaTreeNode.prototype = {
 
 		// node name
 		var tooltip = ( this.data && typeof this.data.tooltip == "string" ) ? " title='" + this.data.tooltip + "'" : "";
-		res +=  "<a href='#'" + tooltip + ">" + this.data.title + "</a>";
+		res +=  "<a href='#' class='" + opts.classNames.title + "'" + tooltip + ">" + this.data.title + "</a>";
 		return res;
 	},
 
@@ -235,7 +235,7 @@ DynaTreeNode.prototype = {
 			cnList.push(cn.active);
 		if( this.data.addClass )
 			cnList.push(this.data.addClass);
-		// IE6 doesn't correctly evaluate multiples class names,
+		// IE6 doesn't correctly evaluate multiple class names,
 		// so we create combined class names that can be used in the CSS
 		cnList.push(cn.combinedExpanderPrefix
 				+ (this.bExpanded ? "e" : "c")
@@ -357,6 +357,67 @@ DynaTreeNode.prototype = {
 			dtn = dtn.parent;
 		};
 		return level;
+	},
+
+	_getTypeForOuterNodeEvent: function(event) {
+		/** Return the inner node span (title, checkbox or expander) if 
+		 *  event.target points to the outer span.
+		 *  This function should fix issue #93: 
+		 *  FF2 ignores empty spans, when generating events (returning the parent instead).
+		 */ 
+		var cns = this.tree.options.classNames;
+	    var target = event.target;
+	    // Only process clicks on an outer node span (probably due to a FF2 event handling bug)
+	    if( target.className.indexOf(cns.folder)<0 
+	    	&& target.className.indexOf(cns.document)<0 ) {
+	        return null
+	    }
+	    // Event coordinates, relative to outer node span:
+	    var eventX = event.pageX - target.offsetLeft;
+	    var eventY = event.pageY - target.offsetTop;
+//	    alert ("click at " + eventX + ", " + eventY);
+	    
+	    for(var i=0; i<target.childNodes.length; i++) {
+	        var cn = target.childNodes[i];
+	        var x = cn.offsetLeft - target.offsetLeft;
+	        var y = cn.offsetTop - target.offsetTop;
+	        var nx = cn.clientWidth, ny = cn.clientHeight;
+//	        alert (cn.className + ": " + x + ", " + y + ", s:" + nx + ", " + ny);
+	        if( eventX>=x && eventX<=(x+nx) && eventY>=y && eventY<=(y+ny) ) {
+//	            alert("HIT "+ cn.className);
+	            if( cn.className==cns.title ) 
+	            	return "title";
+	            else if( cn.className==cns.expander ) 
+	            	return "expander";
+	            else if( cn.className==cns.checkbox ) 
+	            	return "checkbox";
+	            else if( cn.className==cns.nodeIcon ) 
+	            	return "icon";
+	        }
+	    }
+	    return "prefix";
+	},
+
+	getEventTargetType: function(event) {
+		// Return the part of a node, that a click event occured on.
+		// Note: there is no check, if the was fired on TIHS node. 
+		var tcn = event && event.target ? event.target.className : "";
+		var cns = this.tree.options.classNames;
+
+		if( tcn == cns.title )
+			return "title";
+		else if( tcn==cns.expander )
+			return "expander";
+		else if( tcn==cns.checkbox )
+			return "checkbox";
+		else if( tcn==cns.nodeIcon )
+			return "icon";
+		else if( tcn==cns.empty || tcn==cns.vline || tcn==cns.connector )
+			return "prefix";
+		else if( tcn.indexOf(cns.folder)>=0 || tcn.indexOf(cns.document)>=0 )
+			// FIX issue #93
+			return this._getTypeForOuterNodeEvent(event);
+		return null;
 	},
 
 	isVisible: function() {
@@ -691,11 +752,13 @@ DynaTreeNode.prototype = {
 
 	onClick: function(event) {
 //		this.tree.logDebug("dtnode.onClick(" + event.type + "): dtnode:" + this + ", button:" + event.button + ", which: " + event.which);
-
-		if( $(event.target).hasClass(this.tree.options.classNames.expander) ) {
+		var targetType = this.getEventTargetType(event);
+//		if( $(event.target).hasClass(this.tree.options.classNames.expander) ) {
+		if( targetType == "expander" ) {
 			// Clicking the expander icon always expands/collapses
 			this.toggleExpand();
-		} else if( $(event.target).hasClass(this.tree.options.classNames.checkbox) ) {
+//		} else if( $(event.target).hasClass(this.tree.options.classNames.checkbox) ) {
+		} else if( targetType == "checkbox" ) {
 			// Clicking the checkbox always (de)selects
 			this.toggleSelect();
 		} else {
@@ -1432,7 +1495,6 @@ TODO: better?
  * widget $(..).dynatree
  */
 
-
 $.widget("ui.dynatree", {
 	init: function() {
         // ui.core 1.6 renamed init() to _init(): this stub assures backward compatibility
@@ -1578,7 +1640,6 @@ $.widget("ui.dynatree", {
 
 		$this.bind("click.dynatree dblclick.dynatree keypress.dynatree keydown.dynatree", function(event){
 			var dtnode = __getNodeFromElement(event.target);
-			
 			if( !dtnode )
 				return false;
 			var prevPhase = dtnode.tree.phase;
@@ -1733,12 +1794,15 @@ $.ui.dynatree.defaults = {
 		container: "ui-dynatree-container",
 		folder: "ui-dynatree-folder",
 		document: "ui-dynatree-document",
+		
 		empty: "ui-dynatree-empty",
 		vline: "ui-dynatree-vline",
 		expander: "ui-dynatree-expander",
 		connector: "ui-dynatree-connector",
 		checkbox: "ui-dynatree-checkbox",
 		nodeIcon: "ui-dynatree-icon",
+		title: "ui-dynatree-title",
+		
 		nodeError: "ui-dynatree-statusnode-error",
 		nodeWait: "ui-dynatree-statusnode-wait",
 		hidden: "ui-dynatree-hidden",
