@@ -8,10 +8,11 @@ Main Changes:
   * Persistence has changed (no longer fires events)
   * Support for persistence with lazy trees
   * Added a sample web server for lazy trees (written in Python)
+  * Using jQuery 1.3.2 and jQuery UI 1.7.1
 
 New functions:
   * onPostInit(isReloading, isError)
-  * tree.reactivate(setFocus)
+  * tree.reactivate(setFocus)ui.core 1.7.1
   * tree.isInitializing()
   * tree.isReloading()
   * tree.isUserEvent()
