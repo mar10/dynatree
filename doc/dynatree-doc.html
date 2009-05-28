@@ -1136,11 +1136,18 @@ $("#tree").dynatree({
 		Set focus to this node. Parent nodes are expanded, if this is necessary
 		to make it visible.
 	</dd>
-	<dt>getLevel()
+	<dt>getEventTargetType(event)
 	<dd>
-		Return the depth (i.e. number of parent nodes).<br>
-		0 is returned for the root node.
+		Return the part of a node, that a click event occurred on.<br>
+		Possible values: 'prefix' 'expander', 'checkbox', 'title'.<br>
+		<code>null</code> is returned else.<br>
+        Note: there is no check, if the event was fired on <strong>this</strong> node. 
 	</dd>
+    <dt>getLevel()
+    <dd>
+        Return the depth (i.e. number of parent nodes).<br>
+        0 is returned for the root node.
+    </dd>
 	<dt>hasChildren()
 	<dd>
 		Return true, if this node has child nodes.
