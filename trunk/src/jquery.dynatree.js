@@ -713,14 +713,18 @@ DynaTreeNode.prototype = {
 		}
 //		this.tree.logDebug("_expand: start div toggle - %o", this);
 
+		// issue 98: only toggle, if render hasn't set visibility already:
+		var filter = ">DIV" + (bExpand ? ":hidden" : ":visible");
+		
 		if( opts.fx ) {
 			var duration = opts.fx.duration || 200;
-			$(">DIV", this.div).animate(opts.fx, duration);
+//			$(">DIV", this.div).animate(opts.fx, duration);
+			$(filter, this.div).animate(opts.fx, duration);
 		} else {
-//			$(">DIV", this.div).toggle();
-			var $d = $(">DIV", this.div);
+			$(filter, this.div).toggle();
+//			var $d = $(">DIV", this.div);
 //			this.tree.logDebug("_expand: got div, start toggle - %o", this);
-			$d.toggle();
+//			$d.toggle();
 		}
 //		this.tree.logDebug("_expand: end div toggle - %o", this);
 
