@@ -110,6 +110,7 @@ DynaTreeNode.prototype = {
 		this.span = null; // not yet created
 		this.childList = null; // no subnodes yet
 		this.isRead = false; // Lazy content not yet read
+		this.isLoading = false; // Lazy content is being loaded
 		this.hasSubSel = false;
 	},
 
@@ -309,6 +310,7 @@ DynaTreeNode.prototype = {
 			case DTNodeStatus_Ok:
 				this._setStatusNode(null);
 				this.isRead = true;
+				this.isLoading = false;
 				this.render(false, false);
 				if( this.tree.options.autoFocus ) {
 					if( this === this.tree.tnRoot && !this.tree.options.rootVisible && this.childList ) {
@@ -320,16 +322,16 @@ DynaTreeNode.prototype = {
 				}
 				break;
 			case DTNodeStatus_Loading:
+				this.isLoading = true;
 				this._setStatusNode({
 					title: this.tree.options.strings.loading,
-//					icon: "ltWait.gif"
 					addClass: this.tree.options.classNames.nodeWait
 				});
 				break;
 			case DTNodeStatus_Error:
+				this.isLoading = false;
 				this._setStatusNode({
 					title: this.tree.options.strings.loadError,
-//					icon: "ltError.gif"
 					addClass: this.tree.options.classNames.nodeError
 				});
 				break;
@@ -695,7 +697,7 @@ DynaTreeNode.prototype = {
 			this.tree.activeNode.deactivate();
 		}
 		// Expanding a lazy node: set 'loading...' and call callback
-		if( bExpand && this.data.isLazy && !this.isRead ) {
+		if( bExpand && this.data.isLazy && !this.isRead && !this.isLoading ) {
 			try {
 				this.tree.logDebug("_expand: start lazy - %o", this);
 				this.setLazyNodeStatus(DTNodeStatus_Loading);
@@ -961,6 +963,7 @@ DynaTreeNode.prototype = {
 			if( ! recursive ) {
 				this._expand(false);
 				this.isRead = false;
+				this.isLoading = false;
 				this.render(false, false);
 			}
         }
