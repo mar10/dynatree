@@ -1642,7 +1642,10 @@ $.widget("ui.dynatree", {
 			return null;
 		}
 
-		$this.bind("click.dynatree dblclick.dynatree keypress.dynatree keydown.dynatree", function(event){
+		var eventNames = "click.dynatree dblclick.dynatree";
+		if( o.keyboard ) // Note: leading ' '!
+			eventNames += " keypress.dynatree keydown.dynatree";
+		$this.bind(eventNames, function(event){
 			var dtnode = __getNodeFromElement(event.target);
 			if( !dtnode )
 				return false;
