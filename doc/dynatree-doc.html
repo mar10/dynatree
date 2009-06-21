@@ -1239,6 +1239,19 @@ if( dtnode )
 </pre>
 
 
+<h4>Example: retrieve a node using a jQuery selector</h4>
+
+<pre class="prettyprint">
+$(".ui-dynatree-partsel").each(function(){
+    dtnode = $(this).attr("dtnode");
+    [...]
+});
+</pre>
+<p>
+    Note: The selector must evaluate to the node's &lt;span> tag.
+</p>
+
+
 <h4>Example: Add a child to the active node</h4>
 
 <pre class="prettyprint">
@@ -1250,7 +1263,7 @@ var childNode = dtnode.append({
 </pre>
 <p>
 	Note: instead of passing a single child object, we could also pass an array
-	of objects.<br>
+	of such objects.<br>
 	Also, the children may again contain <code>children</code> attributes, thus
 	defining a sub tree. 
 </p>

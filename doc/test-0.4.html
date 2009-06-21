@@ -181,21 +181,10 @@
 			$("#tree").dynatree(this.checked ? "bind" : "unbind");
 		});
 		$("#btnTest").click(function(){
-			var tree = $("#tree").dynatree("getTree");
-			var rootNode = $("#tree").dynatree("getRoot");
-			var node122 = tree.getNodeByKey("122");
-//			var clipboard = node122.toDict(true);
-			var clipboard = node122.toDict(true, function(dict){
-					dict.title = "Copy of " + dict.title;
-					delete dict.key; // prevent duplicta keys
-				});
-			logMsg("cb=%o", clipboard);
-			var node11 = tree.getNodeByKey("11");
-			node11.append(clipboard);  // beta-2: we need [] to force creation of sub-nodes
-			logMsg("target2=%o", node11.toDict());
-			
-          	//dtnode.data.title = "New title: " + Date();
-	        //dtnode.render();           
+            $(".ui-dynatree-selected").each(function(){
+                var dtnode = $(this).attr("dtnode");
+                logMsg("%o", dtnode);
+            });
 		});
 
 		$("#tree a").hover(function(){
