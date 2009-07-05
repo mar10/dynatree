@@ -1651,7 +1651,7 @@ $.widget("ui.dynatree", {
 		$this.bind(eventNames, function(event){
 			var dtnode = __getNodeFromElement(event.target);
 			if( !dtnode )
-				return false;
+				return true;  // Allow bubbling of other events
 			var prevPhase = dtnode.tree.phase;
 			dtnode.tree.phase = "userEvent";
 			try {
