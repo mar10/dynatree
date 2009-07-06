@@ -1206,14 +1206,14 @@ DynaTreeStatus.prototype = {
 		$.cookie(this.cookieId + "-select", ( this.selectedKeyList == null ) ? "" : this.selectedKeyList.join(","), this.cookieOpts);
 	},
 	addExpand: function(key) {
-		this._log("addExpand(%o)", key);
+//		this._log("addExpand(%o)", key);
 		if( $.inArray(key, this.expandedKeyList) < 0 ) {
 			this.expandedKeyList.push(key);
 			$.cookie(this.cookieId + "-expand", this.expandedKeyList.join(","), this.cookieOpts);
 		}
 	},
 	clearExpand: function(key) {
-		this._log("clearExpand(%o)", key);
+//		this._log("clearExpand(%o)", key);
 		var idx = $.inArray(key, this.expandedKeyList); 
 		if( idx >= 0 ) {
 			this.expandedKeyList.splice(idx, 1);
@@ -1221,14 +1221,14 @@ DynaTreeStatus.prototype = {
 		}
 	},
 	addSelect: function(key) {
-		this._log("addSelect(%o)", key);
+//		this._log("addSelect(%o)", key);
 		if( $.inArray(key, this.selectedKeyList) < 0 ) {
 			this.selectedKeyList.push(key);
 			$.cookie(this.cookieId + "-select", this.selectedKeyList.join(","), this.cookieOpts);
 		}
 	},
 	clearSelect: function(key) {
-		this._log("clearSelect(%o)", key);
+//		this._log("clearSelect(%o)", key);
 		var idx = $.inArray(key, this.selectedKeyList); 
 		if( idx >= 0 ) {
 			this.selectedKeyList.splice(idx, 1);
