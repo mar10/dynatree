@@ -1505,12 +1505,11 @@ TODO: better?
 $.widget("ui.dynatree", {
 	init: function() {
         // ui.core 1.6 renamed init() to _init(): this stub assures backward compatibility
-//        logMsg("ui.dynatree.init() was called, you should upgrade to ui.core.js v1.6 or higher.");
+        _log("warn", "ui.dynatree.init() was called; you should upgrade to ui.core.js v1.6 or higher.");
         return this._init();
     },
 
 	_init: function() {
-//    	return DynaTree._initTree.call(this);
     	logMsg("Dynatree._init(): version='%s', debugLevel=%o.", DynaTree.version, this.options.debugLevel);
 
     	// The widget framework supplies this.element and this.options.
@@ -1528,7 +1527,7 @@ $.widget("ui.dynatree", {
     				    opts.imagePath = this.src.slice(0, this.src.lastIndexOf("/")) + "/skin/";
                     else
     				    opts.imagePath = "skin/";
-    				logMsg("Guessing imagePath from '%s': '%s'", this.src, opts.imagePath);
+//    				logMsg("Guessing imagePath from '%s': '%s'", this.src, opts.imagePath);
     				return false; // first match
     			}
     		});
@@ -1702,16 +1701,21 @@ $.widget("ui.dynatree", {
 		this.element.unbind(".dynatree");
 	},
 	
+/* TODO: we could handle option changes during runtime here (maybe to re-render, ...)
+	setData: function(key, value) {
+		this.tree.logDebug("dynatree.setData('" + key + "', '" + value + "')");
+	},
+*/	
 	enable: function() {
 		this.bind();
-		// Enable and remove -disabled from css: 
-		this.setData("disabled", false);
+		// Call default disable(): remove -disabled from css: 
+		$.widget.prototype.enable.apply(this, arguments);
 	},
 	
 	disable: function() {
 		this.unbind();
-		// Disable and add -disabled to css: 
-		this.setData("disabled", true);
+		// Call default disable(): add -disabled to css: 
+		$.widget.prototype.disable.apply(this, arguments);
 	},
 	
 	// --- getter methods (i.e. NOT returning a reference to $)
