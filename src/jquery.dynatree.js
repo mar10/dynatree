@@ -925,10 +925,12 @@ DynaTreeNode.prototype = {
 		}
         if( tn === this.tree.activeNode )
         	tn.deactivate();
-        if( tn.bSelected )
-            this.tree.persistence.clearSelect(tn.data.key);
-        if ( tn.bExpanded )
-            this.tree.persistence.clearExpand(tn.data.key);
+        if( this.tree.options.persist ) {
+	        if( tn.bSelected )
+	            this.tree.persistence.clearSelect(tn.data.key);
+	        if ( tn.bExpanded )
+	            this.tree.persistence.clearExpand(tn.data.key);
+        }
 		tn.removeChildren(true);
 		this.div.removeChild(tn.div);
 		for(var i=0; i<ac.length; i++) {
@@ -950,11 +952,13 @@ DynaTreeNode.prototype = {
 				var tn=ac[i];
 //        		this.tree.logDebug ("del %o", tn);
                 if ( tn === tree.activeNode )
-                tn.deactivate();
-                if( tn.bSelected )
-                    this.tree.persistence.clearSelect(tn.data.key);
-                if ( tn.bExpanded )
-                    this.tree.persistence.clearExpand(tn.data.key);
+                	tn.deactivate();
+                if( this.tree.options.persist ) {
+	                if( tn.bSelected )
+	                    this.tree.persistence.clearSelect(tn.data.key);
+	                if ( tn.bExpanded )
+	                    this.tree.persistence.clearExpand(tn.data.key);
+                }
                 tn.removeChildren(true);
 				this.div.removeChild(tn.div);
                 delete tn;
@@ -1182,7 +1186,7 @@ DynaTreeStatus.prototype = {
 	read: function() {
 		// Read or init cookies. 
 		this.cookiesFound = false;
-
+			
 		var cookie = $.cookie(this.cookieId + "-active");
 		this.activeKey = ( cookie == null ) ? "" : cookie;
 		if( cookie != null ) this.cookiesFound = true;
@@ -1284,7 +1288,11 @@ DynaTree.prototype = {
 		this.focusNode = null;
 
 		this.persistence = new DynaTreeStatus(options.cookieId, options.cookie);
-		this.persistence.read();
+		if( this.options.persist ) {
+			if( !$.cookie )
+				_log("warn", "Please include jquery.cookie.js to use persistence.");
+			this.persistence.read();
+		}
 		this.logDebug("DynaTree.persistence: %o", this.persistence.toDict());
 
 		// Cached tag strings
