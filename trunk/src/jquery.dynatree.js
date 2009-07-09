@@ -726,7 +726,7 @@ DynaTreeNode.prototype = {
 				if( bExpand )
 					$child.show();
 				else
-					$child.hide();
+					$child.hide(); // TODO: this seems to be slow, when called the first time for an element
 			}
 		}
 		
