@@ -715,6 +715,22 @@ DynaTreeNode.prototype = {
 		}
 //		this.tree.logDebug("_expand: start div toggle - %o", this);
 
+		var fxDuration = opts.fx ? (opts.fx.duration || 200) : 0;
+		for(var i=0; i<this.childList.length; i++ ) {
+			var $child = $(this.childList[i].div);
+			if( fxDuration ) {
+				// This is a toggle, so only do it, if not already rendered (in)visible (issue 98)
+				if( bExpand != $child.is(':visible') )
+					$child.animate(opts.fx, fxDuration);
+			} else {
+				if( bExpand )
+					$child.show();
+				else
+					$child.hide();
+			}
+		}
+		
+/* issue 109: using selector filter is really SLOW.
 		// issue 98: only toggle, if render hasn't set visibility already:
 		var filter = ">DIV" + (bExpand ? ":hidden" : ":visible");
 		
@@ -728,6 +744,7 @@ DynaTreeNode.prototype = {
 //			this.tree.logDebug("_expand: got div, start toggle - %o", this);
 //			$d.toggle();
 		}
+//*/
 //		this.tree.logDebug("_expand: end div toggle - %o", this);
 
 		if ( opts.onExpand )
@@ -1084,7 +1101,7 @@ DynaTreeNode.prototype = {
 		 * A simple object is also accepted instead of an array.
 		 * 
 		 */
-		this.tree.logDebug("%o.addChild(%o, %o)", this, obj, insertBefore);
+//		this.tree.logDebug("%o.addChild(%o, %o)", this, obj, insertBefore);
 		if( !obj || obj.length==0 ) // Passed null or undefined or empty array
 			return;
 		if( obj instanceof DynaTreeNode )
