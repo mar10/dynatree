@@ -1,4 +1,5 @@
 #summary Ignore this page.
+#labels Restrict-AddWikiComment-Commit
 
 = Test Only (please ignore) =
 
