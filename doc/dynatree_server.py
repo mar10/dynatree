@@ -124,7 +124,7 @@ class DynaTreeWsgiApp(object):
         argDict = dict(argList)
         print "Query args: %s" % argDict
 
-        # Support &sleep=SECONDS argument for debugging
+        # Support &sleep=SECONDS argument to simulate slow connections for debugging 
         if argDict.get("sleep"):
             print "Sleeping %s seconds..." % argDict.get("sleep")
             time.sleep(int(argDict.get("sleep")))

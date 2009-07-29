@@ -7,7 +7,7 @@
 	<meta name="keywords" content="dynatree JavaScript JS dynamic html tree view treeview checkbox widget plugin for jQuery data structure library ajax open source free">
 	<meta name="description" content="dynatree is a JavaScript treeview plugin for jQuery with support for checkboxes and lazy loading of branches.">
 
-	<script src="http://www.google-analytics.com/urchin.js" type="text/javascript"></script>
+	<script src="http://www.google-analytics.com/ga.js" type="text/javascript"></script>
 
 	<script src='../jquery/jquery.js' type='text/javascript'></script>
 	<script src='../jquery/ui.core.js' type='text/javascript'></script>
@@ -30,8 +30,8 @@
 	$(function(){
 		// Log to Google Analytics, when not running locally
 		if ( document.URL.toLowerCase().indexOf('wwwendt.de/')>=0 ) {
-			_uacct = "UA-316028-1";
-			urchinTracker();
+			var pageTracker = _gat._getTracker("UA-316028-1");
+			pageTracker._trackPageview();
 		}
 
 		// Create TOC
@@ -839,6 +839,29 @@ $("#tree").dynatree({
     See <a href="#ajaxResponse">Initializing the structure from an Ajax response</a> 
     for a sample to initialize the whole tree with an Ajax request.
 </p><p>
+    This sample code (written in Python) shows how a server could create a
+    response: 
+<pre class="prettyprint">
+# Build node list as JSON formatted string:
+res = "["
+res += "{ 'title': 'Node 1', 'key': 'k1', 'isLazy': true },"
+res += "{ 'title': 'Node 2', 'key': 'k2', 'isLazy': true },"
+res += "{ 'title': 'Node 3', 'key': 'k3', 'isLazy': true }" # no trailing ',' at the last line 
+res += "]"
+
+# Add support for the JSONP protocol:
+# This means, if the request URL contains an argument '?callback=xxx',
+# wrap the result as 'xxx(result)'
+if "callback" in argDict:
+    res = argDict["callback"] + "(" + res + ")"
+
+# Make sure, content type is JSON:
+start_response("200 OK", [("Content-Type", "application/json")])
+
+# Return result (the square brackets are Python / WSGI specific):
+return [ res ]
+</pre>
+</p><p>
     See <a href="dynatree_server.py">dynatree_server.py</a> for a sample 
     implementation of a web server that handles this (~150 lines of Python code).<br>
     When this server is running, you can try this <a href="sample-lazy-persist.html">live example</a>
@@ -1242,7 +1265,7 @@ if( dtnode )
 </pre>
 
 
-<h4>Example: retrieve a node using a jQuery selector</h4>
+<h4>Example: Retrieve a node using a jQuery selector</h4>
 
 <pre class="prettyprint">
 $(".ui-dynatree-partsel").each(function(){
@@ -1253,6 +1276,15 @@ $(".ui-dynatree-partsel").each(function(){
 <p>
     Note: The selector must evaluate to the node's &lt;span> tag.
 </p>
+
+
+<h4>Example: Rename the active node</h4>
+
+<pre class="prettyprint">
+var dtnode = $("#tree").dynatree("getActiveNode");
+dtnode.data.title = "My new title";
+dtnode.render();
+</pre>
 
 
 <h4>Example: Add a child to the active node</h4>
