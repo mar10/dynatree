@@ -184,6 +184,8 @@
             $(".ui-dynatree-selected").each(function(){
                 var dtnode = $(this).attr("dtnode");
                 logMsg("%o", dtnode);
+                  dtnode.data.title= "hurz";
+                  dtnode.render();
             });
 		});
 
