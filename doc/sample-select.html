@@ -22,7 +22,7 @@
 	var treeData = [
 		{title: "item1 with key and tooltip", tooltip: "Look, a tool tip!" },
 		{title: "item2: selected on init", select: true },
-		{title: "Folder with some children", isFolder: true, key: "id3",
+		{title: "Folder", isFolder: true, key: "id3",
 			children: [
 				{title: "Sub-item 3.1",
 					children: [
@@ -51,7 +51,9 @@
 						{title: "Sub-item 4.2.1", key: "id4.2.1" },
 						{title: "Sub-item 4.2.2", key: "id4.2.2" }
 					]
-				}
+				},
+				{title: "Sub-item 4.3 (hideCheckbox)", hideCheckbox: true },
+				{title: "Sub-item 4.4 (unselectable)", unselectable: true }
 			]
 		}
 	];
@@ -218,7 +220,9 @@
 		
 	<p class="description">
 		This tree has <b>checkoxes and selectMode 1 (single-selection)</b> enabled.<br>
-		A double-click handler selects a document node (not folders).<br>
+		A double-click handler selects a <i>document</i> node (not folders).<br>
+		The <code>checkbox</code> class name was customized, to display radio
+		buttons.<br>
 		A keydown handler selects on [space].
 	</p>
 	<div id="tree1"></div>

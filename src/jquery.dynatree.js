@@ -648,6 +648,8 @@ DynaTreeNode.prototype = {
 	select: function(sel) {
 		// Select - but not focus - this node.
 //		this.tree.logDebug("dtnode.select(%o) - %o", sel, this);
+		if( this.data.unselectable )
+			return this.bSelected;
 		return this._select(sel!=false, true, true);
 	},
 
@@ -776,20 +778,16 @@ DynaTreeNode.prototype = {
 	onClick: function(event) {
 //		this.tree.logDebug("dtnode.onClick(" + event.type + "): dtnode:" + this + ", button:" + event.button + ", which: " + event.which);
 		var targetType = this.getEventTargetType(event);
-//		if( $(event.target).hasClass(this.tree.options.classNames.expander) ) {
 		if( targetType == "expander" ) {
 			// Clicking the expander icon always expands/collapses
 			this.toggleExpand();
-//		} else if( $(event.target).hasClass(this.tree.options.classNames.checkbox) ) {
 		} else if( targetType == "checkbox" ) {
 			// Clicking the checkbox always (de)selects
 			this.toggleSelect();
 		} else {
 			this._userActivate();
 			// Chrome and Safari don't focus the a-tag on click
-//			this.tree.logDebug("a tag: ", this.span.getElementsByTagName("a")[0]);
 			this.span.getElementsByTagName("a")[0].focus();
-//			alert("hasFocus=" + this.span.getElementsByTagName("a")[0].focused);
 		}
 		// Make sure that clicks stop, otherwise <a href='#'> jumps to the top
 		return false;
@@ -1885,9 +1883,9 @@ $.ui.dynatree.nodedatadefaults = {
 	focus: false, // Initial focused status.
 	expand: false, // Initial expanded status.
 	select: false, // Initial selected status.
-//	hideCheckbox: null, // Suppress checkbox for this node.
-//	unselectable: false, // Prevent selection.
-//  disabled: null,	
+	hideCheckbox: false, // Suppress checkbox display for this node.
+	unselectable: false, // Prevent selection.
+//  disabled: false,	
 	// The following attributes are only valid if passed to some functions:
 	children: null, // Array of child nodes.
 	// NOTE: we can also add custom attributes here.
