@@ -41,7 +41,8 @@ span.ui-dynatree-vline,
 span.ui-dynatree-connector,
 span.ui-dynatree-expander,
 span.ui-dynatree-icon,
-span.ui-dynatree-checkbox
+span.ui-dynatree-checkbox,
+span.ui-dynatree-radio
 {
 	width: 16px;
 	height: 16px;
@@ -140,6 +141,37 @@ span.ui-dynatree-checkbox:hover
 .ui-dynatree-selected span.ui-dynatree-checkbox:hover
 {
 	background-image: url("cbChecked_hover.gif");
+}
+
+/******************************************************************************* 
+ * Radiobutton icon
+ */
+span.ui-dynatree-radio
+{
+	margin-left: 3px;
+	background-image: url("rbUnchecked.gif");
+}
+span.ui-dynatree-radio:hover
+{
+	background-image: url("rbUnchecked_hover.gif");
+}
+
+.ui-dynatree-partsel span.ui-dynatree-radio
+{
+	background-image: url("rbIntermediate.gif");
+}
+.ui-dynatree-partsel span.ui-dynatree-radio:hover
+{
+	background-image: url("rbIntermediate_hover.gif");
+}
+
+.ui-dynatree-selected span.ui-dynatree-radio
+{
+	background-image: url("rbChecked.gif");
+}
+.ui-dynatree-selected span.ui-dynatree-radio:hover
+{
+	background-image: url("rbChecked_hover.gif");
 }
 
 /******************************************************************************* 

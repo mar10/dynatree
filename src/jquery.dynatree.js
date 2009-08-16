@@ -1282,13 +1282,13 @@ var DynaTree = Class.create();
 // --- Static members ----------------------------------------------------------
 
 DynaTree.version = "$Version:$"; 
-
+/*
 DynaTree._initTree = function() {
 };
 
 DynaTree._bind = function() {
 };
-
+*/
 //--- Class members ------------------------------------------------------------
 
 DynaTree.prototype = {
@@ -1493,7 +1493,7 @@ TODO: better?
 				data.tooltip = $li.attr("title");
 			if( $li.attr("id") )
 				data.key = $li.attr("id");
-			// If a data attribute is present, evaluate as a javascript object
+			// If a data attribute is present, evaluate as a JavaScript object
 			if( $li.attr("data") ) {
 				var dataAttr = $.trim($li.attr("data"));
 				if( dataAttr ) {
@@ -1542,6 +1542,11 @@ $.widget("ui.dynatree", {
 
     	var $this = this.element;
     	var opts = this.options;
+    	// If a 'options.classNames' dictionary was passed, still use defaults 
+    	// for undefined classes:
+    	if( opts.classNames !== $.ui.dynatree.defaults.classNames ) {
+    		opts.classNames = $.extend({}, $.ui.dynatree.defaults.classNames, opts.classNames);
+    	}
 
     	// Guess skin path, if not specified
     	if(!opts.imagePath) {
@@ -1828,7 +1833,9 @@ $.ui.dynatree.defaults = {
 //		domain: "jquery.com",
 //		secure: true
 	},
-    
+    // Class names used, when rendering the HTML markup.
+	// Note: if only single entries are passed for options.classNames, all other 
+	// values are still set to default. 
 	classNames: {
 		container: "ui-dynatree-container",
 		folder: "ui-dynatree-folder",

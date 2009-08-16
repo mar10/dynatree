@@ -267,6 +267,26 @@ $("#tree").dynatree({
 		domain: undefined, // String; Defaults to creator's domain
 		secure: undefined // Boolean; Defaults to false
 	},
+    // Class names used, when rendering the HTML markup.
+	// Note: if only single entries are passed for options.classNames, all other 
+	// values are still set to default. 
+	classNames: {
+		container: "ui-dynatree-container",
+		folder: "ui-dynatree-folder",
+		document: "ui-dynatree-document",
+		empty: "ui-dynatree-empty",
+		vline: "ui-dynatree-vline",
+		expander: "ui-dynatree-expander",
+		connector: "ui-dynatree-connector",
+		checkbox: "ui-dynatree-checkbox",
+		title: "ui-dynatree-title",
+		nodeError: "ui-dynatree-statusnode-error",
+		nodeWait: "ui-dynatree-statusnode-wait",
+		active: "ui-dynatree-active",
+		selected: "ui-dynatree-selected",
+		expanded: "ui-dynatree-expanded",
+		[...]
+	},
 	debugLevel: 1 // 0:quiet, 1:normal, 2:debug
 });
 </pre>
@@ -275,6 +295,21 @@ $("#tree").dynatree({
 	<strong>Details:</strong>
 </p>
 <dl class="optionList">
+	<dt>classNames
+	<dd>
+		Type: <code>dictionary</code>, default: <code>$.ui.dynatree.defaults.classNames</code>.<br>
+		Override class names, that are used, when rendering the HTML markup.<br>
+		Typically this will require some customization of the CSS file too.
+		<br>
+		Example:
+<pre class="prettyprint">
+$("#tree1").dynatree({
+	checkbox: true,
+	// Override class name for checkbox icon:
+	classNames: {checkbox: "ui-dynatree-radio"},
+	[...] 
+</pre>
+	</dd>
 	<dt>clickFolderMode
 	<dd>
 		Type: <code>integer</code>, default: <code>3</code>.<br>

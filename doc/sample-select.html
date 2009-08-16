@@ -60,6 +60,8 @@
 		// --- Initialize sample trees
 		$("#tree1").dynatree({
 			checkbox: true,
+			// Override class name for checkbox icon:
+			classNames: {checkbox: "ui-dynatree-radio"}, 
 			selectMode: 1,
 			children: treeData,
 			onActivate: function(dtnode) {
