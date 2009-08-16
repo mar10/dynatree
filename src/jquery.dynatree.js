@@ -783,9 +783,11 @@ DynaTreeNode.prototype = {
 		if( targetType == "expander" ) {
 			// Clicking the expander icon always expands/collapses
 			this.toggleExpand();
+			this.focus(); // issue 95
 		} else if( targetType == "checkbox" ) {
 			// Clicking the checkbox always (de)selects
 			this.toggleSelect();
+			this.focus(); // issue 95
 		} else {
 			this._userActivate();
 			// Chrome and Safari don't focus the a-tag on click
@@ -1046,6 +1048,14 @@ DynaTreeNode.prototype = {
 			if( dtnode.bExpanded && opts.persist )
 				pers.addExpand(dtnode.data.key);
 			dtnode.bSelected = ( dtnode.data.select == true ); // Deselected by default
+/*			
+			Doesn't work, cause pers.selectedKeyList may be null
+			if( dtnode.bSelected && opts.selectMode==1 
+				&& pers.selectedKeyList && pers.selectedKeyList.length>0 ) {
+				tree.logWarning("Ignored multi-selection in single-mode for %o", dtnode);
+				dtnode.bSelected = false; // Fixing bad input data (multi selection for mode:1)
+			}
+*/
 			if( dtnode.bSelected && opts.persist )
 				pers.addSelect(dtnode.data.key);
 		}

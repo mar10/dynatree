@@ -221,9 +221,12 @@
 	<p class="description">
 		This tree has <b>checkoxes and selectMode 1 (single-selection)</b> enabled.<br>
 		A double-click handler selects a <i>document</i> node (not folders).<br>
+		A keydown handler selects on [space].<br>
 		The <code>checkbox</code> class name was customized, to display radio
 		buttons.<br>
-		A keydown handler selects on [space].
+		Note: the initialization data contains multiple selected nodes. This is
+		considered bad input data and <b>not</b> fixed automatically (only on 
+		the first click). 
 	</p>
 	<div id="tree1"></div>
 	<div>Active node: <span id="echoActive1">-</span></div>
