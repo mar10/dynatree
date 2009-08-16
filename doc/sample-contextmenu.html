@@ -75,7 +75,7 @@
 	
 	function bindContextMenu() {
 		// Add context menu to document nodes:
-		$(".ui-dynatree-document")
+		$(".ui-dynatree-document,.ui-dynatree-folder")
 			.destroyContextMenu() // unbind first, to prevent duplicates			
 			.contextMenu({menu: "myMenu"}, function(action, el, pos) {
 			var dtnode = el.attr("dtnode");
@@ -157,7 +157,7 @@
 <body class="example">
 	<h1>Example: Context Menu</h1>
 	<p class="description">
-		Implementation of a context menu. Right-click a <i>document</i> node and see what happens.<br>
+		Implementation of a context menu. Right-click a node and see what happens.<br>
     	Also [space] key is supported to open the menu.<br>
     	<br>
     	This example also demonstrates, how to copy or move branches and how
