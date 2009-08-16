@@ -388,6 +388,8 @@ children: [
 		focus: false, // Initial focused status.
 		expand: false, // Initial expanded status.
 		select: false, // Initial selected status.
+		hideCheckbox: false, // Suppress checkbox for this node.
+		unselectable: false, // Prevent selection.
 		// The following attributes are only valid if passed to some functions:
 		children: null // Array of child nodes.
 		// NOTE: we can also add custom attributes here.
@@ -437,6 +439,14 @@ onActivate: function(dtnode) {
 	<dd>
 		If set to true, the node will be initially focused.
 	</dd>
+	<dt>hideCheckbox
+	<dd>
+		Suppress display of checkbox icon.<br>
+		It is still possible to (de)select the node using the API, keyboard or
+		initialization data. (The selection state may be visualized by a CSS
+		style.)<br>
+		See also <code>unselectable</code>.
+	</dd>
 	<dt>icon
 	<dd>
 		Optional name of an image file relative to the image directory. <br>
@@ -475,6 +485,13 @@ onActivate: function(dtnode) {
 	<dd>
 		Optional string to display in a popup window when the cursor hovers over
 		the node.
+	</dd>
+	<dt>unselectable
+	<dd>
+		Prevent (de)selection of this node using API, mouse, and keyboard.<br>
+		It is still possible, to (de)select this node in the initialization data
+		or indirectly (in multi-hier mode).<br>
+		See also <code>hideCheckbox</code>.
 	</dd>
 </dl>
 
