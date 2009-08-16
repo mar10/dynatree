@@ -109,7 +109,7 @@ DynaTreeNode.prototype = {
 		this.div = null; // not yet created
 		this.span = null; // not yet created
 		this.childList = null; // no subnodes yet
-		this.isRead = false; // Lazy content not yet read
+//		this.isRead = false; // Lazy content not yet read
 		this.isLoading = false; // Lazy content is being loaded
 		this.hasSubSel = false;
 	},
@@ -226,7 +226,8 @@ DynaTreeNode.prototype = {
 			cnList.push(cn.expanded);
 		if( this.childList != null )
 			cnList.push(cn.hasChildren);
-		if( this.data.isLazy && !this.isRead )
+//		if( this.data.isLazy && !this.isRead )
+		if( this.data.isLazy && this.childList==null )
 			cnList.push(cn.lazy);
 		if( isLastSib )
 			cnList.push(cn.lastsib);
@@ -242,7 +243,8 @@ DynaTreeNode.prototype = {
 		// so we create combined class names that can be used in the CSS
 		cnList.push(cn.combinedExpanderPrefix
 				+ (this.bExpanded ? "e" : "c")
-				+ (this.data.isLazy && !this.isRead ? "d" : "")
+//				+ (this.data.isLazy && !this.isRead ? "d" : "")
+				+ (this.data.isLazy && this.childList==null ? "d" : "")
 				+ (isLastSib ? "l" : "")
 				);
 		cnList.push(cn.combinedIconPrefix
@@ -311,7 +313,7 @@ DynaTreeNode.prototype = {
 		switch( lts ) {
 			case DTNodeStatus_Ok:
 				this._setStatusNode(null);
-				this.isRead = true;
+//				this.isRead = true;
 				this.isLoading = false;
 				this.render(false, false);
 				if( this.tree.options.autoFocus ) {
@@ -379,7 +381,6 @@ DynaTreeNode.prototype = {
 	    // Event coordinates, relative to outer node span:
 	    var eventX = event.pageX - target.offsetLeft;
 	    var eventY = event.pageY - target.offsetTop;
-//	    alert ("click at " + eventX + ", " + eventY);
 	    
 	    for(var i=0; i<target.childNodes.length; i++) {
 	        var cn = target.childNodes[i];
@@ -664,6 +665,24 @@ DynaTreeNode.prototype = {
 		return this.bSelected;
 	},
 	
+	_loadContent: function() {
+		try {
+			var opts = this.tree.options;
+			this.tree.logDebug("_loadContent: start - %o", this);
+			this.setLazyNodeStatus(DTNodeStatus_Loading);
+			if( true == opts.onLazyRead.call(this.span, this) ) {
+				// If function returns 'true', we assume that the loading is done:
+				this.setLazyNodeStatus(DTNodeStatus_Ok);
+				// Otherwise (i.e. if the loading was started as an asynchronous process)
+				// the onLazyRead(dtnode) handler is expected to call dtnode.setLazyNodeStatus(DTNodeStatus_Ok/_Error) when done.
+				this.tree.logDebug("_loadContent: succeeded - %o", this);
+			}
+		} catch(e) {
+			alert(e);
+			this.setLazyNodeStatus(DTNodeStatus_Error);
+		}
+	},
+	
 	_expand: function(bExpand) {
 //		this.tree.logDebug("dtnode._expand(%o) - %o", bExpand, this);
 		if( this.bExpanded == bExpand ) {
@@ -696,41 +715,31 @@ DynaTreeNode.prototype = {
 				parents[i].collapseSiblings();
 		}
 
-		// If currently active node is now hidden, deactivate it
+		// If the currently active node is now hidden, deactivate it
 		if( opts.activeVisible && this.tree.activeNode && ! this.tree.activeNode.isVisible() ) {
 			this.tree.activeNode.deactivate();
 		}
 		// Expanding a lazy node: set 'loading...' and call callback
-		if( bExpand && this.data.isLazy && !this.isRead && !this.isLoading ) {
-			try {
-				this.tree.logDebug("_expand: start lazy - %o", this);
-				this.setLazyNodeStatus(DTNodeStatus_Loading);
-				if( true == opts.onLazyRead.call(this.span, this) ) {
-					// If function returns 'true', we assume that the loading is done:
-					this.setLazyNodeStatus(DTNodeStatus_Ok);
-					// Otherwise (i.e. if the loading was started as an asynchronous process)
-					// the onLazyRead(dtnode) handler is expected to call dtnode.setLazyNodeStatus(DTNodeStatus_Ok/_Error) when done.
-					this.tree.logDebug("_expand: lazy succeeded - %o", this);
-				}
-			} catch(e) {
-				this.setLazyNodeStatus(DTNodeStatus_Error);
-			}
+		if( bExpand && this.data.isLazy && this.childList==null && !this.isLoading ) {
+			this._loadContent();
 			return;
 		}
 //		this.tree.logDebug("_expand: start div toggle - %o", this);
 
 		var fxDuration = opts.fx ? (opts.fx.duration || 200) : 0;
-		for(var i=0; i<this.childList.length; i++ ) {
-			var $child = $(this.childList[i].div);
-			if( fxDuration ) {
-				// This is a toggle, so only do it, if not already rendered (in)visible (issue 98)
-				if( bExpand != $child.is(':visible') )
-					$child.animate(opts.fx, fxDuration);
-			} else {
-				if( bExpand )
-					$child.show();
-				else
-					$child.hide(); // TODO: this seems to be slow, when called the first time for an element
+		if( this.childList ) {
+			for(var i=0; i<this.childList.length; i++ ) {
+				var $child = $(this.childList[i].div);
+				if( fxDuration ) {
+					// This is a toggle, so only do it, if not already rendered (in)visible (issue 98)
+					if( bExpand != $child.is(':visible') )
+						$child.animate(opts.fx, fxDuration);
+				} else {
+					if( bExpand )
+						$child.show();
+					else
+						$child.hide(); // TODO: this seems to be slow, when called the first time for an element
+				}
 			}
 		}
 		
@@ -961,9 +970,9 @@ DynaTreeNode.prototype = {
 		}
 	},
 
-	removeChildren: function(recursive) {
+	removeChildren: function(isRecursiveCall) {
         // Remove all child nodes (more efficiently than recursive remove())
-//		this.tree.logDebug ("%o.removeChildren(%o)", this, recursive);
+//		this.tree.logDebug ("%o.removeChildren(%o)", this, isRecursiveCall);
 		var tree = this.tree;
         var ac = this.childList;
         if( ac ) {
@@ -983,13 +992,28 @@ DynaTreeNode.prototype = {
                 delete tn;
         	}
         	this.childList = null;
-			if( ! recursive ) {
-				this._expand(false);
-				this.isRead = false;
-				this.isLoading = false;
-				this.render(false, false);
-			}
         }
+		if( ! isRecursiveCall ) {
+//			this._expand(false);
+//			this.isRead = false;
+			this.isLoading = false;
+			this.render(false, false);
+		}
+	},
+
+	reload: function(force) {
+		// Discard lazy content (and reload, if node is expanded). 
+		if( ! this.data.isLazy )
+			throw "node.reload() requires lazy nodes.";
+		if( this.bExpanded ) {
+			this.expand(false);
+			this.removeChildren();
+			this.expand(true);
+		} else {
+			this.removeChildren();
+			if( force )
+				this._loadContent();
+		}
 	},
 
 	_addChildNode: function(dtnode, insertBefore) {
@@ -1142,6 +1166,7 @@ DynaTreeNode.prototype = {
 	},
 
 	appendAjax: function(ajaxOptions) {
+		this.removeChildren();
 		this.setLazyNodeStatus(DTNodeStatus_Loading);
 		// Ajax option inheritance: $.ajaxSetup < $.ui.dynatree.defaults.ajaxDefaults < tree.options.ajaxDefaults < ajaxOptions
 		var self = this;
@@ -1152,7 +1177,8 @@ DynaTreeNode.prototype = {
      		    // <this> is the request options
 				var prevPhase = self.tree.phase;
 				self.tree.phase = "init";
-				self.append(data);
+//				self.append(data);
+				self.addChild(data, null);
 				self.tree.phase = "postInit";
 				self.setLazyNodeStatus(DTNodeStatus_Ok);
 				if( orgSuccess )
@@ -1394,6 +1420,37 @@ DynaTree.prototype = {
 		this.logDebug("dynatree.redraw() done.");
 	},
 
+	reloadAjax: function() {
+		// Reload 
+		var opts = this.options;
+		if( ! opts.initAjax || ! opts.initAjax.url )
+			throw "tree.reload() requires 'initAjax' mode.";
+		var pers = this.persistence;
+		var ajaxOpts = $.extend({}, opts.initAjax);
+		// Append cookie info to the request
+		if( ajaxOpts.addActiveKey )
+			ajaxOpts.data.activeKey = pers.activeKey; 
+		if( ajaxOpts.addFocusedKey )
+			ajaxOpts.data.focusedKey = pers.focusedKey; 
+		if( ajaxOpts.addExpandedKeyList )
+			ajaxOpts.data.expandedKeyList = pers.expandedKeyList.join(","); 
+		if( ajaxOpts.addSelectedKeyList )
+			ajaxOpts.data.selectedKeyList = pers.selectedKeyList.join(","); 
+
+		// Setup onPostInit callback to be called when Ajax returns
+		if( opts.onPostInit ) {
+			if( ajaxOpts.success )
+				this.tree.logWarning("initAjax: success callback is ignored when onPostInit was specified.");
+			if( ajaxOpts.error )
+				this.tree.logWarning("initAjax: error callback is ignored when onPostInit was specified.");
+			var isReloading = pers.isReloading();
+			ajaxOpts["success"] = function(dtnode) { opts.onPostInit.call(dtnode.tree, isReloading, false); }; 
+			ajaxOpts["error"] = function(dtnode) { opts.onPostInit.call(dtnode.tree, isReloading, true); }; 
+		}
+    	this.logDebug("Dynatree._init(): send Ajax request...");
+    	this.tnRoot.appendAjax(ajaxOpts);
+	},
+
 	getRoot: function() {
 		return this.tnRoot;
 	},
@@ -1599,28 +1656,7 @@ $.widget("ui.dynatree", {
     	} else if( opts.initAjax && opts.initAjax.url ) {
     		// Init tree from AJAX request
     		isLazy = true;
-    		var ajaxOpts = $.extend({}, opts.initAjax);
-    		// Append cookie info to the request
-    		if( ajaxOpts.addActiveKey )
-    			ajaxOpts.data.activeKey = this.tree.persistence.activeKey; 
-    		if( ajaxOpts.addFocusedKey )
-    			ajaxOpts.data.focusedKey = this.tree.persistence.focusedKey; 
-    		if( ajaxOpts.addExpandedKeyList )
-    			ajaxOpts.data.expandedKeyList = this.tree.persistence.expandedKeyList.join(","); 
-    		if( ajaxOpts.addSelectedKeyList )
-    			ajaxOpts.data.selectedKeyList = this.tree.persistence.selectedKeyList.join(","); 
-
-    		// Setup onPostInit callback to be called when Ajax returns
-    		if( opts.onPostInit ) {
-    			if( ajaxOpts.success )
-    				this.tree.logWarning("initAjax: success callback is ignored when onPostInit was specified.");
-    			if( ajaxOpts.error )
-    				this.tree.logWarning("initAjax: error callback is ignored when onPostInit was specified.");
-    			ajaxOpts["success"] = function(dtnode) { opts.onPostInit.call(dtnode.tree, isReloading, false); }; 
-    			ajaxOpts["error"] = function(dtnode) { opts.onPostInit.call(dtnode.tree, isReloading, true); }; 
-    		}
-        	this.tree.logDebug("Dynatree._init(): send Ajax request...");
-    		root.appendAjax(ajaxOpts);
+    		this.tree.reloadAjax();
 
     	} else if( opts.initId ) {
     		// Init tree from another UL element

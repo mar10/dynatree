@@ -393,7 +393,7 @@ children: [
 		// The following attributes are only valid if passed to some functions:
 		children: null // Array of child nodes.
 		// NOTE: we can also add custom attributes here.
-		// This may then also be used in the onActivate(), onSelect(), or onLazyTree() callbacks.
+		// This may then also be used in the onActivate(), onSelect(), or onLazyRead() callbacks.
 	},
 	[&#8230;]
 ]
@@ -462,7 +462,7 @@ onActivate: function(dtnode) {
 	<dt>isLazy
 	<dd>
 		Enables delayed loading of the node contents. When a lazy node is expanded
-		for the first time, the onLazyTree() callback is called.
+		for the first time, the onLazyRead() callback is called.
 	</dd>
 	<dt>key
 	<dd>
@@ -945,7 +945,7 @@ $("#tree").dynatree({
     [&#8230;]
     onPostInit: function(isReloading, isError) {
         // 'this' is the current tree
-        // isReloading is set, if status wss read from existing cookies
+        // isReloading is true, if status was read from existing cookies
         // isError is only used in Ajay mode
         // Fire an onActivate() event for the currently active node
         this.reactivate();
@@ -1154,6 +1154,11 @@ $("#tree").dynatree({
         (if there is one).<br>
         This may be useful when processing an onPostInit callback.
     </dd>
+	<dt>reloadAjax()
+	<dd>
+		Reload the the tree, by re-submitting the Ajax request that was defined
+		in the <code>initAjax</code> option.
+	</dd>
 	<dt>toDict()
 	<dd>
 		Convert the tree into a JavaScript object.<br>
@@ -1242,13 +1247,28 @@ $("#tree").dynatree({
 	<dd>
 		Expand all parents as neccessary, to make this node visible.
 	</dd>
+	<dt>reload(force)
+	<dd>
+		Discard all children of a lazy node.<br>
+		If the node is currently expanded, an <code>onLazyRead</code> event is 
+		generated to re-load the children immediately.<br>
+		If the node is collapsed, and <i>force</i> is <code>false</code>
+		or ommited, the children will removed, but only re-loaded when the node 
+		is expanded by the user.<br>
+		If the node is collapsed, and <i>force</i> is <code>true</code>, the 
+		children will be reloaded immediately (without expanding).
+	</dd>
 	<dt>remove()
 	<dd>
 		Remove this node from tree.
 	</dd>
 	<dt>removeChildren()
 	<dd>
-		Remove all children and collpase this node.
+		Remove all child nodes.
+	</dd>
+	<dt>render(bDeep)
+	<dd>
+		Redraw this node (and all child nodes, if <i>bDeep</i> is <code>true</code>).
 	</dd>
 	<dt>select(flag)
 	<dd>

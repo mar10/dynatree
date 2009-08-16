@@ -27,6 +27,7 @@
 			rootVisible: true,
 			persist: true,
 			onPostInit: function(isReloading, isError) {
+//				alert("reloading: "+isReloading+", error:"+isError);
                logMsg("onPostInit(%o, %o) - %o", isReloading, isError, this);
                // Re-fire onActivate, so the text is updated
 			   this.reactivate();
@@ -36,7 +37,7 @@
             initAjax: {url: "http://127.0.0.1:8001",
                        dataType: "jsonp", // Enable JSONP, so this sample can be run from the local file system against a localhost server
                        data: {key: "",
-//			                  sleep: 3,
+			                  sleep: 1,
                               mode: "baseFolders"
                               },
                        addExpandedKeyList: true // Send list of expanded keys, so the webservice can deliver these children also
@@ -46,6 +47,7 @@
                 	{url: "http://127.0.0.1:8001", 
                      dataType: "jsonp", // Enable JSONP, so this sample can be run from the local file system against a localhost server
 		             data: {key: dtnode.data.key,
+ 		                    sleep: 1,
    		                    mode: "branch"
                             }
                 });
@@ -54,6 +56,16 @@
                 $("#echoActive").text(dtnode.data.tooltip + ", key=" + dtnode.data.key);
             }
 		});
+
+        $("#btnReload").click(function(){
+            $("#tree").dynatree("getTree").reloadAjax();
+            return false;
+        });
+        $("#btnReloadNode").click(function(){
+            $("#tree").dynatree("getTree").getNodeByKey("_4108794").reload(true);
+            return false;
+        });
+		
 
 	});
 </script>
@@ -67,7 +79,7 @@
         loaded 'on demand', when expanded.<br>
         <br>
         Using <code>persist: true</code> and <code>initAjax: { addExpandedKeyList: true }</code>
-        we also support 'lazy persistence' (which has to be suppored by the
+        we also support 'lazy persistence' (which has to be supported by the
         web service, of course).<br>
 		<br>
 		Note:<br>
@@ -90,6 +102,10 @@
 
 	<div>Active node: <span id="echoActive">-</span></div>
 
+	<p>
+		<button id="btnReload">Reload tree</button>
+		<button id="btnReloadNode">Reload node</button>
+	</p>
 	<!-- Start_Exclude: This block is not part of the sample code -->
 	<hr>
 	<p class="sample-links  no_code">
