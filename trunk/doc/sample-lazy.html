@@ -59,7 +59,7 @@
 				];
 				function fakeAjaxResponse() {
 					return function() {
-						dtnode.append(fakeJsonResult);
+						dtnode.addChild(fakeJsonResult);
 						// Remove the 'loading...' status:
 						dtnode.setLazyNodeStatus(DTNodeStatus_Ok);
 					};

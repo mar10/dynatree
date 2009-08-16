@@ -429,7 +429,7 @@ onActivate: function(dtnode) {
 	<dt>children
 	<dd>
 		Array of node options, that are used to generate child nodes.<br>
-		This option is only valid when passed to certain functions, like <code>DynTreeNode.append()</code>.
+		This option is only valid when passed to certain functions, like <code>DynTreeNode.addChild()</code>.
 	</dd>
 	<dt>expand
 	<dd>
@@ -664,14 +664,14 @@ $(function(){
 	});
 	// Now get the root node object
 	var rootNode = $("#tree").dynatree("getRoot");
-	// Call the DynaTreeNode.append() member function and pass options for the new node
-	var childNode = rootNode.append({
+	// Call the DynaTreeNode.addChild() member function and pass options for the new node
+	var childNode = rootNode.addChild({
 		title: "Child node 1",
 		tooltip: "This child node was added programmatically.",
 		isFolder: true
 	});
 	//
-	childNode.append({
+	childNode.addChild({
 		title: "Document using a custom icon",
 		icon: "customdoc1.gif"
 	});
@@ -1188,15 +1188,25 @@ $("#tree").dynatree({
 		If <code>activeVisible</code> option is set, all parents will be expanded as necessary.<br>
 		Focus is <em>not</em> set.
 	</dd>
-	<dt>append(nodeArray)
+
+	<dt>addChild(nodeData[, beforeNode])
 	<dd>
-		Accepts a node or an array of nodes to create child nodes.<br>
-		The nodes may contain a <code>children</code> option to build a hierarchy.<br>
-		Returns the new DynaTree object (the first one, if an array was passed).
-		<br>
-		The nodeArray must be formatted like the data'a <code>children</code> object.
-		(See also <a href="#nodeOptions">Node options</a>).
+		Append a new child node.<br>
+		<i>nodeData</i> may be a node data object as defined in 
+		<a href="#nodeOptions">Node options</a>, or an array thereof.
+		Also objects and arrays of type <code>DynaTreeNode</code> are allowed.<br>
+		Example:
+<pre class="prettyprint">
+var node = $("#tree").dynatree("getTree").getNodeByKey("1234");
+node.addChild({title: "New Node", key: "3333"});
+</pre>
+		Since the <i>nodeData</i> may be a nested data structure, it is possible 
+		to create a deep hierarchy with one call.<br>
+		The optional argument <i>beforeNode</i> specifies a child <code>DynaTreeNode</code>
+		that the new node will be inserted before. (If this parameter is <i>null</i>
+		or omitted, the new node will be appended.)
 	</dd>
+
 	<dt>appendAjax(ajaxOptions)
 	<dd>
 		Accepts a standard jQuery Ajax option object.<br>
@@ -1363,7 +1373,7 @@ dtnode.render();
 
 <pre class="prettyprint">
 var dtnode = $("#tree").dynatree("getActiveNode");
-var childNode = dtnode.append({
+var childNode = dtnode.addChild({
 	title: "My new node",
 	tooltip: "This folder and all child nodes were added programmatically."
 });

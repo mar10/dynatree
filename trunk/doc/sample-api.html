@@ -53,7 +53,7 @@
 //				alert ("Let's pretend we're using this AJAX response to load the branch:\n " + jsonResult);
 				function fakeAjaxResponse() {
 					return function() {
-						dtnode.append(fakeJsonResult);
+						dtnode.addChild(fakeJsonResult);
 						// Remove the 'loading...' status:
 						dtnode.setLazyNodeStatus(DTNodeStatus_Ok);
 					};
@@ -66,12 +66,12 @@
 			// Sample: add an hierarchic branch using code.
 			// This is how we would add tree nodes programatically
 			var rootNode = $("#tree").dynatree("getRoot");
-			var childNode = rootNode.append({
+			var childNode = rootNode.addChild({
 				title: "Programatically addded nodes",
 				tooltip: "This folder and all child nodes were added programmatically.",
 				isFolder: true
 			});
-			childNode.append({
+			childNode.addChild({
 				title: "Document using a custom icon",
 				icon: "customdoc1.gif"
 			});
@@ -98,7 +98,7 @@
 					]
 				}
 			];
-			$("#tree").dynatree("getRoot").append(obj);
+			$("#tree").dynatree("getRoot").addChild(obj);
 		});
 
 		$("#btnActiveNode").click(function(){
