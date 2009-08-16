@@ -111,7 +111,7 @@ def _findFolderByKey(rootPath, key):
 #===============================================================================
 
 class DynaTreeWsgiApp(object):
-    """This WSGI application serves a file system for dynatree."""
+    """This WSGI application serves a file system hierarchy for dynatree."""
     def __init__(self, optionDict):
         self.optionDict = optionDict
 
@@ -181,6 +181,7 @@ class DynaTreeWsgiApp(object):
                 subNodes = []
                 self.makeChildList(argDict, fullPath, subNodes)
                 node["children"] = subNodes
+#                node["isLazy"] = False
                 node["expand"] = True
     
 
