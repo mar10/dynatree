@@ -111,7 +111,7 @@ def _findFolderByKey(rootPath, key):
 #===============================================================================
 
 class DynaTreeWsgiApp(object):
-    """This WSGI application serves a file system hierarchy for dynatree."""
+    """This WSGI application serves a file system for dynatree."""
     def __init__(self, optionDict):
         self.optionDict = optionDict
 
@@ -124,7 +124,7 @@ class DynaTreeWsgiApp(object):
         argDict = dict(argList)
         print "Query args: %s" % argDict
 
-        # Support &sleep=SECONDS argument to simulate slow connections for debugging 
+        # Support &sleep=SECONDS argument for debugging
         if argDict.get("sleep"):
             print "Sleeping %s seconds..." % argDict.get("sleep")
             time.sleep(int(argDict.get("sleep")))
@@ -181,7 +181,6 @@ class DynaTreeWsgiApp(object):
                 subNodes = []
                 self.makeChildList(argDict, fullPath, subNodes)
                 node["children"] = subNodes
-#                node["isLazy"] = False
                 node["expand"] = True
     
 

@@ -101,7 +101,7 @@
   				];
   				function fakeAjaxResponse() {
   					return function() {
-  						dtnode.addChild(fakeJsonResult);
+  						dtnode.append(fakeJsonResult);
   						// Remove the 'loading...' status:
   						dtnode.setLazyNodeStatus(DTNodeStatus_Ok);
   					};
@@ -181,21 +181,10 @@
 			$("#tree").dynatree(this.checked ? "bind" : "unbind");
 		});
 		$("#btnTest").click(function(){
-			var tree = $("#tree").dynatree("getTree");
-			var parentNode = tree.getNodeByKey("1");
-			var beforeNode = tree.getNodeByKey("12");
-			parentNode.addChild({title: "NEW NODE"}, beforeNode);
-/*			
-			var parentDiv = parentNode.div;
-			var childs = parentDiv.getElementsByTagName("DIV");
-			var child = parentDiv.firstChild; // title <span>
-			while( child ) {
-				child = child.nextSibling; // title <span>
-				alert(child);
-			}
-//			for(i=0; i<childs.length; i++)
-//				alert(i+": "+childs[i]);
-*/
+            $(".ui-dynatree-selected").each(function(){
+                var dtnode = $(this).attr("dtnode");
+                logMsg("%o", dtnode);
+            });
 		});
 
 		$("#tree a").hover(function(){

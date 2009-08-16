@@ -66,7 +66,7 @@
 			$("#tree").remove();
 		});
 		$("#btn50").click(function(){
-			$("#tree").dynatree("getRoot").addChild({title: 'i50', expand: true});
+			$("#tree").dynatree("getRoot").append({title: 'i50', expand: true});
 		});
 		$("#btn21").click(function(){
 			$("#tree").dynatree("getTree").getNodeByKey("_12").removeChildren();

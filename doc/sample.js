@@ -65,9 +65,9 @@ function initCodeSamples() {
 
 $(function(){
 	// Log to Google Analytics, when not running locally
-	if ( document._gat && document.URL.toLowerCase().indexOf('wwwendt.de/')>=0 ) {
-		var pageTracker = _gat._getTracker("UA-316028-1");
-		pageTracker._trackPageview();
+	if ( document.urchinTracker && document.URL.toLowerCase().indexOf('wwwendt.de/')>=0 ) {
+		_uacct = "UA-316028-1";
+		urchinTracker();
 	}
 
 	// Show some elements only, if (not) inside the Example Browser

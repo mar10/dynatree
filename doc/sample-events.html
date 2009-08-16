@@ -23,7 +23,6 @@
 		$("#tree").dynatree({
 			title: "Event samples",
 			rootVisible: true,
-//			checkbox: true,
 //			persist: true,
 			onQueryActivate: function(activate, dtnode) {
 				logMsg("onQueryActivate(%o, %o)", activate, dtnode);
@@ -42,7 +41,7 @@
 			
 			onQuerySelect: function(select, dtnode) {
 				logMsg("onQuerySelect(%o, %o)", select, dtnode);
-				if( dtnode.data.isFolder )
+				if( dtnode.isFolder )
 					return false;
 			},
 			onSelect: function(select, dtnode) {
