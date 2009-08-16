@@ -224,6 +224,8 @@ DynaTreeNode.prototype = {
 		cnList.push( ( this.data.isFolder ) ? cn.folder : cn.document );
 		if( this.bExpanded )
 			cnList.push(cn.expanded);
+		if( this.childList != null )
+			cnList.push(cn.hasChildren);
 		if( this.data.isLazy && !this.isRead )
 			cnList.push(cn.lazy);
 		if( isLastSib )
@@ -1853,7 +1855,7 @@ $.ui.dynatree.defaults = {
 		combinedExpanderPrefix: "ui-dynatree-exp-",
 		combinedIconPrefix: "ui-dynatree-ico-",
 //		disabled: "ui-dynatree-disabled",
-//		hasChildren: "ui-dynatree-has-children",
+		hasChildren: "ui-dynatree-has-children",
 		active: "ui-dynatree-active",
 		selected: "ui-dynatree-selected",
 		expanded: "ui-dynatree-expanded",

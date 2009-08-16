@@ -145,6 +145,8 @@ span.ui-dynatree-checkbox:hover
 
 /******************************************************************************* 
  * Radiobutton icon
+ * This is a customization, that may be activated by overriding the 'checkbox'
+ * class name as 'ui-dynatree-radio' in the tree options.
  */
 span.ui-dynatree-radio
 {
@@ -253,6 +255,10 @@ span.ui-dynatree-focused a:link  /* @IE */
 	background-color: #EFEBDE; /* gray */
 }
 
+
+span.ui-dynatree-has-children a
+{
+}
 
 span.ui-dynatree-expanded a
 {
