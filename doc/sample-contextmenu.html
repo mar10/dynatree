@@ -52,7 +52,7 @@
 					alert("Cannot move a node to a sub node.");
 					return;
 				}
-				dtnode.append(cb);
+				dtnode.addChild(cb);
 				clipboardNode.remove();
 			} else {
 				// Copy mode: prevent duplicate keys:
@@ -60,7 +60,7 @@
 					dict.title = "Copy of " + dict.title;
 					delete dict.key; // Remove key, so a new one will be created
 				});
-				dtnode.append(cb);
+				dtnode.addChild(cb);
 			}
 			clipboardNode = pasteMode = null;
 			// Must enable context menu for new nodes

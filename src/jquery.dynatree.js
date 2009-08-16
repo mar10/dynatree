@@ -184,6 +184,27 @@ DynaTreeNode.prototype = {
 		return res;
 	},
 
+	_fixOrder: function() {
+		/**
+		 * Make sure, that <div> order matches childList order.
+		 */
+		var cl = this.childList; 
+		if( !cl )
+			return;
+		var childDiv = this.div.firstChild.nextSibling;
+		for(var i=0; i<cl.length-1; i++) {
+			var childNode1 = cl[i]; 
+			var childNode2 = childDiv.firstChild.dtnode;
+			if( childNode1 !== childNode2 ) {
+//
+				this.tree.logDebug("_fixOrder: mismatch at index " + i + ": " + childNode1 + " != " + childNode2);
+				this.div.insertBefore(childNode1.div, childNode2.div);
+			} else {
+				childDiv = childDiv.nextSibling;
+			}
+		}
+	},
+	
 	render: function(bDeep, bHidden) {
 		/**
 		 * Create HTML markup for this node.
@@ -195,17 +216,21 @@ DynaTreeNode.prototype = {
 		 * </div>
 		 */
 //		this.tree.logDebug("%o.render()", this);
+		var opts = this.tree.options;
+		var cn = opts.classNames;
+		var isLastSib = this.isLastSibling();
 		// --- 
 		if( ! this.div ) {
 			this.span = document.createElement("span");
 			this.span.dtnode = this;
 			if( this.data.key )
 				this.span.id = this.tree.options.idPrefix + this.data.key;
-
 			this.div  = document.createElement("div");
 			this.div.appendChild(this.span);
-			if ( this.parent )
+			
+			if ( this.parent ) {
 				this.parent.div.appendChild(this.div);
+			}
 
 			if( this.parent==null && !this.tree.options.rootVisible )
 				this.span.style.display = "none";
@@ -217,16 +242,12 @@ DynaTreeNode.prototype = {
 		this.div.style.display = ( this.parent==null || this.parent.bExpanded ? "" : "none");
 
 		// Set classes for current status
-		var opts = this.tree.options;
-		var cn = opts.classNames;
-		var isLastSib = this.isLastSibling();
 		var cnList = [];
 		cnList.push( ( this.data.isFolder ) ? cn.folder : cn.document );
 		if( this.bExpanded )
 			cnList.push(cn.expanded);
 		if( this.childList != null )
 			cnList.push(cn.hasChildren);
-//		if( this.data.isLazy && !this.isRead )
 		if( this.data.isLazy && this.childList==null )
 			cnList.push(cn.lazy);
 		if( isLastSib )
@@ -243,7 +264,6 @@ DynaTreeNode.prototype = {
 		// so we create combined class names that can be used in the CSS
 		cnList.push(cn.combinedExpanderPrefix
 				+ (this.bExpanded ? "e" : "c")
-//				+ (this.data.isLazy && !this.isRead ? "d" : "")
 				+ (this.data.isLazy && this.childList==null ? "d" : "")
 				+ (isLastSib ? "l" : "")
 				);
@@ -257,6 +277,7 @@ DynaTreeNode.prototype = {
 			for(var i=0; i<this.childList.length; i++) {
 				this.childList[i].render(bDeep, bHidden)
 			}
+			this._fixOrder();
 		}
 	},
 
@@ -1016,7 +1037,7 @@ DynaTreeNode.prototype = {
 		}
 	},
 
-	_addChildNode: function(dtnode, insertBefore) {
+	_addChildNode: function(dtnode, beforeNode) {
 		/** 
 		 * Internal function to add one single DynatreeNode as a child.
 		 * 
@@ -1027,19 +1048,28 @@ DynaTreeNode.prototype = {
 		
 //		tree.logDebug("%o._addChildNode(%o)", this, dtnode);
 		
-		// --- Add dtnode as a child
-		// TODO: implement insertBefore
+		// --- Update and fix dtnode attributes if necessary 
+		dtnode.parent = this;
+//		if( beforeNode && (beforeNode.parent !== this || beforeNode === dtnode ) )
+//			throw "<beforeNode> must be another child of <this>";
 
+		// --- Add dtnode as a child
 		if ( this.childList==null ) {
 			this.childList = [];
-		} else {
+		} else if( ! beforeNode ) {
 			// Fix 'lastsib'
 			$(this.childList[this.childList.length-1].span).removeClass(opts.classNames.lastsib);
 		}
-		this.childList.push (dtnode);
-
-		// --- Update and fix dtnode attributes if necessary 
-		dtnode.parent = this;
+		if( beforeNode ) {
+			var iBefore = $.inArray(beforeNode, this.childList);
+			if( iBefore < 0 )
+				throw "<beforeNode> must be a child of <this>";
+			this.childList.splice(iBefore, 0, dtnode);
+//			alert(this.childList);
+		} else {
+			// Append node
+			this.childList.push(dtnode);
+		}
 
 		// --- Handle persistence 
 		// Initial status is read from cookies, if persistence is active and 
@@ -1112,7 +1142,7 @@ DynaTreeNode.prototype = {
 		return dtnode;
 	},
 
-	addChild: function(obj, insertBefore) {
+	addChild: function(obj, beforeNode) {
 		/**
 		 * Add a node object as child.
 		 * 
@@ -1120,7 +1150,7 @@ DynaTreeNode.prototype = {
 		 * (Except for the root node creation in the tree constructor)
 		 * 
 		 * @param obj A JS object (may be recursive) or an array of those.
-		 * @param {DynaTreeNode} insertBefore (optional) sibling node.
+		 * @param {DynaTreeNode} beforeNode (optional) sibling node.
 		 *     
 		 * Data format: array of node objects, with optional 'children' attributes.
 		 * [
@@ -1135,11 +1165,11 @@ DynaTreeNode.prototype = {
 		 * A simple object is also accepted instead of an array.
 		 * 
 		 */
-//		this.tree.logDebug("%o.addChild(%o, %o)", this, obj, insertBefore);
+//		this.tree.logDebug("%o.addChild(%o, %o)", this, obj, beforeNode);
 		if( !obj || obj.length==0 ) // Passed null or undefined or empty array
 			return;
 		if( obj instanceof DynaTreeNode )
-			return this._addChildNode(obj, insertBefore);
+			return this._addChildNode(obj, beforeNode);
 		if( !obj.length ) // Passed a single data object
 			obj = [ obj ];
 
@@ -1148,7 +1178,7 @@ DynaTreeNode.prototype = {
 		var tnFirst = null;
 		for (var i=0; i<obj.length; i++) {
 			var data = obj[i];
-			var dtnode = this._addChildNode(new DynaTreeNode(this, this.tree, data), insertBefore);
+			var dtnode = this._addChildNode(new DynaTreeNode(this, this.tree, data), beforeNode);
 			if( !tnFirst ) tnFirst = dtnode;
 			// Add child nodes recursively
 			if( data.children )
@@ -1159,9 +1189,7 @@ DynaTreeNode.prototype = {
 	},
 
 	append: function(obj) {
-		/**
-		 * @deprecated 
-		 */
+		this.tree.logWarning("node.append() is deprecated (use node.addChild() instead).");
 		return this.addChild(obj, null);
 	},
 
