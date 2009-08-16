@@ -1679,7 +1679,7 @@ $.widget("ui.dynatree", {
     	// Init tree structure
     	if( opts.children ) {
     		// Read structure from node array
-    		root.append(opts.children);
+    		root.addChild(opts.children);
 
     	} else if( opts.initAjax && opts.initAjax.url ) {
     		// Init tree from AJAX request
