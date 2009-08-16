@@ -18,11 +18,10 @@ Drag'n'drop support.
   * See also the [http://code.google.com/p/dynatree/issues/list?can=1&q=milestone:Release0.5.1+status%3AFixed%2CVerified&sort=-modified&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary fix list].
 
 ===== 0.5.0 =====
-Main Changes:
-  * See [UpdateToVersion05 Migration hints] for details.
   * Change how persistance and related events are working (no longer fires events)
   * Support for persistence with lazy trees
   * See also the [http://code.google.com/p/dynatree/issues/list?can=1&q=milestone:Release0.5+status%3AFixed%2CVerified&sort=-modified&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary fix list].
+  * See [UpdateToVersion05 Migration hints] for details!
 
 
 ==== Release 0.4 ====
