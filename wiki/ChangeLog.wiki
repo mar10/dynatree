@@ -10,8 +10,6 @@ Drag'n'drop support.
 
 ==== Release 0.5 ====
 
-See [UpdateToVersion05 Migration hints] for details.
-
 ===== 0.5.1 =====
   * Support for reloading the tree or single lazy nodes.
   * Optionally inserting child nodes (instead of appending).
@@ -21,6 +19,7 @@ See [UpdateToVersion05 Migration hints] for details.
 
 ===== 0.5.0 =====
 Main Changes:
+  * See [UpdateToVersion05 Migration hints] for details.
   * Change how persistance and related events are working (no longer fires events)
   * Support for persistence with lazy trees
   * See also the [http://code.google.com/p/dynatree/issues/list?can=1&q=milestone:Release0.5+status%3AFixed%2CVerified&sort=-modified&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary fix list].
