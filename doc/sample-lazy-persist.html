@@ -38,6 +38,7 @@
                        dataType: "jsonp", // Enable JSONP, so this sample can be run from the local file system against a localhost server
                        data: {key: "",
 			                  sleep: 1,
+                              depth: 2,
                               mode: "baseFolders"
                               },
                        addExpandedKeyList: true // Send list of expanded keys, so the webservice can deliver these children also
@@ -62,7 +63,7 @@
             return false;
         });
         $("#btnReloadNode").click(function(){
-            $("#tree").dynatree("getTree").getNodeByKey("_4108794").reload(true);
+            $("#tree").dynatree("getRoot").reload();
             return false;
         });
 		
@@ -104,7 +105,7 @@
 
 	<p>
 		<button id="btnReload">Reload tree</button>
-		<button id="btnReloadNode">Reload node</button>
+		<button id="btnReloadNode">Reload root node</button>
 	</p>
 	<!-- Start_Exclude: This block is not part of the sample code -->
 	<hr>
