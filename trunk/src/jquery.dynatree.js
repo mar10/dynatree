@@ -991,7 +991,7 @@ DynaTreeNode.prototype = {
 		}
 	},
 
-	removeChildren: function(isRecursiveCall) {
+	removeChildren: function(isRecursiveCall, retainPersistence) {
         // Remove all child nodes (more efficiently than recursive remove())
 //		this.tree.logDebug ("%o.removeChildren(%o)", this, isRecursiveCall);
 		var tree = this.tree;
@@ -1002,7 +1002,7 @@ DynaTreeNode.prototype = {
 //        		this.tree.logDebug ("del %o", tn);
                 if ( tn === tree.activeNode )
                 	tn.deactivate();
-                if( this.tree.options.persist ) {
+                if( this.tree.options.persist && !retainPersistence ) {
 	                if( tn.bSelected )
 	                    this.tree.persistence.clearSelect(tn.data.key);
 	                if ( tn.bExpanded )
@@ -1117,7 +1117,7 @@ DynaTreeNode.prototype = {
 		// Always expand, if it's below minExpandLevel
 //		tree.logDebug ("%o._addChildNode(%o), l=%o", this, dtnode, dtnode.getLevel());
 		if ( opts.minExpandLevel >= dtnode.getLevel() ) {
-			tree.logDebug ("Force expand for %o", dtnode);
+//			tree.logDebug ("Force expand for %o", dtnode);
 			this.bExpanded = true;
 		}
 
@@ -1194,7 +1194,7 @@ DynaTreeNode.prototype = {
 	},
 
 	appendAjax: function(ajaxOptions) {
-		this.removeChildren();
+		this.removeChildren(false, true);
 		this.setLazyNodeStatus(DTNodeStatus_Loading);
 		// Ajax option inheritance: $.ajaxSetup < $.ui.dynatree.defaults.ajaxDefaults < tree.options.ajaxDefaults < ajaxOptions
 		var self = this;
