@@ -60,6 +60,7 @@ Sample Dynatree options to use this service:
                        dataType: "jsonp", // Enable JSONP, so this sample can be run from the local file system against a localhost server
                        data: {key: "",
 //                              sleep: 3,
+//                              depth: 2,
                               mode: "baseFolders"
                               },
                        addExpandedKeyList: true // Send list of expanded keys, so the webservice can deliver these children also
@@ -128,6 +129,10 @@ class DynaTreeWsgiApp(object):
         if argDict.get("sleep"):
             print "Sleeping %s seconds..." % argDict.get("sleep")
             time.sleep(int(argDict.get("sleep")))
+            
+        depth = int(argDict.get("depth", 0))
+        if depth > 1:
+            print "'depth' mode: loading %s levels" % depth
 
         # Eval 'mode' and 'key' arguments
         rootPath = self.optionDict["rootPath"]
@@ -143,7 +148,7 @@ class DynaTreeWsgiApp(object):
 
         # Get list of child nodes (may be recursive)
         childList = [ ]
-        self.makeChildList(argDict, folderPath, childList)
+        self.makeChildList(argDict, folderPath, childList, depth)
         
         # Convert result list to a JSON string
         res = json.dumps(childList, encoding="Latin-1")
@@ -157,8 +162,8 @@ class DynaTreeWsgiApp(object):
         return [ res ]
 
 
-    def makeChildList(self, argDict, folderPath, childList):
-        print "makeChildList ", folderPath
+    def makeChildList(self, argDict, folderPath, childList, depth):
+        print "makeChildList(%s, depth=%s) " % (folderPath, depth)
         expandedKeyList = argDict.get("expandedKeyList", "").split(",")
         filenameList = os.listdir(folderPath)
         for fn in filenameList:
@@ -177,12 +182,12 @@ class DynaTreeWsgiApp(object):
             childList.append(node)
             # Support lazy persistence:
             # If the current node was requested as 'expanded', load the children too 
-            if isFolder and key in expandedKeyList:
+            if isFolder and (key in expandedKeyList or depth > 1):
                 subNodes = []
-                self.makeChildList(argDict, fullPath, subNodes)
+                self.makeChildList(argDict, fullPath, subNodes, depth-1)
                 node["children"] = subNodes
 #                node["isLazy"] = False
-                node["expand"] = True
+#                node["expand"] = True
     
 
 #===============================================================================
@@ -202,8 +207,8 @@ def make_server(host, port, app, server_class=WSGIServer, handler_class=WSGIRequ
 
 def main():  
     # Configure root directory that will be exported:
-#    rootPath = "/temp"
     rootPath = gettempdir()
+#    rootPath = "/temp"
 
     # Configure hostname and port on which the server will listen
 #    hostname = "127.0.0.1" # Use empty string for localhost (local access only)
