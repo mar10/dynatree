@@ -491,6 +491,7 @@ DynaTreeNode.prototype = {
 			this.tree.activeNode = this;
 	        if( opts.persist )
 				$.cookie(opts.cookieId+"-active", this.data.key, opts.cookie);
+	        this.tree.persistence.activeKey = this.data.key;
 			$(this.span).addClass(opts.classNames.active);
 			if ( fireEvents && opts.onActivate ) // Pass element as 'this' (jQuery convention)
 				opts.onActivate.call(this.span, this);
@@ -506,6 +507,7 @@ DynaTreeNode.prototype = {
 		        	// If we pass null, we also have to pass a COPY of opts, because $cookie will override opts.expires (issue 84)
 					$.cookie(opts.cookieId+"-active", "", opts.cookie);
 		        }
+		        this.tree.persistence.activeKey = null;
 				this.tree.activeNode = null;
 				if ( fireEvents && opts.onDeactivate )
 					opts.onDeactivate.call(this.span, this);
@@ -1000,7 +1002,7 @@ DynaTreeNode.prototype = {
         	for(var i=0; i<ac.length; i++) {
 				var tn=ac[i];
 //        		this.tree.logDebug ("del %o", tn);
-                if ( tn === tree.activeNode )
+                if ( tn === tree.activeNode && !retainPersistence )
                 	tn.deactivate();
                 if( this.tree.options.persist && !retainPersistence ) {
 	                if( tn.bSelected )
@@ -1008,7 +1010,7 @@ DynaTreeNode.prototype = {
 	                if ( tn.bExpanded )
 	                    this.tree.persistence.clearExpand(tn.data.key);
                 }
-                tn.removeChildren(true);
+                tn.removeChildren(true, retainPersistence);
 				this.div.removeChild(tn.div);
                 delete tn;
         	}
@@ -1085,6 +1087,7 @@ DynaTreeNode.prototype = {
 				tree.focusNode = dtnode;
 			dtnode.bExpanded = ($.inArray(dtnode.data.key, pers.expandedKeyList) >= 0);
 			dtnode.bSelected = ($.inArray(dtnode.data.key, pers.selectedKeyList) >= 0);
+//			tree.logDebug("    key=%o, bSelected=%o", dtnode.data.key, dtnode.bSelected);
 		} else {
 			// Init status from data (Note: we write the cookies after the init phase)
 //			tree.logDebug("init from data");
@@ -1456,6 +1459,7 @@ DynaTree.prototype = {
 		var pers = this.persistence;
 		var ajaxOpts = $.extend({}, opts.initAjax);
 		// Append cookie info to the request
+//		this.logDebug("reloadAjax: key=%o, an.key:%o", pers.activeKey, this.activeNode?this.activeNode.data.key:"?");
 		if( ajaxOpts.addActiveKey )
 			ajaxOpts.data.activeKey = pers.activeKey; 
 		if( ajaxOpts.addFocusedKey )
@@ -1497,6 +1501,7 @@ DynaTree.prototype = {
 	reactivate: function(setFocus) {
 		// Re-fire onQueryActivate and onActivate events.
 		var node = this.activeNode;
+//		this.logDebug("reactivate %o", node);
 		if( node ) {
 			this.activeNode = null; // Force re-activating
 			node.activate();
