@@ -19,7 +19,10 @@
       2. Configure the rootPath variable in the main() function at the bottom
          of this module.
       3. Run this module:
-         >python dynatree_server.py
+         > python dynatree_server.py
+         
+         Optionally pass a root folder:
+         > python dynatree_server.py c:\temp
 
     This module
       - Is a standalone web server that answers URLs beginning with
@@ -77,7 +80,12 @@ Sample Dynatree options to use this service:
         });
 """
 
-import cgi, os, time
+import cgi 
+import os
+import sys
+import time
+from wsgiref.simple_server import WSGIServer, WSGIRequestHandler 
+from tempfile import gettempdir
 
 try:
     import json # Available since Python 2.6
@@ -130,6 +138,7 @@ class DynaTreeWsgiApp(object):
             print "Sleeping %s seconds..." % argDict.get("sleep")
             time.sleep(int(argDict.get("sleep")))
             
+        # Support &depth=LEVEL argument to read more than one level (1: direct children)
         depth = int(argDict.get("depth", 0))
         if depth > 1:
             print "'depth' mode: loading %s levels" % depth
@@ -195,8 +204,6 @@ class DynaTreeWsgiApp(object):
 #===============================================================================
 
 # Requires Python >= 2.5
-from wsgiref.simple_server import WSGIServer, WSGIRequestHandler 
-from tempfile import gettempdir
 
 def make_server(host, port, app, server_class=WSGIServer, handler_class=WSGIRequestHandler):
     """Create a new WSGI server listening on 'host' and 'port' for 'app'."""
@@ -208,6 +215,9 @@ def make_server(host, port, app, server_class=WSGIServer, handler_class=WSGIRequ
 def main():  
     # Configure root directory that will be exported:
     rootPath = gettempdir()
+    if len(sys.argv) > 1:
+        rootPath =sys.argv[1]
+    
 #    rootPath = "/temp"
 
     # Configure hostname and port on which the server will listen
@@ -223,6 +233,7 @@ def main():
 
     print "Exporting file system at ", rootPath, " for Dynatree."
     print "Serving HTTP on", sa[0], "port", sa[1], "..."
+    assert os.path.isdir(rootPath), "Invalid root path: '%s'" % rootPath
 
     httpd.serve_forever()
      
