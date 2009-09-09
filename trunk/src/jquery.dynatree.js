@@ -1775,7 +1775,8 @@ $.widget("ui.dynatree", {
 				case "keypress":
 					return ( o.onKeypress && o.onKeypress(dtnode, event)===false ) ? false : dtnode.onKeypress(event);
 				};
-//			} catch(e) {
+			} catch(e) {
+				var _ = null; # issue 117
 //				dtnode.tree.logError("bind(%o): dtnode: %o", event, dtnode);
 			} finally {
 				dtnode.tree.phase = prevPhase;
