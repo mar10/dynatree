@@ -1745,11 +1745,11 @@ $.widget("ui.dynatree", {
 		
 		// Tool function to get dtnode from the event target:
 		function __getNodeFromElement(el) {
-			var iMax = 4;
-			do {
+			var iMax = 5;
+			while( el && iMax-- ) {
 				if( el.dtnode ) return el.dtnode;
 				el = el.parentNode;
-			} while( iMax-- );
+			};
 			return null;
 		}
 
