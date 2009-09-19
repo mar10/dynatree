@@ -29,7 +29,6 @@
 				// Note: we also get this event, if persistence is on, and the page is reloaded. 
 				alert("You activated " + dtnode.data.title);
 			},
-//			persist: true,
 			children: [
 				{title: "Item 1"},
 				{title: "Folder 2", isFolder: true, key: "folder2",
@@ -47,7 +46,8 @@
 <body class="example">
 	<h1>Example: Quick start</h1>
 	<p class="description">
-		This sample initializes the tree from a JavaScript object.
+		This sample initializes the tree from a JavaScript object.<br>
+		An <i>onActivate</i> handler brings up an alert box when a node is selected.
 	</p>
 	
     <!-- Add a <div> element where the tree should appear: -->

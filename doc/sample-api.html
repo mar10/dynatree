@@ -25,17 +25,11 @@
 		$("#tree").dynatree({
 			title: "Programming Sample",
 			rootVisible: true,
-//			autoCollapse: true,
-//			fx: { height: "toggle", duration: 200 },
 			onActivate: function(dtnode) {
 				$("#echoActive").text(dtnode.data.title);
 				if( dtnode.data.url )
 					window.open(dtnode.data.url, dtnode.data.target);
 			},
-//			keyboard: false,
-//          onKeydown: function(dtnode, event) {
-//              return false;
-//          },
 			onDeactivate: function(dtnode) {
 				$("#echoSelected").text("-");
 			},
@@ -146,10 +140,10 @@
 </head>
 
 <body class="example">
-	<h1>Example: Programming</h1>
+	<h1>Dynatree API</h1>
 	<p class="description">
-		Note: this example uses a data attribute in some places, so it is not 
-		strictly compliant. 
+		This example demonstrates the usage of some DynaTree and DynaTreeNode
+        API functions. 
 	</p>
 	
 	<p>
