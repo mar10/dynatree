@@ -19,6 +19,7 @@
 	<!-- End_Exclude -->
     
 <script type='text/javascript'>
+    var _activeKey = null;
 	$(function(){
 		
 		// --- Initialize sample trees
@@ -57,15 +58,16 @@
 			},
             onActivate: function(dtnode) {
                 $("#echoActive").text(dtnode.data.tooltip + ", key=" + dtnode.data.key);
+                _activeKey = dtnode.data.key;
             }
 		});
 
         $("#btnReload").click(function(){
-            $("#tree").dynatree("getTree").reloadAjax();
+            $("#tree").dynatree("getTree").reload();
             return false;
         });
         $("#btnReloadNode").click(function(){
-            $("#tree").dynatree("getRoot").reload();
+            $("#tree").dynatree("getTree").getNodeByKey(_activeKey).reload();
             return false;
         });
 		
@@ -107,7 +109,7 @@
 
 	<p>
 		<button id="btnReload">Reload tree</button>
-		<button id="btnReloadNode">Reload root node</button>
+		<button id="btnReloadNode">Reload active node</button>
 	</p>
 	<!-- Start_Exclude: This block is not part of the sample code -->
 	<hr>

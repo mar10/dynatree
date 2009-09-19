@@ -1154,10 +1154,14 @@ $("#tree").dynatree({
         (if there is one).<br>
         This may be useful when processing an onPostInit callback.
     </dd>
-	<dt>reloadAjax()
+	<dt>reload()
 	<dd>
-		Reload the the tree, by re-submitting the Ajax request that was defined
-		in the <code>initAjax</code> option.
+		Reload the the tree.<br>
+        For lazy trees this is done, by re-submitting the Ajax request that was 
+        defined in the <code>initAjax</code> option.<br>
+		This will <strong>not</strong> work, if the tree was loaded from an embedded
+		&lt;UL> element, because these elements are removed after they have been
+		rendered.
 	</dd>
 	<dt>toDict()
 	<dd>
