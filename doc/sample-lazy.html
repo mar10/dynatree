@@ -25,46 +25,33 @@
 		$("#tree").dynatree({
 			title: "Lazy loading sample",
 			rootVisible: true,
-			persist: true,
 			fx: { height: "toggle", duration: 200 },
-			// initAjax is hard to fake, so we pass the children as object array:
-//			initAjax: { .. },
-			children: [
-				{title: "Simple node", key: "1" },
-				{title: "Lazy folder", isFolder: true, isLazy: true, key: "2"},
-				{title: "Lazy document", isLazy: true, key: "3"}
-				],
+            // In real life we would call a URL on the server like this:
+//          initAjax: {
+//              url: "/getTopLevelNodesAsJson",
+//              data: { mode: "funnyMode" }
+//              },
+            // .. but here we use a local file instead:
+			initAjax: { 
+                url: "sample-data1.json" 
+				},
 			
 			onActivate: function(dtnode) {
 				$("#echoActive").text(dtnode.data.title);
 			},
-/*
-			onExpand: function(flag, dtnode) {
-                if( !flag && dtnode.data.isLazy ) // Unload lazy nodes on collapse (so they are reloaded next time)
-                    dtnode.removeChildren();
-			},
-*/
+
 			onLazyRead: function(dtnode){
-				// typically we would call something like this:
-//            	dtnode.appendAjax(
-//                	{url: "/getChildrenAsJson",
-//		             data: {key: dtnode.data.key,
-//		                    mode: "funnyMode"
-//                          }
-//                });
-				// ... but in this sample we just simulate the behaviour:			
-				var fakeJsonResult = [
-				    { title: 'Lazy node 1', isLazy: true },
-				    { title: 'Simple node 2', select: true }
-				];
-				function fakeAjaxResponse() {
-					return function() {
-						dtnode.addChild(fakeJsonResult);
-						// Remove the 'loading...' status:
-						dtnode.setLazyNodeStatus(DTNodeStatus_Ok);
-					};
-				}
-				window.setTimeout(fakeAjaxResponse(), 1500);
+				// In real life we would call something like this:
+//            	dtnode.appendAjax({
+//            	    url: "/getChildrenAsJson",
+//		            data: {key: dtnode.data.key,
+//            		       mode: "funnyMode"
+//                         }
+//              });
+                // .. but here we use a local file instead:
+                dtnode.appendAjax({
+                    url: "sample-data2.json" 
+                });
 			}
 			
 		});
