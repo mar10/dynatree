@@ -21,11 +21,16 @@
 <script type='text/javascript'>
     var _activeKey = null;
 	$(function(){
-		
+
+		$("#tree").ajaxComplete(function(event, XMLHttpRequest, ajaxOptions) {
+			  _log("debug", "ajaxComplete: %o", this); // dom element listening
+			});
+					
 		// --- Initialize sample trees
 		$("#tree").dynatree({
 			title: "Lazy loading sample",
 			rootVisible: true,
+		    minExpandLevel: 0, // 1: root node is not collapsible
 			persist: true,
 			checkbox: true,
 			selectMode: 3,
@@ -41,7 +46,7 @@
                        dataType: "jsonp", // Enable JSONP, so this sample can be run from the local file system against a localhost server
                        data: {key: "",
 			                  sleep: 1,
-                              depth: 2,
+                              depth: 3,
                               mode: "baseFolders"
                               },
                        addExpandedKeyList: true // Send list of expanded keys, so the webservice can deliver these children also
