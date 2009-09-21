@@ -1051,7 +1051,7 @@ DynaTreeNode.prototype = {
 		var opts = tree.options;
 		var pers = tree.persistence;
 		
-		tree.logDebug("%o._addChildNode(%o)", this, dtnode);
+//		tree.logDebug("%o._addChildNode(%o)", this, dtnode);
 		
 		// --- Update and fix dtnode attributes if necessary 
 		dtnode.parent = this;
@@ -1083,17 +1083,17 @@ DynaTreeNode.prototype = {
 		var isInitializing = tree.isInitializing();
 		if( opts.persist && pers.cookiesFound && isInitializing ) {
 			// Init status from cookies
-			tree.logDebug("init from cookie, pa=%o, dk=%o", pers.activeKey, dtnode.data.key);
+//			tree.logDebug("init from cookie, pa=%o, dk=%o", pers.activeKey, dtnode.data.key);
 			if( pers.activeKey == dtnode.data.key )
 				tree.activeNode = dtnode;
 			if( pers.focusedKey == dtnode.data.key )
 				tree.focusNode = dtnode;
 			dtnode.bExpanded = ($.inArray(dtnode.data.key, pers.expandedKeyList) >= 0);
 			dtnode.bSelected = ($.inArray(dtnode.data.key, pers.selectedKeyList) >= 0);
-			tree.logDebug("    key=%o, bSelected=%o", dtnode.data.key, dtnode.bSelected);
+//			tree.logDebug("    key=%o, bSelected=%o", dtnode.data.key, dtnode.bSelected);
 		} else {
 			// Init status from data (Note: we write the cookies after the init phase)
-			tree.logDebug("init from data");
+//			tree.logDebug("init from data");
 			if( dtnode.data.activate ) {
 				tree.activeNode = dtnode;
 				if( opts.persist )
@@ -1215,6 +1215,7 @@ DynaTreeNode.prototype = {
 */   			
        		success: function(data, textStatus){
      		    // <this> is the request options
+//				self.tree.logDebug("appendAjax().success");
 				var prevPhase = self.tree.phase;
 				self.tree.phase = "init";
 //				self.append(data);
@@ -1227,6 +1228,7 @@ DynaTreeNode.prototype = {
        			},
        		error: function(XMLHttpRequest, textStatus, errorThrown){
        		    // <this> is the request options  
+//				self.tree.logDebug("appendAjax().error");
 				self.setLazyNodeStatus(DTNodeStatus_Error);
 				if( orgError )
 					orgError.call(options, self, XMLHttpRequest, textStatus, errorThrown);
