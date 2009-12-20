@@ -15,6 +15,7 @@ Drag'n'drop support.
   * Improved the lazy load sample to use realistic Ajax calls with local files
   * Fixed persistence when reloading lazy nodes
   * Fixed the context menu sample (online includes had moved)
+  * See also the [http://code.google.com/p/dynatree/issues/list?can=1&q=milestone:Release0.5.2+status%3AFixed%2CVerified&sort=-modified&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary fix list].
 
 ===== 0.5.1 =====
   * Support for reloading the tree or single lazy nodes.
