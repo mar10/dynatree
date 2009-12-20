@@ -1639,8 +1639,10 @@ DynaTree.prototype = {
 	},
 
 	activateKey: function(key) {
-		var dtnode = this.getNodeByKey(key);
+		var dtnode = (key === null) ? null : this.getNodeByKey(key);
 		if( !dtnode ) {
+			if( this.activeNode )
+				this.activeNode.deactivate();
 			this.activeNode = null;
 			return null;
 		}
