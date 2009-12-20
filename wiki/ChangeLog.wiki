@@ -10,7 +10,9 @@ Drag'n'drop support.
 
 ==== Release 0.5 ====
 
-===== 0.5.2 (under development) =====
+===== 0.5.3 (under development) =====
+
+===== 0.5.2 =====
   * Added a drag and drop sample using standard plugins.
   * Improved the lazy load sample to use realistic Ajax calls with local files
   * Fixed persistence when reloading lazy nodes
