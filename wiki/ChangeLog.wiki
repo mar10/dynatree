@@ -10,6 +10,12 @@ Drag'n'drop support.
 
 ==== Release 0.5 ====
 
+===== 0.5.2 (under development) =====
+  * Added a drag and drop sample using standard plugins.
+  * Improved the lazy load sample to use realistic Ajax calls with local files
+  * Fixed persistence when reloading lazy nodes
+  * Fixed the context menu sample (online includes had moved)
+
 ===== 0.5.1 =====
   * Support for reloading the tree or single lazy nodes.
   * Optionally inserting child nodes (instead of appending).
