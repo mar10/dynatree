@@ -5,13 +5,27 @@
 	<title>Dynatree - Example</title>
 
 	<script src='../jquery/jquery.js' type='text/javascript'></script>
-	<script src='../jquery/ui.core.js' type='text/javascript'></script>
     <script src='../jquery/jquery.cookie.js' type='text/javascript'></script>
 
-    <script type="text/javascript" src="http://jqueryui.com/latest/ui/ui.draggable.js"></script>
-    <script type="text/javascript" src="http://jqueryui.com/latest/ui/ui.droppable.js"></script>
+    
+    <!-- include jQuery UI Draggable 1.7.2 and jQuery UI Droppable 1.7.2 -->
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.js"></script>
+    
     <style type="text/css">
-		.drophover{ border: 1px solid blue; }
+		.dropappend a { 
+            border: 1px solid silver; 
+            /*background-color: silver; */
+/*            background-repeat: repeat-x;
+            background-position: bottom;*/
+            background-image: url("../src/skin/drop_append.gif");
+            };
+		.dropchild{ 
+            border: 1px solid silver; 
+            /*background-color: silver; */
+            background-repeat: no-repeat;
+            background-position: right;
+            background-image: url("../src/skin/drop_child.gif");
+            };
     </style>
 
 	<link href='../src/skin/ui.dynatree.css' rel='stylesheet' type='text/css'>
@@ -29,10 +43,11 @@
 	function _bindDragDrop() {
 		// Enable document and folder nodes as drag source
 		$("#tree span.ui-dynatree-document, span.ui-dynatree-folder").draggable({
+//        $("#tree li").draggable({
 			delay: 0,
 			distance: 4,
 			helper: 'clone',
-			opacity: 0.5,
+			opacity: 0.35,
 			addClasses: false,
 			appendTo: 'body',
 //			cursor: 'crosshair',
@@ -54,7 +69,8 @@
 			accept: '.ui-dynatree-document, .ui-dynatree-folder',
 			addClasses: false,
 //			activeClass: '.ui-state-highlight',
-			hoverClass: 'drophover',
+//			hoverClass: 'dropchild',
+			hoverClass: 'dropappend',
 			tolerance: 'intersect',			
 			activate: function(event, ui) {
 //				logMsg("droppable.activate, %o, %o", event, ui);
@@ -69,8 +85,8 @@
 				logMsg("droppable.out, %o, %o", event, ui);
 			},
 			drop: function(event, ui) {
-				var srcnode = ui.draggable[0].dtnode;
-				var destnode = event.target.dtnode;
+				var srcnode = ui.draggable[0].parentNode.dtnode;
+				var destnode = event.target.parentNode.dtnode;
 				logMsg("droppable.drop, %o, %o", event, ui);
 				logMsg("drop source: %o", srcnode);
 				logMsg("drop target: %o", destnode);
