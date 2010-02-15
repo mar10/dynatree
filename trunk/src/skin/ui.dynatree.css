@@ -1,7 +1,7 @@
 /******************************************************************************* 
  * Tree container
  */
-div.ui-dynatree-container
+ul.ui-dynatree-container
 {
 	font-family: tahoma, arial, helvetica;
 	font-size: 10pt; /* font size should not be too big */
@@ -12,8 +12,75 @@ div.ui-dynatree-container
 	border: 1px dotted gray;
 }
 
+ul.ui-dynatree-container ul
+{
+    padding: 0 0 0 16px;
+}
+
+ul.ui-dynatree-container li
+{
+    list-style-image: none;
+    list-style-position: outside;
+    list-style-type: none;
+    -moz-background-clip:border;
+    -moz-background-inline-policy: continuous;
+    -moz-background-origin: padding;
+    background-attachment: scroll;
+    background-color: transparent;
+    background-position: 0 0;
+    background-repeat: repeat-y;
+    
+    margin:0;
+/*    padding:3px 0 3px 16px;*/
+/*    padding:3px 0 3px 0;*/
+    padding:1px 0 0 0;
+}
+ul.ui-dynatree-container li.vline
+{
+    background-image: url(vline.gif);
+}
+/*
+ul.ui-dynatree-container li.ui-dynatree-exp-
+{
+    background-image: url(conn_.gif);
+}
+ul.ui-dynatree-container li.ui-dynatree-exp-l
+{
+    background-image: url(conn_l.gif);
+}
+ul.ui-dynatree-container li.ui-dynatree-exp-e
+{
+    background-image: url(conn_e.gif);
+}
+ul.ui-dynatree-container li.ui-dynatree-exp-el
+{
+    background-image: url(conn_el.gif);
+}
+ul.ui-dynatree-container li.ui-dynatree-exp-c
+{
+    background-image: url(conn_c.gif);
+}
+ul.ui-dynatree-container li.ui-dynatree-exp-cl
+{
+    background-image: url(conn_cl.gif);
+}
+*/
+/*
+.treeview li {
+	-moz-background-clip:border;
+	-moz-background-inline-policy:continuous;
+	-moz-background-origin:padding;
+	background:transparent url(images/treeview-default-line.gif) no-repeat scroll 0 0;
+}
+.treeview li {
+	margin:0;
+	padding:3px 0 3px 16px;
+}
+*/
+
+
 /* Style, when control is disabled */
-.ui-dynatree-disabled div.ui-dynatree-container
+.ui-dynatree-disabled ul.ui-dynatree-container
 {
 	opacity: 0.5;
 /*	filter: alpha(opacity=50); /* Yields a css warning */
@@ -24,7 +91,7 @@ div.ui-dynatree-container
 /******************************************************************************* 
  * Vertical line image
  */
-div.ui-dynatree-container img
+ul.ui-dynatree-container img
 {
 	width: 16px;
 	height: 16px;
@@ -65,7 +132,8 @@ span.ui-dynatree-vline
 }
 span.ui-dynatree-connector
 {
-	background-image: url("ltL_nes.gif");
+/*	background-image: url("ltL_nes.gif");*/
+    background-image: url("ltL_ne.gif");
 }
 .ui-dynatree-lastsib span.ui-dynatree-connector
 {
@@ -219,8 +287,8 @@ span.ui-dynatree-icon /* Default icon */
  */
 
 /* Remove blue color and underline from title links */
-div.ui-dynatree-container a
-/*, div.ui-dynatree-container a:visited*/
+ul.ui-dynatree-container a
+/*, ul.ui-dynatree-container a:visited*/
 {
 	color: black; /* inherit doesn't work on IE */
 	text-decoration: none;
@@ -230,7 +298,7 @@ div.ui-dynatree-container a
 /*	outline: 0; /* @ Firefox, prevent dotted border after click */
 }
 
-div.ui-dynatree-container a:hover
+ul.ui-dynatree-container a:hover
 {
 	text-decoration: underline;
 }
@@ -249,7 +317,7 @@ span.ui-dynatree-folder a
 	font-weight: bold;
 }
 
-div.ui-dynatree-container a:focus,
+ul.ui-dynatree-container a:focus,
 span.ui-dynatree-focused a:link  /* @IE */
 {
 	background-color: #EFEBDE; /* gray */
