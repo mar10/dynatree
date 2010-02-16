@@ -218,6 +218,14 @@ span.ui-dynatree-icon /* Default icon */
  * Node titles
  */
 
+ /* @Chrome: fix broken hit area of node titles (issue 133) */
+span.ui-dynatree-document,
+span.ui-dynatree-folder
+{
+	display: -moz-inline-box; /* @ FF 1+2 */
+	display: inline-block; /* Required to make a span sizeable */
+}
+
 /* Remove blue color and underline from title links */
 div.ui-dynatree-container a
 /*, div.ui-dynatree-container a:visited*/
