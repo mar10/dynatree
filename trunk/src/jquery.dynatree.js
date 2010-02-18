@@ -377,7 +377,9 @@ DynaTreeNode.prototype = {
 		}
 	},
 
-	setLazyNodeStatus: function(lts) {
+	setLazyNodeStatus: function(lts, opts) {
+		var tooltip = (opts && opts.tooltip) ? opts.tooltip : null;
+		var info = (opts && opts.info) ? " (" + opts.info + ")" : "";
 		switch( lts ) {
 			case DTNodeStatus_Ok:
 				this._setStatusNode(null);
@@ -396,14 +398,16 @@ DynaTreeNode.prototype = {
 			case DTNodeStatus_Loading:
 				this.isLoading = true;
 				this._setStatusNode({
-					title: this.tree.options.strings.loading,
+					title: this.tree.options.strings.loading + info,
+					tooltip: tooltip,
 					addClass: this.tree.options.classNames.nodeWait
 				});
 				break;
 			case DTNodeStatus_Error:
 				this.isLoading = false;
 				this._setStatusNode({
-					title: this.tree.options.strings.loadError,
+					title: this.tree.options.strings.loadError + info,
+					tooltip: tooltip,
 					addClass: this.tree.options.classNames.nodeError
 				});
 				break;
@@ -748,8 +752,8 @@ DynaTreeNode.prototype = {
 				this.tree.logDebug("_loadContent: succeeded - %o", this);
 			}
 		} catch(e) {
-			alert(e);
-			this.setLazyNodeStatus(DTNodeStatus_Error);
+			this.tree.logWarning("_loadContent: failed - %o", e);
+			this.setLazyNodeStatus(DTNodeStatus_Error, {tooltip: ""+e});
 		}
 	},
 	
@@ -1256,8 +1260,8 @@ DynaTreeNode.prototype = {
        			},
        		error: function(XMLHttpRequest, textStatus, errorThrown){
        		    // <this> is the request options  
-//				self.tree.logDebug("appendAjax().error");
-				self.setLazyNodeStatus(DTNodeStatus_Error);
+   				self.tree.logWarning("appendAjax failed:", textStatus, ":\n", XMLHttpRequest, "\n", errorThrown);
+				self.setLazyNodeStatus(DTNodeStatus_Error, {info: textStatus, tooltip: ""+errorThrown});
 				if( orgError )
 					orgError.call(options, self, XMLHttpRequest, textStatus, errorThrown);
        			}
