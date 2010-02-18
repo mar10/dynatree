@@ -1,0 +1,24 @@
+#summary Migration hints for updating from 0.5 to 1.0.
+
+*Note: 1.0 is not yet released!*
+
+
+When updating from version 0.5 to 1.0, the following aspects have changed and may have to be adjusted.
+
+Main Changes:
+  * New HTML markup
+  * Support for drag'n'drop
+
+New functions:
+  * ...
+
+Other Changes:
+  * ...
+
+
+=== Markup has changed ===
+
+TODO: how to adjust CSS selectors for the new markup.
+{{{
+    [...]
+}}}	
