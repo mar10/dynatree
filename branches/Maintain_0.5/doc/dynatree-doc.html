@@ -895,11 +895,11 @@ $("#tree").dynatree({
     response: 
 <pre class="prettyprint">
 # Build node list as JSON formatted string:
-res = "["
-res += "{ 'title': 'Node 1', 'key': 'k1', 'isLazy': true },"
-res += "{ 'title': 'Node 2', 'key': 'k2', 'isLazy': true },"
-res += "{ 'title': 'Node 3', 'key': 'k3', 'isLazy': true }" # no trailing ',' at the last line 
-res += "]"
+res = '['
+res += '{ "title": "Node 1", "key": "k1", "isLazy": true },'
+res += '{ "title": "Node 2", "key": "k2", "isLazy": true },'
+res += '{ "title": "Node 3", "key": "k3", "isLazy": true }' # no trailing "," at the last line 
+res += ']'
 
 # Add support for the JSONP protocol:
 # This means, if the request URL contains an argument '?callback=xxx',
