@@ -1216,7 +1216,8 @@ node.addChild({title: "New Node", key: "3333"});
 		Accepts a standard jQuery Ajax option object.<br>
 		An asynchronous request is started, so this function returns immediately.
 		While loading, a spinning wheel is displayed. On error, a red icon is shown.<br>
-		The request handler must return a JSON object, formatted like the data'a <code>children</code> object.<br>
+		The request handler must return a JSON object, formatted like the data's
+		<code>children</code> object.<br>
 		Use the <code>setLazyNodeStatus()</code> function to display the result.<br>
 		See <a href="#lazyLoading">Loading child nodes on demand ('lazy loading')</a> for details.
 	</dd>
@@ -1245,6 +1246,10 @@ node.addChild({title: "New Node", key: "3333"});
         Return the depth (i.e. number of parent nodes).<br>
         0 is returned for the root node.
     </dd>
+	<dt>getChildren()
+	<dd>
+		Return list of child nodes or <code>null</code>.
+	</dd>
 	<dt>hasChildren()
 	<dd>
 		Return true, if this node has child nodes.
