@@ -327,6 +327,10 @@ DynaTreeNode.prototype = {
 		}
 	},
 
+	getChildren: function() {
+		return this.childList;
+	},
+
 	hasChildren: function() {
 		return this.childList != null;
 	},
