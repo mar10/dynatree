@@ -2,7 +2,7 @@
 	jquery.dynatree.js
 	Dynamic tree view control, with support for lazy loading of branches.
 
-	Copyright (c) 2008-2009  Martin Wendt (http://wwWendt.de)
+	Copyright (c) 2008-2010  Martin Wendt (http://wwWendt.de)
 	Licensed under the MIT License (MIT-License.txt)
 
 	A current version and some documentation is available at
@@ -1758,9 +1758,21 @@ $.widget("ui.dynatree", {
         return this._init();
     },
 
-	_init: function() {
-    	logMsg("Dynatree._init(): version='%s', debugLevel=%o.", DynaTree.version, this.options.debugLevel);
+ 	_init: function() {
+		if( parseFloat($.ui.version) < 1.8 ) {
+	        // jquery.ui.core 1.8 renamed _init() to _create(): this stub assures backward compatibility
+	        _log("warn", "ui.dynatree._init() was called; you should upgrade to jquery.ui.core.js v1.8 or higher.");
+			return this._create();
+		}
+		// jquery.ui.core 1.8 still uses _init() to perform "default functionality" 
+    	_log("debug", "ui.dynatree._init() was called; no current default functionality.");
+    },
 
+	_create: function() {
+    	if( parseFloat($.ui.version) >= 1.8 ) {
+    		this.options = $.extend(true, $[this.namespace][this.widgetName].defaults, this.options);
+    	}
+    	logMsg("Dynatree._create(): version='%s', debugLevel=%o.", DynaTree.version, this.options.debugLevel);
     	var opts = this.options;
     	// The widget framework supplies this.element and this.options.
     	this.options.event += ".dynatree"; // namespace event
@@ -1774,7 +1786,7 @@ $.widget("ui.dynatree", {
     	// Create the DynaTree object
     	this.tree = new DynaTree(this);
     	this.tree._load();
-    	this.tree.logDebug("Dynatree._init(): done.");
+    	this.tree.logDebug("Dynatree._create(): done.");
 	},
 
 	bind: function() {
