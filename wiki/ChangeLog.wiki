@@ -12,6 +12,7 @@
 ==== Release 0.5 ====
 
 ===== 0.5.3 (under development) =====
+  * issue 137
   * Improved Ajax error logging
   * issue 135
   * issue 133
