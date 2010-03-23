@@ -10,7 +10,7 @@
 	<script src="http://www.google-analytics.com/ga.js" type="text/javascript"></script>
 
 	<script src='../jquery/jquery.js' type='text/javascript'></script>
-	<script src='../jquery/ui.core.js' type='text/javascript'></script>
+	<script src='../jquery/jquery.ui.core.js' type='text/javascript'></script>
 
 	<link href='../src/skin/ui.dynatree.css' rel='stylesheet' type='text/css'>
     <script src='../src/jquery.dynatree.js' type='text/javascript'></script>
@@ -55,10 +55,12 @@
 <div class="hint">
 	This document describes dynatree version: <strong>$Version:$</strong>.<br>
 	Document revision: $Revision:$.<br>
-	A current version may be found at the project site <a href="http://wwwendt.de/tech/dynatree/index.html">http://wwwendt.de/tech/dynatree/index.html</a>.
+	A current version may be found at the project site 
+	<a href="http://wwwendt.de/tech/dynatree/index.html">http://wwwendt.de/tech/dynatree/index.html</a>.
 </div>
 <p>
-	Dynatree is a dynamic JavaScript tree view control with support for checkboxes, persistence and lazy loading.
+	Dynatree is a dynamic JavaScript tree view control with support for checkboxes, 
+	persistency and lazy loading.
 </p>
 <p>
 	Main features:
@@ -67,20 +69,22 @@
 	<li>Open source (<a href="http://www.opensource.org/licenses/mit-license.php">MIT-License</a>)
 	<li>Programmable through an object oriented interface.
 	<li>Support for lazy loading and Ajax.
+    <li>Optimized for large dynamic trees. 
 	<li>Checkboxes and hierarchical selection.
     <li>Support for persistence.
 	<li>Keyboard aware.
 	<li>Initializes from html code or JavaScript objects.
 	<li>Implemented as a <a href="http://jquery.com">jQuery</a> plugin.<br>
 		(Note: this doesn't mean that you have to use jQuery for your whole site.)
+	<li>Supports drag and drop.
 </ul>
 
 <p class="info">
-	This document describes <strong>release 0.5</strong>.<br>
-	If you are updating from version 0.4 please read the 
-	<a href="http://code.google.com/p/dynatree/wiki/UpdateToVersion05">migration hints</a> 
+	This document describes <strong>release 1.0</strong>.<br>
+	If you are updating from version 0.5 please read the 
+	<a href="http://code.google.com/p/dynatree/wiki/UpdateToVersion10">migration hints</a> 
 	first.<br>
-	Also, the <a href="http://wwWendt.de/tech/dynatree-0.4/doc/dynatree-doc.html">0.4 documentation</a> is  still available.
+	Also, the <a href="http://wwWendt.de/tech/dynatree-0.5/doc/dynatree-doc.html">0.5 documentation</a> is  still available.
 </p>
 
 <!-- jquery.planize will generate a TOC here: -->
@@ -120,7 +124,7 @@
 &lt;head>
 	&lt;!-- Include the required JavaScript libraries: -->
 	&lt;script src='jquery/jquery.js' type='text/javascript'>&lt;/script>
-	&lt;script src='jquery/ui.core.js' type='text/javascript'>&lt;/script>
+	&lt;script src='jquery/jquery.ui.core.js' type='text/javascript'>&lt;/script>
     &lt;script src='jquery/jquery.cookie.js' type='text/javascript'>&lt;/script>
 
 	&lt;link rel='stylesheet' type='text/css' href='skin/ui.dynatree.css'>
@@ -602,7 +606,7 @@ $("#tree").dynatree({
 &lt;head>
 	&lt;!-- Include the required JavaScript libraries: -->
 	&lt;script src='jquery/jquery.js' type='text/javascript'>&lt;/script>
-	&lt;script src='jquery/ui.core.js' type='text/javascript'>&lt;/script>
+	&lt;script src='jquery/jquery.ui.core.js' type='text/javascript'>&lt;/script>
 
 	&lt;link rel='stylesheet' type='text/css' href='skin/ui.dynatree.css' >
 	&lt;script src='jquery.dynatree.js' type='text/javascript'>&lt;/script>
@@ -1437,7 +1441,7 @@ var dict = $("#tree").dynatree("getTree").toDict();
 <a href="sample-theming.html">Try this example...</a>
 <pre class="prettyprint">
 &lt;script src='../jquery/jquery.js' type='text/javascript'>&lt;/script>
-&lt;script src='../jquery/ui.core.js' type='text/javascript'>&lt;/script>
+&lt;script src='../jquery/jquery.ui.core.js' type='text/javascript'>&lt;/script>
 &lt;script src='../src/jquery.dynatree.js' type='text/javascript'>&lt;/script>
 &lt;!-- Include a customized stylesheet: -->
 &lt;link href='custom-skin/ui.dynatree.css' rel='stylesheet' type='text/css' >
