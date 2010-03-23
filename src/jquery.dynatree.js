@@ -8,13 +8,11 @@
 	A current version and some documentation is available at
 		http://dynatree.googlecode.com/
 
-	Let me know, if you find bugs or improvements (martin at domain wwWendt.de).
-
 	$Version:$
 	$Revision:$
 
  	@depends: jquery.js
- 	@depends: ui.core.js
+ 	@depends: jquery.ui.core.js
     @depends: jquery.cookie.js
 *************************************************************************/
 
@@ -142,10 +140,10 @@ DynaTreeNode.prototype = {
 		var opts = this.tree.options;
 		var cache = this.tree.cache;
 		// parent connectors
-		var rootParent = opts.rootVisible ? null : this.tree.tnRoot; 
-		var bHideFirstExpander = (opts.rootVisible && opts.minExpandLevel>0) || opts.minExpandLevel>1;
-		var bHideFirstConnector = opts.rootVisible || opts.minExpandLevel>0;
-
+//		var rootParent = opts.rootVisible ? null : this.tree.tnRoot; 
+//		var bHideFirstExpander = (opts.rootVisible && opts.minExpandLevel>0) || opts.minExpandLevel>1;
+//		var bHideFirstConnector = opts.rootVisible || opts.minExpandLevel>0;
+		var level = this.getLevel();
 		var res = "";
 /*		
 		var p = this.parent;
@@ -159,8 +157,8 @@ DynaTreeNode.prototype = {
 */
 		// connector (expanded, expandable or simple)
 		
-		if( bHideFirstExpander && this.parent==rootParent ) { 
-			// skip connector
+		if( level < opts.minExpandLevel ) { 
+			// skip expander/connector
 		} else if ( this.childList || this.data.isLazy ) {
    			res += cache.tagExpander;
 		} else {
@@ -192,8 +190,10 @@ DynaTreeNode.prototype = {
 		/**
 		 * Make sure, that <li> order matches childList order.
 		 */
-//		this.tree.logWarning("_fixOrder: Not yet implemented")
-		return
+		
+		this.tree.logWarning("_fixOrder: Not yet implemented")
+		return;
+
 		var cl = this.childList; 
 		if( !cl )
 			return;
@@ -226,7 +226,7 @@ DynaTreeNode.prototype = {
 		 *   </ul>
 		 * </li>
 		 */
-		this.tree.logDebug("%o.render(%s)", this, useEffects);
+//		this.tree.logDebug("%o.render(%s)", this, useEffects);
 		// --- 
 		var opts = this.tree.options;
 		var cn = opts.classNames;
@@ -236,7 +236,10 @@ DynaTreeNode.prototype = {
 			// Root node has only a <ul>
 			this.li = this.span = null;
 			this.ul = document.createElement("ul");
-			this.ul.className = cn.container;
+			if( opts.minExpandLevel > 1 )
+				this.ul.className = cn.container + " " + cn.noConnector;
+			else
+				this.ul.className = cn.container;
 
 		} else if( this.parent ) {
 			// Create <li><span /> </li>
@@ -294,15 +297,9 @@ DynaTreeNode.prototype = {
 					+ (this.data.isFolder ? "f" : "")
 					);
 			this.span.className = cnList.join(" ");
-/*
-			var connectorType = cn.combinedExpanderPrefix
-					+ (this.childList == null ? "" : this.bExpanded ? "e" : "c")
-					+ (this.data.isLazy && this.childList==null ? "d" : "")
-					+ (isLastSib ? "l" : "");
-			this.li.className = connectorType;
-*/			
-			if( !isLastSib )
-				this.li.className = "vline";
+
+			if( isLastSib )
+				this.li.className = "ui-dynatree-lastsib";
 			
 			// Hide children, if node is collapsed
 //			this.ul.style.display = ( this.bExpanded || !this.parent ) ? "" : "none";
@@ -391,7 +388,8 @@ DynaTreeNode.prototype = {
 				this.isLoading = false;
 				this.render();
 				if( this.tree.options.autoFocus ) {
-					if( this === this.tree.tnRoot && !this.tree.options.rootVisible && this.childList ) {
+//					if( this === this.tree.tnRoot && !this.tree.options.rootVisible && this.childList ) {
+					if( this === this.tree.tnRoot && this.childList ) {
 						// special case: using ajaxInit
 						this.childList[0].focus();
 					} else {
@@ -903,7 +901,8 @@ DynaTreeNode.prototype = {
 				if( this.bExpanded ) {
 					this.toggleExpand();
 					this.focus();
-				} else if( this.parent && (this.tree.options.rootVisible || this.parent.parent) ) {
+//				} else if( this.parent && (this.tree.options.rootVisible || this.parent.parent) ) {
+				} else if( this.parent && this.parent.parent ) {
 					this.parent.focus();
 				}
 				break;
@@ -919,7 +918,8 @@ DynaTreeNode.prototype = {
 				var sib = this.prevSibling();
 				while( sib && sib.bExpanded && sib.childList )
 					sib = sib.childList[sib.childList.length-1];
-				if( !sib && this.parent && (this.tree.options.rootVisible || this.parent.parent) )
+//				if( !sib && this.parent && (this.tree.options.rootVisible || this.parent.parent) )
+				if( !sib && this.parent && this.parent.parent )
 					sib = this.parent;
 				if( sib ) sib.focus();
 				break;
@@ -1047,7 +1047,8 @@ DynaTreeNode.prototype = {
                 }
                 tn.removeChildren(true, retainPersistence);
 //				this.div.removeChild(tn.div);
-				this.ul.removeChild(tn.li);
+        		if( this.ul )
+        			this.ul.removeChild(tn.li);
                 delete tn;
         	}
         	this.childList = null;
@@ -1238,7 +1239,7 @@ DynaTreeNode.prototype = {
 	appendAjax: function(ajaxOptions) {
 		this.removeChildren(false, true);
 		this.setLazyNodeStatus(DTNodeStatus_Loading);
-		// Ajax option inheritance: $.ajaxSetup < $.ui.dynatree.defaults.ajaxDefaults < tree.options.ajaxDefaults < ajaxOptions
+		// Ajax option inheritance: $.ajaxSetup < $.ui.dynatree.prototype.options.ajaxDefaults < tree.options.ajaxDefaults < ajaxOptions
 		var self = this;
 		var orgSuccess = ajaxOptions.success;
 		var orgError = ajaxOptions.error;
@@ -1298,8 +1299,8 @@ DynaTreeStatus.prototype = {
 	initialize: function(cookieId, cookieOpts) {
 		this._log("DynaTreeStatus: initialize");
 		if( cookieId === undefined )
-			cookieId = $.ui.dynatree.defaults.cookieId;
-		cookieOpts = $.extend({}, $.ui.dynatree.defaults.cookie, cookieOpts);
+			cookieId = $.ui.dynatree.prototype.options.cookieId;
+		cookieOpts = $.extend({}, $.ui.dynatree.prototype.options.cookie, cookieOpts);
 		
 		this.cookieId = cookieId; 
 		this.cookieOpts = cookieOpts;
@@ -1431,10 +1432,18 @@ DynaTree.prototype = {
 		this.activeNode = null;
 		this.focusNode = null;
 
+		// Some deprecation warnings to help with migration
+		if( opts.rootVisible !== undefined ) 
+			_log("warn", "Option 'rootVisible' is no longer supported.");
+		if( opts.title  !== undefined ) 
+			_log("warn", "Option 'title' is no longer supported.");
+		if( opts.minExpandLevel < 1 ) 
+			_log("warn", "Option 'minExpandLevel' must be >= 1.");
+		
 		// If a 'options.classNames' dictionary was passed, still use defaults 
     	// for undefined classes:
-    	if( opts.classNames !== $.ui.dynatree.defaults.classNames ) {
-    		opts.classNames = $.extend({}, $.ui.dynatree.defaults.classNames, opts.classNames);
+    	if( opts.classNames !== $.ui.dynatree.prototype.options.classNames ) {
+    		opts.classNames = $.extend({}, $.ui.dynatree.prototype.options.classNames, opts.classNames);
     	}
     	// Guess skin path, if not specified
     	if(!opts.imagePath) {
@@ -1784,18 +1793,29 @@ TODO: better?
 };
 
 /*************************************************************************
- * widget $(..).dynatree
+ * Widget $(..).dynatree
  */
 
 $.widget("ui.dynatree", {
+/*
 	init: function() {
         // ui.core 1.6 renamed init() to _init(): this stub assures backward compatibility
-        _log("warn", "ui.dynatree.init() was called; you should upgrade to ui.core.js v1.6 or higher.");
+        _log("warn", "ui.dynatree.init() was called; you should upgrade to jquery.ui.core.js v1.8 or higher.");
         return this._init();
     },
-
+ */
 	_init: function() {
-    	logMsg("Dynatree._init(): version='%s', debugLevel=%o.", DynaTree.version, this.options.debugLevel);
+		if( parseFloat($.ui.version) < 1.8 ) {
+	        // jquery.ui.core 1.8 renamed _init() to _create(): this stub assures backward compatibility
+	        _log("warn", "ui.dynatree._init() was called; you should upgrade to jquery.ui.core.js v1.8 or higher.");
+			return this._create();
+		}
+		// jquery.ui.core 1.8 still uses _init() to perform "default functionality" 
+    	_log("debug", "ui.dynatree._init() was called; no current default functionality.");
+    },
+
+    _create: function() {
+    	logMsg("Dynatree._create(): version='%s', debugLevel=%o.", DynaTree.version, this.options.debugLevel);
 
     	var opts = this.options;
     	// The widget framework supplies this.element and this.options.
@@ -1896,13 +1916,13 @@ $.widget("ui.dynatree", {
 	enable: function() {
 		this.bind();
 		// Call default disable(): remove -disabled from css: 
-		$.widget.prototype.enable.apply(this, arguments);
+		$.Widget.prototype.enable.apply(this, arguments);
 	},
 	
 	disable: function() {
 		this.unbind();
 		// Call default disable(): add -disabled to css: 
-		$.widget.prototype.disable.apply(this, arguments);
+		$.Widget.prototype.disable.apply(this, arguments);
 	},
 	
 	// --- getter methods (i.e. NOT returning a reference to $)
@@ -1929,14 +1949,16 @@ $.widget("ui.dynatree", {
 
 // The following methods return a value (thus breaking the jQuery call chain):
 
-$.ui.dynatree.getter = "getTree getRoot getActiveNode getSelectedNodes";
+// @@ 1.8
+//$.ui.dynatree.getter = "getTree getRoot getActiveNode getSelectedNodes";
 
 
 // Plugin default options:
 
-$.ui.dynatree.defaults = {
-	title: "Dynatree root", // Name of the root node.
-	rootVisible: false, // Set to true, to make the root node visible.
+//$.ui.dynatree.defaults = {  @@ 1.8
+$.ui.dynatree.prototype.options = {
+//	title: "Dynatree root", // Name of the root node.
+//	rootVisible: false, // Set to true, to make the root node visible.
  	minExpandLevel: 1, // 1: root node is not collapsible
 	imagePath: null, // Path to a folder containing icons. Defaults to 'skin/' subdirectory.
 	children: null, // Init tree structure from this object array.
@@ -2005,6 +2027,7 @@ $.ui.dynatree.defaults = {
 		checkbox: "ui-dynatree-checkbox",
 		nodeIcon: "ui-dynatree-icon",
 		title: "ui-dynatree-title",
+		noConnector: "ui-dynatree-no-connector",
 		
 		nodeError: "ui-dynatree-statusnode-error",
 		nodeWait: "ui-dynatree-statusnode-wait",
