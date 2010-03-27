@@ -186,29 +186,23 @@ DynaTreeNode.prototype = {
 		return res;
 	},
 
+
 	_fixOrder: function() {
 		/**
 		 * Make sure, that <li> order matches childList order.
 		 */
-		
-		this.tree.logWarning("_fixOrder: Not yet implemented")
-		return;
-
 		var cl = this.childList; 
 		if( !cl )
 			return;
-//		var childDiv = this.div.firstChild.nextSibling;
-		var childDiv = this.ul.firstChild.nextSibling;
+		var childLI = this.ul.firstChild;
 		for(var i=0; i<cl.length-1; i++) {
 			var childNode1 = cl[i]; 
-			var childNode2 = childDiv.firstChild.dtnode;
+			var childNode2 = childLI.dtnode;
 			if( childNode1 !== childNode2 ) {
-//
 				this.tree.logDebug("_fixOrder: mismatch at index " + i + ": " + childNode1 + " != " + childNode2);
-//				this.div.insertBefore(childNode1.div, childNode2.div);
 				this.ul.insertBefore(childNode1.li, childNode2.li);
 			} else {
-				childDiv = childDiv.nextSibling;
+				childLI = childLI.nextSibling;
 			}
 		}
 	},
