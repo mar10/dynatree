@@ -190,8 +190,13 @@ class DynaTreeWsgiApp(object):
             fullPath = os.path.join(folderPath, fn)
             isFolder = os.path.isdir(fullPath)
             key = _keyFromString(fullPath)
-            size = os.path.getsize(fullPath)
-            date = time.ctime(os.path.getmtime(fullPath))
+            try:
+                size = os.path.getsize(fullPath)
+                date = time.ctime(os.path.getmtime(fullPath))
+            except:
+                # May fail when path contains funny chars (don't care in this sample)
+                size = 0
+                date = time.ctime()
             # Create a node dictionary and append it to the child list
             node = {"title": fn,
                     "key": key,
