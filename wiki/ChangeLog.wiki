@@ -12,7 +12,7 @@
 ==== Release 0.5 ====
 
 ===== 0.5.4 (under development) =====
-  *
+  * Dual licensed under the MIT or GPL Version 2 licenses (Issue 144)
 
 ===== 0.5.3 =====
   * issue 137
