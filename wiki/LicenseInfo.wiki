@@ -1,4 +1,5 @@
-#summary Dynatree license information.
+#summary License Information.
+#labels Featured
 
 = Dynatree License Information =
 
