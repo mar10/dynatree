@@ -12,5 +12,5 @@ You don’t have to do anything special to choose one license or the other and y
 
 Licenses
 
-  * MIT License [http://en.wikipedia.org/wiki/MIT_License More Information]
-  * GPL [http://en.wikipedia.org/wiki/GNU_General_Public_License More Information]
+  * [http://code.google.com/p/dynatree/source/browse/trunk/src/MIT-License.txt MIT License] [http://en.wikipedia.org/wiki/MIT_License More Information]
+  * [http://code.google.com/p/dynatree/source/browse/trunk/src/GPL-LICENSE.txt GPL] [http://en.wikipedia.org/wiki/GNU_General_Public_License More Information]
