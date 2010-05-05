@@ -195,7 +195,6 @@ DynaTreeNode.prototype = {
 			var childNode1 = cl[i]; 
 			var childNode2 = childDiv.firstChild.dtnode;
 			if( childNode1 !== childNode2 ) {
-//
 				this.tree.logDebug("_fixOrder: mismatch at index " + i + ": " + childNode1 + " != " + childNode2);
 				this.div.insertBefore(childNode1.div, childNode2.div);
 			} else {
@@ -1538,9 +1537,9 @@ DynaTree.prototype = {
 		// Set up onPostInit callback to be called when Ajax returns
 		if( opts.onPostInit ) {
 			if( ajaxOpts.success )
-				this.tree.logWarning("initAjax: success callback is ignored when onPostInit was specified.");
+				this.logWarning("initAjax: success callback is ignored when onPostInit was specified.");
 			if( ajaxOpts.error )
-				this.tree.logWarning("initAjax: error callback is ignored when onPostInit was specified.");
+				this.logWarning("initAjax: error callback is ignored when onPostInit was specified.");
 			var isReloading = pers.isReloading();
 			ajaxOpts["success"] = function(dtnode) { opts.onPostInit.call(dtnode.tree, isReloading, false); }; 
 			ajaxOpts["error"] = function(dtnode) { opts.onPostInit.call(dtnode.tree, isReloading, true); }; 
@@ -1760,7 +1759,7 @@ $.widget("ui.dynatree", {
  	_init: function() {
 		if( parseFloat($.ui.version) < 1.8 ) {
 	        // jquery.ui.core 1.8 renamed _init() to _create(): this stub assures backward compatibility
-	        _log("warn", "ui.dynatree._init() was called; you should upgrade to jquery.ui.core.js v1.8 or higher.");
+	        _log("info", "ui.dynatree._init() was called; consider upgrading to jquery.ui.core.js v1.8 or higher.");
 			return this._create();
 		}
 		// jquery.ui.core 1.8 still uses _init() to perform "default functionality" 
