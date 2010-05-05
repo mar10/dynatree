@@ -1768,7 +1768,7 @@ $.widget("ui.dynatree", {
 
 	_create: function() {
     	if( parseFloat($.ui.version) >= 1.8 ) {
-    		this.options = $.extend(true, $[this.namespace][this.widgetName].defaults, this.options);
+    		this.options = $.extend(true, {}, $[this.namespace][this.widgetName].defaults, this.options);
     	}
     	logMsg("Dynatree._create(): version='%s', debugLevel=%o.", DynaTree.version, this.options.debugLevel);
     	var opts = this.options;
