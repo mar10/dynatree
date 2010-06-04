@@ -1185,6 +1185,10 @@ $("#tree").dynatree({
 		For example <code>dtnode.data.title</code> or <code>dtnode.data.tooltip</code>.
 		See also <a href="#nodeOptions">Node options</a>.
 	</dd>
+	<dt>Attribute 'childList'
+	<dd>
+		List of child nodes or <code>null</code>.
+	</dd>
 	<dt>activate()
 	<dd>
 		Activate this node - according to flag - and fire a onActivate event.<br>
@@ -1246,7 +1250,8 @@ node.addChild({title: "New Node", key: "3333"});
     </dd>
 	<dt>hasChildren()
 	<dd>
-		Return true, if this node has child nodes.
+		Return true, if this node has child nodes.<br>
+		The child nodes are accessible as <code>childList</code> attribute.
 	</dd>
 	<dt>isActive()
 	<dd>
