@@ -265,8 +265,7 @@ span.ui-dynatree-icon /* Default icon */
  */
 
  /* @Chrome: otherwise hit area of node titles is broken (issue 133) */
-span.ui-dynatree-document,
-span.ui-dynatree-folder
+span.ui-dynatree-node
 {
     display: -moz-inline-box; /* @ FF 1+2 */
     display: inline-block; /* Required to make a span sizeable */
@@ -290,8 +289,7 @@ ul.ui-dynatree-container a:hover
 	text-decoration: underline;
 }
 
-span.ui-dynatree-document a,
-span.ui-dynatree-folder a
+span.ui-dynatree-node a
 {
 	display: inline-block; /* Better alignment, when title contains <br> */  
 /*	vertical-align: top;*/

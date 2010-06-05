@@ -75,8 +75,8 @@
 	// --- Contextmenu helper --------------------------------------------------
 	
 	function bindContextMenu() {
-		// Add context menu to document nodes:
-		$("span.ui-dynatree-document,span.ui-dynatree-folder")
+		// Add context menu to all nodes:
+		$("span.ui-dynatree-node")
 			.destroyContextMenu() // unbind first, to prevent duplicates			
 			.contextMenu({menu: "myMenu"}, function(action, el, pos) {
 			// The event was bound to the <span> tag, but the dtnode object

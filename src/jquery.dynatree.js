@@ -262,7 +262,9 @@ DynaTreeNode.prototype = {
 	
 			// Set classes for current status
 			var cnList = [];
-			cnList.push( ( this.data.isFolder ) ? cn.folder : cn.document );
+			cnList.push(cn.node);
+			if( this.data.isFolder ) 
+				cnList.push(cn.folder);
 			if( this.bExpanded )
 				cnList.push(cn.expanded);
 			if( this.childList != null )
@@ -319,6 +321,10 @@ DynaTreeNode.prototype = {
 		}
 	},
 
+	getParent: function() {
+		return this.parent;
+	},
+
 	getChildren: function() {
 		return this.childList;
 	},
@@ -333,7 +339,7 @@ DynaTreeNode.prototype = {
 		return p.childList[p.childList.length-1] === this;
 	},
 
-	prevSibling: function() {
+	getPrevSibling: function() {
 		if( !this.parent ) return null;
 		var ac = this.parent.childList;
 		for(var i=1; i<ac.length; i++) // start with 1, so prev(first) = null
@@ -342,7 +348,7 @@ DynaTreeNode.prototype = {
 		return null;
 	},
 
-	nextSibling: function() {
+	getNextSibling: function() {
 		if( !this.parent ) return null;
 		var ac = this.parent.childList;
 		for(var i=0; i<ac.length-1; i++) // up to length-2, so next(last) = null
@@ -443,8 +449,7 @@ DynaTreeNode.prototype = {
 		var cns = this.tree.options.classNames;
 	    var target = event.target;
 	    // Only process clicks on an outer node span (probably due to a FF2 event handling bug)
-	    if( target.className.indexOf(cns.folder)<0 
-	    	&& target.className.indexOf(cns.document)<0 ) {
+	    if( target.className.indexOf(cns.node)<0 ) {
 	        return null
 	    }
 	    // Event coordinates, relative to outer node span:
@@ -488,7 +493,7 @@ DynaTreeNode.prototype = {
 			return "icon";
 		else if( tcn==cns.empty || tcn==cns.vline || tcn==cns.connector )
 			return "prefix";
-		else if( tcn.indexOf(cns.folder)>=0 || tcn.indexOf(cns.document)>=0 )
+		else if( tcn.indexOf(cns.node)>=0 )
 			// FIX issue #93
 			return this._getTypeForOuterNodeEvent(event);
 		return null;
@@ -910,7 +915,7 @@ DynaTreeNode.prototype = {
 				}
 				break;
 			case 38: // <up>
-				var sib = this.prevSibling();
+				var sib = this.getPrevSibling();
 				while( sib && sib.bExpanded && sib.childList )
 					sib = sib.childList[sib.childList.length-1];
 //				if( !sib && this.parent && (this.tree.options.rootVisible || this.parent.parent) )
@@ -925,7 +930,7 @@ DynaTreeNode.prototype = {
 				} else {
 					var parents = this._parentList(false, true);
 					for(var i=parents.length-1; i>=0; i--) {
-						sib = parents[i].nextSibling();
+						sib = parents[i].getNextSibling();
 						if( sib ) break;
 					}
 				}
@@ -1579,9 +1584,9 @@ DynaTree.prototype = {
 		// Set up onPostInit callback to be called when Ajax returns
 		if( opts.onPostInit ) {
 			if( ajaxOpts.success )
-				this.tree.logWarning("initAjax: success callback is ignored when onPostInit was specified.");
+				this.logWarning("initAjax: success callback is ignored when onPostInit was specified.");
 			if( ajaxOpts.error )
-				this.tree.logWarning("initAjax: error callback is ignored when onPostInit was specified.");
+				this.logWarning("initAjax: error callback is ignored when onPostInit was specified.");
 			var isReloading = pers.isReloading();
 			ajaxOpts["success"] = function(dtnode) { opts.onPostInit.call(dtnode.tree, isReloading, false); }; 
 			ajaxOpts["error"] = function(dtnode) { opts.onPostInit.call(dtnode.tree, isReloading, true); }; 
@@ -1968,7 +1973,6 @@ $.ui.dynatree.prototype.options = {
 	checkbox: false, // Show checkboxes.
 	selectMode: 2, // 1:single, 2:multi, 3:multi-hier
 	fx: null, // Animations, e.g. null or { height: "toggle", duration: 200 }
-
 	// Low level event handlers: onEvent(dtnode, event): return false, to stop default processing
 	onClick: null, // null: generate focus, expand, activate, select events.
 	onDblClick: null, // (No default actions.)
@@ -2012,8 +2016,9 @@ $.ui.dynatree.prototype.options = {
 	// values are still set to default. 
 	classNames: {
 		container: "ui-dynatree-container",
+		node: "ui-dynatree-node",
 		folder: "ui-dynatree-folder",
-		document: "ui-dynatree-document",
+//		document: "ui-dynatree-document",
 		
 		empty: "ui-dynatree-empty",
 		vline: "ui-dynatree-vline",

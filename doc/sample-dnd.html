@@ -41,8 +41,8 @@
 <script type='text/javascript'>
 	// --- (Re)Bind event handlers ---------------------------------------------
 	function _bindDragDrop() {
-		// Enable document and folder nodes as drag source
-		$("#tree span.ui-dynatree-document, span.ui-dynatree-folder").draggable({
+		// Enable all nodes as drag source
+		$("#tree span.ui-dynatree-node").draggable({
 //        $("#tree li").draggable({
 			delay: 0,
 			distance: 4,
@@ -64,9 +64,9 @@
 			},
 			_last: null
 		});
-		// Enable document and folder nodes as drop target
-		$("#tree span.ui-dynatree-document, span.ui-dynatree-folder").droppable({
-			accept: '.ui-dynatree-document, .ui-dynatree-folder',
+		// Enable all nodes as drop target
+		$("#tree span.ui-dynatree-node").droppable({
+			accept: '.ui-dynatree-node',
 			addClasses: false,
 //			activeClass: '.ui-state-highlight',
 //			hoverClass: 'dropchild',
