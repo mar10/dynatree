@@ -221,8 +221,7 @@ div.ui-dynatree-container a:hover
 	text-decoration: underline;
 }
 
-span.ui-dynatree-document a,
-span.ui-dynatree-folder a
+span.ui-dynatree-node a
 {
 	display: inline-block; /* Better alignment, when title contains <br> */  
 	padding-left: 3px;
