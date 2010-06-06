@@ -1596,7 +1596,8 @@ DynaTree.prototype = {
 	},
 
 	toString: function() {
-		return "DynaTree '" + this.options.title + "'";
+//		return "DynaTree '" + this.options.title + "'";
+		return "Dynatree '" + this.$tree.attr("id") + "'";
 	},
 
 	toDict: function() {
@@ -1721,6 +1722,23 @@ DynaTree.prototype = {
 
 	visit: function(fn, data, includeRoot) {
 		return this.tnRoot.visit(fn, data, includeRoot);
+	},
+
+	onDraggableDrag: function(event, ui) {
+		// Called by draggable.drag() event if cursor is over this tree.
+		var opts = this.options;
+//		if( opts.enableDrop === false )
+//			return;
+		var sourceNode = ui.helper.data("dtnode") || null;
+		var targetNode = ui.helper.data("dtTargetNode") || null;
+		this.logDebug("%s.onDraggableDrag(%o, %o)", this, event, ui);
+		if(!targetNode || targetNode.tree !== this)
+			this.logError("Bad target node %o", targetNode);
+//		if(this.data.isFolder)
+//			return false;
+//		var opts = this.tree.options;
+//		return false;
+		return true;
 	},
 
 	_createFromTag: function(parentTreeNode, $ulParent) {
@@ -1973,6 +1991,8 @@ $.ui.dynatree.prototype.options = {
 	checkbox: false, // Show checkboxes.
 	selectMode: 2, // 1:single, 2:multi, 3:multi-hier
 	fx: null, // Animations, e.g. null or { height: "toggle", duration: 200 }
+	enableDrag: false,
+	enableDrop: false,
 	// Low level event handlers: onEvent(dtnode, event): return false, to stop default processing
 	onClick: null, // null: generate focus, expand, activate, select events.
 	onDblClick: null, // (No default actions.)
@@ -1994,6 +2014,9 @@ $.ui.dynatree.prototype.options = {
 	onExpand: null, // Callback(dtnode) when a node is expanded/collapsed.
 	onLazyRead: null, // Callback(dtnode) when a lazy node is expanded for the first time.
 	
+	// Drag'n'drop event handlers
+	onDropOver: null, // Callback(source, sourceNode, targetNode)
+
 	ajaxDefaults: { // Used by initAjax option
 		cache: false, // false: Append random '_' argument to the request url to prevent caching.
 		dataType: "json" // Expect json format and pass json object to callbacks.

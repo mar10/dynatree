@@ -1,0 +1,356 @@
+
+<meta http-equiv="Context-Type" content="text/html; charset=ISO-8859-1">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+    <title>Dynatree - Example</title>
+<!-- 
+    <script src='../jquery/jquery.js' type='text/javascript'></script>
+    <script src='../jquery/jquery.ui.core.js' type='text/javascript'></script>
+    <script src='../jquery/jquery.ui.widget.js' type='text/javascript'></script>
+    <script src='../jquery/jquery.cookie.js' type='text/javascript'></script>
+ -->
+    <!-- Standard jQuery 1.4 and UI 1.8 -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js" type="text/javascript"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.js" type="text/javascript"></script>
+ 
+    <link href='../src/skin/ui.dynatree.css' rel='stylesheet' type='text/css'>
+    <script src='../src/jquery.dynatree.js' type='text/javascript'></script>
+    <style type="text/css">
+        .drophover{ border: 1px solid blue; }
+        #draggableSample, #droppableSample  {
+            height:100px;
+            padding:0.5em;
+            width:150px;
+            background-color: silver;
+            border:1px solid #AAAAAA;
+            color:#222222;
+        }
+        #draggableSample  {
+        }
+        #droppableSample  {
+            background-color: maroon;
+            color: white;
+        }
+    </style>
+
+    <!-- Start_Exclude: This block is not part of the sample code -->
+    <link href="prettify.css" rel="stylesheet">
+    <script src="prettify.js" type='text/javascript'></script>
+    <link href='sample.css' rel='stylesheet' type='text/css'>
+    <script src='sample.js' type='text/javascript'></script>
+    <!-- End_Exclude -->
+    
+<script type='text/javascript'>
+function __getNodeFromElement(el) {
+    if( el && el.jquery )
+        el = el.get(0);
+    var iMax = 5;
+    while( el && iMax-- ) {
+//        logMsg("check %o", el);
+        if( el.dtnode ) return el.dtnode;
+        el = el.parentNode;
+    };
+    return null;
+}
+
+// --- Extend ui.draggable event handling --------------------------------------
+
+$.ui.plugin.add("draggable", "connectToDynatree", {
+    start: function(event, ui) {
+        var i = $(this).data("draggable");
+        var sourceNode = ui.helper.data("dtnode") || null;
+        logMsg("draggable-connectToDynatree.start, %o", sourceNode);
+        if(sourceNode) {
+            // Adjust helper offset for tree nodes
+            i.offset.click.top -= event.originalTarget.offsetTop;
+            i.offset.click.left -= event.originalTarget.offsetLeft;
+        }
+        /*
+        $(".ui-dynatree-container").live("mousemove.dynatree_dnd", function(e) {
+            logMsg("mousemove.dynatree_dnd %o", e);
+            logMsg("    this %o", this);
+            logMsg("    node %o", __getNodeFromElement(e.target));
+        });
+        */
+        /*
+        if(dtnode && dtnode.tree.options.enableDrag === false) {
+            logMsg("draggable-connectToDynatree.start: dtnode.tree.options.enableDrag=false");
+            return false;
+        }
+        */
+    },
+    drag: function(event, ui) {
+        var i = $(this).data("draggable");
+        var sourceNode = ui.helper.data("dtnode") || null;
+        // Ignore if source is not a Dynatree node  
+//        if(!sourceNode)
+//            return;
+        // If target is a Dynatree node, let it handle the event   
+//        logMsg("draggable-connectToDynatree.drag, %o", i);
+        logMsg("draggable-connectToDynatree.drag, %o, %o", event, ui);
+//        var tree = $("#tree2").droppable
+        var targetNode = __getNodeFromElement(event.target);
+        ui.helper.data("dtTargetNode", targetNode)
+//        var targetNode = __getNodeFromElement(event.relatedTarget);
+        logMsg("    this %o", this);
+        logMsg("    i %o", i);
+        logMsg("    sourceNode %o", sourceNode);
+        logMsg("    targetNode %o", targetNode);
+/*        logMsg(" target %o", __getNodeFromElement(event.currentTarget));
+        logMsg(" target %o", __getNodeFromElement(event.originalTarget));
+        logMsg("  closest %o", $(event.target).closest('.ui-dynatree-node'))*/
+        if(targetNode && targetNode.tree.onDraggableDrag )
+            return targetNode.tree.onDraggableDrag.call(targetNode.tree, event, ui);
+        // else go ahead with standard event handling
+    },
+    stop: function(event, ui) {
+        var i = $(this).data("draggable");
+        var sourceNode = ui.helper.data("dtnode") || null;
+//        if(dtnode && dtnode.tree.
+        logMsg("draggable-connectToDynatree.stop, %o", sourceNode);
+    },
+});
+
+    // --- Initialize Dynatree -------------------------------------------------
+    $(function(){
+        $("#tree").dynatree({
+            enableDrag: true,
+            onActivate: function(dtnode) {
+                $("#echoActive").text(dtnode.data.title + "(" + dtnode.data.key + ")");
+            },
+            onDeactivate: function(dtnode) {
+                $("#echoActive").text("-");
+            }
+        });
+        $("#tree2").dynatree({
+            enableDrop: true,
+            idPrefix: "ui-dynatree-t2-",
+            onActivate: function(dtnode) {
+                $("#echoActive2").text(dtnode.data.title + "(" + dtnode.data.key + ")");
+            },
+            onDeactivate: function(dtnode) {
+                $("#echoActive2").text("-");
+            }
+        });
+        // --- (Re)Bind event handlers ---------------------------------------------
+        $("#tree").draggable({
+            // Tool function to get dtnode from the event target:
+            // Enable document and folder nodes as drag source
+                addClasses: true,
+                appendTo: "body",
+                containment: false,
+                delay: 0,
+                distance: 4,
+                revert: true,
+                connectToDynatree: true,
+    		    helper: function(event) {
+                    var dtnode = __getNodeFromElement(event.originalTarget);
+//                    var helper = $(event.target).clone(); 
+//                    var helper = $('<div class="dynatree-drag-node"><table></table></div>')
+//                        .find('table').append($(event.target).closest('a').clone()).end();  
+//                    var helper = $('<div class="dynatree-drag-node"></div>')
+//                    .append($(event.target).closest('a').clone()).end();  
+                    var helper = $("<div class='dynatree-drag-node'></div>")
+                    .append($(event.target).closest("a").clone());
+                    // Attach node reference to helper object  
+                    helper.data("dtnode", dtnode);
+                    logMsg("helper.dtnode=%o", helper.data("dtnode"));
+                    return helper; 
+				        
+			    },
+                // Events
+                start: function(event, ui) {
+                    var sourceNode = ui.helper.data("dtnode") || null;
+                    logMsg("draggable.start, %o, %o, %o", event, ui, sourceNode);
+                    // Cancel drag'n'drop if we don't have hit a node
+//                    if( !dtnode )
+//                        return false;
+                },
+                drag: function(event, ui) {
+                    // Return false to cancel drag'n'drop 
+                    var sourceNode = ui.helper.data("dtnode") || null;
+//                    logMsg("draggable.drag, %o, %o, %o", sourceNode, event, ui);
+                },
+                stop: function(event, ui) {
+                    var sourceNode = ui.helper.data("dtnode") || null;
+                    logMsg("draggable.stop, %o, %o, %o", sourceNode, event, ui);
+                },
+                _last: null
+            });
+            // Enable all nodes as drop target
+//          $("#tree2 span.ui-dynatree-node").droppable({
+            $("#tree2").droppable({
+//                accept: '.ui-dynatree-node',
+                addClasses: true,
+//              activeClass: '.ui-state-highlight',
+                hoverClass: "drophover",
+                tolerance: "intersect",    
+                greedy: true,
+                     
+                accept: function(draggable) {
+                    // Called at startup, once for every draggable. Return false to reject
+                    logMsg("droppable.accept(%o)", draggable);
+                    return true;
+                },
+                // Events
+                activate: function(event, ui) {
+                    // This event is triggered any time an accepted draggable starts dragging. This can be useful if you want to make the droppable 'light up' when it can be dropped on.
+                    logMsg("droppable.activate, %o, %o", event, ui);
+                },
+                deactivate: function(event, ui) {
+                    // This event is triggered any time an accepted draggable stops dragging.
+                    logMsg("droppable.deactivate, %o, %o", event, ui);
+                },
+                over: function(event, ui) {
+                    var sourceNode = ui.helper.data("dtnode")
+                    var targetNode = ui.helper.data("dtTargetNode");
+                    logMsg("droppable.over, %o, %o", event, ui);
+                    logMsg("    source %o", sourceNode);
+                    logMsg("    target %o", targetNode);
+                },
+                out: function(event, ui) {
+                    logMsg("droppable.out, %o, %o", event, ui);
+                },
+                drop: function(event, ui) {
+                    logMsg("droppable.drop, %o, %o", event, ui);
+                    var sourceNode = ui.helper.data("dtnode")
+                    var targetNode = ui.helper.data("dtTargetNode");
+                    logMsg("    drop this: %o", this);
+                    logMsg("    drop source: %o", sourceNode);
+                    logMsg("    drop target: %o", targetNode);
+                    logMsg("    drop target2: %o", __getNodeFromElement(this));
+                    logMsg("    drop target3: %o", __getNodeFromElement(event.target));
+                    if( !targetNode ) {
+                        alert("no target node");
+                        return false;
+                    }
+                    var copynode;
+                    if(sourceNode) {
+                        copynode = sourceNode.toDict(true, function(dict){
+                            dict.title = "Copy of " + dict.title;
+                            delete dict.key; // Remove key, so a new one will be created
+                        });
+                    }else{
+                        copynode = {title: "This node was dropped here."};
+                    }
+                    targetNode.addChild(copynode);
+                    // Must re-binnd, so new nodes become draggable too
+//                  _bindDragDrop();
+                    alert("done");
+                },
+                _last: null
+            });
+            // Init simple draggable sample
+            $("#draggableSample").draggable({
+                revert: true,
+                connectToDynatree: true,
+                cursorAt: { top: -5, left:-5 },
+                helper: "clone"
+            });
+            // Init simple draggable sample
+            $("#droppableSample").droppable({
+                over: function(event, ui) {
+	                logMsg("droppable.over, %o, %o", event, ui);
+	            },
+                drop: function(event, ui) {
+                    $(this).addClass('ui-state-highlight').find('p').html('Dropped!');
+                }
+            });
+            
+    });
+</script>
+</head>
+
+<body class="example">
+    <h1>Example: Standard jQuery drag-and-drop</h1>
+    <p class="description">
+        This sample uses the standard jQuery draggable and droppable.
+    </p>
+    <table>
+    <thead>
+    <tr>
+        <th>
+        <p>This tree allows dragging.</p>
+        </th>
+        <th>
+        <p>This tree allows dropping.</p>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            <div id="tree">
+                <ul style="display:none">
+                    <li id="key1" title="Look, a tool tip!">item1 with key and tooltip
+                    <li id="key2" class="selected">item2: selected on init
+                    <li id="key3" class="folder">Folder with some children
+                        <ul>
+                            <li id="key3.1">Sub-item 3.1
+                            <li id="key3.2">Sub-item 3.2
+                        </ul>
+        
+                    <li id="key4" class="expanded">Document with some children (expanded on init)
+                        <ul>
+                            <li id="key4.1">Sub-item 4.1
+                            <li id="key4.2">Sub-item 4.2
+                        </ul>
+                </ul>
+            </div>
+        </td>
+        <td>
+            <div id="tree2">
+                <ul style="display:none">
+                    <li id="key1" title="Look, a tool tip!">item1 with key and tooltip
+                    <li id="key2" class="selected">item2: selected on init
+                    <li id="key3" class="folder">Folder with some children
+                        <ul>
+                            <li id="key3.1">Sub-item 3.1
+                            <li id="key3.2">Sub-item 3.2
+                        </ul>
+        
+                    <li id="key4" class="expanded">Document with some children (expanded on init)
+                        <ul>
+                            <li id="key4.1">Sub-item 4.1
+                            <li id="key4.2">Sub-item 4.2
+                        </ul>
+                </ul>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div>Active node: <span id="echoActive">-</span></div>
+        </td>
+        <td>
+            <div>Active node: <span id="echoActive2">-</span></div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+		    <div id="draggableSample" class="ui-widget-content">
+		        <p>Drag me around</p>
+		    </div>
+        </td>
+        <td>
+            <div id="droppableSample" class="ui-widget-content">
+                <p>Drop something here</p>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+    </table>
+
+    <!-- Start_Exclude: This block is not part of the sample code -->
+    <hr>
+    <p class="sample-links  no_code">
+        <a class="hideInsideFS" href="http://dynatree.googlecode.com">jquery.dynatree.js project home</a>
+        <a class="hideOutsideFS" href="#">Link to this page</a>
+        <a class="hideInsideFS" href="samples.html">Example Browser</a>
+        <a href="#" class="codeExample">View source code</a>
+    </p>
+    <!-- End_Exclude -->
+</body>
+</html>
