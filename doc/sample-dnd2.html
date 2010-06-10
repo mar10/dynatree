@@ -1,4 +1,3 @@
-
 <meta http-equiv="Context-Type" content="text/html; charset=ISO-8859-1">
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -18,7 +17,6 @@
     <link href='../src/skin/ui.dynatree.css' rel='stylesheet' type='text/css'>
     <script src='../src/jquery.dynatree.js' type='text/javascript'></script>
     <style type="text/css">
-        .drophover{ border: 1px solid blue; }
         #draggableSample, #droppableSample  {
             height:100px;
             padding:0.5em;
@@ -32,6 +30,9 @@
         #droppableSample  {
             background-color: maroon;
             color: white;
+        }
+        .drophover{ 
+        	border: 1px solid blue; 
         }
     </style>
 
@@ -91,6 +92,7 @@ $.ui.plugin.add("draggable", "connectToDynatree", {
 //        logMsg("draggable-connectToDynatree.drag, %o", i);
         logMsg("draggable-connectToDynatree.drag, %o, %o", event, ui);
 //        var tree = $("#tree2").droppable
+		var prevTargetNode = ui.helper.data("dtTargetNode") || null;
         var targetNode = __getNodeFromElement(event.target);
         ui.helper.data("dtTargetNode", targetNode)
 //        var targetNode = __getNodeFromElement(event.relatedTarget);
@@ -101,8 +103,20 @@ $.ui.plugin.add("draggable", "connectToDynatree", {
 /*        logMsg(" target %o", __getNodeFromElement(event.currentTarget));
         logMsg(" target %o", __getNodeFromElement(event.originalTarget));
         logMsg("  closest %o", $(event.target).closest('.ui-dynatree-node'))*/
-        if(targetNode && targetNode.tree.onDraggableDrag )
-            return targetNode.tree.onDraggableDrag.call(targetNode.tree, event, ui);
+//        if(targetNode && targetNode.tree.onDraggableDrag )
+//            return targetNode.tree.onDraggableDrag.call(targetNode.tree, event, ui);
+        if(prevTargetNode && prevTargetNode !== targetNode ) {
+        	prevTargetNode.tree.onDragLeave.call(prevTargetNode.tree, prevTargetNode);
+        }
+        if(targetNode){
+            if(targetNode === prevTarget) {
+                // moving over same node
+            	if(targetNode.tree.onDraggableDrag)
+                	return targetNode.tree.onDragOver.call(targetNode.tree, targetNode);
+            }else{
+                // Entering this node
+              	targetNode.tree.onDragEnter.call(targetNode.tree, targetNode);
+            }
         // else go ahead with standard event handling
     },
     stop: function(event, ui) {
@@ -182,7 +196,7 @@ $.ui.plugin.add("draggable", "connectToDynatree", {
             // Enable all nodes as drop target
 //          $("#tree2 span.ui-dynatree-node").droppable({
             $("#tree2").droppable({
-//                accept: '.ui-dynatree-node',
+                accept: '.dynatree-drag-node',
                 addClasses: true,
 //              activeClass: '.ui-state-highlight',
                 hoverClass: "drophover",
@@ -251,11 +265,14 @@ $.ui.plugin.add("draggable", "connectToDynatree", {
             });
             // Init simple draggable sample
             $("#droppableSample").droppable({
+                hoverClass: "drophover",
+                addClasses: true,
                 over: function(event, ui) {
 	                logMsg("droppable.over, %o, %o", event, ui);
 	            },
                 drop: function(event, ui) {
                     $(this).addClass('ui-state-highlight').find('p').html('Dropped!');
+                    return true;
                 }
             });
             
