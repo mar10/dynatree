@@ -827,6 +827,36 @@ DynaTreeNode.prototype = {
 		this._expand(flag);
 	},
 
+	scheduleAction: function(mode, ms) {
+		/** Schedule activity for delayed execution.
+		 *  scheduleAction('cancel') will cancel the request.
+		 */
+		if( this.tree.timer ) {
+			clearTimeout(this.tree.timer);
+			logMsg("clearTimeout(%o)", this.tree.timer);
+		}
+		var self = this; // required for closures
+		switch (mode) {
+		case "cancel":
+			// Simply made sure that timer was cleared
+			break;
+		case "expand":
+			this.tree.timer = setTimeout(function(){
+				logMsg("setTimeout: trigger");
+				self.expand(true);
+			}, ms);
+			break;
+		case "activate":
+			this.tree.timer = setTimeout(function(){
+				self.activate();
+			}, ms);
+			break;
+		default:
+			throw "Invalid mode " + mode;
+		}
+		logMsg("setTimeout(%s, %s): %s", mode, ms, this.tree.timer);
+	},
+
 	toggleExpand: function() {
 		this.expand(!this.bExpanded);
 	},
@@ -1418,6 +1448,7 @@ DynaTree.prototype = {
 		this.$widget = $widget;
 		this.options = $widget.options;
 		this.$tree = $widget.element;
+		this.timer = null;
 		// find container element
 		this.divTree = this.$tree.get(0);
 	},
@@ -1788,49 +1819,78 @@ TODO: better?
 	_checkConsistency: function() {
 //		this.logDebug("tree._checkConsistency() NOT IMPLEMENTED - %o", this);
 	},
-/*	
-	onDraggableDrag: function(event, ui) {
-		// Called by draggable.drag() event if cursor is over this tree.
-		var opts = this.options;
-//		if( opts.enableDrop === false )
-//			return;
-		var sourceNode = ui.helper.data("dtSourceNode") || null;
-		var targetNode = ui.helper.data("dtTargetNode") || null;
-		this.logDebug("%s.onDraggableDrag(%o, %o)", this, event, ui);
-		if(!targetNode || targetNode.tree !== this)
-			this.logError("Bad target node %o", targetNode);
-//		if(this.data.isFolder)
-//			return false;
-//		var opts = this.tree.options;
-//		return false;
-		return true;
-	},
-*/
+
 	_onDragEvent: function(eventName, node, otherNode, event, ui) {
+		/***
+		 * Handles drag'n'drop functionality.
+		 */
 		if(eventName !== "over")
 			this.logDebug("tree._onDragEvent(%s, %o, %o) - %o", eventName, node, otherNode, this);
 		var opts = this.options;
+		var dnd = this.options.dnd;
 		var res = null;
+		var nodeTag = $(node.span);
 		switch (eventName) {
 		case "start":
-			if(opts.onDragStart)
-				opts.onDragStart(node)
+			if(dnd.onDragStart)
+				res = dnd.onDragStart(node)
 			break;
 		case "enter":
-			if(opts.onDragEnter)
-				opts.onDragEnter(node, otherNode)
+            nodeTag.addClass("dynatree-drop-hover");
+			if(dnd.onDragEnter && dnd.onDragEnter(node, otherNode) === true)
+	            nodeTag.addClass("dynatree-drop-accept");
+			else
+	            nodeTag.addClass("dynatree-drop-reject");
 			break;
 		case "over":
-			if(opts.onDragOver)
-				opts.onDragOver(node, otherNode)
+			// Auto-expand node
+			if(dnd.autoExpandMS && node.hasChildren() && !node.bExpanded)
+				node.scheduleAction("expand", dnd.autoExpandMS);
+/*			var checkPos = function(node, pos) {
+				var dyClick = this.offset.click.top, dxClick = this.offset.click.left;
+				var helperTop = this.positionAbs.top, helperLeft = this.positionAbs.left;
+				var itemHeight = o.height, itemWidth = o.width;
+				var itemTop = o.top, itemLeft = o.left;
+
+				return $.ui.isOver(helperTop + dyClick, helperLeft + dxClick, itemTop, itemLeft, itemHeight, itemWidth);
+			};
+			var relPos = event.()*/
+			var nodeOfs = nodeTag.position();
+			var relPos = { x: event.clientX - nodeOfs.left, 
+						y: event.clientY - nodeOfs.top };
+			var relPos2 = { x: relPos.x / nodeTag.width(),
+						y: relPos.y / nodeTag.height() };
+			var hitMode = null;
+			if( (relPos2.y > 0.25 && relPos2.y < 0.75) 
+					|| (relPos2.x > 0.8 ) ) {
+				hitMode = "over";
+			} else if(relPos2.y <= 0.25) {
+				hitMode = "before";
+			} else {
+				hitMode = "after";
+			}
+			logMsg("    clientPos: %s/%s", event.clientX, event.clientY);
+			logMsg("    nodeOfs: %s/%s", nodeOfs.left, nodeOfs.top);
+			logMsg("    relPos: %s/%s", relPos.x, relPos.y);
+			logMsg("    relPos2: %s/%s: %s", relPos2.x, relPos2.y, hitMode);
+			
+			logMsg("    e:%o", event);
+			if(dnd.onDragOver)
+				dnd.onDragOver(node, otherNode, hitMode)
+			break;
+		case "drop":
+			if(dnd.onDrop)
+				dnd.onDrop(node, otherNode)
 			break;
 		case "leave":
-			if(opts.onDragLeave)
-				opts.onDragLeave(node, otherNode)
+			node.scheduleAction("cancel");
+            nodeTag.removeClass("dynatree-drop-hover dynatree-drop-accept dynatree-drop-reject");
+			if(dnd.onDragLeave)
+				dnd.onDragLeave(node, otherNode)
 			break;
 		case "stop":
-			if(opts.onDragStop)
-				opts.onDragStop(node)
+			if(dnd.onDragStop)
+				dnd.onDragStop(node)
 			break;
 		default:
 			throw "Unsupported drag event: " + eventName;
@@ -2046,8 +2106,17 @@ $.ui.dynatree.prototype.options = {
 	onExpand: null, // Callback(dtnode) when a node is expanded/collapsed.
 	onLazyRead: null, // Callback(dtnode) when a lazy node is expanded for the first time.
 	
-	// Drag'n'drop event handlers
-	onDragOver: null, // Callback(source, sourceNode, targetNode)
+	// Drag'n'drop support
+	dnd: {
+		// Make nodes draggable:
+		onDragStart: null, // Callback(sourceNode), return true, to enable dnd
+		onDragStop: null, // Callback(sourceNode)
+		// Make nodes accept draggables
+		onDragEnter: null, // Callback(targetNode, sourceNode)
+		onDragOver: null, // Callback(targetNode, sourceNode, hitMode)
+		onDrop: null, // Callback(targetNode, sourceNode, hitMode)
+		onDragLeave: null // Callback(targetNode, sourceNode)
+	},
 
 	ajaxDefaults: { // Used by initAjax option
 		cache: false, // false: Append random '_' argument to the request url to prevent caching.

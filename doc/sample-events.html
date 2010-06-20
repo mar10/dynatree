@@ -67,6 +67,8 @@
 			onFocus: function(dtnode) {
 				logMsg("onFocus(%o)", dtnode);
 				$("#echoFocused").text(dtnode.data.title);
+                // Auto-activate focused node after 2 seconds
+                dtnode.scheduleAction("activate", 2000);
 			},
 			onBlur: function(dtnode) {
 				logMsg("onBlur(%o)", dtnode);
@@ -107,7 +109,9 @@
 		Use the Firebug plugin in Firefox to see the event log.<br>
 		The 'links' folders contain nodes with an custom data.url option. 
 		This is used to open the URL in the onActivate event. <br>
-		Note: the lazy reading is not implemented in this example.
+		Note: the lazy reading is not implemented in this example.<br>
+        A focused node will automatically be activated after 2 seconds (use the 
+        keyboard to try this out).
 	</p>
 
 	<div id="tree">
