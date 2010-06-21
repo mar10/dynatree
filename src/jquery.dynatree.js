@@ -88,6 +88,17 @@ var Class = {
 	}
 }
 
+// Tool function to get dtnode from the event target:
+function getDtNodeFromElement(el) {
+	var iMax = 5;
+	while( el && iMax-- ) {
+		if( el.dtnode ) return el.dtnode;
+		el = el.parentNode;
+	};
+	return null;
+}
+
+
 /*************************************************************************
  *	Class DynaTreeNode
  */
@@ -1451,6 +1462,8 @@ DynaTree.prototype = {
 		this.timer = null;
 		// find container element
 		this.divTree = this.$tree.get(0);
+		// 
+		_initDragAndDrop(this);
 	},
 
 	// member functions
@@ -1950,21 +1963,11 @@ $.widget("ui.dynatree", {
 		// Prevent duplicate binding
 		this.unbind();
 		
-		// Tool function to get dtnode from the event target:
-		function __getNodeFromElement(el) {
-			var iMax = 5;
-			while( el && iMax-- ) {
-				if( el.dtnode ) return el.dtnode;
-				el = el.parentNode;
-			};
-			return null;
-		}
-
 		var eventNames = "click.dynatree dblclick.dynatree";
 		if( o.keyboard ) // Note: leading ' '!
 			eventNames += " keypress.dynatree keydown.dynatree";
 		$this.bind(eventNames, function(event){
-			var dtnode = __getNodeFromElement(event.target);
+			var dtnode = getDtNodeFromElement(event.target);
 			if( !dtnode )
 				return true;  // Allow bubbling of other events
 			var prevPhase = dtnode.tree.phase;
@@ -1997,7 +2000,7 @@ $.widget("ui.dynatree", {
 			// Handles blur and focus.
 			// Fix event for IE:
 			event = arguments[0] = $.event.fix( event || window.event );
-			var dtnode = __getNodeFromElement(event.target);
+			var dtnode = getDtNodeFromElement(event.target);
 			return dtnode ? dtnode.onFocus(event) : false;
 		}
 		var div = this.tree.divTree;
@@ -2063,8 +2066,9 @@ $.widget("ui.dynatree", {
 //$.ui.dynatree.getter = "getTree getRoot getActiveNode getSelectedNodes";
 
 
-// Plugin default options:
-
+/*******************************************************************************
+ * Plugin default options:
+ */
 //$.ui.dynatree.defaults = {  @@ 1.8
 $.ui.dynatree.prototype.options = {
 //	title: "Dynatree root", // Name of the root node.
@@ -2108,16 +2112,17 @@ $.ui.dynatree.prototype.options = {
 	
 	// Drag'n'drop support
 	dnd: {
-		// Make nodes draggable:
+		// Make tree nodes draggable:
 		onDragStart: null, // Callback(sourceNode), return true, to enable dnd
 		onDragStop: null, // Callback(sourceNode)
-		// Make nodes accept draggables
+		helper: null,
+		// Make tree nodes accept draggables
+        autoExpandMS: 1000, // Expand nodes after n milliseconds of hovering.
 		onDragEnter: null, // Callback(targetNode, sourceNode)
 		onDragOver: null, // Callback(targetNode, sourceNode, hitMode)
 		onDrop: null, // Callback(targetNode, sourceNode, hitMode)
 		onDragLeave: null // Callback(targetNode, sourceNode)
 	},
-
 	ajaxDefaults: { // Used by initAjax option
 		cache: false, // false: Append random '_' argument to the request url to prevent caching.
 		dataType: "json" // Expect json format and pass json object to callbacks.
@@ -2174,7 +2179,7 @@ $.ui.dynatree.prototype.options = {
 	lastentry: undefined
 };
 
-/**
+/*******************************************************************************
  * Reserved data attributes for a tree node.
  */
 $.ui.dynatree.nodedatadefaults = {
@@ -2199,6 +2204,134 @@ $.ui.dynatree.nodedatadefaults = {
 	// ------------------------------------------------------------------------
 	lastentry: undefined
 };
+
+/*******************************************************************************
+ * Drag and drop support
+ */
+function _initDragAndDrop(tree) {
+	var dnd = tree.options.dnd || null;
+	// Register 'connectToDynatree' option with ui.draggable
+	if(dnd && (dnd.onDragStart || dnd.onDrop)) {
+		_registerDnd();
+	}
+	// Attach ui.draggable to this Dynatree instance
+	if(dnd && dnd.onDragStart ) {
+	    tree.$tree.draggable({
+	        // Tool function to get dtnode from the event target:
+	        // Enable document and folder nodes as drag source
+            addClasses: false, //true,
+            appendTo: "body",
+            containment: false,
+            delay: 0,
+            distance: 4,
+            revert: true,
+            connectToDynatree: true,
+		    helper: function(event) {
+                var sourceNode = getDtNodeFromElement(event.target);
+
+                //                    var helper = $(event.target).clone(); 
+//	                var helper = $('<div class="dynatree-drag-helper"><table></table></div>')
+//	                    .find('table').append($(event.target).closest('a').clone()).end();  
+                var helper = $('<div class="dynatree-drag-helper"></div>')
+                .append($(event.target).closest('a').clone());  
+/*                    var helper = $("<div class='dynatree-drag-helper'></div>")
+                .append($(event.target).closest("span.ui-dynatree-icon").clone())
+                .append($(event.target).closest("a").clone());*/
+//	                var helper = $("<div class='dynatree-drag-helper'></div>")
+//	                .append($(sourceNode.span).clone());
+                
+                // Attach node reference to helper object  
+                helper.data("dtSourceNode", sourceNode);
+                logMsg("helper.sourceNode=%o", helper.data("dtSourceNode"));
+                return helper; 
+		    },
+            _last: null
+        });
+	}
+	// Attach ui.droppable to this Dynatree instance
+	if(dnd && dnd.onDrop) {
+	    tree.$tree.droppable({
+	        addClasses: false, // true
+	        tolerance: "intersect",    
+	        greedy: false, //true,
+	        _last: null
+	    });
+	}
+}
+
+//--- Extend ui.draggable event handling --------------------------------------
+var didRegisterDnd = false; 
+var _registerDnd = function() {
+	if(didRegisterDnd)
+		return;
+	$.ui.plugin.add("draggable", "connectToDynatree", {
+	    start: function(event, ui) {
+	        var i = $(this).data("draggable");
+	        var sourceNode = ui.helper.data("dtSourceNode") || null;
+	        logMsg("draggable-connectToDynatree.start, %o", sourceNode);
+	        logMsg("    this: %o", this);
+	        logMsg("    i: %o", i);
+	        logMsg("    ui: %o", ui);
+	        if(sourceNode) {
+	            // Adjust helper offset for tree nodes
+	
+	            var sourcePosition = $(sourceNode.span).position();
+	            var cssPosition = $(ui.helper).position();
+	            logMsg("    i.offset.click: %s/%s", i.offset.click.left, i.offset.click.top);
+	            logMsg("    sourcePosition: %s/%s", sourcePosition.left, sourcePosition.top);
+	            logMsg("    cssPosition: %s/%s", cssPosition.left, cssPosition.top);
+	            logMsg("    event.target.offset: %s/%s", event.target.offsetLeft, event.target.offsetTop);
+	            i.offset.click.top -= event.target.offsetTop;
+	            i.offset.click.left -= event.target.offsetLeft;
+	            // Trigger onDragStart event
+	            sourceNode.tree._onDragEvent("start", sourceNode, null, event, ui);
+	        }
+	    },
+	    drag: function(event, ui) {
+	//        var i = $(this).data("draggable");
+	        var sourceNode = ui.helper.data("dtSourceNode") || null;
+			var prevTargetNode = ui.helper.data("dtTargetNode") || null;
+	        var targetNode = getDtNodeFromElement(event.target);
+	        ui.helper.data("dtTargetNode", targetNode);
+	        if(prevTargetNode && prevTargetNode !== targetNode ) {
+	            prevTargetNode.tree._onDragEvent("leave", prevTargetNode, sourceNode, event, ui);
+	        }
+	        if(targetNode){
+	            if(targetNode === prevTargetNode) {
+	                // Moving over same node
+	                targetNode.tree._onDragEvent("over", targetNode, sourceNode, event, ui);
+	            }else{
+	                // Entering this node first time
+	                targetNode.tree._onDragEvent("enter", targetNode, sourceNode, event, ui);
+	            }
+	        }
+	        // else go ahead with standard event handling
+	    },
+	    stop: function(event, ui) {
+	        var i = $(this).data("draggable");
+	        var sourceNode = ui.helper.data("dtSourceNode") || null;
+	        var targetNode = getDtNodeFromElement(event.target);
+	//        var targetTree = targetNode ? targetNode.tree : null;
+	//        if(dtnode && dtnode.tree.
+	        logMsg("draggable-connectToDynatree.stop, %o", sourceNode);
+	        var mouseDownEvent = i._mouseDownEvent;
+	        var eventType = event.type;
+	        logMsg("    type: %o, downEvent: %o, upEvent: %o", eventType, mouseDownEvent, event);
+	        var dropped = (eventType == "mouseup" && event.which == 1);
+	        if(!dropped)
+	            logMsg("Drag was cancelled");
+	        if(targetNode) { 
+	            if(dropped) 
+	                targetNode.tree._onDragEvent("drop", targetNode, sourceNode, event, ui);
+	            targetNode.tree._onDragEvent("leave", targetNode, sourceNode, event, ui);
+	        }
+	        if(sourceNode) 
+	            sourceNode.tree._onDragEvent("stop", sourceNode, null, event, ui);
+	    }
+	});
+	didRegisterDnd = true;
+};
+
 
 // ---------------------------------------------------------------------------
 })(jQuery);
