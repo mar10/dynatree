@@ -38,11 +38,17 @@ ul.ui-dynatree-container li
 }
 
 /* Suppress vertical line, if we don't have connectors */
+/*
 ul.ui-dynatree-no-connector >li
 {
     background-image: none;
 }
-
+*/
+/* Always suppress vertical line for top level*/
+ul.ui-dynatree-container >li
+{
+    background-image: none;
+}
 ul.ui-dynatree-container li.ui-dynatree-lastsib
 {
     background-image: none;

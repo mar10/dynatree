@@ -1,4 +1,3 @@
-<meta http-equiv="Context-Type" content="text/html; charset=ISO-8859-1">
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
@@ -39,37 +38,55 @@
         /***********************************************************************
          * Drag'n'drop support
          */
-        .dynatree-drop-hover { 
-        	border: 1px solid blue; 
-            cursor: help;
-        }
-        .dynatree-drop-hover a{ 
-            background-repeat: no-repeat;
-            background-position: right;
-            background-image: url("../src/skin/drop_child.gif");
-        }
-        .dynatree-drag-helper{ 
-            border: 1px solid red; 
+        /* Helper object */
+        div.dynatree-drag-helper{ 
+            border-width: 1px; 
             background-color: silver;
         }
-        .dynatree-drop-accept{ 
-            cursor: help;
+        span.dynatree-drag-helper-img { 
+            width: 16px;
+            height: 16px;
+            display: -moz-inline-box; /* @ FF 1+2 */
+            display: inline-block; /* Required to make a span sizeable */
+            vertical-align: top;
+            background-repeat: no-repeat;
+            background-position: left;
         }
-        .drop-append a { 
-            border: 1px solid silver; 
-            /*background-color: silver; */
-/*            background-repeat: repeat-x;
-            background-position: bottom;*/
-            background-image: url("../src/skin/drop_append.gif");
-            };
-        .dynatree-drop-child{ 
-            border: 1px solid silver; 
-            /*background-color: silver; */
+        div.dynatree-drag-helper.dynatree-drop-accept{ 
+            border-color: green; 
+        }
+        div.dynatree-drop-accept span.dynatree-drag-helper-img { 
+            background-image: url("../src/skin/drop_accept.gif");
+        }
+        div.dynatree-drag-helper.dynatree-drop-reject{ 
+            border-color: red; 
+        }
+        div.dynatree-drop-reject span.dynatree-drag-helper-img { 
+            background-image: url("../src/skin/drop_reject.gif");
+        }
+        /* Source node while dragging */
+        .dynatree-drag-source { 
+        	border: 1px dotted gray; 
+        }
+        /* Target node while dragging cursor is over it */
+        .dynatree-drop-target { 
+            border: 1px solid blue; 
+        }
+        .dynatree-drop-target a{ 
             background-repeat: no-repeat;
             background-position: right;
             background-image: url("../src/skin/drop_child.gif");
-            };
-        .dynatree-drop-append{ 
+        }
+        .dynatree-drop-target.dynatree-drop-accept { 
+            border: 1px solid green; 
+        }
+        .dynatree-drop-target.dynatree-drop-reject { 
+            border: 1px solid red; 
+        }
+        .dynatree-drop-target.dynatree-drop-after a { 
+            background-repeat: repeat-x;
+            background-position: bottom;
+            background-image: url("../src/skin/drop_append.gif");
         }
     </style>
  
@@ -92,7 +109,11 @@ $(function(){
         },
         dnd: {
             onDragStart: function(dtnode) {
+                // This function MUST be defined to enable dragging for the tree.
+                // Return `false` to cancel dragging of dtnode. 
                 logMsg("tree.onDragStart(%o)", dtnode);
+                if(dtnode.data.isFolder)
+                    return false;
                 return true;
             },
             onDragStop: function(dtnode) {
@@ -112,13 +133,18 @@ $(function(){
         dnd: {
             autoExpandMS: 1000,
             onDragEnter: function(node, sourceNode) {
+                // Return `false` to disallow dropping sourceNode on node.
+                // Return 'over', 'before, or 'after' to force a hitMode.
                 logMsg("tree.onDragEnter(%o, %o)", node, sourceNode);
-                return true;
+                if(node.data.isFolder)
+                    return false;
+//                return "over";
             },
-            onDragOver: function(node, sourceNode) {
-                logMsg("tree.onDragOver(%o, %o)", node, sourceNode);
+            onDragOver: function(node, sourceNode, hitMode) {
+                logMsg("tree.onDragOver(%o, %o, %o)", node, sourceNode, hitMode);
             },
-            onDrop: function(node, sourceNode) {
+            onDrop: function(node, sourceNode, hitMode) {
+                // This function MUST be defined to enable dropping of items on the tree.
                 logMsg("tree.onDrop(%o, %o)", node, sourceNode);
                 var copynode;
                 if(sourceNode) {
