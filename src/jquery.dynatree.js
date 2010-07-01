@@ -1906,8 +1906,9 @@ TODO: better?
 			if(res === false) {
 				this.logDebug("tree.onDragStart() cancelled");
 				draggable._clear();
+			} else {
+				nodeTag.addClass("dynatree-drag-source");
 			}
-			nodeTag.addClass("dynatree-drag-source");
 			break;
 		case "enter":
 			res = dnd.onDragEnter ? dnd.onDragEnter(node, otherNode) : null;
@@ -1944,11 +1945,11 @@ TODO: better?
     			} else {
     				hitMode = "after";
     			}
-    			logMsg("    clientPos: %s/%s", event.clientX, event.clientY);
-    			logMsg("    nodeOfs: %s/%s", nodeOfs.left, nodeOfs.top);
-    			logMsg("    relPos: %s/%s", relPos.x, relPos.y);
-    			logMsg("    relPos2: %s/%s: %s", relPos2.x, relPos2.y, hitMode);
-    			logMsg("    e:%o", event);
+//    			logMsg("    clientPos: %s/%s", event.clientX, event.clientY);
+//    			logMsg("    nodeOfs: %s/%s", nodeOfs.left, nodeOfs.top);
+//    			logMsg("    relPos: %s/%s", relPos.x, relPos.y);
+//    			logMsg("    relPos2: %s/%s: %s", relPos2.x, relPos2.y, hitMode);
+//    			logMsg("    e:%o", event);
             }
 /*			var checkPos = function(node, pos) {
 				var dyClick = this.offset.click.top, dxClick = this.offset.click.left;
@@ -2331,19 +2332,26 @@ var _registerDnd = function() {
 	        var sourceNode = ui.helper.data("dtSourceNode") || null;
 	        logMsg("draggable-connectToDynatree.start, %o", sourceNode);
 	        logMsg("    this: %o", this);
+	        logMsg("    event: %o", event);
 	        logMsg("    draggable: %o", draggable);
 	        logMsg("    ui: %o", ui);
 	        if(sourceNode) {
 	            // Adjust helper offset for tree nodes
-	
+/*
 	            var sourcePosition = $(sourceNode.span).position();
 	            var cssPosition = $(ui.helper).position();
 	            logMsg("    draggable.offset.click: %s/%s", draggable.offset.click.left, draggable.offset.click.top);
-	            logMsg("    sourcePosition: %s/%s", sourcePosition.left, sourcePosition.top);
-	            logMsg("    cssPosition: %s/%s", cssPosition.left, cssPosition.top);
-	            logMsg("    event.target.offset: %s/%s", event.target.offsetLeft, event.target.offsetTop);
-	            draggable.offset.click.top -= event.target.offsetTop;
-	            draggable.offset.click.left -= event.target.offsetLeft;
+	            logMsg("    sourceNode.position: %s/%s", sourcePosition.left, sourcePosition.top);
+	            logMsg("    helper.position: %s/%s", cssPosition.left, cssPosition.top);
+	            logMsg("    event.target.offset: %s/%s,  %sx%s", event.target.offsetLeft, event.target.offsetTop, event.target.offsetWidth, event.target.offsetHeight);
+	            logMsg("    draggable.positionAbs: %s/%s", draggable.positionAbs.left, draggable.positionAbs.top);
+*/
+	            // Adjust helper offset, so cursor is slightly outside top/left corner
+//	        	draggable.offset.click.top -= event.target.offsetTop;
+//	            draggable.offset.click.left -= event.target.offsetLeft;
+	        	draggable.offset.click.top = -2; 
+	            draggable.offset.click.left = + 16;
+	            logMsg("    draggable.offset.click FIXED: %s/%s", draggable.offset.click.left, draggable.offset.click.top);
 	            // Trigger onDragStart event
 	            // TODO: when called as connectTo..., the return value is ignored(?)
 	            return sourceNode.tree._onDragEvent("start", sourceNode, null, event, ui, draggable);
