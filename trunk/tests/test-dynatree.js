@@ -150,31 +150,31 @@ test(".click() top level nodes (triggers lazy loading)", function() {
     expect(3);
 /*    
     benchmark("Click add100_flat_u", function() {
-        $("#ui-dynatree-id-_1").click();
+        $("#dynatree-id-_1").click();
     });
     benchmark("Click add100_flat", function() {
-        $("#ui-dynatree-id-_2").click();
+        $("#dynatree-id-_2").click();
     });
 */    
     benchmark("Click add1000_flat", function() {
-        $("#ui-dynatree-id-_3").click();
+        $("#dynatree-id-_3").click();
     });
 
     benchmark("Click add1000_deep", function() {
-        $("#ui-dynatree-id-_4").click();
+        $("#dynatree-id-_4").click();
     });
 /*
     benchmark("Click add10000_deep", function() {
-        $("#ui-dynatree-id-_5").click();
+        $("#dynatree-id-_5").click();
     });
     */
     benchmark("Click addJsonFile", function() {
-        $("#ui-dynatree-id-_6").click();
+        $("#dynatree-id-_6").click();
     });
 });
 /*
 timedTest(".click() add10000_deep", function() {
-    $("#ui-dynatree-id-_5").click();
+    $("#dynatree-id-_5").click();
 });
 
 test("Load 100 nodes (flat)", function() {
