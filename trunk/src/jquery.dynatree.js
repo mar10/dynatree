@@ -252,7 +252,7 @@ DynaTreeNode.prototype = {
 			if( ! this.li ) {
 				this.li = document.createElement("li");
 				this.li.dtnode = this;
-				if( this.data.key )
+				if( this.data.key && opts.generateIds )
 					this.li.id = opts.idPrefix + this.data.key;
 	
 				this.span = document.createElement("span");
@@ -2218,6 +2218,7 @@ $.ui.dynatree.prototype.options = {
 		loading: "Loading&#8230;",
 		loadError: "Load error!"
 	},
+	generateIds: false,
 	idPrefix: "ui-dynatree-id-", // Used to generate node id's like <span id="ui-dynatree-id-<key>">.
 //    cookieId: "ui-dynatree-cookie", // Choose a more unique name, to allow multiple trees.
     cookieId: "dynatree", // Choose a more unique name, to allow multiple trees.
