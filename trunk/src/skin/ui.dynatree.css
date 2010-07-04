@@ -37,17 +37,10 @@ ul.dynatree-container li
     padding:1px 0 0 0;
 }
 
-/* Suppress vertical line, if we don't have connectors */
-/*
-ul.dynatree-no-connector >li
-{
-    background-image: none;
-}
-*/
 /* Always suppress vertical line for top level*/
 ul.dynatree-container >li
 {
-    background-image: none;
+/*    background-image: none;*/
 }
 ul.dynatree-container li.dynatree-lastsib
 {
@@ -55,7 +48,7 @@ ul.dynatree-container li.dynatree-lastsib
 }
 
 /* Style, when control is disabled */
-.dynatree-disabled ul.dynatree-container
+.ui-dynatree-disabled ul.dynatree-container
 {
 	opacity: 0.5;
 /*	filter: alpha(opacity=50); /* Yields a css warning */
@@ -340,12 +333,16 @@ span.dynatree-active a
  * Drag'n'drop support
  */
 /* Helper object */
+div.dynatree-drag-helper
+{ 
+}
 div.dynatree-drag-helper a
 { 
     border: 1px solid gray;
     background-color: white;
     padding-left: 5px; 
     padding-right: 5px; 
+	opacity: 0.8;
 }
 span.dynatree-drag-helper-img
 {
@@ -412,6 +409,10 @@ span.dynatree-drop-target.dynatree-drop-after a
 {
 	width:24px;
 	position: absolute;
+    background-image: url("drop_here.gif");
+}
+#dynatree_drop_marker.dynatree_drop_copy
+{
     background-image: url("copy_here.gif");
 }
 #dynatree_drop_marker.dynatree_drop_move

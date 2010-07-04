@@ -21,11 +21,7 @@
     
 <script type='text/javascript'>
 	$(function(){
-		
-		// --- Initialize sample trees
 		$("#tree").dynatree({
-			title: "Lazy loading sample",
-			fx: { height: "toggle", duration: 200 },
             // In real life we would call a URL on the server like this:
 //          initAjax: {
 //              url: "/getTopLevelNodesAsJson",
@@ -33,47 +29,28 @@
 //              },
             // .. but here we use a local file instead:
 			initAjax: { 
-                url: "sample-data1.json" 
+                url: "sample-data3.json" 
 				},
-			
 			onActivate: function(dtnode) {
 				$("#echoActive").text(dtnode.data.title);
 			},
-
-			onLazyRead: function(dtnode){
-				// In real life we would call something like this:
-//            	dtnode.appendAjax({
-//            	    url: "/getChildrenAsJson",
-//		            data: {key: dtnode.data.key,
-//            		       mode: "funnyMode"
-//                         }
-//              });
-                // .. but here we use a local file instead:
-                dtnode.appendAjax({
-                    url: "sample-data2.json" 
-                });
+			onDeactivate: function(dtnode) {
+				$("#echoActive").text("-");
 			}
-			
 		});
-
 	});
 </script>
 </head>
 
 <body class="example">
-	<h1>Example: Lazy loading</h1>
+	<h1>Example: Init from &lt;ul> element</h1>
 	<p class="description">
-		Using 'lazy' option to load the tree and to load the branches.<br>
-		<br>
-		Note: the AJAX call is only simulated. Also, the <code>initAjax</code> option is not used.<br>
-		You may want to try this <a href="sample-lazy-persist.html">live example</a> 
-		of a lazy tree that uses a simple test server.
+		This sample initializes the tree from a JSON request.
 	</p>
-
-	<div id="tree">
-		<!-- When using initAjax, it may be nice to put a throbber here, that spins until the initial content is loaded: -->
-	</div>
-
+	
+	<!-- Add a <div> element where the tree should appear: -->
+	<div id="tree">	</div>
+	
 	<div>Active node: <span id="echoActive">-</span></div>
 
 	<!-- Start_Exclude: This block is not part of the sample code -->

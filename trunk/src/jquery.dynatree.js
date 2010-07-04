@@ -442,6 +442,9 @@ DynaTreeNode.prototype = {
 	},
 
 	getLevel: function() {
+		/**
+		 * Return node depth. 0: System root node, 1: visible top-level node.
+		 */
 		var level = 0;
 		var dtn = this.parent;
 		while( dtn ) {
@@ -609,7 +612,8 @@ DynaTreeNode.prototype = {
 				break;
 			}
 		}
-		if( this.parent == null && this.tree.options.minExpandLevel>0 ) {
+//		if( this.parent == null && this.tree.options.minExpandLevel>0 ) {
+		if( this.parent == null ) {
 			expand = false;
 		}
 		if( expand ) {
@@ -777,7 +781,7 @@ DynaTreeNode.prototype = {
 			return;
 		}
 		var opts = this.tree.options;
-		if( !bExpand && this.getLevel()<opts.minExpandLevel ) {
+		if( !bExpand && this.getLevel() < opts.minExpandLevel ) {
 			this.tree.logDebug("dtnode._expand(%o) prevented collapse - %o", bExpand, this);
 			return;
 		}
@@ -833,7 +837,8 @@ DynaTreeNode.prototype = {
 	expand: function(flag) {
 		if( !this.childList && !this.data.isLazy && flag )
 			return; // Prevent expanding empty nodes
-		if( this.parent == null && this.tree.options.minExpandLevel>0 && !flag )
+//		if( this.parent == null && this.tree.options.minExpandLevel>0 && !flag )
+		if( this.parent == null && !flag )
 			return; // Prevent collapsing the root
 		this._expand(flag);
 	},
@@ -1481,8 +1486,10 @@ DynaTree.prototype = {
 			_log("warn", "Option 'rootVisible' is no longer supported.");
 		if( opts.title  !== undefined ) 
 			_log("warn", "Option 'title' is no longer supported.");
-		if( opts.minExpandLevel < 1 ) 
+		if( opts.minExpandLevel < 1 ) { 
 			_log("warn", "Option 'minExpandLevel' must be >= 1.");
+			opts.minExpandLevel = 1;
+		}
 		
 		// If a 'options.classNames' dictionary was passed, still use defaults 
     	// for undefined classes:

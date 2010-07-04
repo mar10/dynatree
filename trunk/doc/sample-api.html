@@ -25,7 +25,6 @@
 		// The tree structure is read from the contained <ul> tag.
 		$("#tree").dynatree({
 			title: "Programming Sample",
-			rootVisible: true,
 			onActivate: function(dtnode) {
 				$("#echoActive").text(dtnode.data.title);
 				if( dtnode.data.url )

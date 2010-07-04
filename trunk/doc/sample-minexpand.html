@@ -26,13 +26,28 @@
 					{title: "Item 1"},
 					{title: "Folder 2", isFolder: true, key: "folder2",
 						children: [
-							{title: "Sub-item 2.1"},
+							{title: "Sub-item 2.1",
+								children: [
+											{title: "Sub-item 2.1.1",
+												children: [
+															{title: "Sub-item 2.1.1.1"},
+															{title: "Sub-item 2.1.2.2"}
+														]
+												},
+											{title: "Sub-item 2.1.2"}
+										]
+								},
 							{title: "Sub-item 2.2"}
 						]
 					},
 					{title: "Folder 3", isFolder: true, key: "folder3",
 						children: [
-							{title: "Sub-item 3.1"},
+							{title: "Sub-item 3.1",
+								children: [
+											{title: "Sub-item 3.1.1"},
+											{title: "Sub-item 3.1.2"}
+										]
+								},
 							{title: "Sub-item 3.2"}
 						]
 					},
@@ -43,35 +58,23 @@
 			onActivate: function(dtnode) {
 				logMsg("Activated %o", dtnode);
 			},
-			rootVisible: true,
-			minExpandLevel: 0,
+			minExpandLevel: 1,
 			children: children
 		});
 		$("#tree2").dynatree({
 			onActivate: function(dtnode) {
 				logMsg("Activated %o", dtnode);
 			},
-			rootVisible: true,
-			minExpandLevel: 1,
+			minExpandLevel: 2,
 			children: children
 		});
 		$("#tree3").dynatree({
 			onActivate: function(dtnode) {
 				logMsg("Activated %o", dtnode);
 			},
-			rootVisible: false,
-			minExpandLevel: 1,
+			minExpandLevel: 3,
 			children: children
 		});
-		$("#tree4").dynatree({
-			onActivate: function(dtnode) {
-				logMsg("Activated %o", dtnode);
-			},
-			rootVisible: false,
-			minExpandLevel: 2,
-			children: children
-		});
-
     });
     </script>
 </head>
@@ -80,22 +83,18 @@
 	<h1>Example: Expand level</h1>
 
     <!-- Add a <div> element where the tree should appear: -->
-	<p class="description">Root visible, minExpandLevel=0</p>
+	<p class="description">minExpandLevel=1<br>
+    This is the default option.</p>
     <div id="tree1"> </div>
 
 	<hr>
-    <p class="description">Root visible, minExpandLevel=1</p>
+    <p class="description">minExpandLevel=2<br>
+    Top-level nodes are always expanded, so the expander icon is hidden.</p>
     <div id="tree2"> </div>
 
 	<hr>
-    <p class="description">Root hidden, minExpandLevel=1<br>
-    This is the default option:</p>
+    <p class="description">minExpandLevel=3.</p>
     <div id="tree3"> </div>
-
-	<hr>
-    <p class="description">Root hidden, minExpandLevel=2<br>
-    Note, that you cannot collapse the top-level nodes:</p>
-    <div id="tree4"> </div>
 
 	<!-- Start_Exclude: This block is not part of the sample code -->
 	<hr>
