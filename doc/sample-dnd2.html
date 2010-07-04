@@ -49,6 +49,9 @@
 $(function(){
 	// --- Initialize first Dynatree -------------------------------------------
     $("#tree").dynatree({
+		initAjax: { 
+    	    url: "sample-data3.json" 
+		},
         onActivate: function(dtnode) {
             $("#echoActive").text(dtnode.data.title + "(" + dtnode.data.key + ")");
         },
@@ -72,7 +75,9 @@ $(function(){
     });
     // --- Initialize second Dynatree ------------------------------------------
     $("#tree2").dynatree({
-        idPrefix: "dynatree-t2-",
+		initAjax: { 
+	        url: "sample-data3.json" 
+		},
         onActivate: function(dtnode) {
             $("#echoActive2").text(dtnode.data.title + "(" + dtnode.data.key + ")");
         },
@@ -164,42 +169,10 @@ $(function(){
     <tbody>
     <tr valign="top">
         <td>
-            <div id="tree">
-                <ul style="display:none">
-                    <li id="key1" title="Look, a tool tip!">item1 with key and tooltip
-                    <li id="key2" class="selected">item2: selected on init
-                    <li id="key3" class="folder">Folder with some children
-                        <ul>
-                            <li id="key3.1">Sub-item 3.1
-                            <li id="key3.2">Sub-item 3.2
-                        </ul>
-        
-                    <li id="key4" class="expanded">Document with some children (expanded on init)
-                        <ul>
-                            <li id="key4.1">Sub-item 4.1
-                            <li id="key4.2">Sub-item 4.2
-                        </ul>
-                </ul>
-            </div>
+            <div id="tree"> </div>
         </td>
         <td>
-            <div id="tree2">
-                <ul style="display:none">
-                    <li id="key1" title="Look, a tool tip!">item1 with key and tooltip
-                    <li id="key2" class="selected">item2: selected on init
-                    <li id="key3" class="folder">Folder with some children
-                        <ul>
-                            <li id="key3.1">Sub-item 3.1
-                            <li id="key3.2">Sub-item 3.2
-                        </ul>
-        
-                    <li id="key4" class="expanded">Document with some children (expanded on init)
-                        <ul>
-                            <li id="key4.1">Sub-item 4.1
-                            <li id="key4.2">Sub-item 4.2
-                        </ul>
-                </ul>
-            </div>
+            <div id="tree2"></div>
         </td>
     </tr>
     <tr>
