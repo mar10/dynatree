@@ -42,7 +42,7 @@
 	// --- (Re)Bind event handlers ---------------------------------------------
 	function _bindDragDrop() {
 		// Enable all nodes as drag source
-		$("#tree span.ui-dynatree-node").draggable({
+		$("#tree span.dynatree-node").draggable({
 //        $("#tree li").draggable({
 			delay: 0,
 			distance: 4,
@@ -65,8 +65,8 @@
 			_last: null
 		});
 		// Enable all nodes as drop target
-		$("#tree span.ui-dynatree-node").droppable({
-			accept: '.ui-dynatree-node',
+		$("#tree span.dynatree-node").droppable({
+			accept: '.dynatree-node',
 			addClasses: false,
 //			activeClass: '.ui-state-highlight',
 //			hoverClass: 'dropchild',

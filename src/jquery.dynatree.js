@@ -307,7 +307,7 @@ DynaTreeNode.prototype = {
 			this.span.className = cnList.join(" ");
 
 			if( isLastSib )
-				this.li.className = "ui-dynatree-lastsib";
+				this.li.className = "dynatree-lastsib";
 			
 			// Hide children, if node is collapsed
 //			this.ul.style.display = ( this.bExpanded || !this.parent ) ? "" : "none";
@@ -2219,8 +2219,8 @@ $.ui.dynatree.prototype.options = {
 		loadError: "Load error!"
 	},
 	generateIds: false,
-	idPrefix: "ui-dynatree-id-", // Used to generate node id's like <span id="ui-dynatree-id-<key>">.
-//    cookieId: "ui-dynatree-cookie", // Choose a more unique name, to allow multiple trees.
+	idPrefix: "dynatree-id-", // Used to generate node id's like <span id="dynatree-id-<key>">.
+//    cookieId: "dynatree-cookie", // Choose a more unique name, to allow multiple trees.
     cookieId: "dynatree", // Choose a more unique name, to allow multiple trees.
 	cookie: {
 		expires: null //7, // Days or Date; null: session cookie
@@ -2232,34 +2232,34 @@ $.ui.dynatree.prototype.options = {
 	// Note: if only single entries are passed for options.classNames, all other 
 	// values are still set to default. 
 	classNames: {
-		container: "ui-dynatree-container",
-		node: "ui-dynatree-node",
-		folder: "ui-dynatree-folder",
-//		document: "ui-dynatree-document",
+		container: "dynatree-container",
+		node: "dynatree-node",
+		folder: "dynatree-folder",
+//		document: "dynatree-document",
 		
-		empty: "ui-dynatree-empty",
-		vline: "ui-dynatree-vline",
-		expander: "ui-dynatree-expander",
-		connector: "ui-dynatree-connector",
-		checkbox: "ui-dynatree-checkbox",
-		nodeIcon: "ui-dynatree-icon",
-		title: "ui-dynatree-title",
-		noConnector: "ui-dynatree-no-connector",
+		empty: "dynatree-empty",
+		vline: "dynatree-vline",
+		expander: "dynatree-expander",
+		connector: "dynatree-connector",
+		checkbox: "dynatree-checkbox",
+		nodeIcon: "dynatree-icon",
+		title: "dynatree-title",
+		noConnector: "dynatree-no-connector",
 		
-		nodeError: "ui-dynatree-statusnode-error",
-		nodeWait: "ui-dynatree-statusnode-wait",
-		hidden: "ui-dynatree-hidden",
-		combinedExpanderPrefix: "ui-dynatree-exp-",
-		combinedIconPrefix: "ui-dynatree-ico-",
-//		disabled: "ui-dynatree-disabled",
-		hasChildren: "ui-dynatree-has-children",
-		active: "ui-dynatree-active",
-		selected: "ui-dynatree-selected",
-		expanded: "ui-dynatree-expanded",
-		lazy: "ui-dynatree-lazy",
-		focused: "ui-dynatree-focused",
-		partsel: "ui-dynatree-partsel",
-		lastsib: "ui-dynatree-lastsib"
+		nodeError: "dynatree-statusnode-error",
+		nodeWait: "dynatree-statusnode-wait",
+		hidden: "dynatree-hidden",
+		combinedExpanderPrefix: "dynatree-exp-",
+		combinedIconPrefix: "dynatree-ico-",
+//		disabled: "dynatree-disabled",
+		hasChildren: "dynatree-has-children",
+		active: "dynatree-active",
+		selected: "dynatree-selected",
+		expanded: "dynatree-expanded",
+		lazy: "dynatree-lazy",
+		focused: "dynatree-focused",
+		partsel: "dynatree-partsel",
+		lastsib: "dynatree-lastsib"
 	},
 	debugLevel: 2, // 0:quiet, 1:normal, 2:debug $REPLACE:	debugLevel: 1,
 
