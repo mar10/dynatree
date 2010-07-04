@@ -87,7 +87,8 @@ span.ui-dynatree-expander,
 span.ui-dynatree-icon,
 span.ui-dynatree-checkbox,
 span.ui-dynatree-radio,
-span.dynatree-drag-helper-img
+span.dynatree-drag-helper-img,
+#dynatree_drop_marker
 {
 	width: 16px;
 	height: 16px;
@@ -400,12 +401,24 @@ span.dynatree-drop-target.dynatree-drop-reject
 { 
     /*border: 1px solid red;*/ 
 }
-.dynatree-drop-target.dynatree-drop-after a
+span.dynatree-drop-target.dynatree-drop-after a
 {
     /*background-repeat: repeat-x;
     background-position: bottom;
     background-image: url("drop_append.gif");*/
 }
+/* Drop marker icon */
+#dynatree_drop_marker
+{
+	width:24px;
+	position: absolute;
+    background-image: url("copy_here.gif");
+}
+#dynatree_drop_marker.dynatree_drop_move
+{
+    background-image: url("move_here.gif");
+}
+
 
 /******************************************************************************* 
  * Custom node classes (sample)

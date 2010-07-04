@@ -1835,48 +1835,58 @@ TODO: better?
 
 	_setDndStatus: function(sourceNode, targetNode, helper, hitMode, accept) {
 		// hitMode: 'after', 'before', 'over', 'out', 'start', 'stop'
-		var sourceTag = sourceNode ? $(sourceNode.span) : null;
-		var targetTag = $(targetNode.span);
+		var $source = sourceNode ? $(sourceNode.span) : null;
+		var $target = $(targetNode.span);
+		if( !this.$dndMarker ) {
+			this.$dndMarker = $("<div id='dynatree_drop_marker'></div>")
+				.hide()
+				.prependTo("body");
+			logMsg("Creating marker: %o", this.$dndMarker);
+		}
 		if(hitMode === "start"){
 		}
 		if(hitMode === "stop"){
 //			sourceNode.removeClass("dynatree-drop-target");
 		}
 		if(hitMode === "after" || hitMode === "before" || hitMode === "over"){
-//			sourceTag && sourceTag.addClass("dynatree-drag-source");
-			targetTag.addClass("dynatree-drop-target");
+//			$source && $source.addClass("dynatree-drag-source");
+			$target.addClass("dynatree-drop-target");
+			var pos = $target.position();
+			this.$dndMarker.css({"left": (pos.left) + "px", "top": (pos.top) + "px" })
+				.show();
 //			helper.addClass("dynatree-drop-hover");
 		} else {
-//			sourceTag && sourceTag.removeClass("dynatree-drag-source");
-			targetTag.removeClass("dynatree-drop-target");
+//			$source && $source.removeClass("dynatree-drag-source");
+			$target.removeClass("dynatree-drop-target");
+			this.$dndMarker.hide();
 //			helper.removeClass("dynatree-drop-hover");
 		}
 		if(hitMode === "after"){
-			targetTag.addClass("dynatree-drop-after");
+			$target.addClass("dynatree-drop-after");
 		} else {
-			targetTag.removeClass("dynatree-drop-after");
+			$target.removeClass("dynatree-drop-after");
 		}
 		if(hitMode === "before"){
-			targetTag.addClass("dynatree-drop-before");
+			$target.addClass("dynatree-drop-before");
 		} else {
-			targetTag.removeClass("dynatree-drop-before");
+			$target.removeClass("dynatree-drop-before");
 		}
 		if(accept === true){
-			sourceTag && sourceTag.addClass("dynatree-drop-accept");
-			targetTag.addClass("dynatree-drop-accept");
+			$source && $source.addClass("dynatree-drop-accept");
+			$target.addClass("dynatree-drop-accept");
 			helper.addClass("dynatree-drop-accept");
 		}else{
-			sourceTag && sourceTag.removeClass("dynatree-drop-accept");
-			targetTag.removeClass("dynatree-drop-accept");
+			$source && $source.removeClass("dynatree-drop-accept");
+			$target.removeClass("dynatree-drop-accept");
 			helper.removeClass("dynatree-drop-accept");
 		}
 		if(accept === false){
-			sourceTag && sourceTag.addClass("dynatree-drop-reject");
-			targetTag.addClass("dynatree-drop-reject");
+			$source && $source.addClass("dynatree-drop-reject");
+			$target.addClass("dynatree-drop-reject");
 			helper.addClass("dynatree-drop-reject");
 		}else{
-			sourceTag && sourceTag.removeClass("dynatree-drop-reject");
-			targetTag.removeClass("dynatree-drop-reject");
+			$source && $source.removeClass("dynatree-drop-reject");
+			$target.removeClass("dynatree-drop-reject");
 			helper.removeClass("dynatree-drop-reject");
 		}
 	},
