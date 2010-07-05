@@ -2165,8 +2165,7 @@ $.widget("ui.dynatree", {
  */
 //$.ui.dynatree.defaults = {  @@ 1.8
 $.ui.dynatree.prototype.options = {
-//	title: "Dynatree root", // Name of the root node.
-//	rootVisible: false, // Set to true, to make the root node visible.
+	title: "Dynatree", // Tree's name (only used for debug outpu)
  	minExpandLevel: 1, // 1: root node is not collapsible
 	imagePath: null, // Path to a folder containing icons. Defaults to 'skin/' subdirectory.
 	children: null, // Init tree structure from this object array.
