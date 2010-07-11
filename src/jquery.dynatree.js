@@ -283,7 +283,7 @@ DynaTreeNode.prototype = {
 //			if( this.data.isLazy && !this.isRead )
 			if( this.data.isLazy && this.childList==null )
 				cnList.push(cn.lazy);
-			if( this.isLastSib )
+			if( isLastSib )
 				cnList.push(cn.lastsib);
 			if( this.bSelected )
 				cnList.push(cn.selected);
@@ -367,13 +367,32 @@ DynaTreeNode.prototype = {
 				return ac[i+1];
 		return null;
 	},
-
+	
+	isStatusNode: function() {
+		return (this.data.isStatusNode === true);
+	},
+	
+	isChildOf: function(otherNode) {
+		return (this.parent && this.parent === otherNode);
+	},
+	
+	isDescendantOf: function(otherNode) {
+		if(!otherNode)
+			return false;
+		var p = this.parent;
+		while( p ) {
+			if( p===otherNode )
+				return true;
+			p = p.parent;
+		}
+		return false;
+	},
+	
 	_setStatusNode: function(data) {
 		// Create, modify or remove the status child node (pass 'null', to remove it).
 		var firstChild = ( this.childList ? this.childList[0] : null );
 		if( !data ) {
 			if ( firstChild ) {
-//				this.div.removeChild(firstChild.div);
 				this.ul.removeChild(firstChild.li);
 				if( this.childList.length == 1 )
 					this.childList = null;
@@ -1042,7 +1061,7 @@ DynaTreeNode.prototype = {
         // Remove this node
 //		this.tree.logDebug ("%o.remove()", this);
         if ( this === this.tree.root )
-            return false;
+        	throw "Cannot remove system root";
         return this.parent.removeChild(this);
 	},
 
@@ -1142,7 +1161,7 @@ DynaTreeNode.prototype = {
 //			throw "<beforeNode> must be another child of <this>";
 
 		// --- Add dtnode as a child
-		if ( this.childList==null ) {
+		if ( this.childList === null ) {
 			this.childList = [];
 		} else if( ! beforeNode ) {
 			// Fix 'lastsib'
@@ -1319,6 +1338,162 @@ DynaTreeNode.prototype = {
 		});
        	$.ajax(options);
 	},
+
+	move: function(targetNode, mode) {
+		/**Move this node to targetNode.
+		 *  mode 'child': append this node as last child of targetNode.
+		 *  mode 'before': add this node as sibling before targetNode.
+		 *  mode 'after': add this node as sibling after targetNode.
+		 */
+		if(this === targetNode)
+			return;
+		if( !this.parent  )
+			throw "Cannot move system root";
+		if(mode === undefined)
+			mode = "child";
+		var targetParent = (mode === "child") ? targetNode : targetNode.parent;
+		if( targetParent.isDescendantOf(this) )
+			throw "Cannot move a node to it's own descendant";
+		// Unlink this node from current parent
+		if( this.parent.childList == 1 ) {
+			this.parent.childList = null;
+		} else {
+			var pos = $.inArray(this, this.parent.childList);
+			if( pos < 0 )
+				throw "Internal error";
+			this.parent.childList.splice(pos, 1);
+		}
+		this.parent.ul.removeChild(this.li);
+		// Insert this node to target parent's child list
+		if( targetParent.hasChildren() ) {
+			switch(mode) {
+			case "child":
+				// Append to existing target children
+				targetParent.childList.push(this)
+				break;
+			case "before":
+				// Insert this node before target node
+				var pos = $.inArray(targetNode, targetParent.childList);
+				if( pos < 0 )
+					throw "Internal error";
+				this.childList.splice(pos, 0, this);
+				break;
+			case "after":
+				// Insert this node after target node
+				var pos = $.inArray(targetNode, targetParent.childList);
+				if( pos < 0 )
+					throw "Internal error";
+				this.childList.splice(pos+1, 0, this);
+				break;
+			default:
+				throw "Invalid mode " + mode;
+			}
+		} else {
+			targetParent.childList = [ this ];
+		}
+		if( this.tree !== targetNode.tree ) {
+			// TODO: redraw both trees
+			// and fix node.tree for all source nodes
+			throw "Not yet implemented.";
+		}
+		// TODO: fix selection state and whatnot
+		this.tree.redraw();
+/*
+		var tree = this.tree;
+		var opts = tree.options;
+		var pers = tree.persistence;
+		
+//		tree.logDebug("%o._addChildNode(%o)", this, dtnode);
+		
+		// --- Update and fix dtnode attributes if necessary 
+		dtnode.parent = this;
+//		if( beforeNode && (beforeNode.parent !== this || beforeNode === dtnode ) )
+//			throw "<beforeNode> must be another child of <this>";
+
+		// --- Add dtnode as a child
+		if ( this.childList === null ) {
+			this.childList = [];
+		} else if( ! beforeNode ) {
+			// Fix 'lastsib'
+			$(this.childList[this.childList.length-1].span).removeClass(opts.classNames.lastsib);
+		}
+		if( beforeNode ) {
+			var iBefore = $.inArray(beforeNode, this.childList);
+			if( iBefore < 0 )
+				throw "<beforeNode> must be a child of <this>";
+			this.childList.splice(iBefore, 0, dtnode);
+//			alert(this.childList);
+		} else {
+			// Append node
+			this.childList.push(dtnode);
+		}
+
+		// --- Handle persistence 
+		// Initial status is read from cookies, if persistence is active and 
+		// cookies are already present.
+		// Otherwise the status is read from the data attributes and then persisted.
+		var isInitializing = tree.isInitializing();
+		if( opts.persist && pers.cookiesFound && isInitializing ) {
+			// Init status from cookies
+//			tree.logDebug("init from cookie, pa=%o, dk=%o", pers.activeKey, dtnode.data.key);
+			if( pers.activeKey == dtnode.data.key )
+				tree.activeNode = dtnode;
+			if( pers.focusedKey == dtnode.data.key )
+				tree.focusNode = dtnode;
+			dtnode.bExpanded = ($.inArray(dtnode.data.key, pers.expandedKeyList) >= 0);
+			dtnode.bSelected = ($.inArray(dtnode.data.key, pers.selectedKeyList) >= 0);
+//			tree.logDebug("    key=%o, bSelected=%o", dtnode.data.key, dtnode.bSelected);
+		} else {
+			// Init status from data (Note: we write the cookies after the init phase)
+//			tree.logDebug("init from data");
+			if( dtnode.data.activate ) {
+				tree.activeNode = dtnode;
+				if( opts.persist )
+					pers.activeKey = dtnode.data.key;
+			}
+			if( dtnode.data.focus ) {
+				tree.focusNode = dtnode;
+				if( opts.persist )
+					pers.focusedKey = dtnode.data.key;
+			}
+			dtnode.bExpanded = ( dtnode.data.expand == true ); // Collapsed by default
+			if( dtnode.bExpanded && opts.persist )
+				pers.addExpand(dtnode.data.key);
+			dtnode.bSelected = ( dtnode.data.select == true ); // Deselected by default
+			if( dtnode.bSelected && opts.persist )
+				pers.addSelect(dtnode.data.key);
+		}
+
+		// Always expand, if it's below minExpandLevel
+//		tree.logDebug ("%o._addChildNode(%o), l=%o", this, dtnode, dtnode.getLevel());
+		if ( opts.minExpandLevel >= dtnode.getLevel() ) {
+//			tree.logDebug ("Force expand for %o", dtnode);
+			this.bExpanded = true;
+		}
+
+		// In multi-hier mode, update the parents selection state
+		// issue #82: only if not initializing, because the children may not exist yet
+//		if( !dtnode.data.isStatusNode && opts.selectMode==3 && !isInitializing )
+//			dtnode._fixSelectionState();
+
+		// In multi-hier mode, update the parents selection state
+		if( dtnode.bSelected && opts.selectMode==3 ) {
+			var p = this;
+			while( p ) {
+				if( !p.hasSubSel )
+					p._setSubSel(true);
+				p = p.parent;
+			}
+		}
+		// render this node and the new child
+		if ( tree.bEnableUpdate )
+			this.render();
+
+		return dtnode;
+
+*/		
+	},
+
 	// --- end of class
 	lastentry: undefined
 }
@@ -1918,8 +2093,11 @@ TODO: better?
             res = helper;
 			break;
 		case "start":
-			if(dnd.onDragStart)
+			if(node.isStatusNode()) {
+				res = false;
+			} else if(dnd.onDragStart) {
 				res = dnd.onDragStart(node)
+			}
 			if(res === false) {
 				this.logDebug("tree.onDragStart() cancelled");
 				draggable._clear();
@@ -1982,7 +2160,8 @@ TODO: better?
 			this._setDndStatus(otherNode, node, ui.helper, hitMode, res!==false)
 			break;
 		case "drop":
-			if(dnd.onDrop)
+            var enterResponse = ui.helper.data("enterResponse");
+			if(dnd.onDrop && enterResponse !== false)
 				dnd.onDrop(node, otherNode)
 			break;
 		case "leave":

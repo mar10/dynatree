@@ -118,6 +118,8 @@ $(function(){
                     copynode = {title: "This node was dropped here."};
                 }
                 node.addChild(copynode);
+                // expand the drop target
+                node.expand(true);
             },
             onDragLeave: function(node, sourceNode) {
                 /** Always called if onDragEnter was called. 
