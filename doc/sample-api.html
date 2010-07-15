@@ -135,6 +135,14 @@
             });
             return false;
         });
+		$("#btnSortActive").click(function(){
+			var dtnode = $("#tree").dynatree("getActiveNode");
+			dtnode.sortChildren();
+		});
+		$("#btnSortAll").click(function(){
+			var dtnode = $("#tree").dynatree("getRoot");
+			dtnode.sortChildren(null, true);
+		});
 	});
 </script>
 </head>
@@ -150,6 +158,9 @@
 		<a href="#" id="btnExpandAll">Expand all</a> -
 		<a href="#" id="btnCollapseAll">Collapse all</a> -
 		<a href="#" id="btnToggleExpand">Toggle expand</a>
+		<br>
+		<a href="#" id="btnSortAll">Sort tree</a>
+		<a href="#" id="btnSortActive">Sort current node</a>
 		<br>
 		<a href="#" id="btnDisable">Disable</a>
 	</p>

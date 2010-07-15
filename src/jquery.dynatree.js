@@ -306,8 +306,8 @@ DynaTreeNode.prototype = {
 					);
 			this.span.className = cnList.join(" ");
 
-			if( isLastSib )
-				this.li.className = "dynatree-lastsib";
+			// TODO: we should not set this in the <span> tag also, if we set it here:
+			this.li.className = isLastSib ? cn.lastsib : "";
 			
 			// Hide children, if node is collapsed
 //			this.ul.style.display = ( this.bExpanded || !this.parent ) ? "" : "none";
@@ -386,6 +386,29 @@ DynaTreeNode.prototype = {
 			p = p.parent;
 		}
 		return false;
+	},
+	
+	sortChildren: function(cmp, deep) {
+		/*
+		 * Sort child list by title.
+		 * cmd: optional comapre function.
+		 * deep: optional: pass true to sort all descendant nodes. 
+		 */
+		var cl = this.childList;
+		if( !cl )
+			return;
+		cmp = cmp || function(a, b) { 
+			return a.data.title === b.data.title ? 0 : a.data.title > b.data.title; 
+			};
+		cl.sort(cmp);
+		if( deep ){
+			for(var i=0; i<cl.length; i++){
+				if( cl[i].childList )
+					cl[i].sortChildren(cmp, "$norender$");
+			}
+		}
+		if( deep !== "$norender$" )
+			this.render();
 	},
 	
 	_setStatusNode: function(data) {
@@ -1046,8 +1069,8 @@ DynaTreeNode.prototype = {
 	visit: function(fn, data, includeSelf) {
 		// Call fn(dtnode, data) for all child nodes. Stop iteration, if fn() returns false.
 		var n = 0;
-		if( includeSelf == true ) {
-			if( fn(this, data) == false )
+		if( includeSelf === true ) {
+			if( fn(this, data) === false )
 				return 1; 
 			n++; 
 		}
@@ -1055,6 +1078,19 @@ DynaTreeNode.prototype = {
 			for (var i=0; i<this.childList.length; i++)
 				n += this.childList[i].visit(fn, data, true);
 		return n;
+	},
+
+	visitParents: function(fn, includeSelf) {
+		// Visit parent nodes (bottom up)
+		if(includeSelf && fn(this) === false) {
+			return false;
+		}
+		var p = this.parent;
+		while( p ) {
+			if(fn(p) === false)
+				return false;
+			p = p.parent;
+		}
 	},
 
 	remove: function() {
@@ -1342,6 +1378,8 @@ DynaTreeNode.prototype = {
 	move: function(targetNode, mode) {
 		/**Move this node to targetNode.
 		 *  mode 'child': append this node as last child of targetNode.
+		 *                This is the default. To be compatble with the D'n'd
+		 *                hitMode, we also accept 'over'.
 		 *  mode 'before': add this node as sibling before targetNode.
 		 *  mode 'after': add this node as sibling after targetNode.
 		 */
@@ -1349,14 +1387,17 @@ DynaTreeNode.prototype = {
 			return;
 		if( !this.parent  )
 			throw "Cannot move system root";
-		if(mode === undefined)
+		if(mode === undefined || mode == "over")
 			mode = "child";
+		var prevParent = this.parent;
 		var targetParent = (mode === "child") ? targetNode : targetNode.parent;
 		if( targetParent.isDescendantOf(this) )
 			throw "Cannot move a node to it's own descendant";
+
 		// Unlink this node from current parent
-		if( this.parent.childList == 1 ) {
+		if( this.parent.childList.length == 1 ) {
 			this.parent.childList = null;
+			this.parent.bExpanded = false;
 		} else {
 			var pos = $.inArray(this, this.parent.childList);
 			if( pos < 0 )
@@ -1364,26 +1405,29 @@ DynaTreeNode.prototype = {
 			this.parent.childList.splice(pos, 1);
 		}
 		this.parent.ul.removeChild(this.li);
+		this.li = null;
+		
 		// Insert this node to target parent's child list
+		this.parent = targetParent;
 		if( targetParent.hasChildren() ) {
 			switch(mode) {
 			case "child":
 				// Append to existing target children
-				targetParent.childList.push(this)
+				targetParent.childList.push(this);
 				break;
 			case "before":
 				// Insert this node before target node
 				var pos = $.inArray(targetNode, targetParent.childList);
 				if( pos < 0 )
 					throw "Internal error";
-				this.childList.splice(pos, 0, this);
+				targetParent.childList.splice(pos, 0, this);
 				break;
 			case "after":
 				// Insert this node after target node
 				var pos = $.inArray(targetNode, targetParent.childList);
 				if( pos < 0 )
 					throw "Internal error";
-				this.childList.splice(pos+1, 0, this);
+				targetParent.childList.splice(pos+1, 0, this);
 				break;
 			default:
 				throw "Invalid mode " + mode;
@@ -1392,77 +1436,26 @@ DynaTreeNode.prototype = {
 			targetParent.childList = [ this ];
 		}
 		if( this.tree !== targetNode.tree ) {
-			// TODO: redraw both trees
-			// and fix node.tree for all source nodes
+			// Fix node.tree for all source nodes
+			this.visit(function(dtnode){
+				dtnode.tree = targetNode.tree;
+			}, null, true);
 			throw "Not yet implemented.";
 		}
-		// TODO: fix selection state and whatnot
-		this.tree.redraw();
+		// TODO: fix selection state
+		// TODO: fix active state
+		if( !prevParent.isDescendantOf(targetParent)) {
+			prevParent.render();
+		} 
+		if( !targetParent.isDescendantOf(prevParent) ) {
+			targetParent.render();
+		}
+//		this.tree.redraw();
 /*
 		var tree = this.tree;
 		var opts = tree.options;
 		var pers = tree.persistence;
 		
-//		tree.logDebug("%o._addChildNode(%o)", this, dtnode);
-		
-		// --- Update and fix dtnode attributes if necessary 
-		dtnode.parent = this;
-//		if( beforeNode && (beforeNode.parent !== this || beforeNode === dtnode ) )
-//			throw "<beforeNode> must be another child of <this>";
-
-		// --- Add dtnode as a child
-		if ( this.childList === null ) {
-			this.childList = [];
-		} else if( ! beforeNode ) {
-			// Fix 'lastsib'
-			$(this.childList[this.childList.length-1].span).removeClass(opts.classNames.lastsib);
-		}
-		if( beforeNode ) {
-			var iBefore = $.inArray(beforeNode, this.childList);
-			if( iBefore < 0 )
-				throw "<beforeNode> must be a child of <this>";
-			this.childList.splice(iBefore, 0, dtnode);
-//			alert(this.childList);
-		} else {
-			// Append node
-			this.childList.push(dtnode);
-		}
-
-		// --- Handle persistence 
-		// Initial status is read from cookies, if persistence is active and 
-		// cookies are already present.
-		// Otherwise the status is read from the data attributes and then persisted.
-		var isInitializing = tree.isInitializing();
-		if( opts.persist && pers.cookiesFound && isInitializing ) {
-			// Init status from cookies
-//			tree.logDebug("init from cookie, pa=%o, dk=%o", pers.activeKey, dtnode.data.key);
-			if( pers.activeKey == dtnode.data.key )
-				tree.activeNode = dtnode;
-			if( pers.focusedKey == dtnode.data.key )
-				tree.focusNode = dtnode;
-			dtnode.bExpanded = ($.inArray(dtnode.data.key, pers.expandedKeyList) >= 0);
-			dtnode.bSelected = ($.inArray(dtnode.data.key, pers.selectedKeyList) >= 0);
-//			tree.logDebug("    key=%o, bSelected=%o", dtnode.data.key, dtnode.bSelected);
-		} else {
-			// Init status from data (Note: we write the cookies after the init phase)
-//			tree.logDebug("init from data");
-			if( dtnode.data.activate ) {
-				tree.activeNode = dtnode;
-				if( opts.persist )
-					pers.activeKey = dtnode.data.key;
-			}
-			if( dtnode.data.focus ) {
-				tree.focusNode = dtnode;
-				if( opts.persist )
-					pers.focusedKey = dtnode.data.key;
-			}
-			dtnode.bExpanded = ( dtnode.data.expand == true ); // Collapsed by default
-			if( dtnode.bExpanded && opts.persist )
-				pers.addExpand(dtnode.data.key);
-			dtnode.bSelected = ( dtnode.data.select == true ); // Deselected by default
-			if( dtnode.bSelected && opts.persist )
-				pers.addSelect(dtnode.data.key);
-		}
 
 		// Always expand, if it's below minExpandLevel
 //		tree.logDebug ("%o._addChildNode(%o), l=%o", this, dtnode, dtnode.getLevel());
@@ -2034,6 +2027,16 @@ TODO: better?
 //			$source && $source.addClass("dynatree-drag-source");
 			$target.addClass("dynatree-drop-target");
 			var pos = $target.position();
+			switch(hitMode){
+			case "before":
+				pos.top -= 8;
+				break;
+			case "after":
+				pos.top += 8;
+				break;
+			default:
+				pos.left += 8;
+			}
 			this.$dndMarker.css({"left": (pos.left) + "px", "top": (pos.top) + "px" })
 				.show();
 //			helper.addClass("dynatree-drop-hover");
@@ -2072,10 +2075,14 @@ TODO: better?
 			helper.removeClass("dynatree-drop-reject");
 		}
 	},
+	
 	_onDragEvent: function(eventName, node, otherNode, event, ui, draggable) {
 		/***
 		 * Handles drag'n'drop functionality.
 		 */
+		var _calcHitMode = function() {
+			
+		}
 		if(eventName !== "over")
 			this.logDebug("tree._onDragEvent(%s, %o, %o) - %o", eventName, node, otherNode, this);
 		var opts = this.options;
@@ -2110,7 +2117,7 @@ TODO: better?
 //			logMsg("helper %o", ui.helper);
             ui.helper.data("enterResponse", res);
 			this.logDebug("helper.enterResponse: %o", res);
-			this._setDndStatus(otherNode, node, ui.helper, "over", res!==false);
+//			this._setDndStatus(otherNode, node, ui.helper, "over", res!==false);
 			break;
 		case "over":
 			// Auto-expand node
@@ -2133,13 +2140,15 @@ TODO: better?
     			var relPos2 = { x: relPos.x / nodeTag.width(),
     						y: relPos.y / nodeTag.height() };
     			if( (relPos2.y > 0.25 && relPos2.y < 0.75) 
-    					|| (relPos2.x > 0.8 ) ) {
+//    					|| (relPos2.x > 0.8 ) 
+    					) {
     				hitMode = "over";
     			} else if(relPos2.y <= 0.25) {
     				hitMode = "before";
     			} else {
     				hitMode = "after";
     			}
+                ui.helper.data("hitMode", hitMode);
 //    			logMsg("    clientPos: %s/%s", event.clientX, event.clientY);
 //    			logMsg("    nodeOfs: %s/%s", nodeOfs.left, nodeOfs.top);
 //    			logMsg("    relPos: %s/%s", relPos.x, relPos.y);
@@ -2161,13 +2170,15 @@ TODO: better?
 			break;
 		case "drop":
             var enterResponse = ui.helper.data("enterResponse");
+            var hitMode = ui.helper.data("hitMode");
 			if(dnd.onDrop && enterResponse !== false)
-				dnd.onDrop(node, otherNode)
+				dnd.onDrop(node, otherNode, hitMode)
 			break;
 		case "leave":
 			// Cancel pending expand request
 			node.scheduleAction("cancel");
             ui.helper.data("enterResponse", null);
+            ui.helper.data("hitMode", null);
 //            nodeTag.removeClass("dynatree-drop-hover dynatree-drop-accept dynatree-drop-reject");
 			this._setDndStatus(otherNode, node, ui.helper, "out", undefined)
 			if(dnd.onDragLeave)
