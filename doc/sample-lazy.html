@@ -1,13 +1,13 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 	<title>Dynatree - Example</title>
 
 	<script src='../jquery/jquery.js' type='text/javascript'></script>
 	<script src='../jquery/jquery.ui.core.js' type='text/javascript'></script>
-    <script src='../jquery/jquery.ui.widget.js' type='text/javascript'></script>
-    <script src='../jquery/jquery.cookie.js' type='text/javascript'></script>
+	<script src='../jquery/jquery.ui.widget.js' type='text/javascript'></script>
+	<script src='../jquery/jquery.cookie.js' type='text/javascript'></script>
 
 	<link href='../src/skin/ui.dynatree.css' rel='stylesheet' type='text/css'>
 	<script src='../src/jquery.dynatree.js' type='text/javascript'></script>
@@ -16,26 +16,26 @@
 	<link href="prettify.css" rel="stylesheet">
 	<script src="prettify.js" type='text/javascript'></script>
 	<link href='sample.css' rel='stylesheet' type='text/css'>
-    <script src='sample.js' type='text/javascript'></script>
+	<script src='sample.js' type='text/javascript'></script>
 	<!-- End_Exclude -->
-    
+
 <script type='text/javascript'>
 	$(function(){
-		
+
 		// --- Initialize sample trees
 		$("#tree").dynatree({
 			title: "Lazy loading sample",
 			fx: { height: "toggle", duration: 200 },
-            // In real life we would call a URL on the server like this:
+			// In real life we would call a URL on the server like this:
 //          initAjax: {
 //              url: "/getTopLevelNodesAsJson",
 //              data: { mode: "funnyMode" }
 //              },
-            // .. but here we use a local file instead:
-			initAjax: { 
-                url: "sample-data1.json" 
+			// .. but here we use a local file instead:
+			initAjax: {
+				url: "sample-data1.json"
 				},
-			
+
 			onActivate: function(dtnode) {
 				$("#echoActive").text(dtnode.data.title);
 			},
@@ -48,12 +48,12 @@
 //            		       mode: "funnyMode"
 //                         }
 //              });
-                // .. but here we use a local file instead:
-                dtnode.appendAjax({
-                    url: "sample-data2.json" 
-                });
+				// .. but here we use a local file instead:
+				dtnode.appendAjax({
+					url: "sample-data2.json"
+				});
 			}
-			
+
 		});
 
 	});
@@ -66,7 +66,7 @@
 		Using 'lazy' option to load the tree and to load the branches.<br>
 		<br>
 		Note: the AJAX call is only simulated. Also, the <code>initAjax</code> option is not used.<br>
-		You may want to try this <a href="sample-lazy-persist.html">live example</a> 
+		You may want to try this <a href="sample-lazy-persist.html">live example</a>
 		of a lazy tree that uses a simple test server.
 	</p>
 

@@ -1,13 +1,13 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 	<title>Dynatree - Example</title>
 
 	<script src='../jquery/jquery.js' type='text/javascript'></script>
 	<script src='../jquery/jquery.ui.core.js' type='text/javascript'></script>
-    <script src='../jquery/jquery.ui.widget.js' type='text/javascript'></script>
-    <script src='../jquery/jquery.cookie.js' type='text/javascript'></script>
+	<script src='../jquery/jquery.ui.widget.js' type='text/javascript'></script>
+	<script src='../jquery/jquery.cookie.js' type='text/javascript'></script>
 
 	<link href='../src/skin/ui.dynatree.css' rel='stylesheet' type='text/css'>
 	<script src='../src/jquery.dynatree.js' type='text/javascript'></script>
@@ -16,9 +16,9 @@
 	<link href="prettify.css" rel="stylesheet">
 	<script src="prettify.js" type='text/javascript'></script>
 	<link href='sample.css' rel='stylesheet' type='text/css'>
-    <script src='sample.js' type='text/javascript'></script>
+	<script src='sample.js' type='text/javascript'></script>
 	<!-- End_Exclude -->
-    
+
 <script type='text/javascript'>
 	$(function(){
 		$("#tree").dynatree({
@@ -26,10 +26,10 @@
 			checkbox: true,
 			selectMode: 3,
 			onPostInit: function(isReloading, isError) {
-               logMsg("onPostInit(%o, %o)", isReloading, isError);
-               // Re-fire onActivate, so the text is update  
+			   logMsg("onPostInit(%o, %o)", isReloading, isError);
+			   // Re-fire onActivate, so the text is update
 			   this.reactivate();
-		    }, 
+			},
 			onActivate: function(dtnode) {
 				$("#echoActive").text(dtnode.data.title);
 			},
@@ -50,15 +50,15 @@
 	<p class="description">
 		Cookie persistence is enabled here.<br>
 		Also, double-click handler expands document nodes.<br>
-		Select a node and hit [F5] to refresh, to see how the active node and 
-		expansion and selection states are restored.<br>	
+		Select a node and hit [F5] to refresh, to see how the active node and
+		expansion and selection states are restored.<br>
 		<br>
-		NOTE: if this doesn't seem to work, it's probably because the frame 
+		NOTE: if this doesn't seem to work, it's probably because the frame
 		content is cached by the browser.<br>
-		Try this example as an 
+		Try this example as an
 		<a href="#" target="_blank">unframed page</a>.
 	</p>
-	
+
 	<!-- Tree container -->
 	<div id="tree">
 		<ul>
@@ -93,7 +93,7 @@
 		</ul>
 	</div>
 	<div>Active node: <span id="echoActive">-</span></div>
-	
+
 	<!-- Start_Exclude: This block is not part of the sample code -->
 	<hr>
 	<p class="sample-links  no_code">

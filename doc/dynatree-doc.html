@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 	<title>jquery.dynatree.js documentation</title>
 
 	<meta name="keywords" content="dynatree JavaScript JS dynamic html tree view treeview checkbox widget plugin for jQuery data structure library ajax open source free">
@@ -13,7 +13,7 @@
 	<script src='../jquery/jquery.ui.core.js' type='text/javascript'></script>
 
 	<link href='../src/skin/ui.dynatree.css' rel='stylesheet' type='text/css'>
-    <script src='../src/jquery.dynatree.js' type='text/javascript'></script>
+	<script src='../src/jquery.dynatree.js' type='text/javascript'></script>
 
 	<!-- Convert tabs to spaces and doc CSS -->
 	<link rel='stylesheet' type='text/css' href='howto.css'>
@@ -37,9 +37,9 @@
 		// Create TOC
 		$("html *").planize({
 			title: "Table of contents",
-		    min_level: 2,
-            generate_toc: true,
-            toc_elem: $("#toc")
+			min_level: 2,
+			generate_toc: true,
+			toc_elem: $("#toc")
 		});
 		// Format code samples
 		prettyPrint();
@@ -55,11 +55,11 @@
 <div class="hint">
 	This document describes dynatree version: <strong>$Version:$</strong>.<br>
 	Document revision: $Revision:$.<br>
-	A current version may be found at the project site 
+	A current version may be found at the project site
 	<a href="http://wwwendt.de/tech/dynatree/index.html">http://wwwendt.de/tech/dynatree/index.html</a>.
 </div>
 <p>
-	Dynatree is a dynamic JavaScript tree view control with support for checkboxes, 
+	Dynatree is a dynamic JavaScript tree view control with support for checkboxes,
 	persistency and lazy loading.
 </p>
 <p>
@@ -69,9 +69,9 @@
 	<li>Open source (<a href="http://code.google.com/p/dynatree/wiki/LicenseInfo">MIT and GPL License</a>)
 	<li>Programmable through an object oriented interface.
 	<li>Support for lazy loading and Ajax.
-    <li>Optimized for large dynamic trees. 
+	<li>Optimized for large dynamic trees.
 	<li>Checkboxes and hierarchical selection.
-    <li>Support for persistence.
+	<li>Support for persistence.
 	<li>Keyboard aware.
 	<li>Initializes from html code or JavaScript objects.
 	<li>Implemented as a <a href="http://jquery.com">jQuery</a> plugin.<br>
@@ -81,8 +81,8 @@
 
 <p class="info">
 	This document describes <strong>release 1.0</strong>.<br>
-	If you are updating from version 0.5 please read the 
-	<a href="http://code.google.com/p/dynatree/wiki/UpdateToVersion10">migration hints</a> 
+	If you are updating from version 0.5 please read the
+	<a href="http://code.google.com/p/dynatree/wiki/UpdateToVersion10">migration hints</a>
 	first.<br>
 	Also, the <a href="http://wwWendt.de/tech/dynatree-0.5/doc/dynatree-doc.html">0.5 documentation</a> is  still available.
 </p>
@@ -125,7 +125,7 @@
 	&lt;!-- Include the required JavaScript libraries: -->
 	&lt;script src='jquery/jquery.js' type='text/javascript'>&lt;/script>
 	&lt;script src='jquery/jquery.ui.core.js' type='text/javascript'>&lt;/script>
-    &lt;script src='jquery/jquery.cookie.js' type='text/javascript'>&lt;/script>
+	&lt;script src='jquery/jquery.cookie.js' type='text/javascript'>&lt;/script>
 
 	&lt;link rel='stylesheet' type='text/css' href='skin/ui.dynatree.css'>
 	&lt;script src='jquery.dynatree.js' type='text/javascript'>&lt;/script>
@@ -138,7 +138,7 @@
 		$("#tree").dynatree({
 			onActivate: function(dtnode) {
 				// A DynaTreeNode object is passed to the activation handler
-				// Note: we also get this event, if persistence is on, and the page is reloaded. 
+				// Note: we also get this event, if persistence is on, and the page is reloaded.
 				alert("You activated " + dtnode.data.title);
 			},
 			persist: true,
@@ -226,7 +226,7 @@ $("#tree").dynatree({
 	initAjax: null, // Ajax options used to initialize the tree strucuture.
 	autoFocus: true, // Set focus to first child, when expanding or lazy-loading.
 	keyboard: true, // Support keyboard navigation.
-    persist: false, // Persist expand-status to a cookie
+	persist: false, // Persist expand-status to a cookie
 	autoCollapse: false, // Automatically collapse all siblings, when a node is expanded.
 	clickFolderMode: 3, // 1:activate, 2:expand, 3:activate and expand
 	activeVisible: true, // Make sure, active nodes are visible (expanded).
@@ -246,15 +246,15 @@ $("#tree").dynatree({
 	onQueryActivate: null, // Callback(flag, dtnode) before a node is (de)activated.
 	onQuerySelect: null, // Callback(flag, dtnode) before a node is (de)selected.
 	onQueryExpand: null, // Callback(flag, dtnode) before a node is expanded/collpsed.
-	
+
 	// High level event handlers
-    onPostInit: null, // Callback(isReloading, isError) when tree was (re)loaded.
+	onPostInit: null, // Callback(isReloading, isError) when tree was (re)loaded.
 	onActivate: null, // Callback(dtnode) when a node is activated.
 	onDeactivate: null, // Callback(dtnode) when a node is deactivated.
 	onSelect: null, // Callback(flag, dtnode) when a node is (de)selected.
 	onExpand: null, // Callback(flag, dtnode) when a node is expanded.
 	onLazyRead: null, // Callback(dtnode) when a lazy node is expanded for the first time.
-	
+
 	ajaxDefaults: { // Used by initAjax option
 		cache: false, // false: Append random '_' argument to the request url to prevent caching.
 		dataType: "json" // Expect json format and pass json object to callbacks.
@@ -264,19 +264,19 @@ $("#tree").dynatree({
 		loadError: "Load error!"
 	},
 	idPrefix: "dynatree-id-", // Used to generate node id's like &lt;span id="dynatree-id-&lt;key>">.
-    cookieId: "dynatree-cookie", // Choose a more unique name, to allow multiple trees.
+	cookieId: "dynatree-cookie", // Choose a more unique name, to allow multiple trees.
 	cookie: { // Options passed to $.cookie (see jquery.cookie.js)
 		expires: null, // Days or Date; null: session cookie
 		path: undefined, // String; Defaults to current page
 		domain: undefined, // String; Defaults to creator's domain
 		secure: undefined // Boolean; Defaults to false
 	},
-    // Class names used, when rendering the HTML markup.
-	// Note: if only single entries are passed for options.classNames, all other 
-	// values are still set to default. 
+	// Class names used, when rendering the HTML markup.
+	// Note: if only single entries are passed for options.classNames, all other
+	// values are still set to default.
 	classNames: {
 		container: "dynatree-container",
-        node: "dynatree-node",
+		node: "dynatree-node",
 		folder: "dynatree-folder",
 		empty: "dynatree-empty",
 		vline: "dynatree-vline",
@@ -311,7 +311,7 @@ $("#tree1").dynatree({
 	checkbox: true,
 	// Override class name for checkbox icon:
 	classNames: {checkbox: "dynatree-radio"},
-	[...] 
+	[...]
 </pre>
 	</dd>
 	<dt>clickFolderMode
@@ -319,21 +319,21 @@ $("#tree1").dynatree({
 		Type: <code>integer</code>, default: <code>3</code>.<br>
 		Define, how a mouse click will change a folder status.
 		<ol>
-		<li>Single-clicking a folder title (or pressing the [enter] or [space] 
-		    key) will activate it.<br>
-		    In this mode documents and folders behave the same. 
+		<li>Single-clicking a folder title (or pressing the [enter] or [space]
+			key) will activate it.<br>
+			In this mode documents and folders behave the same.
 		<li>Single-clicking a folder title expands the node. The folder cannot
-		    be activated.
+			be activated.
 		<li>Single-clicking a folder title will activate and expand it.
-		</ol>  
+		</ol>
 	</dd>
 	<dt>persist
 	<dd>
 		Type: <code>boolean</code>, default: <code>false</code>.<br>
-		True: the tree's expansion, activation, focus and selection state is saved 
+		True: the tree's expansion, activation, focus and selection state is saved
 		to a session cookie, so reloading the page will restore the status.<br>
 		Notes: this may not work with lazy nodes.<br>
-		See <code>cookie</code> option. 
+		See <code>cookie</code> option.
 	</dd>
 </dl>
 
@@ -386,7 +386,7 @@ children: [
 		isFolder: false, // Use a folder icon. Also the node is expandable but not selectable.
 		isLazy: false, // Call onLazyRead(), when the node is expanded for the first time to allow for delayed creation of children.
 		tooltip: null, // Show this popup text.
-		addClass: null, // Class name added to the node's span tag.  
+		addClass: null, // Class name added to the node's span tag.
 		icon: null, // (deprecated: consider using addClass) Use a custom image (filename relative to tree.options.imagePath). 'null' for default icon, 'false' for no icon.
 		activate: false, // Initial active status.
 		focus: false, // Initial focused status.
@@ -427,7 +427,7 @@ onActivate: function(dtnode) {
 		<pre class="prettyprint">{ title: "Pretty node", addClass: "customClass1" }</pre>
 		or
 		<pre class="prettyprint">&lt;li data="addClass: 'customClass1'">Pretty node</pre>
-		can be styled using css as  
+		can be styled using css as
 		<pre class="prettyprint">span.customClass1 a { background-color: maroon; color: yellow; }</pre>
 	</dd>
 	<dt>children
@@ -505,7 +505,7 @@ onActivate: function(dtnode) {
 </p>
 <pre class="prettyprint">
 &lt;script type='text/javascript'>
-    $.ui.dynatree.nodedatadefaults["icon"] = false; // Turn off icons by default
+	$.ui.dynatree.nodedatadefaults["icon"] = false; // Turn off icons by default
 
 	$(function(){
 		$("#tree").dynatree({
@@ -519,7 +519,7 @@ onActivate: function(dtnode) {
 <p>
 	When a node is of type <i>folder</i>, it get's a special folder icon and class name.<br>
 	We usually use them to hold child nodes.<br>
-	Also, folders can be expanded by clicking the title text (this behavior 
+	Also, folders can be expanded by clicking the title text (this behavior
 	can be controlled using the <code>clickFolderMode</code> option).
 </p><p>
 	Non-folders ('documents') may also contain child nodes.<br>
@@ -553,11 +553,11 @@ $("#tree").dynatree({
 
 <pre class="prettyprint">
 $("#tree").dynatree({
-    initAjax: {url: "/ajaxTree",
-    		   data: {key: "root", // Optional arguments to append to the url
-                      mode: "all"
-                      }
-               },
+	initAjax: {url: "/ajaxTree",
+			   data: {key: "root", // Optional arguments to append to the url
+					  mode: "all"
+					  }
+			   },
 	[&#8230;]
 });
 </pre>
@@ -572,15 +572,15 @@ $("#tree").dynatree({
 </p>
 <p>
 	See <a href="#lazyLoading">Loading child nodes on demand</a> for details.<br>
-    See <a href="#lazyPersist">Persistence for lazy trees</a> for a sample on 
-    how to combine this with persistence.
+	See <a href="#lazyPersist">Persistence for lazy trees</a> for a sample on
+	how to combine this with persistence.
 </p>
 
 
 <h4 id="initFromUl">Initializing the tree structure from a &lt;ul> element</h4>
 
 <p>
-	If the container <code>&lt;div></code> contains a <code>&lt;ul></code> element, 
+	If the container <code>&lt;div></code> contains a <code>&lt;ul></code> element,
 	the node titles are read from the <code>&lt;li></code> tags.<br>
 	If the title contains html markup, it may be better to wrap it inside a span element.
 </p>
@@ -588,12 +588,12 @@ $("#tree").dynatree({
 	All other node options are specified in the <code>data</code> attribute of a &lt;li> element.
 </p>
 <p class="info">
-	Note that the <code>data</code> attribute is not valid in <code>&lt;li></code> elements in 
-	some doctypes (HTML 4.01 transitional and Strict and XHTML 1.0 Strict). 
+	Note that the <code>data</code> attribute is not valid in <code>&lt;li></code> elements in
+	some doctypes (HTML 4.01 transitional and Strict and XHTML 1.0 Strict).
 	Validators will complain about this.<br>
 	Also, if the <code>id</code> attribute is used to pass a key, it should be
 	alphanumeric and start with a letter to be compliant.<br>
-	(This doesn't seem to affect the functionality however.) 
+	(This doesn't seem to affect the functionality however.)
 </p>
 <p>
 	Nested &lt;ul> elements are used to build a hierarchical tree structure.<br>
@@ -710,7 +710,7 @@ onActivate: function(dtnode) {
 
 <p>
 	The following example handles an activation event by opening a url in a new window.<br>
-	This assumes, that we have defined an additional custom attribute named 
+	This assumes, that we have defined an additional custom attribute named
 	'url' in the node options, like so:
 </p>
 
@@ -809,22 +809,22 @@ $("#tree").dynatree({
 <h3 id="lazyLoading">Loading child nodes on demand ('lazy loading')</h3>
 
 <p>
-	Dynatree supports delayed loading of tree nodes, which means we read the 
+	Dynatree supports delayed loading of tree nodes, which means we read the
 	child nodes only when their parent is expanded.
 </p>
 <p>
-    Because the data request is performed asynchronously, the browser will not 
-    block and is still responsive. Dynatree will display a spinning wheel, while 
-    waiting for the request to complete. 
+	Because the data request is performed asynchronously, the browser will not
+	block and is still responsive. Dynatree will display a spinning wheel, while
+	waiting for the request to complete.
 </p>
 <p>
 	To make this happen, we have to
 </p>
 <ul>
 	<li>Mark some or all nodes as lazy, by setting the <code>isLazy</code> option to true.
-    <li>Implement a backend web service that delivers a JSON formatted node list. 
-	<li>Implement the <code>onLazyRead</code> callback to send an Ajax request, 
-	    create the child nodes, and set the 'ok' status.
+	<li>Implement a backend web service that delivers a JSON formatted node list.
+	<li>Implement the <code>onLazyRead</code> callback to send an Ajax request,
+		create the child nodes, and set the 'ok' status.
 </ul>
 
 <div class="codesample">
@@ -834,10 +834,10 @@ $("#tree").dynatree({
 	[&#8230;]
 	onLazyRead: function(dtnode){
 		dtnode.appendAjax({url: "/sendData",
-	                       data: {"key": dtnode.data.key, // Optional url arguments
-		                          "mode": "all"
-		                          }
-		                  });
+						   data: {"key": dtnode.data.key, // Optional url arguments
+								  "mode": "all"
+								  }
+						  });
 	},
 	[&#8230;]
 });
@@ -845,71 +845,71 @@ $("#tree").dynatree({
 </div>
 
 <p>
-    Typically we would implement <code>onLazyRead</code> by calling the  
+	Typically we would implement <code>onLazyRead</code> by calling the
 	<code>dtnode.appendAjax()</code> function.<br>
-	It expects one option object argument, as described in the documentation for 
+	It expects one option object argument, as described in the documentation for
 	the <a href="http://docs.jquery.com/Ajax/jQuery.ajax">jQuery.ajax()</a>	command.<br>
 </p><p>
-    These options are set by default:<br>
-    <code>cache: false</code> and <code>dataType: "json"</code>.
+	These options are set by default:<br>
+	<code>cache: false</code> and <code>dataType: "json"</code>.
 </p><p>
-	Note that the <code>success</code> and <code>error</code> options 
+	Note that the <code>success</code> and <code>error</code> options
 	are implemented differently from the jQuery standard:<br>
-	They pass different arguments and are called <strong>after</strong> the 
+	They pass different arguments and are called <strong>after</strong> the
 	Dynatree default processing took place.<br>
-	This makes it easy to use the <code>success</code> callback to apply any 
-	custom postprocessing, for example activating a node or binding events.  
+	This makes it easy to use the <code>success</code> callback to apply any
+	custom postprocessing, for example activating a node or binding events.
 </p>
 <pre class="prettyprint">
 $("#tree").dynatree({
-    [&#8230;]
-    onLazyRead: function(dtnode){
-        dtnode.appendAjax({url: "/sendData",
-                           data: {"key": dtnode.data.key, // Optional url arguments
-                                  "mode": "all"
-                                  },
-                           success: function(dtnode) {
-                               // Called after nodes have been created and the waiting icon was removed.
-                               // 'this' is the options for this Ajax request
-                               },
-                           error: function(dtnode, XMLHttpRequest, textStatus, errorThrown) { 
-                               // Called on error, after error icon was created. 
-                               },
-                           cache: false // Append random '_' argument to url to prevent caching.
-                          });
-    },
-    [&#8230;]
+	[&#8230;]
+	onLazyRead: function(dtnode){
+		dtnode.appendAjax({url: "/sendData",
+						   data: {"key": dtnode.data.key, // Optional url arguments
+								  "mode": "all"
+								  },
+						   success: function(dtnode) {
+							   // Called after nodes have been created and the waiting icon was removed.
+							   // 'this' is the options for this Ajax request
+							   },
+						   error: function(dtnode, XMLHttpRequest, textStatus, errorThrown) {
+							   // Called on error, after error icon was created.
+							   },
+						   cache: false // Append random '_' argument to url to prevent caching.
+						  });
+	},
+	[&#8230;]
 });
 </pre>
 <p>
-    The web service is expected to return a JSON node list, formatted like this:<br>
-    <code>[ { "title": "Node1", "isLazy": true, "key": "BC13B21636CD6D5C", &#8230; }, { &#8230; }, &#8230; ]</code><br>
-    See <a href="#nodeOptions">Node options</a> for a list of supported attributes.
+	The web service is expected to return a JSON node list, formatted like this:<br>
+	<code>[ { "title": "Node1", "isLazy": true, "key": "BC13B21636CD6D5C", &#8230; }, { &#8230; }, &#8230; ]</code><br>
+	See <a href="#nodeOptions">Node options</a> for a list of supported attributes.
 </p><p>
-    When the response was received, <code>appendAjax()</code> appends the child 
-    nodes and calls <code>node.setLazyNodeStatus(DTNodeStatus_Ok)</code> to
-    remove the wait icon. 
+	When the response was received, <code>appendAjax()</code> appends the child
+	nodes and calls <code>node.setLazyNodeStatus(DTNodeStatus_Ok)</code> to
+	remove the wait icon.
 </p><p>
-    Note that <code>initAjax</code> is simply a special case, where the tree's
-    root node is loaded on startup.<br> 
-    See <a href="#ajaxResponse">Initializing the structure from an Ajax response</a> 
-    for a sample to initialize the whole tree with an Ajax request.
+	Note that <code>initAjax</code> is simply a special case, where the tree's
+	root node is loaded on startup.<br>
+	See <a href="#ajaxResponse">Initializing the structure from an Ajax response</a>
+	for a sample to initialize the whole tree with an Ajax request.
 </p><p>
-    This sample code (written in Python) shows how a server could create a
-    response: 
+	This sample code (written in Python) shows how a server could create a
+	response:
 <pre class="prettyprint">
 # Build node list as JSON formatted string:
 res = '['
 res += '{ "title": "Node 1", "key": "k1", "isLazy": true },'
 res += '{ "title": "Node 2", "key": "k2", "isLazy": true },'
-res += '{ "title": "Node 3", "key": "k3", "isLazy": true }' # no trailing "," at the last line 
+res += '{ "title": "Node 3", "key": "k3", "isLazy": true }' # no trailing "," at the last line
 res += ']'
 
 # Add support for the JSONP protocol:
 # This means, if the request URL contains an argument '?callback=xxx',
 # wrap the result as 'xxx(result)'
 if "callback" in argDict:
-    res = argDict["callback"] + "(" + res + ")"
+	res = argDict["callback"] + "(" + res + ")"
 
 # Make sure, content type is JSON:
 start_response("200 OK", [("Content-Type", "application/json")])
@@ -918,107 +918,107 @@ start_response("200 OK", [("Content-Type", "application/json")])
 return [ res ]
 </pre>
 </p><p>
-    See <a href="dynatree_server.py">dynatree_server.py</a> for a sample 
-    implementation of a web server that handles this (~150 lines of Python code).<br>
-    When this server is running, you can try this <a href="sample-lazy-persist.html">live example</a>
-    of a lazy tree.
+	See <a href="dynatree_server.py">dynatree_server.py</a> for a sample
+	implementation of a web server that handles this (~150 lines of Python code).<br>
+	When this server is running, you can try this <a href="sample-lazy-persist.html">live example</a>
+	of a lazy tree.
 </p>
 
 
 <h2 id="persistence">Persistence</h2>
 
 <p>
-When initializing a tree in persist mode, we first check, if persistence 
+When initializing a tree in persist mode, we first check, if persistence
 cookies already exist.<br>
-If not, we assume first-time initializing, read the status from the tree source, 
-and store it into new cookies. 
+If not, we assume first-time initializing, read the status from the tree source,
+and store it into new cookies.
 </p><p>
-Otherwise we assume re-loading, ignore the source node attributes and override 
+Otherwise we assume re-loading, ignore the source node attributes and override
 them using the cookie info.
 </p><p>
-In either case, the 'active', 'expand' and 'select' status of a node is read from 
-the data or restored from the cookies.<br> 
-However, no onQueryActivate, onActivate, onExpand, onSelect, etc. events are fired. 
+In either case, the 'active', 'expand' and 'select' status of a node is read from
+the data or restored from the cookies.<br>
+However, no onQueryActivate, onActivate, onExpand, onSelect, etc. events are fired.
 (The only event that may be fired is onFocus.)<br>
-In order to generate these events on reload, we may use the callback function onPostInit() 
+In order to generate these events on reload, we may use the callback function onPostInit()
 and tree.reactivate().
 </p>
 
 <pre class="prettyprint">
 $("#tree").dynatree({
-    [&#8230;]
-    onPostInit: function(isReloading, isError) {
-        // 'this' is the current tree
-        // isReloading is true, if status was read from existing cookies
-        // isError is only used in Ajay mode
-        // Fire an onActivate() event for the currently active node
-        this.reactivate();
-    },
-    onActivate: function(dtnode) {
-        // Use status functions to find out about the calling context
-        var isInitializing = dtnode.tree.isInitializing(); // Tree loading phase
-        var isReloading = dtnode.tree.isReloading(); // Loading phase, and reading status from cookies
-        var isUserEvent = dtnode.tree.isUserEvent(); // Event was triggered by mouse or keyboard
-        
-        $("#echoActive").text(dtnode.data.title);
-    },     
+	[&#8230;]
+	onPostInit: function(isReloading, isError) {
+		// 'this' is the current tree
+		// isReloading is true, if status was read from existing cookies
+		// isError is only used in Ajay mode
+		// Fire an onActivate() event for the currently active node
+		this.reactivate();
+	},
+	onActivate: function(dtnode) {
+		// Use status functions to find out about the calling context
+		var isInitializing = dtnode.tree.isInitializing(); // Tree loading phase
+		var isReloading = dtnode.tree.isReloading(); // Loading phase, and reading status from cookies
+		var isUserEvent = dtnode.tree.isUserEvent(); // Event was triggered by mouse or keyboard
+
+		$("#echoActive").text(dtnode.data.title);
+	},
 </pre>
 
 
 <h3 id="lazyPersist">Persistence for lazy trees</h3>
 <p>
-The problem with restoring the status of a <b>lazy</b> tree is, that the currently active 
+The problem with restoring the status of a <b>lazy</b> tree is, that the currently active
 or selected nodes may not be part of the tree, when it is freshly re-loaded.
 </p><p>
-The basic idea is to leave it up to the backend web service to deliver not only 
+The basic idea is to leave it up to the backend web service to deliver not only
 the top-level nodes, but also all nodes that are required to display the current status.
 </p><p>
 For example, it may be neccessary to render 3 parent nodes, if the active node is at level # 4.<br>
 The backend may also deliver all child nodes of expanded parents.<br>
 Or in selectMode 3 (hierarchical) we may want to send all nodes, that are partly selected.
 </p><p>
-initAjax (and appendAjax) have 3 options, that make it easy to pass persistence 
+initAjax (and appendAjax) have 3 options, that make it easy to pass persistence
 information to the web service.
 </p><p>
-    See <a href="dynatree_server.py">dynatree_server.py</a> for a sample 
-    implementation of a web server that handles this (~150 lines of Python code).<br>
-    When this server is running, you can try this <a href="sample-lazy-persist.html">live example</a>
-    of a lazy tree.
+	See <a href="dynatree_server.py">dynatree_server.py</a> for a sample
+	implementation of a web server that handles this (~150 lines of Python code).<br>
+	When this server is running, you can try this <a href="sample-lazy-persist.html">live example</a>
+	of a lazy tree.
 </p>
 
 <pre class="prettyprint">
 $("#tree").dynatree({
-    [&#8230;]
-    initAjax: {url: "/ajaxTree",
-               data: {key: key,
-                      mode: mode,
-                      filter: filter
-                      },
-               addActiveKey: true,  // add &activeKey= parameter to URL
-               addFocusedKey: true, // add &focusedKey= parameter to URL
-               addExpandedKeyList: true // add &expandedKeyList= parameter to URL
-               },
-    onPostInit: function(isReloading, isError) {
-        // In lazy mode, this will be called *after* the initAjax request returned.
-        // 'this' is the current tree
-        // isReloading is set, if status wss read from existing cookies
-        // isError is set, if Ajax failed
-        // Fire an onActivate() event for the currently active node
-        this.reactivate();
-    },
-    onActivate: function(dtnode) {
-        // Use status functions to find out about the calling context
-        var isUserEvent = dtnode.tree.isUserEvent(); // Event was triggered by mouse or keyboard
-        
-        $("#echoActive").text(dtnode.data.title);
-    },
+	[&#8230;]
+	initAjax: {url: "/ajaxTree",
+			   data: {key: key,
+					  mode: mode,
+					  filter: filter
+					  },
+			   addActiveKey: true,  // add &activeKey= parameter to URL
+			   addFocusedKey: true, // add &focusedKey= parameter to URL
+			   addExpandedKeyList: true // add &expandedKeyList= parameter to URL
+			   },
+	onPostInit: function(isReloading, isError) {
+		// In lazy mode, this will be called *after* the initAjax request returned.
+		// 'this' is the current tree
+		// isReloading is set, if status wss read from existing cookies
+		// isError is set, if Ajax failed
+		// Fire an onActivate() event for the currently active node
+		this.reactivate();
+	},
+	onActivate: function(dtnode) {
+		// Use status functions to find out about the calling context
+		var isUserEvent = dtnode.tree.isUserEvent(); // Event was triggered by mouse or keyboard
+
+		$("#echoActive").text(dtnode.data.title);
+	},
 </pre>
 
 
 <h2 id="programming">Programming dynatree</h2>
 
 <p>
-	The dynatree widget provides a set of plugin methods, that can be called 
+	The dynatree widget provides a set of plugin methods, that can be called
 	directly.<br>
 	For example
 </p>
@@ -1027,7 +1027,7 @@ $("#tree").dynatree("disable");
 </pre>
 <p>
 	However this plugin implementation is based on a class called <code>DynaTree</code>
-	that holds a set of <code>DynaTreeNode</code> objects.<br> 
+	that holds a set of <code>DynaTreeNode</code> objects.<br>
 	These classes expose methods that can be accessed for enhanced functionality.<br>
 	For example:
 </p>
@@ -1039,7 +1039,7 @@ tree.activateKey("key1234");
 // Get a DynaTreeNode object instance:
 var node = tree.getNodeByKey("key7654");
 var rootNode = $("#tree").dynatree("getRoot");
-// and use it 
+// and use it
 node.toggleExpand();
 </pre>
 
@@ -1060,13 +1060,13 @@ $("#tree").dynatree({
 <dl class="optionList">
 	<dt>$("#tree").dynatree("disable")
 	<dd>
-		Disable event handling and add a class called 'dynatree-disabled' to 
-		the container element. 
+		Disable event handling and add a class called 'dynatree-disabled' to
+		the container element.
 	</dd>
 	<dt>$("#tree").dynatree("enable")
 	<dd>
-		Enable event handling and remove the 'dynatree-disabled' class from the 
-		container element. 
+		Enable event handling and remove the 'dynatree-disabled' class from the
+		container element.
 	</dd>
 	<dt>$("#tree").dynatree("getTree")
 	<dd>
@@ -1083,7 +1083,7 @@ $("#tree").dynatree({
 	</dd>
 	<dt>$("#tree").dynatree("getSelectedNodes")
 	<dd>
-		Return an array of <code>DynaTreeNode</code> objects that are currently 
+		Return an array of <code>DynaTreeNode</code> objects that are currently
 		selected.<br>
 		(May be empty: <code>[ ]</code>.)
 	</dd>
@@ -1093,31 +1093,31 @@ $("#tree").dynatree({
 <h3><code>DynaTree</code> class members</h3>
 
 <dl class="optionList">
-    <dt>activateKey(key)
-    <dd>
-        Activate and focus node with a given key and fire focus and activate events.<br>
-        If <code>activeVisible</code> option is set, all parents will be expanded as necessary.<br>
-        If key is null, the current activation is removed.<br>
-        Return the active DynaTreeNode.
-    </dd>
+	<dt>activateKey(key)
+	<dd>
+		Activate and focus node with a given key and fire focus and activate events.<br>
+		If <code>activeVisible</code> option is set, all parents will be expanded as necessary.<br>
+		If key is null, the current activation is removed.<br>
+		Return the active DynaTreeNode.
+	</dd>
 	<dt>enableUpdate(enable)
 	<dd>
 		Turn rendering on or off. Disabling update may speedup processing, when adding lots of nodes.<br>
-		Don't forget to turn rendering back on, after applying the changes. 
+		Don't forget to turn rendering back on, after applying the changes.
 	</dd>
-    <dt>getActiveNode()
-    <dd>
-        Return the currently active DynaTreeNode or null.
-    </dd>
+	<dt>getActiveNode()
+	<dd>
+		Return the currently active DynaTreeNode or null.
+	</dd>
 	<dt>getNodeByKey(key)
 	<dd>
 		Return DynaTreeNode with a given key or 'null' if not found.
 	</dd>
-    <dt>getPersistData()
-    <dd>
-        Return cookie persistence info as dictionary.<br>
-        There is also a global function available: getDynaTreePersistData(cookieId, cookieOpts) 
-    </dd>
+	<dt>getPersistData()
+	<dd>
+		Return cookie persistence info as dictionary.<br>
+		There is also a global function available: getDynaTreePersistData(cookieId, cookieOpts)
+	</dd>
 	<dt>getRoot()
 	<dd>
 		Return the root DynaTreeNode object.
@@ -1125,44 +1125,44 @@ $("#tree").dynatree({
 	<dt>getSelectedNodes(stopOnParents)
 	<dd>
 		Return a list of currently selected DynaTreeNodes (may be an empty array).<br>
-		If stopOnParents is set to <code>true</code>, children of selected nodes 
+		If stopOnParents is set to <code>true</code>, children of selected nodes
 		are skipped. This may be convenient in selectMode:3 (multi-hier).
 	</dd>
 	<dt>isInitializing()
 	<dd>
 		Return true, if the tree is in the init phase.<br>
-		Use this function in an event handler, to check if the event was fired 
-		during a page reload, when the cookie persistence is applied.   
+		Use this function in an event handler, to check if the event was fired
+		during a page reload, when the cookie persistence is applied.
 	</dd>
-    <dt>isReloading()
-    <dd>
-        Return true, if the tree is in the init phase and persistence is on,
-        and the current status was read from existing cookies.<br>
-        Use this function in an event handler, to check if the event was fired 
-        during a page reload, when the cookie persistence is applied.   
-    </dd>
-    <dt>isUserEvent()
-    <dd>
-        Return true, if the tree is processing a user event.<br>
-        Use this function in an event handler, to check if the event was fired 
-        in response to a mouse click or key stroke.   
-    </dd>
+	<dt>isReloading()
+	<dd>
+		Return true, if the tree is in the init phase and persistence is on,
+		and the current status was read from existing cookies.<br>
+		Use this function in an event handler, to check if the event was fired
+		during a page reload, when the cookie persistence is applied.
+	</dd>
+	<dt>isUserEvent()
+	<dd>
+		Return true, if the tree is processing a user event.<br>
+		Use this function in an event handler, to check if the event was fired
+		in response to a mouse click or key stroke.
+	</dd>
 	<dt>selectKey(key, flag)
 	<dd>
 		Select or deselect node with a given key and fire focus and select events.<br>
 		Return the selected DynaTreeNode.
 	</dd>
-    <dt>reactivate(setFocus)
-    <dd>
-        Fire onQueryActivate and onActivate events for the currently active node
-        (if there is one).<br>
-        This may be useful when processing an onPostInit callback.
-    </dd>
+	<dt>reactivate(setFocus)
+	<dd>
+		Fire onQueryActivate and onActivate events for the currently active node
+		(if there is one).<br>
+		This may be useful when processing an onPostInit callback.
+	</dd>
 	<dt>reload()
 	<dd>
 		Reload the the tree.<br>
-        For lazy trees this is done, by re-submitting the Ajax request that was 
-        defined in the <code>initAjax</code> option.<br>
+		For lazy trees this is done, by re-submitting the Ajax request that was
+		defined in the <code>initAjax</code> option.<br>
 		This will <strong>not</strong> work, if the tree was loaded from an embedded
 		&lt;UL> element, because these elements are removed after they have been
 		rendered.
@@ -1200,7 +1200,7 @@ $("#tree").dynatree({
 	<dt>addChild(nodeData[, beforeNode])
 	<dd>
 		Append a new child node.<br>
-		<i>nodeData</i> may be a node data object as defined in 
+		<i>nodeData</i> may be a node data object as defined in
 		<a href="#nodeOptions">Node options</a>, or an array thereof.
 		Also objects and arrays of type <code>DynaTreeNode</code> are allowed.<br>
 		Example:
@@ -1208,7 +1208,7 @@ $("#tree").dynatree({
 var node = $("#tree").dynatree("getTree").getNodeByKey("1234");
 node.addChild({title: "New Node", key: "3333"});
 </pre>
-		Since the <i>nodeData</i> may be a nested data structure, it is possible 
+		Since the <i>nodeData</i> may be a nested data structure, it is possible
 		to create a deep hierarchy with one call.<br>
 		The optional argument <i>beforeNode</i> specifies a child <code>DynaTreeNode</code>
 		that the new node will be inserted before. (If this parameter is <i>null</i>
@@ -1243,13 +1243,13 @@ node.addChild({title: "New Node", key: "3333"});
 		Return the part of a node, that a click event occurred on.<br>
 		Possible values: 'prefix' 'expander', 'checkbox', 'title'.<br>
 		<code>null</code> is returned else.<br>
-        Note: there is no check, if the event was fired on <strong>this</strong> node. 
+		Note: there is no check, if the event was fired on <strong>this</strong> node.
 	</dd>
-    <dt>getLevel()
-    <dd>
-        Return the depth (i.e. number of parent nodes).<br>
-        0 is returned for the root node.
-    </dd>
+	<dt>getLevel()
+	<dd>
+		Return the depth (i.e. number of parent nodes).<br>
+		0 is returned for the root node.
+	</dd>
 	<dt>getChildren()
 	<dd>
 		Return list of child nodes or <code>null</code>.
@@ -1273,12 +1273,12 @@ node.addChild({title: "New Node", key: "3333"});
 	<dt>reload(force)
 	<dd>
 		Discard all children of a lazy node.<br>
-		If the node is currently expanded, an <code>onLazyRead</code> event is 
+		If the node is currently expanded, an <code>onLazyRead</code> event is
 		generated to re-load the children immediately.<br>
 		If the node is collapsed, and <i>force</i> is <code>false</code>
-		or ommited, the children will removed, but only re-loaded when the node 
+		or ommited, the children will removed, but only re-loaded when the node
 		is expanded by the user.<br>
-		If the node is collapsed, and <i>force</i> is <code>true</code>, the 
+		If the node is collapsed, and <i>force</i> is <code>true</code>, the
 		children will be reloaded immediately (without expanding).
 	</dd>
 	<dt>remove()
@@ -1314,8 +1314,8 @@ node.addChild({title: "New Node", key: "3333"});
 		<code>recursive</code>: set to true, to include child nodes.<br>
 		<code>callback</code>: (optional) function to allow modifications.<br>
 		Example <pre>var cb = node.toDict(true, function(dict){
-    dict.title = "Copy of " + dict.title;
-    delete dict.key; // prevent duplicate keys
+	dict.title = "Copy of " + dict.title;
+	delete dict.key; // prevent duplicate keys
 });</pre>
 	</dd>
 	<dt>toggleExpand()
@@ -1364,12 +1364,12 @@ if( dtnode )
 
 <pre class="prettyprint">
 $(".dynatree-partsel").each(function(){
-    dtnode = $(this).attr("dtnode");
-    [...]
+	dtnode = $(this).attr("dtnode");
+	[...]
 });
 </pre>
 <p>
-    Note: The selector must evaluate to the node's &lt;span> tag.
+	Note: The selector must evaluate to the node's &lt;span> tag.
 </p>
 
 
@@ -1395,7 +1395,7 @@ var childNode = dtnode.addChild({
 	Note: instead of passing a single child object, we could also pass an array
 	of such objects.<br>
 	Also, the children may again contain <code>children</code> attributes, thus
-	defining a sub tree. 
+	defining a sub tree.
 </p>
 
 
@@ -1409,7 +1409,7 @@ $("#tree a").hover(function(){
 		// (...) for example open a tooltip.
 	}, function(){
 		// (...) for example remove the tooltip.
-	}); 
+	});
 </pre>
 
 
@@ -1417,7 +1417,7 @@ $("#tree a").hover(function(){
 
 <pre class="prettyprint">
 $("#tree").dynatree("getRoot").visit(function(dtnode){
-    dtnode.expand(true);
+	dtnode.expand(true);
 });
 </pre>
 
@@ -1434,7 +1434,7 @@ var dict = $("#tree").dynatree("getTree").toDict();
 <h2>Theming and translation</h2>
 
 <p>
-	The tree's fonts, colors, and icons are defined using CSS, so changing the 
+	The tree's fonts, colors, and icons are defined using CSS, so changing the
 	appearance is simply a matter of including a custom stylesheet.
 </p>
 <div class="codesample">
@@ -1457,8 +1457,8 @@ var dict = $("#tree").dynatree("getTree").toDict();
 </div>
 
 <p>
-	Changing the appearance and icons of single nodes is done by assigning a 
-	custom class: 
+	Changing the appearance and icons of single nodes is done by assigning a
+	custom class:
 </p>
 <pre class="prettyprint">
 &lt;ul>
@@ -1510,9 +1510,9 @@ $("#tree").dynatree({
 
 <h3>Credits</h3>
 <p>
-	I am using the <a href="http://prendreuncafe.com/work/jqplanize/">planize plugin</a> 
+	I am using the <a href="http://prendreuncafe.com/work/jqplanize/">planize plugin</a>
 	by Nicolas Perriault for the table of contents.<br>
-	I am using <a href="http://code.google.com/p/google-code-prettify/">prettify.js</a> 
+	I am using <a href="http://code.google.com/p/google-code-prettify/">prettify.js</a>
 	by Mike Samuel for syntax highlighting in the of source code samples.
 </p>
 
@@ -1525,7 +1525,7 @@ $("#tree").dynatree({
 	<li>A <a href="http://groups.google.com/group/dynatree">discussion forum</a> is in place to ask questions or discuss features.
 	<li>Use the <a href="http://code.google.com/p/dynatree/issues/list">Issue Tracker</a> to get a list of known bugs, or vote for a feature.<br>
 		Please make sure you searched the group and issue tracker, before adding a new request.
-	<li>If you like to make a donation, have a look at my 
+	<li>If you like to make a donation, have a look at my
 		<a href="http://www.amazon.de/wishlist/4NVVW4520RYN">Amazon wishlist</a>.
 </ul>
 
