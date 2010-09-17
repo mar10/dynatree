@@ -1,13 +1,13 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
-    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 	<title>Dynatree - Example</title>
 
 	<script src='../jquery/jquery.js' type='text/javascript'></script>
 	<script src='../jquery/jquery.ui.core.js' type='text/javascript'></script>
-    <script src='../jquery/jquery.ui.widget.js' type='text/javascript'></script>
-    <script src='../jquery/jquery.cookie.js' type='text/javascript'></script>
+	<script src='../jquery/jquery.ui.widget.js' type='text/javascript'></script>
+	<script src='../jquery/jquery.cookie.js' type='text/javascript'></script>
 
 	<link href='../src/skin/ui.dynatree.css' rel='stylesheet' type='text/css'>
 	<script src='../src/jquery.dynatree.js' type='text/javascript'></script>
@@ -16,12 +16,12 @@
 	<link href="prettify.css" rel="stylesheet">
 	<script src="prettify.js" type='text/javascript'></script>
 	<link href='sample.css' rel='stylesheet' type='text/css'>
-    <script src='sample.js' type='text/javascript'></script>
+	<script src='sample.js' type='text/javascript'></script>
 	<!-- End_Exclude -->
-    
-    <!-- Add code to initialize the tree when the document is loaded: -->
-    <script type='text/javascript'>
-    $(function(){
+
+	<!-- Add code to initialize the tree when the document is loaded: -->
+	<script type='text/javascript'>
+	$(function(){
 		$("#tree").dynatree({
 			children: [
 				{title: "Add 100 nodes (flat, force update)...", isFolder: true, isLazy: true, mode: "add100_flat_u" },
@@ -70,37 +70,37 @@
 	function addNodes(dtnode, level1, level2, level3, forceUpdate) {
 		if( forceUpdate != true )
 			dtnode.tree.enableUpdate(false);
-		
+
 		var key;
 		for (var i=0; i<level1; i++) {
 			key = "" + (i+1);
 			var f = dtnode.addChild({title: "Folder_" + key,
-			                       key: key,
-				                   isFolder: true
+								   key: key,
+								   isFolder: true
 								   });
 			for (var j=0; j<level2; j++) {
 				key = "" + (i+1) + "." + (j+1);
 				var d = f.addChild({title: "Node_" + key,
-				                  key: key
-							      });
+								  key: key
+								  });
 				for (var k=0; k<level3; k++) {
 					key = "" + (i+1) + "." + (j+1) + "." + (k+1);
 					d.addChild({title: "Node_" + key,
-					          key: key
-						      });
+							  key: key
+							  });
 				}
 			}
 		}
 		dtnode.tree.enableUpdate(true);
 	}
 
-    </script>
+	</script>
 </head>
 
 <body class="example">
 	<h1>Example: Benchmark</h1>
 	<p class="description">
-		Expand a node to start a benchmark, then check the firebug console. 
+		Expand a node to start a benchmark, then check the firebug console.
 	</p>
 
 	<div id='tree'> </div>
@@ -108,7 +108,7 @@
 	enableUpdate(false) is used for speedup.
 	</p>
 	<p>
-        <button id="btnClear">remove children</button>
+		<button id="btnClear">remove children</button>
 	</p>
 	<!-- Start_Exclude: This block is not part of the sample code -->
 	<hr>
