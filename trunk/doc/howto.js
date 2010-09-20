@@ -9,9 +9,9 @@ $(function(){
 		text2 = text.replace(/\t/g, "    ");
 		$(this).text(text2)
 	});
-	
+
 	// Show some elements only, if (not) inside the Example Browser
-	if (top.location == self.location) 
+	if (top.location == self.location)
 		$(".hideOutsideFS").hide();
 	else
 		$(".hideInsideFS").hide();
