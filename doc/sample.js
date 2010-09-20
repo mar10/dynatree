@@ -5,7 +5,7 @@
 function viewSourceCode()
 {
 	window.location = "view-source:" + window.location.href;
-	
+
 }
 
 function initCodeSamples() {
@@ -15,7 +15,7 @@ function initCodeSamples() {
 			}
 	)
 	$( 'pre.codeExample' ).hide();
-	$('a.codeExample').toggle( 
+	$('a.codeExample').toggle(
 			function() {
 				if( !this.old ){
 					this.old = $(this).html();
@@ -71,10 +71,10 @@ $(function(){
 	}
 
 	// Show some elements only, if (not) inside the Example Browser
-	if (top.location == self.location) 
+	if (top.location == self.location)
 		$(".hideOutsideFS").hide();
 	else
 		$(".hideInsideFS").hide();
-	
+
 	initCodeSamples();
 });
