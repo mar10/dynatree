@@ -35,6 +35,7 @@
 		// and pass the tree options as an argument to the dynatree() function:
 		$("#tree").dynatree({
 //			autoCollapse: true,
+			minExpandLevel: 1,
 			persist: true,
 			onPostInit: function(isReloading, isError) {
 			   this.reactivate();
