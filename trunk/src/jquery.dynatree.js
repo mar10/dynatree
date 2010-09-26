@@ -2168,13 +2168,13 @@ TODO: better?
     						y: event.clientY - nodeOfs.top };
     			var relPos2 = { x: relPos.x / nodeTag.width(),
     						y: relPos.y / nodeTag.height() };
-    			if( enterResponse.over && enterResponse.after && relPos2.y > 0.75 ){
+    			if( enterResponse.after && relPos2.y > 0.75 ){
     				hitMode = "after";
-    			} else if( enterResponse.after && relPos2.y > 0.5 ){
+    			} else if(!enterResponse.over && enterResponse.after && relPos2.y > 0.5 ){
     				hitMode = "after";
-    			} else if(enterResponse.over && enterResponse.before && relPos2.y <= 0.25) {
+    			} else if(enterResponse.before && relPos2.y <= 0.25) {
     				hitMode = "before";
-    			} else if(enterResponse.before && relPos2.y <= 0.5) {
+    			} else if(!enterResponse.over && enterResponse.before && relPos2.y <= 0.5) {
     				hitMode = "before";
     			} else if(enterResponse.over) {
     				hitMode = "over";
@@ -2184,10 +2184,10 @@ TODO: better?
     			if(node === otherNode){
         			logMsg("    drop over source node prevented");
     				hitMode = null;
-    			}else if(hitMode === "before" && node === otherNode.getNextSibling()){
+    			}else if(hitMode === "before" && otherNode && node === otherNode.getNextSibling()){
         			logMsg("    drop after source node prevented");
     				hitMode = null;
-    			}else if(hitMode === "after" && node === otherNode.getPrevSibling()){
+    			}else if(hitMode === "after" && otherNode && node === otherNode.getPrevSibling()){
         			logMsg("    drop before source node prevented");
     				hitMode = null;
     			}

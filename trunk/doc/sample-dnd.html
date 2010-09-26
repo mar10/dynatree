@@ -32,25 +32,13 @@ $(function(){
 		initAjax: {
 			url: "sample-data3.json"
 		},
-		onActivate: function(dtnode) {
-			$("#echoActive").text(dtnode.data.title + "(" + dtnode.data.key + ")");
-		},
-		onDeactivate: function(dtnode) {
-			$("#echoActive").text("-");
-		},
 		dnd: {
 			onDragStart: function(dtnode) {
 				/** This function MUST be defined to enable dragging for the tree.
 				 *  Return false to cancel dragging of dtnode.
 				 */
-				logMsg("tree.onDragStart(%o)", dtnode);
 				return true;
 			},
-			onDragStop: function(dtnode) {
-				// This function is optional.
-				logMsg("tree.onDragStop(%o)", dtnode);
-			},
-			autoExpandMS: 1000,
 			onDragEnter: function(node, sourceNode) {
 				/** sourceNode may be null for non-dynatree droppables.
 				 *  Return false to disallow dropping on node. In this case
@@ -59,41 +47,18 @@ $(function(){
 				 *  Return ['before', 'after'] to restrict available hitModes.
 				 *  Any other return value will calc the hitMode from the cursor position.
 				 */
-				logMsg("tree.onDragEnter(%o, %o)", node, sourceNode);
-                // Prevent dropping a parent below it's own child
-//                if(node.isDescendantOf(sourceNode))
-//                    return false;
                 // Prevent dropping a parent below another parent (only sort
                 // nodes under the same parent)
                 if(node.parent !== sourceNode.parent)
                     return false;
-//              if(node === sourceNode)
-//                  return false;
 				// Don't allow dropping *over* a node (would create a child)
 				return ["before", "after"];
 			},
-			onDragOver: function(node, sourceNode, hitMode) {
-				/** Return false to disallow dropping this node.
-				 *
-				 */
-				logMsg("tree.onDragOver(%o, %o, %o)", node, sourceNode, hitMode);
-				// Prohibit creating childs in non-folders (only sorting allowed)
-				if( !node.isFolder && hitMode == "over" )
-					return "after";
-			},
 			onDrop: function(node, sourceNode, hitMode) {
 				/** This function MUST be defined to enable dropping of items on
-				 * the tree.
+				 *  the tree.
 				 */
-				logMsg("tree.onDrop(%o, %o, %s)", node, sourceNode, hitMode);
 				sourceNode.move(node, hitMode);
-				// expand the drop target
-//				sourceNode.expand(true);
-			},
-			onDragLeave: function(node, sourceNode) {
-				/** Always called if onDragEnter was called.
-				 */
-				logMsg("tree.onDragLeave(%o, %o)", node, sourceNode);
 			}
 		}
 	});
@@ -104,7 +69,9 @@ $(function(){
 <body class="example">
 	<h1>Example: Sort nodes using drag-and-drop</h1>
 	<p class="description">
-		This sample uses Dynatree's built-in drag-and-drop feature to move nodes.
+		This sample uses Dynatree's built-in drag-and-drop feature to move nodes.<br>
+        - Nodes may only be dragged under it's original parent.<br>
+        - When dropped, the node is moved to the target.<br>
 	</p>
 
 	<div id="tree"> </div>
