@@ -1412,7 +1412,7 @@ DynaTreeNode.prototype = {
 			this.parent.childList.splice(pos, 1);
 		}
 		this.parent.ul.removeChild(this.li);
-		this.li = null;
+		targetParent.ul.appendChild(this.li);
 		
 		// Insert this node to target parent's child list
 		this.parent = targetParent;
@@ -2151,13 +2151,8 @@ TODO: better?
 			};
             ui.helper.data("enterResponse", res);
 			this.logDebug("helper.enterResponse: %o", res);
-//			this._setDndStatus(otherNode, node, ui.helper, "over", res!==false);
 			break;
 		case "over":
-//			// Auto-expand node
-//			if(dnd.autoExpandMS && node.hasChildren() && !node.bExpanded) {
-//				node.scheduleAction("expand", dnd.autoExpandMS);
-//			}
             var enterResponse = ui.helper.data("enterResponse");
 			var hitMode = null;
             if(enterResponse === false){
@@ -2185,6 +2180,7 @@ TODO: better?
     				hitMode = "over";
     			}
     			// Prevent no-ops like 'before source node'
+    			// TODO: this makes sense when moving nodes, but may be desired in copy mode
     			if(node === otherNode){
         			logMsg("    drop over source node prevented");
     				hitMode = null;
@@ -2212,7 +2208,7 @@ TODO: better?
 				return $.ui.isOver(helperTop + dyClick, helperLeft + dxClick, itemTop, itemLeft, itemHeight, itemWidth);
 			};
 			var relPos = event.()*/
-			// Auto-expand node
+			// Auto-expand node (only when 'over' the node, not 'before', or 'after')
 			if(hitMode === "over" 
 				&& dnd.autoExpandMS && node.hasChildren() && !node.bExpanded) {
 				node.scheduleAction("expand", dnd.autoExpandMS);
@@ -2630,7 +2626,7 @@ var _registerDnd = function() {
 	        var targetNode = getDtNodeFromElement(event.target);
 	        if(event.target && !targetNode){
 	        	// We got a drag event, but the targetNode could not be found
-	        	// from the event location. This may happen, if the mouse
+	        	// at the event location. This may happen, if the mouse
 	        	// jumped over the drag helper, in which case we ignore it:
 	        	var isHelper = $(event.target).closest("div.dynatree-drag-helper,#dynatree-drop-marker").length > 0;
 	        	if(isHelper){
