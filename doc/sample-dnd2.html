@@ -18,26 +18,6 @@
 	<link href='../src/skin/ui.dynatree.css' rel='stylesheet' type='text/css'>
 	<script src='../src/jquery.dynatree.js' type='text/javascript'></script>
 
-	<style type="text/css">
-		#draggableSample, #droppableSample {
-			height:100px;
-			padding:0.5em;
-			width:150px;
-			border:1px solid #AAAAAA;
-		}
-		#draggableSample {
-			background-color: silver;
-			color:#222222;
-		}
-		#droppableSample {
-			background-color: maroon;
-			color: white;
-		}
-		#droppableSample.drophover {
-			border: 1px solid green;
-		}
-	</style>
-
 	<!-- Start_Exclude: This block is not part of the sample code -->
 	<link href="prettify.css" rel="stylesheet">
 	<script src="prettify.js" type='text/javascript'></script>
@@ -45,18 +25,12 @@
 	<script src='sample.js' type='text/javascript'></script>
 	<!-- End_Exclude -->
 
-<script type='text/javascript'>
+<script type='text/javascript'><!--
 $(function(){
 	// --- Initialize first Dynatree -------------------------------------------
 	$("#tree").dynatree({
 		initAjax: {
 			url: "sample-data3.json"
-		},
-		onActivate: function(dtnode) {
-			$("#echoActive").text(dtnode.data.title + "(" + dtnode.data.key + ")");
-		},
-		onDeactivate: function(dtnode) {
-			$("#echoActive").text("-");
 		},
 		dnd: {
 			onDragStart: function(dtnode) {
@@ -64,62 +38,51 @@ $(function(){
 				 *  Return false to cancel dragging of dtnode.
 				 */
 				logMsg("tree.onDragStart(%o)", dtnode);
-				if(dtnode.data.isFolder)
-					return false;
 				return true;
 			},
 			onDragStop: function(dtnode) {
+				// This function is optional.
 				logMsg("tree.onDragStop(%o)", dtnode);
-			}
-		}
-	});
-	// --- Initialize second Dynatree ------------------------------------------
-	$("#tree2").dynatree({
-		initAjax: {
-			url: "sample-data3.json"
-		},
-		onActivate: function(dtnode) {
-			$("#echoActive2").text(dtnode.data.title + "(" + dtnode.data.key + ")");
-		},
-		onDeactivate: function(dtnode) {
-			$("#echoActive2").text("-");
-		},
-		dnd: {
+			},
 			autoExpandMS: 1000,
 			onDragEnter: function(node, sourceNode) {
 				/** sourceNode may be null for non-dynatree droppables.
 				 *  Return false to disallow dropping on node. In this case
 				 *  onDragOver and onDragLeave are not called.
 				 *  Return 'over', 'before, or 'after' to force a hitMode.
+				 *  Return ['before', 'after'] to restrict available hitModes.
 				 *  Any other return value will calc the hitMode from the cursor position.
 				 */
 				logMsg("tree.onDragEnter(%o, %o)", node, sourceNode);
-				if(node.data.isFolder)
-					return false;
-//                return "over";
+                // Prevent dropping a parent below it's own child
+//                if(node.isDescendantOf(sourceNode))
+//                    return false;
+                // Prevent dropping a parent below another parent (only sort
+                // nodes under the same parent)
+                if(node.parent !== sourceNode.parent)
+                    return false;
+//              if(node === sourceNode)
+//                  return false;
+				// Don't allow dropping *over* a node (would create a child)
+				return ["before", "after"];
 			},
 			onDragOver: function(node, sourceNode, hitMode) {
 				/** Return false to disallow dropping this node.
 				 *
 				 */
 				logMsg("tree.onDragOver(%o, %o, %o)", node, sourceNode, hitMode);
+				// Prohibit creating childs in non-folders (only sorting allowed)
+				if( !node.isFolder && hitMode == "over" )
+					return "after";
 			},
 			onDrop: function(node, sourceNode, hitMode) {
-				/** This function MUST be defined to enable dropping of items on the tree.
+				/** This function MUST be defined to enable dropping of items on
+				 * the tree.
 				 */
-				logMsg("tree.onDrop(%o, %o)", node, sourceNode);
-				var copynode;
-				if(sourceNode) {
-					copynode = sourceNode.toDict(true, function(dict){
-						dict.title = "Copy of " + dict.title;
-						delete dict.key; // Remove key, so a new one will be created
-					});
-				}else{
-					copynode = {title: "This node was dropped here."};
-				}
-				node.addChild(copynode);
+				logMsg("tree.onDrop(%o, %o, %s)", node, sourceNode, hitMode);
+				sourceNode.move(node, hitMode);
 				// expand the drop target
-				node.expand(true);
+//				sourceNode.expand(true);
 			},
 			onDragLeave: function(node, sourceNode) {
 				/** Always called if onDragEnter was called.
@@ -128,77 +91,17 @@ $(function(){
 			}
 		}
 	});
-	// --- Initialize simple draggable sample ----------------------------------
-	$("#draggableSample").draggable({
-		revert: true,
-		connectToDynatree: true,
-		cursorAt: { top: -5, left:-5 },
-		helper: "clone"
-	});
-	// --- Initialize simple droppable sample ----------------------------------
-	$("#droppableSample").droppable({
-		hoverClass: "drophover",
-		addClasses: true,
-		over: function(event, ui) {
-			logMsg("droppable.over, %o, %o", event, ui);
-		},
-		drop: function(event, ui) {
-			$(this).addClass('ui-state-highlight').find('p').html('Dropped!');
-			alert("dropped");
-		}
-	});
 });
-</script>
+--></script>
 </head>
 
 <body class="example">
-	<h1>Example: Standard jQuery drag-and-drop</h1>
+	<h1>Example: Sort nodes using drag-and-drop</h1>
 	<p class="description">
-		This sample uses the standard jQuery draggable and droppable.
+		This sample uses Dynatree's built-in drag-and-drop feature to move nodes.
 	</p>
 
-	<table>
-	<thead>
-	<tr>
-		<th>
-		<p>This tree allows dragging.</p>
-		</th>
-		<th>
-		<p>This tree allows dropping.</p>
-		</th>
-	</tr>
-	</thead>
-	<tbody>
-	<tr valign="top">
-		<td>
-			<div id="tree"> </div>
-		</td>
-		<td>
-			<div id="tree2"></div>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<div>Active node: <span id="echoActive">-</span></div>
-		</td>
-		<td>
-			<div>Active node: <span id="echoActive2">-</span></div>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<div id="draggableSample" class="ui-widget-content">
-				<p>Drag me around</p>
-			</div>
-		</td>
-		<td>
-			<div id="droppableSample" class="ui-widget-content">
-				<p>Drop something here</p>
-			</div>
-		</td>
-	</tr>
-	</tbody>
-	</table>
+	<div id="tree"> </div>
 
 	<!-- Start_Exclude: This block is not part of the sample code -->
 	<hr>
