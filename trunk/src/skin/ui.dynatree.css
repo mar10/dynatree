@@ -354,8 +354,8 @@ span.dynatree-drag-helper-img
 }
 div.dynatree-drag-helper /*.dynatree-drop-accept*/
 { 
-    border-color: green; 
-    background-color: red;
+/*    border-color: green; 
+    background-color: red;*/
 }
 div.dynatree-drop-accept span.dynatree-drag-helper-img
 { 
@@ -422,6 +422,7 @@ span.dynatree-drop-target.dynatree-drop-accept a
     /*border: 1px solid green;*/ 
     background-color: #3169C6 !important;
     color: white !important; /* @ IE6 */
+    text-decoration: none;    
 }
 span.dynatree-drop-target.dynatree-drop-reject
 { 
