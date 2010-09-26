@@ -2092,8 +2092,23 @@ TODO: better?
 	},
 	
 	_onDragEvent: function(eventName, node, otherNode, event, ui, draggable) {
-		/***
+		/**
 		 * Handles drag'n'drop functionality.
+		 * 
+		 * A standard jQuery drag-and-drop process may generate these calls:
+		 *  
+		 * draggable helper():
+		 *     _onDragEvent("helper", sourceNode, null, event, null, null);
+		 * start:
+		 *     _onDragEvent("start", sourceNode, null, event, ui, draggable);
+		 * drag:
+		 *     _onDragEvent("leave", prevTargetNode, sourceNode, event, ui, draggable);
+	     *     _onDragEvent("over", targetNode, sourceNode, event, ui, draggable);
+	     *     _onDragEvent("enter", targetNode, sourceNode, event, ui, draggable);
+	     * stop: 
+	     *     _onDragEvent("drop", targetNode, sourceNode, event, ui, draggable);
+	     *     _onDragEvent("leave", targetNode, sourceNode, event, ui, draggable);
+	     *     _onDragEvent("stop", sourceNode, null, event, ui, draggable);
 		 */
 		var _calcHitMode = function() {
 			
@@ -2129,16 +2144,20 @@ TODO: better?
 			break;
 		case "enter":
 			res = dnd.onDragEnter ? dnd.onDragEnter(node, otherNode) : null;
-//			logMsg("helper %o", ui.helper);
+			res = {
+				over: (res !== false) && ((res === true) || (res === "over") || $.inArray("over", res) >= 0),
+				before: (res !== false) && ((res === true) || (res === "before") || $.inArray("before", res) >= 0),
+				after: (res !== false) && ((res === true) || (res === "after") || $.inArray("after", res) >= 0)
+			};
             ui.helper.data("enterResponse", res);
 			this.logDebug("helper.enterResponse: %o", res);
 //			this._setDndStatus(otherNode, node, ui.helper, "over", res!==false);
 			break;
 		case "over":
-			// Auto-expand node
-			if(dnd.autoExpandMS && node.hasChildren() && !node.bExpanded) {
-				node.scheduleAction("expand", dnd.autoExpandMS);
-			}
+//			// Auto-expand node
+//			if(dnd.autoExpandMS && node.hasChildren() && !node.bExpanded) {
+//				node.scheduleAction("expand", dnd.autoExpandMS);
+//			}
             var enterResponse = ui.helper.data("enterResponse");
 			var hitMode = null;
             if(enterResponse === false){
@@ -2154,15 +2173,29 @@ TODO: better?
     						y: event.clientY - nodeOfs.top };
     			var relPos2 = { x: relPos.x / nodeTag.width(),
     						y: relPos.y / nodeTag.height() };
-    			if( (relPos2.y > 0.25 && relPos2.y < 0.75) 
-//    					|| (relPos2.x > 0.8 ) 
-    					) {
-    				hitMode = "over";
-    			} else if(relPos2.y <= 0.25) {
-    				hitMode = "before";
-    			} else {
+    			if( enterResponse.over && enterResponse.after && relPos2.y > 0.75 ){
     				hitMode = "after";
+    			} else if( enterResponse.after && relPos2.y > 0.5 ){
+    				hitMode = "after";
+    			} else if(enterResponse.over && enterResponse.before && relPos2.y <= 0.25) {
+    				hitMode = "before";
+    			} else if(enterResponse.before && relPos2.y <= 0.5) {
+    				hitMode = "before";
+    			} else if(enterResponse.over) {
+    				hitMode = "over";
     			}
+    			// Prevent no-ops like 'before source node'
+    			if(node === otherNode){
+        			logMsg("    drop over source node prevented");
+    				hitMode = null;
+    			}else if(hitMode === "before" && node === otherNode.getNextSibling()){
+        			logMsg("    drop after source node prevented");
+    				hitMode = null;
+    			}else if(hitMode === "after" && node === otherNode.getPrevSibling()){
+        			logMsg("    drop before source node prevented");
+    				hitMode = null;
+    			}
+    			
                 ui.helper.data("hitMode", hitMode);
 //    			logMsg("    clientPos: %s/%s", event.clientX, event.clientY);
 //    			logMsg("    nodeOfs: %s/%s", nodeOfs.left, nodeOfs.top);
@@ -2179,15 +2212,24 @@ TODO: better?
 				return $.ui.isOver(helperTop + dyClick, helperLeft + dxClick, itemTop, itemLeft, itemHeight, itemWidth);
 			};
 			var relPos = event.()*/
-			if(dnd.onDragOver)
-				res = dnd.onDragOver(node, otherNode, hitMode)
-			this._setDndStatus(otherNode, node, ui.helper, hitMode, res!==false)
+			// Auto-expand node
+			if(hitMode === "over" 
+				&& dnd.autoExpandMS && node.hasChildren() && !node.bExpanded) {
+				node.scheduleAction("expand", dnd.autoExpandMS);
+			}
+			if(hitMode && dnd.onDragOver){
+				res = dnd.onDragOver(node, otherNode, hitMode);
+			}
+			this._setDndStatus(otherNode, node, ui.helper, hitMode, res!==false);
 			break;
 		case "drop":
-            var enterResponse = ui.helper.data("enterResponse");
+//          var enterResponse = ui.helper.data("enterResponse");
             var hitMode = ui.helper.data("hitMode");
-			if(dnd.onDrop && enterResponse !== false)
-				dnd.onDrop(node, otherNode, hitMode)
+//			if(dnd.onDrop && enterResponse !== false)
+//				dnd.onDrop(node, otherNode, hitMode)
+			if(hitMode && dnd.onDrop){
+				dnd.onDrop(node, otherNode, hitMode);
+			}
 			break;
 		case "leave":
 			// Cancel pending expand request
@@ -2195,14 +2237,16 @@ TODO: better?
             ui.helper.data("enterResponse", null);
             ui.helper.data("hitMode", null);
 //            nodeTag.removeClass("dynatree-drop-hover dynatree-drop-accept dynatree-drop-reject");
-			this._setDndStatus(otherNode, node, ui.helper, "out", undefined)
-			if(dnd.onDragLeave)
-				dnd.onDragLeave(node, otherNode)
+			this._setDndStatus(otherNode, node, ui.helper, "out", undefined);
+			if(dnd.onDragLeave){
+				dnd.onDragLeave(node, otherNode);
+			}
 			break;
 		case "stop":
 			nodeTag.removeClass("dynatree-drag-source");
-			if(dnd.onDragStop)
-				dnd.onDragStop(node)
+			if(dnd.onDragStop){
+				dnd.onDragStop(node);
+			}
 			break;
 		default:
 			throw "Unsupported drag event: " + eventName;
@@ -2552,7 +2596,7 @@ var _registerDnd = function() {
 	    start: function(event, ui) {
 	        var draggable = $(this).data("draggable");
 	        var sourceNode = ui.helper.data("dtSourceNode") || null;
-	        logMsg("draggable-connectToDynatree.start, %o", sourceNode);
+	        logMsg("draggable-connectToDynatree.start, %s", sourceNode);
 	        logMsg("    this: %o", this);
 	        logMsg("    event: %o", event);
 	        logMsg("    draggable: %o", draggable);
@@ -2584,6 +2628,17 @@ var _registerDnd = function() {
 	        var sourceNode = ui.helper.data("dtSourceNode") || null;
 			var prevTargetNode = ui.helper.data("dtTargetNode") || null;
 	        var targetNode = getDtNodeFromElement(event.target);
+	        if(event.target && !targetNode){
+	        	// We got a drag event, but the targetNode could not be found
+	        	// from the event location. This may happen, if the mouse
+	        	// jumped over the drag helper, in which case we ignore it:
+	        	var isHelper = $(event.target).closest("div.dynatree-drag-helper,#dynatree-drop-marker").length > 0;
+	        	if(isHelper){
+		        	logMsg("Drag event over helper: ignored.");
+	        		return;
+	        	}
+	        }
+//        	logMsg("draggable-connectToDynatree.drag: targetNode(from event): %s, dtTargetNode: %s", targetNode, ui.helper.data("dtTargetNode"));
 	        ui.helper.data("dtTargetNode", targetNode);
 	        // Leaving a tree node
 	        if(prevTargetNode && prevTargetNode !== targetNode ) {
@@ -2605,13 +2660,16 @@ var _registerDnd = function() {
 	    stop: function(event, ui) {
 	        var draggable = $(this).data("draggable");
 	        var sourceNode = ui.helper.data("dtSourceNode") || null;
-	        var targetNode = getDtNodeFromElement(event.target);
+//	        var targetNode = getDtNodeFromElement(event.target);
+			var targetNode = ui.helper.data("dtTargetNode") || null;
+        	logMsg("draggable-connectToDynatree.stop: targetNode(from event): %s, dtTargetNode: %s", targetNode, ui.helper.data("dtTargetNode"));
 	//        var targetTree = targetNode ? targetNode.tree : null;
 	//        if(dtnode && dtnode.tree.
-	        logMsg("draggable-connectToDynatree.stop, %o", sourceNode);
+	        logMsg("draggable-connectToDynatree.stop, %s", sourceNode);
 	        var mouseDownEvent = draggable._mouseDownEvent;
 	        var eventType = event.type;
 	        logMsg("    type: %o, downEvent: %o, upEvent: %o", eventType, mouseDownEvent, event);
+	        logMsg("    targetNode: %o", targetNode);
 	        var dropped = (eventType == "mouseup" && event.which == 1);
 	        if(!dropped)
 	            logMsg("Drag was cancelled");
