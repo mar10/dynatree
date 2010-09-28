@@ -589,7 +589,7 @@ DynaTreeNode.prototype = {
 		var opts = this.tree.options;
 		if( this.data.isStatusNode )
 			return;
-		if ( fireEvents && opts.onQueryActivate && opts.onQueryActivate.call(this.span, flag, this) == false )
+		if ( fireEvents && opts.onQueryActivate && opts.onQueryActivate.call(this.tree, flag, this) == false )
 			return; // Callback returned false
 		
 		if( flag ) {
@@ -607,12 +607,12 @@ DynaTreeNode.prototype = {
 	        this.tree.persistence.activeKey = this.data.key;
 			$(this.span).addClass(opts.classNames.active);
 			if ( fireEvents && opts.onActivate ) // Pass element as 'this' (jQuery convention)
-				opts.onActivate.call(this.span, this);
+				opts.onActivate.call(this.tree, this);
 		} else {
 			// Deactivate
 			if( this.tree.activeNode === this ) {
 				var opts = this.tree.options;
-				if ( opts.onQueryActivate && opts.onQueryActivate.call(this.span, false, this) == false )
+				if ( opts.onQueryActivate && opts.onQueryActivate.call(this.tree, false, this) == false )
 					return; // Callback returned false
 				$(this.span).removeClass(opts.classNames.active);
 		        if( opts.persist ) {
@@ -623,7 +623,7 @@ DynaTreeNode.prototype = {
 		        this.tree.persistence.activeKey = null;
 				this.tree.activeNode = null;
 				if ( fireEvents && opts.onDeactivate )
-					opts.onDeactivate.call(this.span, this);
+					opts.onDeactivate.call(this.tree, this);
 			}
 		}
 	},
@@ -742,7 +742,7 @@ DynaTreeNode.prototype = {
 			return;
 		}
 		// Allow event listener to abort selection
-		if ( fireEvents && opts.onQuerySelect && opts.onQuerySelect.call(this.span, sel, this) == false )
+		if ( fireEvents && opts.onQuerySelect && opts.onQuerySelect.call(this.tree, sel, this) == false )
 			return; // Callback returned false
 		
 		// Force single-selection
@@ -769,7 +769,7 @@ DynaTreeNode.prototype = {
 				this._fixSelectionState();
 
 			if ( fireEvents && opts.onSelect )
-				opts.onSelect.call(this.span, true, this);
+				opts.onSelect.call(this.tree, true, this);
 
 		} else {
 			if( opts.persist )
@@ -781,7 +781,7 @@ DynaTreeNode.prototype = {
 				this._fixSelectionState();
 
 	    	if ( fireEvents && opts.onSelect )
-				opts.onSelect.call(this.span, false, this);
+				opts.onSelect.call(this.tree, false, this);
 		}
 	},
 
@@ -807,7 +807,7 @@ DynaTreeNode.prototype = {
 			var opts = this.tree.options;
 			this.tree.logDebug("_loadContent: start - %o", this);
 			this.setLazyNodeStatus(DTNodeStatus_Loading);
-			if( true == opts.onLazyRead.call(this.span, this) ) {
+			if( true == opts.onLazyRead.call(this.tree, this) ) {
 				// If function returns 'true', we assume that the loading is done:
 				this.setLazyNodeStatus(DTNodeStatus_Ok);
 				// Otherwise (i.e. if the loading was started as an asynchronous process)
@@ -831,7 +831,7 @@ DynaTreeNode.prototype = {
 			this.tree.logDebug("dtnode._expand(%o) prevented collapse - %o", bExpand, this);
 			return;
 		}
-		if ( opts.onQueryExpand && opts.onQueryExpand.call(this.span, bExpand, this) == false )
+		if ( opts.onQueryExpand && opts.onQueryExpand.call(this.tree, bExpand, this) == false )
 			return; // Callback returned false
 		this.bExpanded = bExpand;
 
@@ -877,7 +877,7 @@ DynaTreeNode.prototype = {
 //		this.tree.logDebug("_expand: end div toggle - %o", this);
 
 		if ( opts.onExpand )
-			opts.onExpand.call(this.span, bExpand, this);
+			opts.onExpand.call(this.tree, bExpand, this);
 	},
 
 	expand: function(flag) {
@@ -1050,7 +1050,7 @@ DynaTreeNode.prototype = {
 		var opts = this.tree.options;
 		if ( event.type=="blur" || event.type=="focusout" ) {
 			if ( opts.onBlur ) // Pass element as 'this' (jQuery convention)
-				opts.onBlur.call(this.span, this);
+				opts.onBlur.call(this.tree, this);
 			if( this.tree.tnFocused )
 				$(this.tree.tnFocused.span).removeClass(opts.classNames.focused);
 			this.tree.tnFocused = null;
@@ -1064,7 +1064,7 @@ DynaTreeNode.prototype = {
 			}
 			this.tree.tnFocused = this;
 			if ( opts.onFocus ) // Pass element as 'this' (jQuery convention)
-				opts.onFocus.call(this.span, this);
+				opts.onFocus.call(this.tree, this);
 			$(this.tree.tnFocused.span).addClass(opts.classNames.focused);
 	        if( opts.persist )
 				$.cookie(opts.cookieId+"-focus", this.data.key, opts.cookie);
