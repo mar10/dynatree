@@ -47,8 +47,8 @@ Example
 {{{
     onPostInit: function(isReloading, isError) {
         // 'this' is the current tree
-        // isReloading is set, if status wss read from existing cookies
-        // isError is only used in Ajay mode
+        // isReloading is set, if status was read from existing cookies
+        // isError is only used in Ajax mode
         // Fire an onActivate() event for the currently active node
         this.reactivate();
     },
@@ -92,7 +92,7 @@ information to the web service handler.
     onPostInit: function(isReloading, isError) {
         // In lazy mode, this will be called *after* the initAjax request returned.
         // 'this' is the current tree
-        // isReloading is set, if status wss read from existing cookies
+        // isReloading is set, if status was read from existing cookies
         // isError is set, if Ajax failed
         // Fire an onActivate() event for the currently active node
         this.reactivate();
