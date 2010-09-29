@@ -2180,7 +2180,7 @@ TODO: better?
     				hitMode = "over";
     			}
     			// Prevent no-ops like 'before source node'
-    			// TODO: this makes sense when moving nodes, but may be desired in copy mode
+    			// TODO: these are no-ops when moving nodes, but not in copy mode
     			if(node === otherNode){
         			logMsg("    drop over source node prevented");
     				hitMode = null;
@@ -2190,8 +2190,12 @@ TODO: better?
     			}else if(hitMode === "after" && otherNode && node === otherNode.getPrevSibling()){
         			logMsg("    drop before source node prevented");
     				hitMode = null;
+    			}else if(hitMode === "over" && otherNode 
+    					&& otherNode.parent === node && otherNode.isLastSibling() ){
+        			logMsg("    drop last child over own parent prevented");
+    				hitMode = null;
     			}
-    			
+    			logMsg("hitMode: %s - %s - %s", hitMode, (node.parent === otherNode), node.isLastSibling());
                 ui.helper.data("hitMode", hitMode);
 //    			logMsg("    clientPos: %s/%s", event.clientX, event.clientY);
 //    			logMsg("    nodeOfs: %s/%s", nodeOfs.left, nodeOfs.top);
