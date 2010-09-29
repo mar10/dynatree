@@ -59,12 +59,13 @@ $(function(){
 //                    return false;
                 // Prevent dropping a parent below another parent (only sort
                 // nodes under the same parent)
-                if(node.parent !== sourceNode.parent)
-                    return false;
+//                if(node.parent !== sourceNode.parent)
+//                    return false;
 //              if(node === sourceNode)
 //                  return false;
 				// Don't allow dropping *over* a node (would create a child)
-				return ["before", "after"];
+//				return ["before", "after"];
+                return true;
 			},
 			onDragOver: function(node, sourceNode, hitMode) {
 				/** Return false to disallow dropping this node.
@@ -72,8 +73,8 @@ $(function(){
 				 */
 				logMsg("tree.onDragOver(%o, %o, %o)", node, sourceNode, hitMode);
 				// Prohibit creating childs in non-folders (only sorting allowed)
-				if( !node.isFolder && hitMode == "over" )
-					return "after";
+//				if( !node.isFolder && hitMode == "over" )
+//					return "after";
 			},
 			onDrop: function(node, sourceNode, hitMode) {
 				/** This function MUST be defined to enable dropping of items on
