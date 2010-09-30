@@ -344,8 +344,23 @@ DynaTreeNode.prototype = {
 		return this.childList;
 	},
 
+	/**Check if node has children (returns undefined, if not sure). */
 	hasChildren: function() {
-		return this.childList != null;
+		if(this.data.isLazy){
+			if(this.childList.length === 0){
+				// Loaded, but response was empty
+				return false;
+			}else if(this.childList.length){
+				if(this.childList.length === 1 && this.childList[0].isStatusNode()){
+					// Currently loading or load error
+					return undefined;
+				}
+				return true;
+			}
+			// childList is null or undefined: this means 'not yet loaded'
+			return undefined;
+		}
+		return !!this.childList;
 	},
 
 	isLastSibling: function() {
