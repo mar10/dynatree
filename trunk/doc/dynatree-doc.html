@@ -137,10 +137,10 @@
 		// Attach the dynatree widget to an existing &lt;div id="tree"> element
 		// and pass the tree options as an argument to the dynatree() function:
 		$("#tree").dynatree({
-			onActivate: function(dtnode) {
+			onActivate: function(node) {
 				// A DynaTreeNode object is passed to the activation handler
 				// Note: we also get this event, if persistence is on, and the page is reloaded.
-				alert("You activated " + dtnode.data.title);
+				alert("You activated " + node.data.title);
 			},
 			persist: true,
 			children: [ // Pass an array of nodes.
@@ -235,7 +235,7 @@ $("#tree").dynatree({
 	selectMode: 2, // 1:single, 2:multi, 3:multi-hier
 	fx: null, // Animations, e.g. null or { height: "toggle", duration: 200 }
 
-	// Low level event handlers: onEvent(dtnode, event): return false, to stop default processing
+	// Low level event handlers: onEvent(node, event): return false, to stop default processing
 	onClick: null, // null: generate focus, expand, activate, select events.
 	onDblClick: null, // (No default actions.)
 	onKeydown: null, // null: generate keyboard navigation (focus, expand, activate).
@@ -243,18 +243,18 @@ $("#tree").dynatree({
 	onFocus: null, // null: handle focus.
 	onBlur: null, // null: handle unfocus.
 
-	// Pre-event handlers onQueryEvent(flag, dtnode): return false, to stop processing
-	onQueryActivate: null, // Callback(flag, dtnode) before a node is (de)activated.
-	onQuerySelect: null, // Callback(flag, dtnode) before a node is (de)selected.
-	onQueryExpand: null, // Callback(flag, dtnode) before a node is expanded/collpsed.
+	// Pre-event handlers onQueryEvent(flag, node): return false, to stop processing
+	onQueryActivate: null, // Callback(flag, node) before a node is (de)activated.
+	onQuerySelect: null, // Callback(flag, node) before a node is (de)selected.
+	onQueryExpand: null, // Callback(flag, node) before a node is expanded/collpsed.
 
 	// High level event handlers
 	onPostInit: null, // Callback(isReloading, isError) when tree was (re)loaded.
-	onActivate: null, // Callback(dtnode) when a node is activated.
-	onDeactivate: null, // Callback(dtnode) when a node is deactivated.
-	onSelect: null, // Callback(flag, dtnode) when a node is (de)selected.
-	onExpand: null, // Callback(flag, dtnode) when a node is expanded.
-	onLazyRead: null, // Callback(dtnode) when a lazy node is expanded for the first time.
+	onActivate: null, // Callback(node) when a node is activated.
+	onDeactivate: null, // Callback(node) when a node is deactivated.
+	onSelect: null, // Callback(flag, node) when a node is (de)selected.
+	onExpand: null, // Callback(flag, node) when a node is expanded.
+	onLazyRead: null, // Callback(node) when a lazy node is expanded for the first time.
 
 	ajaxDefaults: { // Used by initAjax option
 		cache: false, // false: Append random '_' argument to the request url to prevent caching.
@@ -408,8 +408,8 @@ children: [
 	The node options are also passed to the event handlers and can be accessed like this:
 </p>
 <pre class="prettyprint">
-onActivate: function(dtnode) {
-	alert("You activated " + dtnode.data.title);
+onActivate: function(node) {
+	alert("You activated " + node.data.title);
 },
 </pre>
 
@@ -616,8 +616,8 @@ $("#tree").dynatree({
 	&lt;script type='text/javascript'>
 	$(function(){
 		$("#tree").dynatree({
-			onActivate: function(dtnode) {
-				alert("You activated " + dtnode);
+			onActivate: function(node) {
+				alert("You activated " + node);
 			}
 		});
 	});
@@ -663,8 +663,8 @@ $("#tree").dynatree({
 $(function(){
 	// Initialize the tree in the onload event
 	$("#tree").dynatree({
-		onActivate: function(dtnode) {
-			alert("You activated " + dtnode);
+		onActivate: function(node) {
+			alert("You activated " + node);
 		}
 	});
 	// Now get the root node object
@@ -697,8 +697,8 @@ $(function(){
 	The node options can be accessed like this:
 </p>
 <pre class="prettyprint">
-onActivate: function(dtnode) {
-	alert("You activated " + dtnode.data.title);
+onActivate: function(node) {
+	alert("You activated " + node.data.title);
 },
 </pre>
 
@@ -740,12 +740,12 @@ children: [
 <pre class="prettyprint">
 $("#tree").dynatree({
 	[&#8230;]
-	onActivate: function(dtnode) {
-		if( dtnode.data.url )
-			window.open(dtnode.data.url);
-		$("#echoActive").text(dtnode.data.title);
+	onActivate: function(node) {
+		if( node.data.url )
+			window.open(node.data.url);
+		$("#echoActive").text(node.data.title);
 	},
-	onDeactivate: function(dtnode) {
+	onDeactivate: function(node) {
 		$("#echoActive").text("-");
 	},
 	[&#8230;]
@@ -765,10 +765,10 @@ $("#tree").dynatree({
 	<pre class="prettyprint">
 	$("#tree").dynatree({
 		[&#8230;]
-		onSelect: function(flag, dtnode) {
+		onSelect: function(flag, node) {
 			if( ! flag )
-				alert("You deselected node with title " + dtnode.data.title);
-			var selectedNodes = dtnode.tree.getSelectedNodes();
+				alert("You deselected node with title " + node.data.title);
+			var selectedNodes = node.tree.getSelectedNodes();
 			var selectedKeys = $.map(selectedNodes, function(node){
 				return node.data.key;
 			});
@@ -795,10 +795,10 @@ $("#tree").dynatree({
 <pre class="prettyprint">
 $("#tree").dynatree({
 	[&#8230;]
-	onFocus: function(dtnode) {
-		$("#echoFocused").text(dtnode.data.title);
+	onFocus: function(node) {
+		$("#echoFocused").text(node.data.title);
 	},
-	onBlur: function(dtnode) {
+	onBlur: function(node) {
 		$("#echoFocused").text("-");
 	},
 	[&#8230;]
@@ -833,9 +833,9 @@ $("#tree").dynatree({
 <pre class="prettyprint">
 $("#tree").dynatree({
 	[&#8230;]
-	onLazyRead: function(dtnode){
-		dtnode.appendAjax({url: "/sendData",
-						   data: {"key": dtnode.data.key, // Optional url arguments
+	onLazyRead: function(node){
+		node.appendAjax({url: "/sendData",
+						   data: {"key": node.data.key, // Optional url arguments
 								  "mode": "all"
 								  }
 						  });
@@ -847,7 +847,7 @@ $("#tree").dynatree({
 
 <p>
 	Typically we would implement <code>onLazyRead</code> by calling the
-	<code>dtnode.appendAjax()</code> function.<br>
+	<code>node.appendAjax()</code> function.<br>
 	It expects one option object argument, as described in the documentation for
 	the <a href="http://docs.jquery.com/Ajax/jQuery.ajax">jQuery.ajax()</a>	command.<br>
 </p><p>
@@ -864,16 +864,16 @@ $("#tree").dynatree({
 <pre class="prettyprint">
 $("#tree").dynatree({
 	[&#8230;]
-	onLazyRead: function(dtnode){
-		dtnode.appendAjax({url: "/sendData",
-						   data: {"key": dtnode.data.key, // Optional url arguments
+	onLazyRead: function(node){
+		node.appendAjax({url: "/sendData",
+						   data: {"key": node.data.key, // Optional url arguments
 								  "mode": "all"
 								  },
-						   success: function(dtnode) {
+						   success: function(node) {
 							   // Called after nodes have been created and the waiting icon was removed.
 							   // 'this' is the options for this Ajax request
 							   },
-						   error: function(dtnode, XMLHttpRequest, textStatus, errorThrown) {
+						   error: function(node, XMLHttpRequest, textStatus, errorThrown) {
 							   // Called on error, after error icon was created.
 							   },
 						   cache: false // Append random '_' argument to url to prevent caching.
@@ -956,13 +956,13 @@ $("#tree").dynatree({
 		// Fire an onActivate() event for the currently active node
 		this.reactivate();
 	},
-	onActivate: function(dtnode) {
+	onActivate: function(node) {
 		// Use status functions to find out about the calling context
-		var isInitializing = dtnode.tree.isInitializing(); // Tree loading phase
-		var isReloading = dtnode.tree.isReloading(); // Loading phase, and reading status from cookies
-		var isUserEvent = dtnode.tree.isUserEvent(); // Event was triggered by mouse or keyboard
+		var isInitializing = node.tree.isInitializing(); // Tree loading phase
+		var isReloading = node.tree.isReloading(); // Loading phase, and reading status from cookies
+		var isUserEvent = node.tree.isUserEvent(); // Event was triggered by mouse or keyboard
 
-		$("#echoActive").text(dtnode.data.title);
+		$("#echoActive").text(node.data.title);
 	},
 </pre>
 
@@ -1008,11 +1008,11 @@ $("#tree").dynatree({
 		// Fire an onActivate() event for the currently active node
 		this.reactivate();
 	},
-	onActivate: function(dtnode) {
+	onActivate: function(node) {
 		// Use status functions to find out about the calling context
-		var isUserEvent = dtnode.tree.isUserEvent(); // Event was triggered by mouse or keyboard
+		var isUserEvent = node.tree.isUserEvent(); // Event was triggered by mouse or keyboard
 
-		$("#echoActive").text(dtnode.data.title);
+		$("#echoActive").text(node.data.title);
 	},
 </pre>
 
@@ -1176,7 +1176,7 @@ $("#tree").dynatree({
 	</dd>
 	<dt>visit(fn, data, includeRoot)
 	<dd>
-		Call <code>fn(dtnode, data)</code>  for all nodes.<br>
+		Call <code>fn(node, data)</code>  for all nodes.<br>
 		Stop iteration of the current branch, if fn() returns false.
 	</dd>
 </dl>
@@ -1189,7 +1189,7 @@ $("#tree").dynatree({
 	<dd>
 		Use this attribute to access all node options that were passed to create
 		this node.<br>
-		For example <code>dtnode.data.title</code> or <code>dtnode.data.tooltip</code>.
+		For example <code>node.data.title</code> or <code>node.data.tooltip</code>.
 		See also <a href="#nodeOptions">Node options</a>.
 	</dd>
 	<dt>activate()</dt>
@@ -1331,7 +1331,7 @@ node.addChild({title: "New Node", key: "3333"});
 	</dd>
 	<dt>visit(fn, data, includeSelf)
 	<dd>
-		Call <code>fn(dtnode, data)</code>  for all child nodes.<br>
+		Call <code>fn(node, data)</code>  for all child nodes.<br>
 		Stop iteration of the current branch, if fn() returns false.
 	</dd>
 </dl>
@@ -1349,16 +1349,16 @@ $("#tree").dynatree("getTree").selectKey("1234");
 // or another way:
 $("#tree").dynatree("getTree").getNodeByKey("1234").select();
 // .. or yet another way:
-$("#dynatree-id-1234").attr("dtnode").select();
+$("#dynatree-id-1234").attr("node").select();
 </pre>
 
 
 <h4>Example: Access the currently active node</h4>
 
 <pre class="prettyprint">
-var dtnode = $("#tree").dynatree("getActiveNode");
-if( dtnode )
-	alert("Currently active: " + dtnode.data.title);
+var node = $("#tree").dynatree("getActiveNode");
+if( node )
+	alert("Currently active: " + node.data.title);
 </pre>
 
 
@@ -1366,7 +1366,7 @@ if( dtnode )
 
 <pre class="prettyprint">
 $(".dynatree-partsel").each(function(){
-	dtnode = $(this).attr("dtnode");
+	node = $(this).attr("node");
 	[...]
 });
 </pre>
@@ -1378,17 +1378,17 @@ $(".dynatree-partsel").each(function(){
 <h4>Example: Rename the active node</h4>
 
 <pre class="prettyprint">
-var dtnode = $("#tree").dynatree("getActiveNode");
-dtnode.data.title = "My new title";
-dtnode.render();
+var node = $("#tree").dynatree("getActiveNode");
+node.data.title = "My new title";
+node.render();
 </pre>
 
 
 <h4>Example: Add a child to the active node</h4>
 
 <pre class="prettyprint">
-var dtnode = $("#tree").dynatree("getActiveNode");
-var childNode = dtnode.addChild({
+var node = $("#tree").dynatree("getActiveNode");
+var childNode = node.addChild({
 	title: "My new node",
 	tooltip: "This folder and all child nodes were added programmatically."
 });
@@ -1406,8 +1406,8 @@ var childNode = dtnode.addChild({
 <pre class="prettyprint">
 // Bind hover events to the tree's &lt;a> tags:
 $("#tree a").hover(function(){
-		// Find dtnode object for this &lt;a> tag
-		var dtnode = $(this).parent("[dtnode]").attr("dtnode");
+		// Find node object for this &lt;a> tag
+		var node = $(this).parent("[node]").attr("node");
 		// (...) for example open a tooltip.
 	}, function(){
 		// (...) for example remove the tooltip.
@@ -1418,8 +1418,8 @@ $("#tree a").hover(function(){
 <h4>Example: Expand all nodes</h4>
 
 <pre class="prettyprint">
-$("#tree").dynatree("getRoot").visit(function(dtnode){
-	dtnode.expand(true);
+$("#tree").dynatree("getRoot").visit(function(node){
+	node.expand(true);
 });
 </pre>
 

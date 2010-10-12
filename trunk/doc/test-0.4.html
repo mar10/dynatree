@@ -64,102 +64,102 @@
 					}
 			],
 
-			onQueryActivate: function(activate, dtnode) {
-				logMsg("onQueryActivate(%o, %o)", activate, dtnode);
+			onQueryActivate: function(activate, node) {
+				logMsg("onQueryActivate(%o, %o)", activate, node);
 			},
-			onActivate: function(dtnode) {
-				logMsg("onActivate(%o)", dtnode);
-				$("#echoActive").text(dtnode.data.title);
+			onActivate: function(node) {
+				logMsg("onActivate(%o)", node);
+				$("#echoActive").text(node.data.title);
 			},
-			onDeactivate: function(dtnode) {
-				logMsg("onDeactivate(%o)", dtnode);
+			onDeactivate: function(node) {
+				logMsg("onDeactivate(%o)", node);
 				$("#echoActive").text("-");
 			},
 
-			onQuerySelect: function(select, dtnode) {
-				logMsg("onQuerySelect(%o, %o)", select, dtnode);
-				if( dtnode.isFolder )
+			onQuerySelect: function(select, node) {
+				logMsg("onQuerySelect(%o, %o)", select, node);
+				if( node.isFolder )
 					return false;
 			},
-			onSelect: function(select, dtnode) {
-				logMsg("onSelect(%o, %o)", dtnode);
-				var s = dtnode.tree.getSelectedNodes().join(", ");
+			onSelect: function(select, node) {
+				logMsg("onSelect(%o, %o)", node);
+				var s = node.tree.getSelectedNodes().join(", ");
 				$("#echoSelected").text(s);
 			},
 
-			onQueryExpand: function(expand, dtnode) {
-				logMsg("onQueryExpand(%o, %o)", expand, dtnode);
+			onQueryExpand: function(expand, node) {
+				logMsg("onQueryExpand(%o, %o)", expand, node);
 			},
-			onExpand: function(expand, dtnode) {
-				logMsg("onExpand(%o, %o)", expand, dtnode);
+			onExpand: function(expand, node) {
+				logMsg("onExpand(%o, %o)", expand, node);
 			},
 
-			onLazyRead: function(dtnode) {
-				logMsg("onLazyRead(%o)", dtnode);
+			onLazyRead: function(node) {
+				logMsg("onLazyRead(%o)", node);
 				var fakeJsonResult = [
 					{ title: 'Lazy node 1', isLazy: true, select: false },
 					{ title: 'Simple node 2', select: true }
 				];
 				function fakeAjaxResponse() {
 					return function() {
-						dtnode.addChild(fakeJsonResult);
+						node.addChild(fakeJsonResult);
 						// Remove the 'loading...' status:
-						dtnode.setLazyNodeStatus(DTNodeStatus_Ok);
+						node.setLazyNodeStatus(DTNodeStatus_Ok);
 					};
 				}
 				window.setTimeout(fakeAjaxResponse(), 1500);
 			},
 
-			onFocus: function(dtnode) {
-				logMsg("onFocus(%o)", dtnode);
-				$("#echoFocused").text(dtnode.data.title);
+			onFocus: function(node) {
+				logMsg("onFocus(%o)", node);
+				$("#echoFocused").text(node.data.title);
 			},
-			onBlur: function(dtnode) {
-				logMsg("onBlur(%o)", dtnode);
+			onBlur: function(node) {
+				logMsg("onBlur(%o)", node);
 				$("#echoFocused").text("-");
 			},
 
-			onClick: function(dtnode, event) {
-				logMsg("onClick(%o, %o)", dtnode, event);
+			onClick: function(node, event) {
+				logMsg("onClick(%o, %o)", node, event);
 				//return false;
 			},
-			onDblClick: function(dtnode, event) {
-				logMsg("onDblClick(%o, %o)", dtnode, event);
-				dtnode.toggleSelect();
+			onDblClick: function(node, event) {
+				logMsg("onDblClick(%o, %o)", node, event);
+				node.toggleSelect();
 			},
-			onKeydown: function(dtnode, event) {
-				logMsg("onKeydown(%o, %o)", dtnode, event);
+			onKeydown: function(node, event) {
+				logMsg("onKeydown(%o, %o)", node, event);
 				switch( event.which ) {
 				case 32: // [space]
-					dtnode.toggleSelect();
+					node.toggleSelect();
 					return false;
 				case 100: // 'd'
 					$("#tree").dynatree("disable");
 					return false;
 				}
 			},
-			onKeypress: function(dtnode, event) {
-				logMsg("onKeypress(%o, %o)", dtnode, event);
+			onKeypress: function(node, event) {
+				logMsg("onKeypress(%o, %o)", node, event);
 			}
 
 		});
 
 
 		$("#btnSelectAll").click(function(){
-			$("#tree").dynatree("getRoot").visit(function(dtnode){
-				dtnode.select(true);
+			$("#tree").dynatree("getRoot").visit(function(node){
+				node.select(true);
 			});
 //			return false;
 		});
 		$("#btnDeselectAll").click(function(){
-			$("#tree").dynatree("getRoot").visit(function(dtnode){
-				dtnode.select(false);
+			$("#tree").dynatree("getRoot").visit(function(node){
+				node.select(false);
 			});
 			return false;
 		});
 		$("#btnVisit").click(function(){
-			$("#tree").dynatree("getRoot").visit(function(dtnode){
-				logMsg("%o", dtnode);
+			$("#tree").dynatree("getRoot").visit(function(node){
+				logMsg("%o", node);
 			});
 		});
 		$("#btnGetSelected").click(function(){
@@ -171,9 +171,9 @@
 			logMsg("Serialized: %o", dict);
 		});
 		$("#btnModify").click(function(){
-			var dtnode= $("#tree").dynatree("getTree").getNodeByKey("1");
-		   dtnode.data.title = "New title: " + Date();
-		   dtnode.render();
+			var node= $("#tree").dynatree("getTree").getNodeByKey("1");
+		   node.data.title = "New title: " + Date();
+		   node.render();
 		});
 		$("#btnEnable").click(function(){
 			$("#tree").dynatree(this.checked ? "enable" : "disable");
@@ -200,11 +200,11 @@
 		});
 
 		$("#tree a").hover(function(){
-				var dtnode = $(this).parent("[dtnode]").attr("dtnode");
-				logMsg("Hover in %o", dtnode);
+				var node = $(this).parent("[node]").attr("node");
+				logMsg("Hover in %o", node);
 			}, function(){
-				var dtnode = $(this).parent("[dtnode]").attr("dtnode");
-				logMsg("Hover out %o", dtnode);
+				var node = $(this).parent("[node]").attr("node");
+				logMsg("Hover out %o", node);
 			});
 	});
 

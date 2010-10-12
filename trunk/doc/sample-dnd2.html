@@ -33,16 +33,16 @@ $(function(){
 			url: "sample-data3.json"
 		},
 		dnd: {
-			onDragStart: function(dtnode) {
+			onDragStart: function(node) {
 				/** This function MUST be defined to enable dragging for the tree.
-				 *  Return false to cancel dragging of dtnode.
+				 *  Return false to cancel dragging of node.
 				 */
-				logMsg("tree.onDragStart(%o)", dtnode);
+				logMsg("tree.onDragStart(%o)", node);
 				return true;
 			},
-			onDragStop: function(dtnode) {
+			onDragStop: function(node) {
 				// This function is optional.
-				logMsg("tree.onDragStop(%o)", dtnode);
+				logMsg("tree.onDragStop(%o)", node);
 			},
 			autoExpandMS: 1000,
 			onDragEnter: function(node, sourceNode) {

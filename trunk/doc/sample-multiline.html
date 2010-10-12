@@ -40,12 +40,12 @@
 		// Initialize the tree inside the <div>element.
 		// The tree structure is read from the contained <ul> tag.
 		$("#tree").dynatree({
-			onActivate: function(dtnode) {
-				$("#echoActive").text(dtnode.data.title);
-				if(dtnode.data.key == "canvasNode1")
+			onActivate: function(node) {
+				$("#echoActive").text(node.data.title);
+				if(node.data.key == "canvasNode1")
 					drawCanvas();
 			},
-			onDeactivate: function(dtnode) {
+			onDeactivate: function(node) {
 				$("#echoSelected").text("-");
 			}
 		});

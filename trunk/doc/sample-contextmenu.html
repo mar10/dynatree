@@ -29,11 +29,11 @@
 	var clipboardNode = null;
 	var pasteMode = null;
 
-	function copyPaste(action, dtnode) {
+	function copyPaste(action, node) {
 		switch( action ) {
 		case "cut":
 		case "copy":
-			clipboardNode = dtnode;
+			clipboardNode = node;
 			pasteMode = action;
 			break;
 		case "paste":
@@ -46,14 +46,14 @@
 				var isRecursive = false;
 				var cb = clipboardNode.toDict(true, function(dict){
 					// If one of the source nodes is the target, we must not move
-					if( dict.key == dtnode.data.key )
+					if( dict.key == node.data.key )
 						isRecursive = true;
 				});
 				if( isRecursive ) {
 					alert("Cannot move a node to a sub node.");
 					return;
 				}
-				dtnode.addChild(cb);
+				node.addChild(cb);
 				clipboardNode.remove();
 			} else {
 				// Copy mode: prevent duplicate keys:
@@ -61,7 +61,7 @@
 					dict.title = "Copy of " + dict.title;
 					delete dict.key; // Remove key, so a new one will be created
 				});
-				dtnode.addChild(cb);
+				node.addChild(cb);
 			}
 			clipboardNode = pasteMode = null;
 			// Must enable context menu for new nodes
@@ -79,17 +79,17 @@
 		$("span.dynatree-node")
 			.destroyContextMenu() // unbind first, to prevent duplicates
 			.contextMenu({menu: "myMenu"}, function(action, el, pos) {
-			// The event was bound to the <span> tag, but the dtnode object
+			// The event was bound to the <span> tag, but the node object
 			// is stored in the parent <li> tag
-			var dtnode = el.parent().attr("dtnode");
+			var node = el.parent().attr("node");
 			switch( action ) {
 			case "cut":
 			case "copy":
 			case "paste":
-				copyPaste(action, dtnode);
+				copyPaste(action, node);
 				break;
 			default:
-				alert("Todo: appply action '" + action + "' to node " + dtnode);
+				alert("Todo: appply action '" + action + "' to node " + node);
 			}
 		});
 	};
@@ -100,15 +100,15 @@
 
 		$("#tree").dynatree({
 			persist: true,
-			onActivate: function(dtnode) {
-				$("#echoActivated").text(dtnode.data.title + ", key=" + dtnode.data.key);
+			onActivate: function(node) {
+				$("#echoActivated").text(node.data.title + ", key=" + node.data.key);
 			},
-			onClick: function(dtnode, event) {
+			onClick: function(node, event) {
 				// Eat keyboard events, while a menu is open
 				if( $(".contextMenu:visible").length > 0 )
 					return false;
 			},
-			onKeydown: function(dtnode, event) {
+			onKeydown: function(node, event) {
 				// Eat keyboard events, when a menu is open
 				if( $(".contextMenu:visible").length > 0 )
 					return false;
@@ -117,14 +117,14 @@
 
 				// Open context menu on [Space] key (simulate right click)
 				case 32: // [Space]
-					$(dtnode.span).trigger("mousedown", {
+					$(node.span).trigger("mousedown", {
 						preventDefault: true,
 						button: 2
 						})
 					.trigger("mouseup", {
 						preventDefault: true,
-						pageX: dtnode.span.offsetLeft,
-						pageY: dtnode.span.offsetTop,
+						pageX: node.span.offsetLeft,
+						pageY: node.span.offsetTop,
 						button: 2
 						});
 					return false;
@@ -132,19 +132,19 @@
 				// Handle Ctrl-C, -X and -V
 				case 67:
 					if( event.ctrlKey ) { // Ctrl-C
-						copyPaste("copy", dtnode);
+						copyPaste("copy", node);
 						return false;
 					}
 					break;
 				case 86:
 					if( event.ctrlKey ) { // Ctrl-V
-						copyPaste("paste", dtnode);
+						copyPaste("paste", node);
 						return false;
 					}
 					break;
 				case 88:
 					if( event.ctrlKey ) { // Ctrl-X
-						copyPaste("cut", dtnode);
+						copyPaste("cut", node);
 						return false;
 					}
 					break;

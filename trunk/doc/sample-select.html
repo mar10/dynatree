@@ -67,20 +67,20 @@
 			classNames: {checkbox: "dynatree-radio"},
 			selectMode: 1,
 			children: treeData,
-			onActivate: function(dtnode) {
-				$("#echoActive1").text(dtnode.data.title);
+			onActivate: function(node) {
+				$("#echoActive1").text(node.data.title);
 			},
-			onSelect: function(select, dtnode) {
+			onSelect: function(select, node) {
 				// Display list of selected nodes
-				var s = dtnode.tree.getSelectedNodes().join(", ");
+				var s = node.tree.getSelectedNodes().join(", ");
 				$("#echoSelection1").text(s);
 			},
-			onDblClick: function(dtnode, event) {
-				dtnode.toggleSelect();
+			onDblClick: function(node, event) {
+				node.toggleSelect();
 			},
-			onKeydown: function(dtnode, event) {
+			onKeydown: function(node, event) {
 				if( event.which == 32 ) {
-					dtnode.toggleSelect();
+					node.toggleSelect();
 					return false;
 				}
 			},
@@ -94,24 +94,24 @@
 			checkbox: true,
 			selectMode: 2,
 			children: treeData,
-			onSelect: function(select, dtnode) {
+			onSelect: function(select, node) {
 				// Display list of selected nodes
-				var selNodes = dtnode.tree.getSelectedNodes();
+				var selNodes = node.tree.getSelectedNodes();
 				// convert to title/key array
 				var selKeys = $.map(selNodes, function(node){
 					   return "[" + node.data.key + "]: '" + node.data.title + "'";
 				});
 				$("#echoSelection2").text(selKeys.join(", "));
 			},
-			onClick: function(dtnode, event) {
+			onClick: function(node, event) {
 				// We should not toggle, if target was "checkbox", because this
 				// would result in double-toggle (i.e. no toggle)
-				if( dtnode.getEventTargetType(event) == "title" )
-					dtnode.toggleSelect();
+				if( node.getEventTargetType(event) == "title" )
+					node.toggleSelect();
 			},
-			onKeydown: function(dtnode, event) {
+			onKeydown: function(node, event) {
 				if( event.which == 32 ) {
-					dtnode.toggleSelect();
+					node.toggleSelect();
 					return false;
 				}
 			},
@@ -124,15 +124,15 @@
 			checkbox: true,
 			selectMode: 3,
 			children: treeData,
-			onSelect: function(select, dtnode) {
+			onSelect: function(select, node) {
 				// Get a list of all selected nodes, and convert to a key array:
-				var selKeys = $.map(dtnode.tree.getSelectedNodes(), function(node){
+				var selKeys = $.map(node.tree.getSelectedNodes(), function(node){
 					return node.data.key;
 				});
 				$("#echoSelection3").text(selKeys.join(", "));
 
 				// Get a list of all selected TOP nodes
-				var selRootNodes = dtnode.tree.getSelectedNodes(true);
+				var selRootNodes = node.tree.getSelectedNodes(true);
 				// ... and convert to a key array:
 				var selRootKeys = $.map(selRootNodes, function(node){
 					return node.data.key;
@@ -140,12 +140,12 @@
 				$("#echoSelectionRootKeys3").text(selRootKeys.join(", "));
 				$("#echoSelectionRoots3").text(selRootNodes.join(", "));
 			},
-			onDblClick: function(dtnode, event) {
-				dtnode.toggleSelect();
+			onDblClick: function(node, event) {
+				node.toggleSelect();
 			},
-			onKeydown: function(dtnode, event) {
+			onKeydown: function(node, event) {
 				if( event.which == 32 ) {
-					dtnode.toggleSelect();
+					node.toggleSelect();
 					return false;
 				}
 			},
@@ -159,29 +159,29 @@
 			checkbox: false,
 			selectMode: 2,
 			children: treeData,
-			onQuerySelect: function(select, dtnode) {
-				if( dtnode.data.isFolder )
+			onQuerySelect: function(select, node) {
+				if( node.data.isFolder )
 					return false;
 			},
-			onSelect: function(select, dtnode) {
+			onSelect: function(select, node) {
 				// Display list of selected nodes
-				var selNodes = dtnode.tree.getSelectedNodes();
+				var selNodes = node.tree.getSelectedNodes();
 				// convert to title/key array
 				var selKeys = $.map(selNodes, function(node){
 					   return "[" + node.data.key + "]: '" + node.data.title + "'";
 				});
 				$("#echoSelection4").text(selKeys.join(", "));
 			},
-			onClick: function(dtnode, event) {
-				if( ! dtnode.data.isFolder )
-					dtnode.toggleSelect();
+			onClick: function(node, event) {
+				if( ! node.data.isFolder )
+					node.toggleSelect();
 			},
-			onDblClick: function(dtnode, event) {
-				dtnode.toggleExpand();
+			onDblClick: function(node, event) {
+				node.toggleExpand();
 			},
-			onKeydown: function(dtnode, event) {
+			onKeydown: function(node, event) {
 				if( event.which == 32 ) {
-					dtnode.toggleSelect();
+					node.toggleSelect();
 					return false;
 				}
 			},
@@ -192,20 +192,20 @@
 		});
 
 		$("#btnToggleSelect").click(function(){
-			$("#tree2").dynatree("getRoot").visit(function(dtnode){
-				dtnode.toggleSelect();
+			$("#tree2").dynatree("getRoot").visit(function(node){
+				node.toggleSelect();
 			});
 			return false;
 		});
 		$("#btnDeselectAll").click(function(){
-			$("#tree2").dynatree("getRoot").visit(function(dtnode){
-				dtnode.select(false);
+			$("#tree2").dynatree("getRoot").visit(function(node){
+				node.select(false);
 			});
 			return false;
 		});
 		$("#btnSelectAll").click(function(){
-			$("#tree2").dynatree("getRoot").visit(function(dtnode){
-				dtnode.select(true);
+			$("#tree2").dynatree("getRoot").visit(function(node){
+				node.select(true);
 			});
 			return false;
 		});

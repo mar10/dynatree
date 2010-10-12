@@ -22,10 +22,10 @@
 <script type='text/javascript'>
 	$(function(){
 		$("#tree").dynatree({
-			onActivate: function(dtnode) {
-				$("#echoActive").text(dtnode.data.title);
+			onActivate: function(node) {
+				$("#echoActive").text(node.data.title);
 			},
-			onDeactivate: function(dtnode) {
+			onDeactivate: function(node) {
 				$("#echoActive").text("-");
 			}
 		});

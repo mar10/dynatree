@@ -52,24 +52,24 @@ $(function(){
 		initAjax: {
 			url: "sample-data3.json"
 		},
-		onActivate: function(dtnode) {
-			$("#echoActive").text(dtnode.data.title + "(" + dtnode.data.key + ")");
+		onActivate: function(node) {
+			$("#echoActive").text(node.data.title + "(" + node.data.key + ")");
 		},
-		onDeactivate: function(dtnode) {
+		onDeactivate: function(node) {
 			$("#echoActive").text("-");
 		},
 		dnd: {
-			onDragStart: function(dtnode) {
+			onDragStart: function(node) {
 				/** This function MUST be defined to enable dragging for the tree.
-				 *  Return false to cancel dragging of dtnode.
+				 *  Return false to cancel dragging of node.
 				 */
-				logMsg("tree.onDragStart(%o)", dtnode);
-				if(dtnode.data.isFolder)
+				logMsg("tree.onDragStart(%o)", node);
+				if(node.data.isFolder)
 					return false;
 				return true;
 			},
-			onDragStop: function(dtnode) {
-				logMsg("tree.onDragStop(%o)", dtnode);
+			onDragStop: function(node) {
+				logMsg("tree.onDragStop(%o)", node);
 			}
 		}
 	});
@@ -78,10 +78,10 @@ $(function(){
 		initAjax: {
 			url: "sample-data3.json"
 		},
-		onActivate: function(dtnode) {
-			$("#echoActive2").text(dtnode.data.title + "(" + dtnode.data.key + ")");
+		onActivate: function(node) {
+			$("#echoActive2").text(node.data.title + "(" + node.data.key + ")");
 		},
-		onDeactivate: function(dtnode) {
+		onDeactivate: function(node) {
 			$("#echoActive2").text("-");
 		},
 		dnd: {
