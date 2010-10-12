@@ -71,7 +71,7 @@
 			return false;
 		});
 		$("#btnReloadNode").click(function(){
-			$("#tree").dynatree("getTree").getNodeByKey(_activeKey).reload();
+			$("#tree").dynatree("getTree").getNodeByKey(_activeKey).reloadChildren();
 			return false;
 		});
 
