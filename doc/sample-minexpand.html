@@ -55,22 +55,22 @@
 				];
 
 		$("#tree1").dynatree({
-			onActivate: function(dtnode) {
-				logMsg("Activated %o", dtnode);
+			onActivate: function(node) {
+				logMsg("Activated %o", node);
 			},
 			minExpandLevel: 1,
 			children: children
 		});
 		$("#tree2").dynatree({
-			onActivate: function(dtnode) {
-				logMsg("Activated %o", dtnode);
+			onActivate: function(node) {
+				logMsg("Activated %o", node);
 			},
 			minExpandLevel: 2,
 			children: children
 		});
 		$("#tree3").dynatree({
-			onActivate: function(dtnode) {
-				logMsg("Activated %o", dtnode);
+			onActivate: function(node) {
+				logMsg("Activated %o", node);
 			},
 			minExpandLevel: 3,
 			children: children

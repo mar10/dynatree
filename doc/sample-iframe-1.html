@@ -20,8 +20,8 @@
 			var $tree = parent.$("#tree");
 			var rootNode = parent.$("#tree").dynatree("getRoot");
 			parent.logMsg("%o", rootNode);
-			parent.$("#tree").dynatree("getRoot").visit(function(dtnode){
-				dtnode.toggleExpand();
+			parent.$("#tree").dynatree("getRoot").visit(function(node){
+				node.toggleExpand();
 				});
 		});
 	});

@@ -24,10 +24,10 @@
 		$("#tree").dynatree({
 			fx: { height: "toggle", duration: 200 },
 			autoCollapse: true,
-			onActivate: function(dtnode) {
-				$("#echoActive").text(dtnode.data.title);
+			onActivate: function(node) {
+				$("#echoActive").text(node.data.title);
 			},
-			onDeactivate: function(dtnode) {
+			onDeactivate: function(node) {
 				$("#echoActive").text("-");
 			}
 		});

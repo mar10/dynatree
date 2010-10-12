@@ -36,20 +36,20 @@
 				url: "sample-data1.json"
 				},
 
-			onActivate: function(dtnode) {
-				$("#echoActive").text(dtnode.data.title);
+			onActivate: function(node) {
+				$("#echoActive").text(node.data.title);
 			},
 
-			onLazyRead: function(dtnode){
+			onLazyRead: function(node){
 				// In real life we would call something like this:
-//            	dtnode.appendAjax({
+//            	node.appendAjax({
 //            	    url: "/getChildrenAsJson",
-//		            data: {key: dtnode.data.key,
+//		            data: {key: node.data.key,
 //            		       mode: "funnyMode"
 //                         }
 //              });
 				// .. but here we use a local file instead:
-				dtnode.appendAjax({
+				node.appendAjax({
 					url: "sample-data2.json"
 				});
 			}

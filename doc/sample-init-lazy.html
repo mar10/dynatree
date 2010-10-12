@@ -31,10 +31,10 @@
 			initAjax: {
 				url: "sample-data3.json"
 				},
-			onActivate: function(dtnode) {
-				$("#echoActive").text(dtnode.data.title);
+			onActivate: function(node) {
+				$("#echoActive").text(node.data.title);
 			},
-			onDeactivate: function(dtnode) {
+			onDeactivate: function(node) {
 				$("#echoActive").text("-");
 			}
 		});

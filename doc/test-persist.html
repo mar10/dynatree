@@ -73,16 +73,16 @@
 				logMsg("persistData: %o", persistData);
 				this.reactivate();
 			},
-			onActivate: function(dtnode) {
-				logMsg("onActivate: %o, userEvent:%o", dtnode, dtnode.tree.isUserEvent());
-				$("#echoActive").text(dtnode.data.title);
+			onActivate: function(node) {
+				logMsg("onActivate: %o, userEvent:%o", node, node.tree.isUserEvent());
+				$("#echoActive").text(node.data.title);
 			},
-			onDeactivate: function(dtnode) {
+			onDeactivate: function(node) {
 				$("#echoActive").text("-");
 			},
-			onDblClick: function(dtnode, event) {
-				logMsg("onDblClick(%o, %o)", dtnode, event);
-				dtnode.toggleExpand();
+			onDblClick: function(node, event) {
+				logMsg("onDblClick(%o, %o)", node, event);
+				node.toggleExpand();
 			}
 		});
 		logMsg("after widget init: %o", this);

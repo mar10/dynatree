@@ -40,10 +40,10 @@
 			onPostInit: function(isReloading, isError) {
 			   this.reactivate();
 			},
-			onActivate: function(dtnode) {
+			onActivate: function(node) {
 				// Use our custom attribute to load the new target content:
-				if( dtnode.data.url )
-					$("[name=contentFrame]").attr("src", dtnode.data.url);
+				if( node.data.url )
+					$("[name=contentFrame]").attr("src", node.data.url);
 			},
 			children: [
 				{title: "Search engines", isFolder: true, expand: true,

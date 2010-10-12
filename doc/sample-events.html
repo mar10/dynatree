@@ -25,75 +25,75 @@
 			title: "Event samples",
 //			checkbox: true,
 //			persist: true,
-			onQueryActivate: function(activate, dtnode) {
-				logMsg("onQueryActivate(%o, %o)", activate, dtnode);
+			onQueryActivate: function(activate, node) {
+				logMsg("onQueryActivate(%o, %o)", activate, node);
 //				return false;
 			},
-			onActivate: function(dtnode) {
-				logMsg("onActivate(%o)", dtnode);
-				$("#echoActive").text(dtnode.data.title);
-				if( dtnode.data.url )
-					window.open(dtnode.data.url);
+			onActivate: function(node) {
+				logMsg("onActivate(%o)", node);
+				$("#echoActive").text(node.data.title);
+				if( node.data.url )
+					window.open(node.data.url);
 			},
-			onDeactivate: function(dtnode) {
-				logMsg("onDeactivate(%o)", dtnode);
+			onDeactivate: function(node) {
+				logMsg("onDeactivate(%o)", node);
 				$("#echoActive").text("-");
 			},
 
-			onQuerySelect: function(select, dtnode) {
-				logMsg("onQuerySelect(%o, %o)", select, dtnode);
-				if( dtnode.data.isFolder )
+			onQuerySelect: function(select, node) {
+				logMsg("onQuerySelect(%o, %o)", select, node);
+				if( node.data.isFolder )
 					return false;
 			},
-			onSelect: function(select, dtnode) {
-				logMsg("onSelect(%o, %o)", dtnode);
-				var s = dtnode.tree.getSelectedNodes().join(", ");
+			onSelect: function(select, node) {
+				logMsg("onSelect(%o, %o)", node);
+				var s = node.tree.getSelectedNodes().join(", ");
 				$("#echoSelected").text(s);
 			},
 
-			onQueryExpand: function(expand, dtnode) {
-				logMsg("onQueryExpand(%o, %o)", expand, dtnode);
+			onQueryExpand: function(expand, node) {
+				logMsg("onQueryExpand(%o, %o)", expand, node);
 //				return false;
 			},
-			onExpand: function(expand, dtnode) {
-				logMsg("onExpand(%o, %o)", expand, dtnode);
+			onExpand: function(expand, node) {
+				logMsg("onExpand(%o, %o)", expand, node);
 			},
 
-			onLazyRead: function(dtnode) {
-				logMsg("onLazyRead(%o)", dtnode);
+			onLazyRead: function(node) {
+				logMsg("onLazyRead(%o)", node);
 			},
 
-			onFocus: function(dtnode) {
-				logMsg("onFocus(%o)", dtnode);
-				$("#echoFocused").text(dtnode.data.title);
+			onFocus: function(node) {
+				logMsg("onFocus(%o)", node);
+				$("#echoFocused").text(node.data.title);
 				// Auto-activate focused node after 2 seconds
-				dtnode.scheduleAction("activate", 2000);
+				node.scheduleAction("activate", 2000);
 			},
-			onBlur: function(dtnode) {
-				logMsg("onBlur(%o)", dtnode);
+			onBlur: function(node) {
+				logMsg("onBlur(%o)", node);
 				$("#echoFocused").text("-");
 			},
 
-			onClick: function(dtnode, event) {
-				logMsg("onClick(%o, %o)", dtnode, event);
-				if( event.shiftKey && dtnode.isLazy )
+			onClick: function(node, event) {
+				logMsg("onClick(%o, %o)", node, event);
+				if( event.shiftKey && node.isLazy )
 					alert("ctrl");
 				//return false;
 			},
-			onDblClick: function(dtnode, event) {
-				logMsg("onDblClick(%o, %o)", dtnode, event);
-				dtnode.toggleSelect();
+			onDblClick: function(node, event) {
+				logMsg("onDblClick(%o, %o)", node, event);
+				node.toggleSelect();
 			},
-			onKeydown: function(dtnode, event) {
-				logMsg("onKeydown(%o, %o)", dtnode, event);
+			onKeydown: function(node, event) {
+				logMsg("onKeydown(%o, %o)", node, event);
 				switch( event.which ) {
 				case 32: // [space]
-					dtnode.toggleSelect();
+					node.toggleSelect();
 					return false;
 				}
 			},
-			onKeypress: function(dtnode, event) {
-				logMsg("onKeypress(%o, %o)", dtnode, event);
+			onKeypress: function(node, event) {
+				logMsg("onKeypress(%o, %o)", node, event);
 			}
 		});
 

@@ -30,31 +30,31 @@
 				{title: "Add 1.000 nodes (deep)...", isFolder: true, isLazy: true, mode: "add1000_deep" },
 				{title: "Add 10.000 nodes (deep)...", isFolder: true, isLazy: true, mode: "add10000_deep" }
 			],
-			onSelect: function(dtnode) {
-				alert("You selected " + dtnode.data.title);
+			onSelect: function(node) {
+				alert("You selected " + node.data.title);
 			},
-			onLazyRead: function(dtnode) {
-				var tree = dtnode.tree;
-				logMsg("Benchmarking mode='" + dtnode.data.mode + "'...");
-				switch( dtnode.data.mode ) {
+			onLazyRead: function(node) {
+				var tree = node.tree;
+				logMsg("Benchmarking mode='" + node.data.mode + "'...");
+				switch( node.data.mode ) {
 					case "add100_flat_u":
-						addNodes(dtnode, 100, 0, 0, true)
+						addNodes(node, 100, 0, 0, true)
 						break;
 					case "add100_flat":
-						addNodes(dtnode, 100, 0, 0)
+						addNodes(node, 100, 0, 0)
 						break;
 					case "add1000_flat":
-						addNodes(dtnode, 1000, 0, 0)
+						addNodes(node, 1000, 0, 0)
 						break;
 					case "add1000_deep":
-						addNodes(dtnode, 10, 10, 10)
+						addNodes(node, 10, 10, 10)
 						break;
 					case "add10000_deep":
-						addNodes(dtnode, 10, 100, 10)
+						addNodes(node, 10, 100, 10)
 						break;
 				}
-//				dtnode.setLazyNodeStatus(DTNodeStatus_Ok);
-				logMsg("Benchmarking mode='" + dtnode.data.mode + "' done.");
+//				node.setLazyNodeStatus(DTNodeStatus_Ok);
+				logMsg("Benchmarking mode='" + node.data.mode + "' done.");
 				// Return true, to show we're finished
 				return true;
 			}
@@ -67,14 +67,14 @@
 		});
 	});
 
-	function addNodes(dtnode, level1, level2, level3, forceUpdate) {
+	function addNodes(node, level1, level2, level3, forceUpdate) {
 		if( forceUpdate != true )
-			dtnode.tree.enableUpdate(false);
+			node.tree.enableUpdate(false);
 
 		var key;
 		for (var i=0; i<level1; i++) {
 			key = "" + (i+1);
-			var f = dtnode.addChild({title: "Folder_" + key,
+			var f = node.addChild({title: "Folder_" + key,
 								   key: key,
 								   isFolder: true
 								   });
@@ -91,7 +91,7 @@
 				}
 			}
 		}
-		dtnode.tree.enableUpdate(true);
+		node.tree.enableUpdate(true);
 	}
 
 	</script>

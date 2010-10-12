@@ -25,21 +25,21 @@
 		// The tree structure is read from the contained <ul> tag.
 		$("#tree").dynatree({
 			title: "Programming Sample",
-			onActivate: function(dtnode) {
-				$("#echoActive").text(dtnode.data.title);
-				if( dtnode.data.url )
-					window.open(dtnode.data.url, dtnode.data.target);
+			onActivate: function(node) {
+				$("#echoActive").text(node.data.title);
+				if( node.data.url )
+					window.open(node.data.url, node.data.target);
 			},
-			onDeactivate: function(dtnode) {
+			onDeactivate: function(node) {
 				$("#echoSelected").text("-");
 			},
-			onFocus: function(dtnode) {
-				$("#echoFocused").text(dtnode.data.title);
+			onFocus: function(node) {
+				$("#echoFocused").text(node.data.title);
 			},
-			onBlur: function(dtnode) {
+			onBlur: function(node) {
 				$("#echoFocused").text("-");
 			},
-			onLazyRead: function(dtnode){
+			onLazyRead: function(node){
 				var fakeJsonResult = [
 					{ title: 'Lazy node 1', isLazy: true },
 					{ title: 'Simple node 2', select: true }
@@ -47,9 +47,9 @@
 //				alert ("Let's pretend we're using this AJAX response to load the branch:\n " + jsonResult);
 				function fakeAjaxResponse() {
 					return function() {
-						dtnode.addChild(fakeJsonResult);
+						node.addChild(fakeJsonResult);
 						// Remove the 'loading...' status:
-						dtnode.setLazyNodeStatus(DTNodeStatus_Ok);
+						node.setLazyNodeStatus(DTNodeStatus_Ok);
 					};
 				}
 				window.setTimeout(fakeAjaxResponse(), 1500);
@@ -101,9 +101,9 @@
 		});
 
 		$("#btnShowActive").click(function(){
-			var dtnode = $("#tree").dynatree("getActiveNode");
-			if( dtnode )
-				alert("Currently active: " + dtnode.data.title);
+			var node = $("#tree").dynatree("getActiveNode");
+			if( node )
+				alert("Currently active: " + node.data.title);
 			else
 				alert("No active node.");
 		});
@@ -118,30 +118,30 @@
 				return false;
 			});
 		$("#btnToggleExpand").click(function(){
-			$("#tree").dynatree("getRoot").visit(function(dtnode){
-				dtnode.toggleExpand();
+			$("#tree").dynatree("getRoot").visit(function(node){
+				node.toggleExpand();
 			});
 			return false;
 		});
 		$("#btnCollapseAll").click(function(){
-			$("#tree").dynatree("getRoot").visit(function(dtnode){
-				dtnode.expand(false);
+			$("#tree").dynatree("getRoot").visit(function(node){
+				node.expand(false);
 			});
 			return false;
 		});
 		$("#btnExpandAll").click(function(){
-			$("#tree").dynatree("getRoot").visit(function(dtnode){
-				dtnode.expand(true);
+			$("#tree").dynatree("getRoot").visit(function(node){
+				node.expand(true);
 			});
 			return false;
 		});
 		$("#btnSortActive").click(function(){
-			var dtnode = $("#tree").dynatree("getActiveNode");
-			dtnode.sortChildren();
+			var node = $("#tree").dynatree("getActiveNode");
+			node.sortChildren();
 		});
 		$("#btnSortAll").click(function(){
-			var dtnode = $("#tree").dynatree("getRoot");
-			dtnode.sortChildren(null, true);
+			var node = $("#tree").dynatree("getRoot");
+			node.sortChildren(null, true);
 		});
 	});
 </script>

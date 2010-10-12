@@ -46,18 +46,18 @@
 					},
 				{title: "Node 2" }
 			],
-			onSelect: function(dtnode) {
-				$("#echoSelected").text(dtnode.data.title);
-				//alert("You selected " + dtnode.data.title);
+			onSelect: function(node) {
+				$("#echoSelected").text(node.data.title);
+				//alert("You selected " + node.data.title);
 			},
-			onLazyRead: function(dtnode) {
-				logMsg("Benchmarking mode='" + dtnode.data.mode + "' done.");
+			onLazyRead: function(node) {
+				logMsg("Benchmarking mode='" + node.data.mode + "' done.");
 			}
 		});
 		$("#tree2").dynatree({
-			onSelect: function(dtnode) {
-				$("#echoSelected").text(dtnode.data.title);
-				//alert("You selected " + dtnode.data.title);
+			onSelect: function(node) {
+				$("#echoSelected").text(node.data.title);
+				//alert("You selected " + node.data.title);
 			}
 		});
 		$("#btnRemoveDiv").click(function(){

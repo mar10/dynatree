@@ -72,14 +72,14 @@ function simulateClick(selector) {
 };
 
 
-function addNodes(dtnode, level1, level2, level3, forceUpdate) {
+function addNodes(node, level1, level2, level3, forceUpdate) {
     if( forceUpdate != true )
-        dtnode.tree.enableUpdate(false);
+        node.tree.enableUpdate(false);
     
     var key;
     for (var i=0; i<level1; i++) {
         key = "" + (i+1);
-        var f = dtnode.addChild({title: "Folder_" + key,
+        var f = node.addChild({title: "Folder_" + key,
                                key: key,
                                isFolder: true
                                });
@@ -96,7 +96,7 @@ function addNodes(dtnode, level1, level2, level3, forceUpdate) {
             }
         }
     }
-    dtnode.tree.enableUpdate(true);
+    node.tree.enableUpdate(true);
 }
 
 /*******************************************************************************
@@ -114,38 +114,38 @@ test("Create dynatree", function() {
             {key: "_5", title: "Add 10.000 nodes (deep)...", isFolder: true, isLazy: true, mode: "add10000_deep" },
             {key: "_6", title: "Add 10.000 nodes (deep)...", isFolder: true, isLazy: true, mode: "addJsonFile" }
         ],
-        onSelect: function(dtnode) {
-            alert("You selected " + dtnode.data.title);
+        onSelect: function(node) {
+            alert("You selected " + node.data.title);
         },
-        onLazyRead: function(dtnode) {
-            var tree = dtnode.tree;
+        onLazyRead: function(node) {
+            var tree = node.tree;
             var start = +new Date;
-            logMsg("Benchmarking mode='" + dtnode.data.mode + "'...");
-            switch( dtnode.data.mode ) {
+            logMsg("Benchmarking mode='" + node.data.mode + "'...");
+            switch( node.data.mode ) {
                 case "add100_flat_u":
-                    addNodes(dtnode, 100, 0, 0, true)
+                    addNodes(node, 100, 0, 0, true)
                     break;
                 case "add100_flat":
-                    addNodes(dtnode, 100, 0, 0)
+                    addNodes(node, 100, 0, 0)
                     break;
                 case "add1000_flat":
-                    addNodes(dtnode, 1000, 0, 0)
+                    addNodes(node, 1000, 0, 0)
                     break;
                 case "add1000_deep":
-                    addNodes(dtnode, 10, 10, 10)
+                    addNodes(node, 10, 10, 10)
                     break;
                 case "add10000_deep":
-                    addNodes(dtnode, 10, 100, 10)
+                    addNodes(node, 10, 100, 10)
                     break;
                 case "addJsonFile":
-                    dtnode.appendAjax({
+                    node.appendAjax({
                         url: "sample-data2.json" 
                     });
                     break;
                 default:
-                    throw "Invalid Mode "+ dtnode.data.mode;
+                    throw "Invalid Mode "+ node.data.mode;
             }
-            logMsg("Benchmarking mode='" + dtnode.data.mode + "' done: " + (+new Date - start) + " milliseconds");
+            logMsg("Benchmarking mode='" + node.data.mode + "' done: " + (+new Date - start) + " milliseconds");
             // Return true, to show we're finished
             return true;
         }

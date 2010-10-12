@@ -30,15 +30,15 @@
 			   // Re-fire onActivate, so the text is update
 			   this.reactivate();
 			},
-			onActivate: function(dtnode) {
-				$("#echoActive").text(dtnode.data.title);
+			onActivate: function(node) {
+				$("#echoActive").text(node.data.title);
 			},
-			onDeactivate: function(dtnode) {
+			onDeactivate: function(node) {
 				$("#echoActive").text("-");
 			},
-			onDblClick: function(dtnode, event) {
-				logMsg("onDblClick(%o, %o)", dtnode, event);
-				dtnode.toggleExpand();
+			onDblClick: function(node, event) {
+				logMsg("onDblClick(%o, %o)", node, event);
+				node.toggleExpand();
 			}
 		});
 	});
