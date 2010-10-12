@@ -1269,6 +1269,10 @@ DynaTreeNode.prototype = {
 	},
 
 	reload: function(force) {
+		throw "Use reloadChildren() instead";
+	},
+	
+	reloadChildren: function(force) {
 		// Discard lazy content (and reload, if node was expanded).
 		if( this.parent === null ){
 			return this.tree.reload();

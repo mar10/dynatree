@@ -898,6 +898,7 @@ $("#tree").dynatree({
 </p><p>
 	This sample code (written in Python) shows how a server could create a
 	response:
+</p>
 <pre class="prettyprint">
 # Build node list as JSON formatted string:
 res = '['
@@ -918,7 +919,7 @@ start_response("200 OK", [("Content-Type", "application/json")])
 # Return result (the square brackets are Python / WSGI specific):
 return [ res ]
 </pre>
-</p><p>
+<p>
 	See <a href="dynatree_server.py">dynatree_server.py</a> for a sample
 	implementation of a web server that handles this (~150 lines of Python code).<br>
 	When this server is running, you can try this <a href="sample-lazy-persist.html">live example</a>
@@ -995,9 +996,9 @@ $("#tree").dynatree({
 					  mode: mode,
 					  filter: filter
 					  },
-			   addActiveKey: true,  // add &activeKey= parameter to URL
-			   addFocusedKey: true, // add &focusedKey= parameter to URL
-			   addExpandedKeyList: true // add &expandedKeyList= parameter to URL
+			   addActiveKey: true,  // add &amp;activeKey= parameter to URL
+			   addFocusedKey: true, // add &amp;focusedKey= parameter to URL
+			   addExpandedKeyList: true // add &amp;expandedKeyList= parameter to URL
 			   },
 	onPostInit: function(isReloading, isError) {
 		// In lazy mode, this will be called *after* the initAjax request returned.
@@ -1184,21 +1185,21 @@ $("#tree").dynatree({
 <h3><code>DynaTreeNode</code> class members</h3>
 
 <dl class="optionList">
-	<dt>Attribute 'data'
+	<dt>Attribute 'data'</dt>
 	<dd>
 		Use this attribute to access all node options that were passed to create
 		this node.<br>
 		For example <code>dtnode.data.title</code> or <code>dtnode.data.tooltip</code>.
 		See also <a href="#nodeOptions">Node options</a>.
 	</dd>
-	<dt>activate()
+	<dt>activate()</dt>
 	<dd>
 		Activate this node - according to flag - and fire a onActivate event.<br>
 		If <code>activeVisible</code> option is set, all parents will be expanded as necessary.<br>
 		Focus is <em>not</em> set.
 	</dd>
 
-	<dt>addChild(nodeData[, beforeNode])
+	<dt>addChild(nodeData[, beforeNode])</dt>
 	<dd>
 		Append a new child node.<br>
 		<i>nodeData</i> may be a node data object as defined in
@@ -1216,7 +1217,7 @@ node.addChild({title: "New Node", key: "3333"});
 		or omitted, the new node will be appended.)
 	</dd>
 
-	<dt>appendAjax(ajaxOptions)
+	<dt>appendAjax(ajaxOptions)</dt>
 	<dd>
 		Accepts a standard jQuery Ajax option object.<br>
 		An asynchronous request is started, so this function returns immediately.
@@ -1226,20 +1227,20 @@ node.addChild({title: "New Node", key: "3333"});
 		Use the <code>setLazyNodeStatus()</code> function to display the result.<br>
 		See <a href="#lazyLoading">Loading child nodes on demand ('lazy loading')</a> for details.
 	</dd>
-	<dt>deactivate()
+	<dt>deactivate()</dt>
 	<dd>
 		Deactivate this node and fire an onDeactivate event.
 	</dd>
-	<dt>expand(flag)
+	<dt>expand(flag)</dt>
 	<dd>
 		Expand or collapse this node - according to flag.
 	</dd>
-	<dt>focus()
+	<dt>focus()</dt>
 	<dd>
 		Set focus to this node. Parent nodes are expanded, if this is necessary
 		to make it visible.
 	</dd>
-	<dt>getEventTargetType(event)
+	<dt>getEventTargetType(event)</dt>
 	<dd>
 		Return the part of a node, that a click event occurred on.<br>
 		Possible values: 'prefix' 'expander', 'checkbox', 'title'.<br>
@@ -1271,7 +1272,7 @@ node.addChild({title: "New Node", key: "3333"});
 	<dd>
 		Expand all parents as neccessary, to make this node visible.
 	</dd>
-	<dt>reload(force)
+	<dt>reloadChildren(force)</dt>
 	<dd>
 		Discard all children of a lazy node.<br>
 		If the node is currently expanded, an <code>onLazyRead</code> event is
