@@ -22,58 +22,32 @@
 	<!-- Add code to initialize the tree when the document is loaded: -->
 	<script type='text/javascript'>
 	$(function(){
-		var children = [
-					{title: "Item 1"},
-					{title: "Folder 2", isFolder: true, key: "folder2",
-						children: [
-							{title: "Sub-item 2.1",
-								children: [
-											{title: "Sub-item 2.1.1",
-												children: [
-															{title: "Sub-item 2.1.1.1"},
-															{title: "Sub-item 2.1.2.2"}
-														]
-												},
-											{title: "Sub-item 2.1.2"}
-										]
-								},
-							{title: "Sub-item 2.2"}
-						]
-					},
-					{title: "Folder 3", isFolder: true, key: "folder3",
-						children: [
-							{title: "Sub-item 3.1",
-								children: [
-											{title: "Sub-item 3.1.1"},
-											{title: "Sub-item 3.1.2"}
-										]
-								},
-							{title: "Sub-item 3.2"}
-						]
-					},
-					{title: "Item 4"}
-				];
-
 		$("#tree1").dynatree({
+	        initAjax: {
+			    url: "sample-data3.json"
+            },
 			onActivate: function(node) {
 				logMsg("Activated %o", node);
 			},
-			minExpandLevel: 1,
-			children: children
+			minExpandLevel: 1
 		});
 		$("#tree2").dynatree({
+            initAjax: {
+                url: "sample-data3.json"
+            },
 			onActivate: function(node) {
 				logMsg("Activated %o", node);
 			},
-			minExpandLevel: 2,
-			children: children
+			minExpandLevel: 2
 		});
 		$("#tree3").dynatree({
+            initAjax: {
+		        url: "sample-data3.json"
+		    },
 			onActivate: function(node) {
 				logMsg("Activated %o", node);
 			},
-			minExpandLevel: 3,
-			children: children
+			minExpandLevel: 3
 		});
 	});
 	</script>
