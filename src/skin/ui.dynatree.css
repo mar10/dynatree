@@ -36,13 +36,13 @@ ul.dynatree-container li
 /*    padding:3px 0 3px 0;*/
     padding:1px 0 0 0;
 }
-
-/* Always suppress vertical line for top level*/
-ul.dynatree-container >li
-{
-/*    background-image: none;*/
-}
+/* Suppress lines for last child node */
 ul.dynatree-container li.dynatree-lastsib
+{
+    background-image: none;
+}
+/* Suppress lines if level is fixed expanded (option minExpandLevel) */
+ul.dynatree-no-connector > li
 {
     background-image: none;
 }
@@ -287,7 +287,9 @@ ul.dynatree-container a
 
 ul.dynatree-container a:hover
 {
-	text-decoration: underline;
+/*	text-decoration: underline; */
+	background: #F2F7FD; /* light blue */
+	border-color: #B8D6FB; /* darker light blue */
 }
 
 span.dynatree-node a

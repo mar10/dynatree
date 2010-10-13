@@ -54,7 +54,7 @@ $(function(){
 				// Don't allow dropping *over* a node (would create a child)
 				return ["before", "after"];
 			},
-			onDrop: function(node, sourceNode, hitMode) {
+            onDrop: function(node, sourceNode, hitMode, ui, draggable) {
 				/** This function MUST be defined to enable dropping of items on
 				 *  the tree.
 				 */

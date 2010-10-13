@@ -158,24 +158,9 @@ DynaTreeNode.prototype = {
 	_getInnerHtml: function() {
 		var opts = this.tree.options;
 		var cache = this.tree.cache;
-		// parent connectors
-//		var rootParent = opts.rootVisible ? null : this.tree.tnRoot;
-//		var bHideFirstExpander = (opts.rootVisible && opts.minExpandLevel>0) || opts.minExpandLevel>1;
-//		var bHideFirstConnector = opts.rootVisible || opts.minExpandLevel>0;
 		var level = this.getLevel();
 		var res = "";
-/*
-		var p = this.parent;
-		while( p ) {
-			// Suppress first connector column, if visible top level is always expanded
-			if ( bHideFirstConnector && p==rootParent  )
-				break;
-			res = ( p.isLastSibling() ? cache.tagEmpty : cache.tagVline) + res;
-			p = p.parent;
-		}
-*/
 		// connector (expanded, expandable or simple)
-
 		if( level < opts.minExpandLevel ) {
 			// skip expander/connector
 		} else if ( this.childList || this.data.isLazy ) {
@@ -183,12 +168,10 @@ DynaTreeNode.prototype = {
 		} else {
 			res += cache.tagConnector;
 		}
-
 		// Checkbox mode
 		if( opts.checkbox && this.data.hideCheckbox !== true && !this.data.isStatusNode ) {
 			res += cache.tagCheckbox;
 		}
-
 		// folder or doctype icon
 		if ( this.data.icon ) {
 			res += "<img src='" + opts.imagePath + this.data.icon + "' alt='' />";
@@ -198,13 +181,12 @@ DynaTreeNode.prototype = {
 			// icon == null means 'default icon'
 			res += cache.tagNodeIcon;
 		}
-
 		// node name
 		var tooltip = this.data.tooltip ? " title='" + this.data.tooltip + "'" : "";
 		if( this.data.noLink ) {
-			res +=  "<span class='" + opts.classNames.title + "'" + tooltip + ">" + this.data.title + "</a>";
+			res += "<span class='" + opts.classNames.title + "'" + tooltip + ">" + this.data.title + "</a>";
 		}else{
-			res +=  "<a href='#' class='" + opts.classNames.title + "'" + tooltip + ">" + this.data.title + "</a>";
+			res += "<a href='#' class='" + opts.classNames.title + "'" + tooltip + ">" + this.data.title + "</a>";
 		}
 		return res;
 	},
@@ -277,6 +259,9 @@ DynaTreeNode.prototype = {
 					this.parent.ul = document.createElement("ul");
 					this.parent.ul.style.display = "none";
 					this.parent.li.appendChild(this.parent.ul);
+					if( opts.minExpandLevel > this.getLevel() ){
+						this.parent.ul.className = cn.noConnector;
+					}
 				}
 				this.parent.ul.appendChild(this.li);
 			}
@@ -382,15 +367,15 @@ DynaTreeNode.prototype = {
 
 	isLastSibling: function() {
 		var p = this.parent;
-		if ( !p ){ 
-			return true; 
+		if ( !p ){
+			return true;
 		}
 		return p.childList[p.childList.length-1] === this;
 	},
 
 	getPrevSibling: function() {
-		if( !this.parent ){ 
-			return null; 
+		if( !this.parent ){
+			return null;
 		}
 		var ac = this.parent.childList;
 		for(var i=1; i<ac.length; i++){ // start with 1, so prev(first) = null
@@ -402,8 +387,8 @@ DynaTreeNode.prototype = {
 	},
 
 	getNextSibling: function() {
-		if( !this.parent ){ 
-			return null; 
+		if( !this.parent ){
+			return null;
 		}
 		var ac = this.parent.childList;
 		for(var i=0; i<ac.length-1; i++){ // up to length-2, so next(last) = null
@@ -599,14 +584,14 @@ DynaTreeNode.prototype = {
 			return "expander";
 		}else if( tcn === cns.checkbox ){
 			return "checkbox";
-	    }else if( tcn === cns.nodeIcon ){
+		}else if( tcn === cns.nodeIcon ){
 			return "icon";
-	    }else if( tcn === cns.empty || tcn === cns.vline || tcn === cns.connector ){
+		}else if( tcn === cns.empty || tcn === cns.vline || tcn === cns.connector ){
 			return "prefix";
-	    }else if( tcn.indexOf(cns.node) >= 0 ){
+		}else if( tcn.indexOf(cns.node) >= 0 ){
 			// FIX issue #93
 			return this._getTypeForOuterNodeEvent(event);
-	    }
+		}
 		return null;
 	},
 
@@ -1271,14 +1256,14 @@ DynaTreeNode.prototype = {
 	reload: function(force) {
 		throw "Use reloadChildren() instead";
 	},
-	
+
 	reloadChildren: function(force) {
 		// Discard lazy content (and reload, if node was expanded).
 		if( this.parent === null ){
 			return this.tree.reload();
 		}
 		if( ! this.data.isLazy ){
-			throw "node.reload() requires lazy nodes.";
+			throw "node.reloadChildren() requires lazy nodes.";
 		}
 		if( this.bExpanded ) {
 			this.expand(false);
@@ -1445,7 +1430,7 @@ DynaTreeNode.prototype = {
 		for (var i=0; i<obj.length; i++) {
 			var data = obj[i];
 			var dtnode = this._addChildNode(new DynaTreeNode(this, this.tree, data), beforeNode);
-			if( !tnFirst ){ 
+			if( !tnFirst ){
 				tnFirst = dtnode;
 			}
 			// Add child nodes recursively
@@ -1535,8 +1520,8 @@ DynaTreeNode.prototype = {
 			}
 			this.parent.childList.splice(pos, 1);
 		}
+		// Remove from source DOM parent
 		this.parent.ul.removeChild(this.li);
-		targetParent.ul.appendChild(this.li);
 
 		// Insert this node to target parent's child list
 		this.parent = targetParent;
@@ -1567,7 +1552,18 @@ DynaTreeNode.prototype = {
 			}
 		} else {
 			targetParent.childList = [ this ];
+			// Parent has no <ul> tag yet:
+			if( !targetParent.ul ) {
+				// This is the parent's first child: create UL tag
+				// (Hidden, because it will be
+				targetParent.ul = document.createElement("ul");
+				targetParent.ul.style.display = "none";
+				targetParent.li.appendChild(targetParent.ul);
+			}
 		}
+		// Add to target DOM parent
+		targetParent.ul.appendChild(this.li);
+
 		if( this.tree !== targetNode.tree ) {
 			// Fix node.tree for all source nodes
 			this.visit(function(dtnode){
@@ -1808,14 +1804,14 @@ DynaTree.prototype = {
 		// Guess skin path, if not specified
 		if(!opts.imagePath) {
 			$("script").each( function () {
-				// Eclipse syntax parser breaks on this expression, so put it at the bottom:
+				var _rexDtLibName = /.*dynatree[^\/]*\.js$/i;
 				if( this.src.search(_rexDtLibName) >= 0 ) {
 					if( this.src.indexOf("/")>=0 ){ // issue #47
 						opts.imagePath = this.src.slice(0, this.src.lastIndexOf("/")) + "/skin/";
 					}else{
 						opts.imagePath = "skin/";
 					}
-//    				logMsg("Guessing imagePath from '%s': '%s'", this.src, opts.imagePath);
+    				logMsg("Guessing imagePath from '%s': '%s'", this.src, opts.imagePath);
 					return false; // first match
 				}
 			});
@@ -2009,10 +2005,6 @@ DynaTree.prototype = {
 		this.logDebug("dynatree.redraw() done.");
 	},
 
-	reloadAjax: function() {
-		this.logWarning("tree.reloadAjax() is deprecated since v0.5.2 (use reload() instead).");
-	},
-
 	reload: function() {
 		this._load();
 	},
@@ -2030,10 +2022,22 @@ DynaTree.prototype = {
 	},
 
 	getNodeByKey: function(key) {
+		// Search the DOM by element ID (assuming this is faster than traversing all nodes).
 		// $("#...") has problems, if the key contains '.', so we use getElementById()
-//		return $("#" + this.options.idPrefix + key).attr("dtnode");
 		var el = document.getElementById(this.options.idPrefix + key);
-		return ( el && el.dtnode ) ? el.dtnode : null;
+		if( el ){
+			return el.dtnode ? el.dtnode : null;
+		}
+		// Not found in the DOM, but still may be in an unrendered part of tree
+		var match = null;
+		this.visit(function(node){
+			window.console.log("%s", node);
+			if(node.data.key == key) {
+				match = node;
+				return false;
+			}
+		}, true);
+		return match;
 	},
 
 	getActiveNode: function() {
@@ -2268,9 +2272,6 @@ TODO: better?
 		 *     _onDragEvent("leave", targetNode, sourceNode, event, ui, draggable);
 		 *     _onDragEvent("stop", sourceNode, null, event, ui, draggable);
 		 */
-		var _calcHitMode = function() {
-
-		}
 		if(eventName !== "over"){
 			this.logDebug("tree._onDragEvent(%s, %o, %o) - %o", eventName, node, otherNode, this);
 		}
@@ -2296,7 +2297,10 @@ TODO: better?
 			}
 			if(res === false) {
 				this.logDebug("tree.onDragStart() cancelled");
-				draggable._clear();
+				//draggable._clear();
+				// NOTE: the return value seems to be ignored (drag is not canceled, when false is returned)
+				ui.helper.trigger("mouseup");
+				ui.helper.hide();
 			} else {
 				nodeTag.addClass("dynatree-drag-source");
 			}
@@ -2387,7 +2391,7 @@ TODO: better?
 //			if(dnd.onDrop && enterResponse !== false)
 //				dnd.onDrop(node, otherNode, hitMode)
 			if(hitMode && dnd.onDrop){
-				dnd.onDrop(node, otherNode, hitMode);
+				dnd.onDrop(node, otherNode, hitMode, ui, draggable);
 			}
 			break;
 		case "leave":
@@ -2850,9 +2854,5 @@ var _registerDnd = function() {
 	didRegisterDnd = true;
 };
 
-
 // ---------------------------------------------------------------------------
 })(jQuery);
-
-// Eclipse syntax parser breaks on this expression, so we put it at the bottom.
-var _rexDtLibName = /.*dynatree[^/]*\.js$/i;
