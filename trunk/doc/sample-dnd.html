@@ -33,6 +33,7 @@ $(function(){
 			url: "sample-data3.json"
 		},
 		dnd: {
+	        preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
 			onDragStart: function(node) {
 				/** This function MUST be defined to enable dragging for the tree.
 				 *  Return false to cancel dragging of node.

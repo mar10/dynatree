@@ -86,6 +86,7 @@ $(function(){
 		},
 		dnd: {
 			autoExpandMS: 1000,
+	        preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
 			onDragEnter: function(node, sourceNode) {
 				/** sourceNode may be null for non-dynatree droppables.
 				 *  Return false to disallow dropping on node. In this case

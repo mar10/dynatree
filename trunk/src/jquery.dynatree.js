@@ -732,9 +732,9 @@ DynaTreeNode.prototype = {
 //		this.tree.logDebug("_fixSelectionState(%o) - %o", this.bSelected, this);
 		if( this.bSelected ) {
 			// Select all children
-			this.visit(function(dtnode){
-				dtnode.parent._setSubSel(true);
-				dtnode._select(true, false, false);
+			this.visit(function(node){
+				node.parent._setSubSel(true);
+				node._select(true, false, false);
 			});
 			// Select parents, if all children are selected
 			var p = this.parent;
@@ -756,9 +756,9 @@ DynaTreeNode.prototype = {
 		} else {
 			// Deselect all children
 			this._setSubSel(false);
-			this.visit(function(dtnode){
-				dtnode._setSubSel(false);
-				dtnode._select(false, false, false);
+			this.visit(function(node){
+				node._setSubSel(false);
+				node._select(false, false, false);
 			});
 			// Deselect parents, and recalc hasSubSel
 			var p = this.parent;
@@ -795,10 +795,10 @@ DynaTreeNode.prototype = {
 		}
 		// Force single-selection
 		if( opts.selectMode==1 && sel ) {
-			this.tree.visit(function(dtnode){
-				if( dtnode.bSelected ) {
+			this.tree.visit(function(node){
+				if( node.bSelected ) {
 					// Deselect; assuming that in selectMode:1 there's max. one other selected node
-					dtnode._select(false, false, false);
+					node._select(false, false, false);
 					return false;
 				}
 			});
@@ -1145,25 +1145,28 @@ DynaTreeNode.prototype = {
 	},
 
 	visit: function(fn, includeSelf) {
-		// Call fn(dtnode, data) for all child nodes. Stop iteration, if fn() returns false.
-		var n = 0;
+		// Call fn(node) for all child nodes. Stop iteration, if fn() returns false.
+		var res = true;
 		if( includeSelf === true ) {
-			if( fn(this) === false ){
-				return 1;
-			}
-			n++;
-		}
-		if ( this.childList ){
-			for (var i=0; i<this.childList.length; i++){
-				n += this.childList[i].visit(fn, true);
+			res = fn(this);
+			if( res === false || res == "skip" ){
+				return res;
 			}
 		}
-		return n;
+		if(this.childList){
+			for(var i=0; i<this.childList.length; i++){
+				res = this.childList[i].visit(fn, true);
+				if( res === false ){
+					break;
+				}
+			}
+		}
+		return res;
 	},
 
 	visitParents: function(fn, includeSelf) {
 		// Visit parent nodes (bottom up)
-		if(includeSelf && fn(this) === false) {
+		if(includeSelf && fn(this) === false){
 			return false;
 		}
 		var p = this.parent;
@@ -1173,6 +1176,7 @@ DynaTreeNode.prototype = {
 			}
 			p = p.parent;
 		}
+		return true;
 	},
 
 	remove: function() {
@@ -1566,8 +1570,8 @@ DynaTreeNode.prototype = {
 
 		if( this.tree !== targetNode.tree ) {
 			// Fix node.tree for all source nodes
-			this.visit(function(dtnode){
-				dtnode.tree = targetNode.tree;
+			this.visit(function(node){
+				node.tree = targetNode.tree;
 			}, null, true);
 			throw "Not yet implemented.";
 		}
@@ -2031,7 +2035,7 @@ DynaTree.prototype = {
 		// Not found in the DOM, but still may be in an unrendered part of tree
 		var match = null;
 		this.visit(function(node){
-			window.console.log("%s", node);
+//			window.console.log("%s", node);
 			if(node.data.key == key) {
 				match = node;
 				return false;
@@ -2059,11 +2063,11 @@ DynaTree.prototype = {
 
 	getSelectedNodes: function(stopOnParents) {
 		var nodeList = [];
-		this.tnRoot.visit(function(dtnode){
-			if( dtnode.bSelected ) {
-				nodeList.push(dtnode);
+		this.tnRoot.visit(function(node){
+			if( node.bSelected ) {
+				nodeList.push(node);
 				if( stopOnParents === true ){
-					return false; // stop processing this branch
+					return "skip"; // stop processing this branch
 				}
 			}
 		});
@@ -2344,19 +2348,21 @@ TODO: better?
 				}
 				// Prevent no-ops like 'before source node'
 				// TODO: these are no-ops when moving nodes, but not in copy mode
-				if(node === otherNode){
-					logMsg("    drop over source node prevented");
-					hitMode = null;
-				}else if(hitMode === "before" && otherNode && node === otherNode.getNextSibling()){
-					logMsg("    drop after source node prevented");
-					hitMode = null;
-				}else if(hitMode === "after" && otherNode && node === otherNode.getPrevSibling()){
-					logMsg("    drop before source node prevented");
-					hitMode = null;
-				}else if(hitMode === "over" && otherNode
-						&& otherNode.parent === node && otherNode.isLastSibling() ){
-					logMsg("    drop last child over own parent prevented");
-					hitMode = null;
+				if( dnd.preventVoidMoves ){
+					if(node === otherNode){
+						logMsg("    drop over source node prevented");
+						hitMode = null;
+					}else if(hitMode === "before" && otherNode && node === otherNode.getNextSibling()){
+						logMsg("    drop after source node prevented");
+						hitMode = null;
+					}else if(hitMode === "after" && otherNode && node === otherNode.getPrevSibling()){
+						logMsg("    drop before source node prevented");
+						hitMode = null;
+					}else if(hitMode === "over" && otherNode
+							&& otherNode.parent === node && otherNode.isLastSibling() ){
+						logMsg("    drop last child over own parent prevented");
+						hitMode = null;
+					}
 				}
 				logMsg("hitMode: %s - %s - %s", hitMode, (node.parent === otherNode), node.isLastSibling());
 				ui.helper.data("hitMode", hitMode);
@@ -2622,9 +2628,10 @@ $.ui.dynatree.prototype.options = {
 		// Make tree nodes draggable:
 		onDragStart: null, // Callback(sourceNode), return true, to enable dnd
 		onDragStop: null, // Callback(sourceNode)
-		helper: null,
+//		helper: null,
 		// Make tree nodes accept draggables
 		autoExpandMS: 1000, // Expand nodes after n milliseconds of hovering.
+		preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
 		onDragEnter: null, // Callback(targetNode, sourceNode)
 		onDragOver: null, // Callback(targetNode, sourceNode, hitMode)
 		onDrop: null, // Callback(targetNode, sourceNode, hitMode)
