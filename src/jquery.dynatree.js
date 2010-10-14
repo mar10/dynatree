@@ -162,8 +162,11 @@ DynaTreeNode.prototype = {
 		var res = "";
 		// connector (expanded, expandable or simple)
 		if( level < opts.minExpandLevel ) {
-			// skip expander/connector
-		} else if ( this.childList || this.data.isLazy ) {
+			if(level > 1){
+				res += cache.tagConnector;
+			}
+			// .. else (i.e. for root level) skip expander/connector altogether
+		} else if( this.hasChildren() !== false ) {
 			res += cache.tagExpander;
 		} else {
 			res += cache.tagConnector;
@@ -183,8 +186,8 @@ DynaTreeNode.prototype = {
 		}
 		// node name
 		var tooltip = this.data.tooltip ? " title='" + this.data.tooltip + "'" : "";
-		if( this.data.noLink ) {
-			res += "<span class='" + opts.classNames.title + "'" + tooltip + ">" + this.data.title + "</a>";
+		if( opts.noLink || this.data.noLink ) {
+			res += "<span style='display: inline-block;' class='" + opts.classNames.title + "'" + tooltip + ">" + this.data.title + "</span>";
 		}else{
 			res += "<a href='#' class='" + opts.classNames.title + "'" + tooltip + ">" + this.data.title + "</a>";
 		}
@@ -259,9 +262,9 @@ DynaTreeNode.prototype = {
 					this.parent.ul = document.createElement("ul");
 					this.parent.ul.style.display = "none";
 					this.parent.li.appendChild(this.parent.ul);
-					if( opts.minExpandLevel > this.getLevel() ){
-						this.parent.ul.className = cn.noConnector;
-					}
+//					if( opts.minExpandLevel > this.getLevel() ){
+//						this.parent.ul.className = cn.noConnector;
+//					}
 				}
 				this.parent.ul.appendChild(this.li);
 			}
@@ -277,10 +280,9 @@ DynaTreeNode.prototype = {
 			if( this.bExpanded ){
 				cnList.push(cn.expanded);
 			}
-			if( this.childList !== null ){
+			if( this.hasChildren() !== false ){
 				cnList.push(cn.hasChildren);
 			}
-//			if( this.data.isLazy && !this.isRead )
 			if( this.data.isLazy && this.childList === null ){
 				cnList.push(cn.lazy);
 			}
@@ -346,21 +348,20 @@ DynaTreeNode.prototype = {
 		return this.childList;
 	},
 
-	/**Check if node has children (returns undefined, if not sure). */
+	/** Check if node has children (returns undefined, if not sure). */
 	hasChildren: function() {
 		if(this.data.isLazy){
-			if(this.childList.length === 0){
+			if(this.childList === null || this.childList === undefined){
+				// Not yet loaded
+				return undefined;
+			}else if(this.childList.length === 0){
 				// Loaded, but response was empty
 				return false;
-			}else if(this.childList.length){
-				if(this.childList.length === 1 && this.childList[0].isStatusNode()){
-					// Currently loading or load error
-					return undefined;
-				}
-				return true;
+			}else if(this.childList.length === 1 && this.childList[0].isStatusNode()){
+				// Currently loading or load error
+				return undefined;
 			}
-			// childList is null or undefined: this means 'not yet loaded'
-			return undefined;
+			return true;
 		}
 		return !!this.childList;
 	},
@@ -421,12 +422,11 @@ DynaTreeNode.prototype = {
 		return false;
 	},
 
+	/**Sort child list by title.
+	 * cmd: optional compare function.
+	 * deep: optional: pass true to sort all descendant nodes.
+	 */
 	sortChildren: function(cmp, deep) {
-		/*
-		 * Sort child list by title.
-		 * cmd: optional comapre function.
-		 * deep: optional: pass true to sort all descendant nodes.
-		 */
 		var cl = this.childList;
 		if( !cl ){
 			return;
@@ -704,7 +704,6 @@ DynaTreeNode.prototype = {
 				break;
 			}
 		}
-//		if( this.parent == null && this.tree.options.minExpandLevel>0 ) {
 		if( this.parent === null ) {
 			expand = false;
 		}
@@ -895,7 +894,7 @@ DynaTreeNode.prototype = {
 			}
 		}
 		// Do not apply animations in init phase, or before lazy-loading
-		var allowEffects = !(this.data.isLazy && this.childList===null) && !this.isLoading;
+		var allowEffects = !(this.data.isLazy && this.childList === null) && !this.isLoading;
 		this.render(allowEffects);
 
 		// Auto-collapse mode: collapse all siblings
@@ -1004,11 +1003,17 @@ DynaTreeNode.prototype = {
 			this.focus(); // issue 95
 		} else {
 			this._userActivate();
-			// TODO: check if still required:
-			// Chrome and Safari don't focus the a-tag on click
 			var aTag = this.span.getElementsByTagName("a");
-			if(aTag[0]){ // not present, if noLink is set
-				aTag[0].focus();
+			if(aTag[0]){ 
+				// TODO: check if still required:
+				// Chrome and Safari don't focus the a-tag on click, 
+				// but calling focus() seem to have other problems: 
+				// http://code.google.com/p/dynatree/issues/detail?id=154
+				// so for now, we live with the chrome/safari problem
+//				aTag[0].focus();
+			}else{
+				// 'noLink' option was set
+				return true;
 			}
 		}
 		// Make sure that clicks stop, otherwise <a href='#'> jumps to the top
@@ -2476,7 +2481,8 @@ $.widget("ui.dynatree", {
 		this.unbind();
 
 		var eventNames = "click.dynatree dblclick.dynatree";
-		if( o.keyboard ){ // Note: leading ' '!
+		if( o.keyboard ){ 
+			// Note: leading ' '!
 			eventNames += " keypress.dynatree keydown.dynatree";
 		}
 		$this.bind(eventNames, function(event){
@@ -2600,8 +2606,7 @@ $.ui.dynatree.prototype.options = {
 	checkbox: false, // Show checkboxes.
 	selectMode: 2, // 1:single, 2:multi, 3:multi-hier
 	fx: null, // Animations, e.g. null or { height: "toggle", duration: 200 }
-	enableDrag: false,
-	enableDrop: false,
+	noLink: false, // Use <span> instead of <a> tags for all nodes
 	// Low level event handlers: onEvent(dtnode, event): return false, to stop default processing
 	onClick: null, // null: generate focus, expand, activate, select events.
 	onDblClick: null, // (No default actions.)
@@ -2645,7 +2650,7 @@ $.ui.dynatree.prototype.options = {
 		loading: "Loading&#8230;",
 		loadError: "Load error!"
 	},
-	generateIds: false,
+	generateIds: false, // Generate id attributes like <span id='dynatree-id-KEY'>
 	idPrefix: "dynatree-id-", // Used to generate node id's like <span id="dynatree-id-<key>">.
 //    cookieId: "dynatree-cookie", // Choose a more unique name, to allow multiple trees.
 	cookieId: "dynatree", // Choose a more unique name, to allow multiple trees.
@@ -2705,6 +2710,7 @@ $.ui.dynatree.nodedatadefaults = {
 	tooltip: null, // Show this popup text.
 	icon: null, // Use a custom image (filename relative to tree.options.imagePath). 'null' for default icon, 'false' for no icon.
 	addClass: null, // Class name added to the node's span tag.
+	noLink: false, // Use <span> instead of <a> tag for this node
 	activate: false, // Initial active status.
 	focus: false, // Initial focused status.
 	expand: false, // Initial expanded status.

@@ -22,7 +22,19 @@
 <script type='text/javascript'>
 	$(function(){
 		$("#tree").dynatree({
+			noLink: true
 			// using default options
+		});
+		$("form").submit(function() {
+			var tree = $("#tree").dynatree("getTree");
+			//alert("TODO: Submit\n" + tree.toDict());
+			//alert($(this).serializeArray());
+			alert($(this).serialize());
+			return false;
+		});
+		$("#btn1").click(function(){
+			alert("Thank you for clicking.");
+			return false;
 		});
 	});
 </script>
@@ -33,48 +45,38 @@
 	<p class="description">
 		This tree is embedded in a form and uses a [Submit] button to POST the
 		tree status.<br>
-		It also uses form input elements.
+		It also uses form input elements.<br>
+        The 'noLink' tree-option is used to make the form and HTML5 elements clickable. 
 	</p>
-	<form action="http://127.0.0.1:8001/submit_data" method="POST">
+	<!-- 
+    <form action="http://127.0.0.1:8001/submit_data" method="POST">
+     -->
+    <form>
 		<div id="tree">
 			<ul id="treeData" style="display: none;">
 				<li id="id1" title="Look, a tool tip!">item1 with key and tooltip
 				<li id="id2">
 					<span><input name="id2"></input></span>
 				<li id="id2b">
-					<button name="as">click me</button>
+					<button id="btn1">click me</button>
 				<li id="id2c">
 					Name: <input type="text" name="name" /><br>
+                <li id="id2c">
 					Comment: <textarea name="comment"></textarea>
-				<li id="id3" class="folder">Folder with some children
+				<li><span>
+						<input type="radio" name="rb1" value="v1" checked> Umschlag 1<br>
+						<input type="radio" name="rb1" value="v2"> Umschlag 2<br>
+						<input type="radio" name="rb1" value="v3"> Umschlag 3
+					</span>
+				<li id="id3" class="folder">Some more options here:
 					<ul>
-						<li>
-							Name: <input type="text" name="name2" /><br>
+						<li><span>
+							Name: <input type="text" name="name2" />
+							</span>
+						<li><span>
 							Comment: <textarea name="comment2"></textarea>
-						<li id="id3.1">Sub-item 3.1
-							<ul>
-								<li id="id3.1.1">Sub-item 3.1.1
-								<li id="id3.1.2">Sub-item 3.1.2
-							</ul>
-						<li id="id3.2">Sub-item 3.2
-							<ul>
-								<li id="id3.2.1">Sub-item 3.2.1
-								<li id="id3.2.2">Sub-item 3.2.2
-							</ul>
-					</ul>
-				<li id="id4" class="expanded">Document with some children (expanded on init)
-					<ul>
-						<li id="id4.1"  class="active focused">Sub-item 4.1 (active and focus on init)
-							<ul>
-								<li id="id4.1.1">Sub-item 4.1.1
-								<li id="id4.1.2">Sub-item 4.1.2
-							</ul>
-						<li id="id4.2">Sub-item 4.2
-							<ul>
-								<li id="id4.2.1">Sub-item 4.2.1
-								<li id="id4.2.2">Sub-item 4.2.2
-							</ul>
-					</ul>
+							</span>
+                    </ul>
 			</ul>
 		</div>
 		<input type="submit" value="Send data">

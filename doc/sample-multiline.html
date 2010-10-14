@@ -80,6 +80,9 @@
 	<h1>Example: formatted and multi-line titles</h1>
 	<p class="description">
 		This example shows how multi-line and non-text contents is displayed.
+		<br>
+		The 'noLink' node-option is used for single nodes to make the form and 
+		HTML5 elements clickable. 
 	</p>
 
 	<div id="tree">
@@ -114,7 +117,7 @@
 
 			<li class="folder">Long line
 				<ul>
-					<li><span>
+					<li class="noLink"><span>
 					Lorem ipsum dolor sit amet, consectetuer sadipscing elitr, sed
 					diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
 					sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
@@ -133,7 +136,7 @@
 
 			<li class="folder">Long text using BR and P
 				<ul>
-					<li><span>
+					<li class="noLink"><span>
 					<p>
 					Lorem ipsum dolor sit amet, consectetuer sadipscing elitr, sed <br>
 					diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,  <br>
@@ -160,10 +163,10 @@
 
 			<li class="folder">Form elements
 				<ul>
-					<li><span>
+					<li class="noLink"><span>
 						Click here: <button value="123">Click me</button>
 						</span>
-					<li data="icon: false"><span>
+					<li class="noLink" data="icon: false"><span>
 						<input type="radio" name="rb1" value="v1" checked> Umschlag 1<br>
 						<input type="radio" name="rb1" value="v2"> Umschlag 2<br>
 						<input type="radio" name="rb1" value="v3"> Umschlag 3
