@@ -3,17 +3,10 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 	<title>Dynatree - Example</title>
-<!--
+
 	<script src="../jquery/jquery.js" type="text/javascript"></script>
-	<script src="../jquery/jquery.ui.core.js" type="text/javascript"></script>
-	<script src="../jquery/jquery.ui.widget.js" type="text/javascript"></script>
+	<script src="../jquery/jquery-ui.custom.js" type="text/javascript"></script>
 	<script src="../jquery/jquery.cookie.js" type="text/javascript"></script>
-	<script src="../jquery/jquery.draggable.js" type="text/javascript"></script>
-	<script src="../jquery/jquery.droppable.js" type="text/javascript"></script>
- -->
-	<!-- Standard jQuery 1.4 and UI 1.8 -->
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js" type="text/javascript"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.js" type="text/javascript"></script>
 
 	<link href="../src/skin/ui.dynatree.css" rel="stylesheet" type="text/css">
 	<script src="../src/jquery.dynatree.js" type="text/javascript"></script>
@@ -86,7 +79,7 @@ $(function(){
 		},
 		dnd: {
 			autoExpandMS: 1000,
-	        preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
+			preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
 			onDragEnter: function(node, sourceNode) {
 				/** sourceNode may be null for non-dynatree droppables.
 				 *  Return false to disallow dropping on node. In this case
@@ -122,15 +115,15 @@ $(function(){
 				}
 				if(hitMode == "over"){
 					// Append as child node
-				    node.addChild(copynode);
-				    // expand the drop target
-				    node.expand(true);
-                }else if(hitMode == "before"){
-                    // Add before this, i.e. as child of current parent
-                    node.parent.addChild(copynode, node);
-                }else if(hitMode == "after"){
-                    // Add after this, i.e. as child of current parent
-                    node.parent.addChild(copynode, node.getNextSibling());
+					node.addChild(copynode);
+					// expand the drop target
+					node.expand(true);
+				}else if(hitMode == "before"){
+					// Add before this, i.e. as child of current parent
+					node.parent.addChild(copynode, node);
+				}else if(hitMode == "after"){
+					// Add after this, i.e. as child of current parent
+					node.parent.addChild(copynode, node.getNextSibling());
 				}
 			},
 			onDragLeave: function(node, sourceNode) {
