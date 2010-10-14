@@ -3,20 +3,13 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 	<title>Dynatree - Example</title>
-<!--
-	<script src='../jquery/jquery.js' type='text/javascript'></script>
-	<script src='../jquery/jquery.ui.core.js' type='text/javascript'></script>
-	<script src='../jquery/jquery.ui.widget.js' type='text/javascript'></script>
-	<script src='../jquery/jquery.cookie.js' type='text/javascript'></script>
-	<script src='../jquery/jquery.draggable.js' type='text/javascript'></script>
-	<script src='../jquery/jquery.droppable.js' type='text/javascript'></script>
- -->
-	<!-- Standard jQuery 1.4 and UI 1.8 -->
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js" type="text/javascript"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.js" type="text/javascript"></script>
 
-	<link href='../src/skin/ui.dynatree.css' rel='stylesheet' type='text/css'>
-	<script src='../src/jquery.dynatree.js' type='text/javascript'></script>
+	<script src="../jquery/jquery.js" type="text/javascript"></script>
+	<script src="../jquery/jquery-ui.custom.js" type="text/javascript"></script>
+	<script src="../jquery/jquery.cookie.js" type="text/javascript"></script>
+
+	<link href="../src/skin/ui.dynatree.css" rel="stylesheet" type="text/css">
+	<script src="../src/jquery.dynatree.js" type="text/javascript"></script>
 
 	<!-- Start_Exclude: This block is not part of the sample code -->
 	<link href="prettify.css" rel="stylesheet">
@@ -33,7 +26,7 @@ $(function(){
 			url: "sample-data3.json"
 		},
 		dnd: {
-	        preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
+			preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
 			onDragStart: function(node) {
 				/** This function MUST be defined to enable dragging for the tree.
 				 *  Return false to cancel dragging of node.
@@ -48,14 +41,14 @@ $(function(){
 				 *  Return ['before', 'after'] to restrict available hitModes.
 				 *  Any other return value will calc the hitMode from the cursor position.
 				 */
-                // Prevent dropping a parent below another parent (only sort
-                // nodes under the same parent)
-                if(node.parent !== sourceNode.parent)
-                    return false;
+				// Prevent dropping a parent below another parent (only sort
+				// nodes under the same parent)
+				if(node.parent !== sourceNode.parent)
+					return false;
 				// Don't allow dropping *over* a node (would create a child)
 				return ["before", "after"];
 			},
-            onDrop: function(node, sourceNode, hitMode, ui, draggable) {
+			onDrop: function(node, sourceNode, hitMode, ui, draggable) {
 				/** This function MUST be defined to enable dropping of items on
 				 *  the tree.
 				 */
@@ -71,8 +64,8 @@ $(function(){
 	<h1>Example: Sort nodes using drag-and-drop</h1>
 	<p class="description">
 		This sample uses Dynatree's built-in drag-and-drop feature to move nodes.<br>
-        - Nodes may only be dragged under it's original parent.<br>
-        - When dropped, the node is moved to the target.<br>
+		- Nodes may only be dragged under it's original parent.<br>
+		- When dropped, the node is moved to the target.<br>
 	</p>
 
 	<div id="tree"> </div>

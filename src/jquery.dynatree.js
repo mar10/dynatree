@@ -226,7 +226,7 @@ DynaTreeNode.prototype = {
 		 *   </ul>
 		 * </li>
 		 */
-		this.tree.logDebug("%o.render(%s)", this, useEffects);
+//		this.tree.logDebug("%o.render(%s)", this, useEffects);
 		// ---
 		var opts = this.tree.options;
 		var cn = opts.classNames;
