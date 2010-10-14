@@ -1174,10 +1174,11 @@ $("#tree").dynatree({
 		Convert the tree into a JavaScript object.<br>
 		See <code>node.toDict()</code> for details.
 	</dd>
-	<dt>visit(fn, data, includeRoot)
+	<dt>visit(fn, includeRoot)
 	<dd>
-		Call <code>fn(node, data)</code>  for all nodes.<br>
-		Stop iteration of the current branch, if fn() returns false.
+		Call <code>fn(node)</code> for all nodes.<br>
+        Stop iteration, if fn() returns false.
+        Stop iteration <i>of the current branch</i>, if fn() returns 'skip'.
 	</dd>
 </dl>
 
@@ -1329,10 +1330,11 @@ node.addChild({title: "New Node", key: "3333"});
 	<dd>
 		Toggle selection state.
 	</dd>
-	<dt>visit(fn, data, includeSelf)
+	<dt>visit(fn, includeSelf)
 	<dd>
-		Call <code>fn(node, data)</code>  for all child nodes.<br>
-		Stop iteration of the current branch, if fn() returns false.
+		Call <code>fn(node)</code> for all child nodes.<br>
+        Stop iteration, if fn() returns false.
+        Stop iteration <i>of the current branch</i>, if fn() returns 'skip'.
 	</dd>
 </dl>
 
