@@ -6,45 +6,27 @@
 When updating from version 0.5 to 1.0, the following aspects have changed and may have to be adjusted.
 Main Changes:
   * Build against jQuery 1.4 and jQuery UI 1.8
-  * New HTML markup
-    Using <ul>/<li> for faster expand / collapse and smoother effects
-  * Support for drag'n'drop
-    Compatible with jquery.ui.draggable/.droppable but more efficient for a large 
-    number of nodes.
-
-- Faster benchmarks
-- Modified css
-- requires jquery.ui.widget.js
-- ui-dynatree-document -> ui-dynatree-node
-- Class ui-dynatree-folder is now *additionally* set (together with 
-  ui-dynatree-node)
-- Always hide root node.
-  Removed tree.rootVisible (now always hidden)
-  Removed tree.title.
-  tree.minExpandLevel must be >= 1
-  If a single visible root is wanted, one could always create one using <ul>
-  Top level node expanders are not connected by vlines (requires additional 
-  expander icon).
-  If minExpandLevel>=1, also the expander icons are hidden, so the first icon 
-  column can be removed.
-- Implemented Unit Testing
-- scheduleAction()
-- opts.generateIds: false
-- rename classes 'ui-dynatree-...' -> 'dynatree-...'
-- All  callbacks have the Dynatree instance as 'this'
-- hasChildren: return 'undefined' if node is unexpanded lazy, or only contains 
-  one status node
-- Changed node.visit(fn, data, includeSelf) -> node.visit(fn, includeSelf)
-  visit() now returns nothing.
-  If the callback function returns false, the the traversal is stopped. 
-  If the callback function returns 'skip', the the traversal of the current branch is stopped. 
-  (Changes apply also for tree.visit())
-- renamed node.reload() --> reloadChildren()
-- renamed dtnode -> node in the samples  
-- Distinguish for lazy nodes
-  childList == null: 'never loaded'
-  childList == []: 'loaded, but node has no children'
-- 'noLink' option is available for nodes or the whole tree.
+  * New HTML markup<br>Using `<ul>/<li>` for faster expand / collapse and smoother effects
+  * Support for drag'n'drop<br>Compatible with jquery.ui.draggable/.droppable but more efficient for a large number of nodes.
+  * Faster benchmarks
+  * Modified css<br>ui-dynatree-document -> ui-dynatree-node<br>Class ui-dynatree-folder is now *additionally* set (together with ui-dynatree-node)<br>rename classes 'ui-dynatree-...' -> 'dynatree-...'
+  * Always hide root node.<br>Removed tree.rootVisible (now always hidden)<br>Removed tree.title.
+  * tree.minExpandLevel must be >= 1<br>If a single visible root is wanted, one could always create one using`<ul>`Top level node expanders are not connected by vlines (requires additional expander icon).<br>If minExpandLevel>=1, also the expander icons are hidden, so the first icon column can be removed.
+  * Implemented Unit Testing
+  * opts.generateIds: false
+  * All  callbacks have the Dynatree instance as 'this'
+  * hasChildren: return 'undefined' if node is unexpanded lazy, or only contains one status node
+  * Changed node.visit(fn, data, includeSelf) -> node.visit(fn, includeSelf)
+    visit() now returns nothing.
+    If the callback function returns false, the the traversal is stopped. 
+    If the callback function returns 'skip', the the traversal of the current branch is stopped. 
+   (Changes apply also for tree.visit())
+  * renamed node.reload() --> reloadChildren()
+  * renamed dtnode -> node in the samples  
+  * Distinguish for lazy nodes
+    childList == null: 'never loaded'
+    childList == []: 'loaded, but node has no children'
+  * 'noLink' option is available for nodes or the whole tree.
 
 
 New functions:
@@ -56,6 +38,7 @@ New functions:
   * node.sortChildren(cmp, deep)
   * New tree.disable(), .enable() (shortcut for $("#tree").dynatree("disable"))
   * getChildren(), getParent(), getPrevSibling(), getNextSibling()
+  * scheduleAction()
 
 Other Changes:
   * ...
