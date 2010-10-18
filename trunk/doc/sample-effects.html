@@ -30,6 +30,22 @@
 				$("#echoActive").text("-");
 			}
 		});
+        $("#cbAutoCollapse")
+        .attr("checked", true) // set state, to prevent caching
+        .click(function(){
+            var f = $(this).attr("checked");
+            $("#tree").dynatree("option", "autoCollapse", f);
+        });
+        $("#cbEffects")
+        .attr("checked", true) // set state, to prevent caching
+        .click(function(){
+            var f = $(this).attr("checked");
+            if(f){
+                $("#tree").dynatree("option", "fx", { height: "toggle", duration: 200 });
+            }else{
+                $("#tree").dynatree("option", "fx", null);
+            }
+        });
 	});
 </script>
 </head>
@@ -40,7 +56,11 @@
 		This sample enables effects to expand/Collapse and sets the
 		<code>autoCollapse</code> option.
 	</p>
-
+	<div>
+        <input type="checkbox" id="cbAutoCollapse"><label for="cbAutoCollapse">Auto collapse</label>
+        - 
+        <input type="checkbox" id="cbEffects"><label for="cbEffects">Use effects</label>
+    </div>
 	<div id="tree">
 		<ul style="display: none;">
 			<li id="id1" title="Look, a tool tip!">item1 with key and tooltip
