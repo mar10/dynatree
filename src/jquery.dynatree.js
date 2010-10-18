@@ -452,7 +452,9 @@ DynaTreeNode.prototype = {
 		var firstChild = ( this.childList ? this.childList[0] : null );
 		if( !data ) {
 			if ( firstChild ) {
-				this.ul.removeChild(firstChild.li);
+				try{
+					this.ul.removeChild(firstChild.li);
+				}catch(e){};
 				if( this.childList.length == 1 ){
 					this.childList = null;
 				}else{
