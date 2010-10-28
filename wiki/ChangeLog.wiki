@@ -5,11 +5,12 @@
 
 
 ==== Release 1.0 (alpha) ====
-Alpha 2
+===== Alpha 2 =====
   * Fixed context menu sample.
   * Added checkboxes for effect control to the sample.
   * Fixed initAjax for IE (not removing wait status).
-Alpha 1
+  * removed obsolete files
+===== Alpha 1 =====
   * Build against jQuery 1.4 and jQuery UI 1.8
   * Drag'n'drop support.
   * Improveded HTML markup.
