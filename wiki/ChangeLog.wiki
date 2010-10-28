@@ -5,6 +5,11 @@
 
 
 ==== Release 1.0 (alpha) ====
+Alpha 2
+  * Fixed context menu sample.
+  * Added checkboxes for effect control to the sample.
+  * Fixed initAjax for IE (not removing wait status).
+Alpha 1
   * Build against jQuery 1.4 and jQuery UI 1.8
   * Drag'n'drop support.
   * Improveded HTML markup.
@@ -13,6 +18,8 @@
 ==== Release 0.5 ====
 
 ===== 0.5.5 (under development) =====
+  * Updated jQuery Context Menu Plugin to version 1.01
+  * Fixed drag'n'drop sample
 
 ===== 0.5.4 =====
   * Dual licensed under the MIT or GPL Version 2 licenses (issue 144)
