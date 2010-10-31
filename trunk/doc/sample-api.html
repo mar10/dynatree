@@ -26,6 +26,7 @@
 			title: "Programming Sample",
 			onActivate: function(node) {
 				$("#echoActive").text(node.data.title);
+//				alert(node.getKeyPath());
 				if( node.data.url )
 					window.open(node.data.url, node.data.target);
 			},
@@ -98,13 +99,30 @@
 			$("#tree").dynatree("getTree").activateKey("id4.3.2");
 //			$("#tree").dynatree("getTree").getNodeByKey("id4.3.2").activate();
 		});
+        $("#btnSetTitle").click(function(){
+            var node = $("#tree").dynatree("getActiveNode");
+            if( !node ) return;
+            node.setTitle(node.data.title + ", " + new Date());
+            // this is a shortcut for 
+            // node.fromDict({title: node.data.title + new Date()});
+        });
+        $("#btnFromDict").click(function(){
+            var node = $("#tree").dynatree("getActiveNode");
+            if( !node ) return;
+            // Set node data and - optionally - replace children
+            node.fromDict({
+                title: node.data.title + new Date(),
+                children: [{title: "t1"}, {title: "t2"}]
+            });
+        });
 
 		$("#btnShowActive").click(function(){
 			var node = $("#tree").dynatree("getActiveNode");
-			if( node )
+			if( node ){
 				alert("Currently active: " + node.data.title);
-			else
+			}else{
 				alert("No active node.");
+			}
 		});
 
 		$("#btnDisable").toggle(function(){
@@ -208,6 +226,8 @@
 		<button id="btnAddObject">Add nodes using arrays</button>
 		<button id="btnActiveNode">Activate item id4.3.2</button>
 		<button id="btnShowActive">Show active node...</button>
+        <button id="btnSetTitle">Set active node title</button>
+        <button id="btnFromDict">Modify active node fom dict</button>
 	</p>
 	<!-- Start_Exclude: This block is not part of the sample code -->
 	<hr>
