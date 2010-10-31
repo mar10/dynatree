@@ -1283,25 +1283,6 @@ DynaTreeNode.prototype = {
 
 	reload: function(force) {
 		throw "Use reloadChildren() instead";
-/*
-		// Discard lazy content (and reload, if node was expanded).
-		if( this.parent === null ){
-			return this.tree.reload();
-		}
-		if( ! this.data.isLazy ){
-			throw "node.reloadChildren() requires lazy nodes.";
-		}
-		if( this.bExpanded ) {
-			this.expand(false);
-			this.removeChildren();
-			this.expand(true);
-		} else {
-			this.removeChildren();
-			if( force ){
-				this._loadContent();
-			}
-		}
-*/		
 	},
 
 	reloadChildren: function(callback) {
@@ -1331,66 +1312,54 @@ DynaTreeNode.prototype = {
 			// Remove children first, to prevent effects being applied
 			this.removeChildren();
 			// then force re-expand to trigger lazy loading
-			this.expand(false);
-			this.expand(true);
+//			this.expand(false);
+//			this.expand(true);
+			this._loadContent();
 		} else {
 			this.removeChildren();
 			this._loadContent();
 		}
 	},
 
-	/** */
 	loadKeyPath: function(keyPath, expand, callback) {
 		this.tree.logDebug("%s.loadKeyPath(%s, %s)", this, keyPath, expand);
-		var segList = keyPath.split(this.tree.options.keyPathSeparator);
-//		throw "Not implemented: node.loadKeyPath()";
-		if(segList.length < 1){
+		if(keyPath === ""){
 			this.tree.logDebug("%s.loadKeyPath(%s, %s): end node!", this, keyPath, expand);
 			if( expand ){
 				this.makeVisible();
 			}
 			return;
 		}
+		var segList = keyPath.split(this.tree.options.keyPathSeparator);
 		if(segList[0] == ""){
 			throw "Key path must be relative (don't start with '/')";
 		}
 		var seg = segList.shift();
 		
-		// If this node is unloaded lazy, then load now, and try again after
-		// the reloadChildren returns
-		if(this.data.isLazy && (this.childlist === null || this.childlist === undefined)){
-			var self = this;
-			this.tree.logDebug("%s.loadKeyPath(%s, %s) -> reloading...", this, keyPath, expand);
-			this.reloadChildren(function(node, isOk){
-				// After loading, look for direct child with that key
-				if(isOk){
-					this.tree.logDebug("%s.loadKeyPath(%s, %s) -> reloaded.", self, keyPath, expand);
-					for(var i = 0; i < node.childList.length; i++){
-						var child = node.childList[i];
-						if( child.data.key === seg ){
-							child.loadKeyPath(segList.join(self.tree.options.keyPathSeparator));
-							break;
-						} 
-					}
-				}else{
-					this.tree.logWarning("%s.loadKeyPath(%s, %s) -> reloadChildren() failed.", self, keyPath, expand);
+		for(var i = 0; i < this.childList.length; i++){
+			var child = this.childList[i];
+			if( child.data.key === seg ){
+				if(child.data.isLazy && (child.childlist === null || child.childlist === undefined)){
+					this.tree.logDebug("%s.loadKeyPath(%s, %s) -> reloading %s...", this, keyPath, expand, child);
+					var self = this;
+					child.reloadChildren(function(node, isOk){
+						// After loading, look for direct child with that key
+						if(isOk){
+							self.tree.logDebug("%s.loadKeyPath(%s, %s) -> reloaded %s.", node, keyPath, expand, node);
+							node.loadKeyPath(segList.join(self.tree.options.keyPathSeparator), expand, callback);
+						}else{
+							this.tree.logWarning("%s.loadKeyPath(%s, %s) -> reloadChildren() failed.", self, keyPath, expand);
+						}
+					});
+				} else {
+					// Look for direct child with that key
+					child.loadKeyPath(segList.join(this.tree.options.keyPathSeparator), expand, callback);
 				}
-			});
-		} else {
-			// The node is
-			// Look for direct child with that key
-			for(var i = 0; i < this.childList.length; i++){
-				var child = this.childList[i];
-				if( child.data.key === seg ){
-					child.loadKeyPath(segList.join(this.tree.options.keyPathSeparator));
-					break;
-				} 
-			}
-			if(!child){
-				// Could not find key
-				this.logWarning("Node not found: " + seg);
-			}
+				return;
+			} 
 		}
+		// Could not find key
+		this.tree.logWarning("Node not found: " + seg);
 		return;
 	},
 
@@ -2050,6 +2019,25 @@ DynaTree.prototype = {
 			opts.onPostInit.call(this, isReloading, false);
 		}
 		this.phase = "idle";
+	},
+
+	_setNoUpdate: function(silent) {
+		// TODO: set options to disable and re-enable updates while loading 
+		var opts = this.options;
+		var prev = {
+			fx: opts.fx, 
+			autoFocus: opts.autoFocus,
+			autoCollapse: opts.autoCollapse };
+		if(silent === true){
+			opts.autoFocus = false;
+			opts.fx = null;
+			opts.autoCollapse = false;
+		} else {
+			opts.autoFocus = silent.autoFocus;
+			opts.fx = silent.fx;
+			opts.autoCollapse = silent.autoCollapse;
+		}
+		return prev;
 	},
 
 	_reloadAjax: function() {

@@ -25,6 +25,7 @@
 		$("#tree").dynatree({
 			title: "Lazy loading sample",
 			fx: { height: "toggle", duration: 200 },
+            autoFocus: false, // Set focus to first child, when expanding or lazy-loading.
 			// In real life we would call a URL on the server like this:
 //          initAjax: {
 //              url: "/getTopLevelNodesAsJson",
