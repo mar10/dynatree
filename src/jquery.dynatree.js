@@ -2517,7 +2517,7 @@ TODO: better?
 			var relPos = event.()*/
 			// Auto-expand node (only when 'over' the node, not 'before', or 'after')
 			if(hitMode === "over"
-				&& dnd.autoExpandMS && node.hasChildren() && !node.bExpanded) {
+				&& dnd.autoExpandMS && node.hasChildren() !== false && !node.bExpanded) {
 				node.scheduleAction("expand", dnd.autoExpandMS);
 			}
 			if(hitMode && dnd.onDragOver){
