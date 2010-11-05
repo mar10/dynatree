@@ -1018,12 +1018,14 @@ DynaTreeNode.prototype = {
 			this._userActivate();
 			var aTag = this.span.getElementsByTagName("a");
 			if(aTag[0]){ 
-				// TODO: check if still required:
+				// issue 154
+				// TODO: check if still required on IE 9:
 				// Chrome and Safari don't focus the a-tag on click, 
-				// but calling focus() seem to have other problems: 
+				// but calling focus() seem to have problems on IE: 
 				// http://code.google.com/p/dynatree/issues/detail?id=154
-				// so for now, we live with the chrome/safari problem
-//				aTag[0].focus();
+				if(!$.browser.msie){
+					aTag[0].focus();
+				}
 			}else{
 				// 'noLink' option was set
 				return true;
