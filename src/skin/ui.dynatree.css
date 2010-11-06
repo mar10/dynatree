@@ -10,6 +10,8 @@ ul.dynatree-container
 	
 	background-color: white; 
 	border: 1px dotted gray;
+	
+	overflow: auto;
 }
 
 ul.dynatree-container ul

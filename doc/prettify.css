@@ -17,6 +17,7 @@ pre.prettyprint {
 	margin-right: 10px;
 	border: 1px dashed #888;
 	background-color: #f0f0f0;
+	overflow: auto;
 	}
 
 @media print {
