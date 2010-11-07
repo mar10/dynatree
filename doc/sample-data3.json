@@ -17,7 +17,8 @@
                             {"title": "Sub-item 2.1.4"}
 						]
 				},
-			{"title": "Sub-item 2.2"}
+            {"title": "Sub-item 2.2"},
+            {"title": "Sub-item 2.3 (lazy)", "isLazy": true }
 		]
 	},
 	{"title": "Folder 3", "isFolder": true, "key": "folder3",

@@ -29,6 +29,7 @@
 			rootCollapsible: false,
 			keyboard: true,
 //			persist: true,
+//            generateIds: true,
 			clickFolderMode: 1, //3, //2,
 			checkbox: true,
 			selectMode: 2,
@@ -198,11 +199,11 @@
 		});
 
 		$("#tree a").hover(function(){
-				var node = $(this).parent("[node]").attr("node");
-				logMsg("Hover in %o", node);
+				var node = $(this).parents("[dtnode]").attr("dtnode");
+				logMsg("Hover in %s", node);
 			}, function(){
-				var node = $(this).parent("[node]").attr("node");
-				logMsg("Hover out %o", node);
+				var node = $(this).parents("[dtnode]").attr("dtnode");
+				logMsg("Hover out %s", node);
 			});
 	});
 
