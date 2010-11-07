@@ -651,6 +651,10 @@ DynaTreeNode.prototype = {
 		} catch(e) { }
 	},
 
+	isFocused: function() {
+		return (this.tree.tnFocused === this);
+	},
+
 	_activate: function(flag, fireEvents) {
 		// (De)Activate - but not focus - this node.
 		this.tree.logDebug("dtnode._activate(%o, fireEvents=%o) - %o", flag, fireEvents, this);
@@ -1003,7 +1007,7 @@ DynaTreeNode.prototype = {
 		}
 	},
 
-	onClick: function(event) {
+	_onClick: function(event) {
 //		this.tree.logDebug("dtnode.onClick(" + event.type + "): dtnode:" + this + ", button:" + event.button + ", which: " + event.which);
 		var targetType = this.getEventTargetType(event);
 		if( targetType === "expander" ) {
@@ -1035,11 +1039,11 @@ DynaTreeNode.prototype = {
 		return false;
 	},
 
-	onDblClick: function(event) {
+	_onDblClick: function(event) {
 //		this.tree.logDebug("dtnode.onDblClick(" + event.type + "): dtnode:" + this + ", button:" + event.button + ", which: " + event.which);
 	},
 
-	onKeydown: function(event) {
+	_onKeydown: function(event) {
 //		this.tree.logDebug("dtnode.onKeydown(" + event.type + "): dtnode:" + this + ", charCode:" + event.charCode + ", keyCode: " + event.keyCode + ", which: " + event.which);
 		var handled = true;
 //		alert("keyDown" + event.which);
@@ -1124,13 +1128,13 @@ DynaTreeNode.prototype = {
 		return !handled;
 	},
 
-	onKeypress: function(event) {
+	_onKeypress: function(event) {
 		// onKeypress is only hooked to allow user callbacks.
 		// We don't process it, because IE and Safari don't fire keypress for cursor keys.
 //		this.tree.logDebug("dtnode.onKeypress(" + event.type + "): dtnode:" + this + ", charCode:" + event.charCode + ", keyCode: " + event.keyCode + ", which: " + event.which);
 	},
 
-	onFocus: function(event) {
+	_onFocus: function(event) {
 		// Handles blur and focus events.
 //		this.tree.logDebug("dtnode.onFocus(%o): %o", event, this);
 		var opts = this.tree.options;
@@ -2124,7 +2128,7 @@ DynaTree.prototype = {
 
 	redraw: function() {
 		this.logDebug("dynatree.redraw()...");
-		this.tnRoot.render();
+		this.tnRoot.render(false);
 		this.logDebug("dynatree.redraw() done.");
 	},
 
@@ -2557,6 +2561,13 @@ TODO: better?
 		return res;
 	},
 
+	cancelDrag: function() {
+		 var dd = $.ui.ddmanager.current;
+		 if(dd){
+			 dd.cancel();
+		 }
+	},
+	
 	// --- end of class
 	lastentry: undefined
 };
@@ -2626,13 +2637,13 @@ $.widget("ui.dynatree", {
 
 				switch(event.type) {
 				case "click":
-					return ( o.onClick && o.onClick(dtnode, event)===false ) ? false : dtnode.onClick(event);
+					return ( o.onClick && o.onClick(dtnode, event)===false ) ? false : dtnode._onClick(event);
 				case "dblclick":
-					return ( o.onDblClick && o.onDblClick(dtnode, event)===false ) ? false : dtnode.onDblClick(event);
+					return ( o.onDblClick && o.onDblClick(dtnode, event)===false ) ? false : dtnode._onDblClick(event);
 				case "keydown":
-					return ( o.onKeydown && o.onKeydown(dtnode, event)===false ) ? false : dtnode.onKeydown(event);
+					return ( o.onKeydown && o.onKeydown(dtnode, event)===false ) ? false : dtnode._onKeydown(event);
 				case "keypress":
-					return ( o.onKeypress && o.onKeypress(dtnode, event)===false ) ? false : dtnode.onKeypress(event);
+					return ( o.onKeypress && o.onKeypress(dtnode, event)===false ) ? false : dtnode._onKeypress(event);
 				}
 			} catch(e) {
 				var _ = null; // issue 117
@@ -2650,7 +2661,7 @@ $.widget("ui.dynatree", {
 			// Fix event for IE:
 			event = arguments[0] = $.event.fix( event || window.event );
 			var dtnode = getDtNodeFromElement(event.target);
-			return dtnode ? dtnode.onFocus(event) : false;
+			return dtnode ? dtnode._onFocus(event) : false;
 		}
 		var div = this.tree.divTree;
 		if( div.addEventListener ) {
@@ -2937,6 +2948,7 @@ var _registerDnd = function() {
 			var sourceNode = ui.helper.data("dtSourceNode") || null;
 			var prevTargetNode = ui.helper.data("dtTargetNode") || null;
 			var targetNode = getDtNodeFromElement(event.target);
+			logMsg("getDtNodeFromElement(%o): %s", event.target, targetNode);
 			if(event.target && !targetNode){
 				// We got a drag event, but the targetNode could not be found
 				// at the event location. This may happen, if the mouse
