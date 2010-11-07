@@ -2,7 +2,7 @@
 	jquery.dynatree.js
 	Dynamic tree view control, with support for lazy loading of branches.
 
-	Copyright (c) 2008-2010,  Martin Wendt (http://wwWendt.de)
+	Copyright (c) 2008-2010, Martin Wendt (http://wwWendt.de)
 	Dual licensed under the MIT or GPL Version 2 licenses.
 	http://code.google.com/p/dynatree/wiki/LicenseInfo
 
@@ -481,7 +481,10 @@ DynaTreeNode.prototype = {
 		if( !data ) {
 			if ( firstChild ) {
 				try{
-					this.ul.removeChild(firstChild.li);
+					// I've seen exceptions here with loadKeyPath...
+					if(this.ul){
+						this.ul.removeChild(firstChild.li);
+					}
 				}catch(e){};
 				if( this.childList.length === 1 ){
 					this.childList = null;
@@ -491,10 +494,12 @@ DynaTreeNode.prototype = {
 			}
 		} else if ( firstChild ) {
 			data.isStatusNode = true;
+			data.key = "_statusNode";
 			firstChild.data = data;
 			firstChild.render();
 		} else {
 			data.isStatusNode = true;
+			data.key = "_statusNode";
 			firstChild = this.addChild(data);
 		}
 	},
@@ -903,7 +908,7 @@ DynaTreeNode.prototype = {
 		}
 	},
 
-	_expand: function(bExpand) {
+	_expand: function(bExpand, forceSync) {
 		if( this.bExpanded === bExpand ) {
 			this.tree.logDebug("dtnode._expand(%o) IGNORED - %o", bExpand, this);
 			return;
@@ -928,7 +933,9 @@ DynaTreeNode.prototype = {
 			}
 		}
 		// Do not apply animations in init phase, or before lazy-loading
-		var allowEffects = !(this.data.isLazy && this.childList === null) && !this.isLoading;
+		var allowEffects = !(this.data.isLazy && this.childList === null) 
+			&& !this.isLoading
+			&& !forceSync;
 		this.render(allowEffects);
 
 		// Auto-collapse mode: collapse all siblings
@@ -953,6 +960,7 @@ DynaTreeNode.prototype = {
 	},
 
 	expand: function(flag) {
+		flag = (flag !== false);
 		if( !this.childList && !this.data.isLazy && flag ){
 			return; // Prevent expanding empty nodes
 		} else if( this.parent === null && !flag ){
@@ -1265,12 +1273,16 @@ DynaTreeNode.prototype = {
 					}
 				}
 				tn.removeChildren(true, retainPersistence);
-//				this.div.removeChild(tn.div);
+				if(this.ul){
+					this.ul.removeChild(tn.li);
+				}
+/*
 				try{
 					this.ul.removeChild(tn.li);
 				}catch(e){
-					this.tree.logDebug ("%s.removeChildren: couldnt remove LI", this, e);
+					this.tree.logDebug("%s.removeChildren: couldnt remove LI", this, e);
 				}
+*/
 				delete tn;
 			}
 			this.childList = null;
@@ -1314,29 +1326,31 @@ DynaTreeNode.prototype = {
 			});
 		}
 		// The expansion state is maintained
-		if( this.bExpanded ) {
-			// Remove children first, to prevent effects being applied
-			this.removeChildren();
-			// then force re-expand to trigger lazy loading
-//			this.expand(false);
-//			this.expand(true);
-			this._loadContent();
-		} else {
-			this.removeChildren();
-			this._loadContent();
-		}
+		this.removeChildren();
+		this._loadContent();
+//		if( this.bExpanded ) {
+//			// Remove children first, to prevent effects being applied
+//			this.removeChildren();
+//			// then force re-expand to trigger lazy loading
+////			this.expand(false);
+////			this.expand(true);
+//			this._loadContent();
+//		} else {
+//			this.removeChildren();
+//			this._loadContent();
+//		}
 	},
 
-	loadKeyPath: function(keyPath, expand, callback) {
-		this.tree.logDebug("%s.loadKeyPath(%s, %s)", this, keyPath, expand);
-		if(keyPath === ""){
-			this.tree.logDebug("%s.loadKeyPath(%s, %s): end node!", this, keyPath, expand);
-			if( expand ){
-				this.makeVisible();
-			}
-			return;
+	/**
+	 * Make sure the node with a given key path is available in the tree. 
+	 */
+	_loadKeyPath: function(keyPath, callback) {
+		var tree = this.tree;
+		tree.logDebug("%s._loadKeyPath(%s)", this, keyPath);
+		if(keyPath == ""){
+			throw "Key path must not be empty";
 		}
-		var segList = keyPath.split(this.tree.options.keyPathSeparator);
+		var segList = keyPath.split(tree.options.keyPathSeparator);
 		if(segList[0] == ""){
 			throw "Key path must be relative (don't start with '/')";
 		}
@@ -1345,27 +1359,34 @@ DynaTreeNode.prototype = {
 		for(var i = 0; i < this.childList.length; i++){
 			var child = this.childList[i];
 			if( child.data.key === seg ){
-				if(child.data.isLazy && (child.childlist === null || child.childlist === undefined)){
-					this.tree.logDebug("%s.loadKeyPath(%s, %s) -> reloading %s...", this, keyPath, expand, child);
+				if(segList.length === 0) {
+					// Found the end node
+					callback.call(tree, child, "ok");
+					
+				}else if(child.data.isLazy && (child.childList === null || child.childList === undefined)){
+					tree.logDebug("%s._loadKeyPath(%s) -> reloading %s...", this, keyPath, child);
 					var self = this;
 					child.reloadChildren(function(node, isOk){
 						// After loading, look for direct child with that key
 						if(isOk){
-							self.tree.logDebug("%s.loadKeyPath(%s, %s) -> reloaded %s.", node, keyPath, expand, node);
-							node.loadKeyPath(segList.join(self.tree.options.keyPathSeparator), expand, callback);
+							tree.logDebug("%s._loadKeyPath(%s) -> reloaded %s.", node, keyPath, node);
+							callback.call(tree, child, "loaded");
+							node._loadKeyPath(segList.join(tree.options.keyPathSeparator), callback);
 						}else{
-							this.tree.logWarning("%s.loadKeyPath(%s, %s) -> reloadChildren() failed.", self, keyPath, expand);
+							tree.logWarning("%s._loadKeyPath(%s) -> reloadChildren() failed.", self, keyPath);
+							callback.call(tree, child, "error");
 						}
 					});
 				} else {
+					callback.call(tree, child, "loaded");
 					// Look for direct child with that key
-					child.loadKeyPath(segList.join(this.tree.options.keyPathSeparator), expand, callback);
+					child._loadKeyPath(segList.join(tree.options.keyPathSeparator), callback);
 				}
 				return;
 			} 
 		}
 		// Could not find key
-		this.tree.logWarning("Node not found: " + seg);
+		tree.logWarning("Node not found: " + seg);
 		return;
 	},
 
@@ -1553,6 +1574,14 @@ DynaTreeNode.prototype = {
 	appendAjax: function(ajaxOptions) {
 		this.removeChildren(false, true);
 		this.setLazyNodeStatus(DTNodeStatus_Loading);
+		if(ajaxOptions.debugLazyDelay){
+			var ms = ajaxOptions.debugLazyDelay;
+			var self = this;
+			ajaxOptions.debugLazyDelay = 0;
+			this.tree.logInfo("appendAjax: waiting for debugLazyDelay " + ms);
+			setTimeout(function(){self.appendAjax(ajaxOptions)}, ms);
+			return;
+		}
 		// Ajax option inheritance: $.ajaxSetup < $.ui.dynatree.prototype.options.ajaxDefaults < tree.options.ajaxDefaults < ajaxOptions
 		var self = this;
 		var orgSuccess = ajaxOptions.success;
@@ -1574,22 +1603,24 @@ DynaTreeNode.prototype = {
 //				self.append(data);
 				self.addChild(data, null);
 				self.tree.phase = "postInit";
-				self.setLazyNodeStatus(DTNodeStatus_Ok);
 				if( orgSuccess ){
 					orgSuccess.call(options, self);
 				}
 				self.tree.logInfo("trigger "+ eventType);
 				self.tree.$tree.trigger(eventType, [self, true]);
 				self.tree.phase = prevPhase;
+				// This should be the last command, so node.isLoading is true
+				// while the callbacks run
+				self.setLazyNodeStatus(DTNodeStatus_Ok);
 				},
 			error: function(XMLHttpRequest, textStatus, errorThrown){
 				// <this> is the request options
 				self.tree.logWarning("appendAjax failed:", textStatus, ":\n", XMLHttpRequest, "\n", errorThrown);
-				self.setLazyNodeStatus(DTNodeStatus_Error, {info: textStatus, tooltip: ""+errorThrown});
 				if( orgError ){
 					orgError.call(options, self, XMLHttpRequest, textStatus, errorThrown);
 				}
 				self.tree.$tree.trigger(eventType, [self, false]);
+				self.setLazyNodeStatus(DTNodeStatus_Error, {info: textStatus, tooltip: ""+errorThrown});
 				}
 		});
 		$.ajax(options);
@@ -2211,7 +2242,7 @@ DynaTree.prototype = {
 		return dtnode;
 	},
 
-	loadKeyPath: function(keyPath, expand, callback) {
+	loadKeyPath: function(keyPath, callback) {
 		var segList = keyPath.split(this.options.keyPathSeparator);
 		// Remove leading '/'
 		if(segList[0] == ""){
@@ -2223,7 +2254,7 @@ DynaTree.prototype = {
 			segList.shift();
 		}
 		keyPath = segList.join(this.options.keyPathSeparator);
-		return this.tnRoot.loadKeyPath(keyPath, expand, callback);
+		return this.tnRoot._loadKeyPath(keyPath, callback);
 	},
 	
 	selectKey: function(key, select) {
@@ -2835,6 +2866,7 @@ $.ui.dynatree.prototype.options = {
 		lastsib: "dynatree-lastsib"
 	},
 	debugLevel: 2, // 0:quiet, 1:normal, 2:debug $REPLACE:	debugLevel: 1,
+//	debugLazyDelay: 0, // milliseconds to wait when loading lazily
 
 	// ------------------------------------------------------------------------
 	lastentry: undefined

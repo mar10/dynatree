@@ -50,6 +50,7 @@
 //              });
 				// .. but here we use a local file instead:
 				node.appendAjax({
+	                debugLazyDelay: 750, // This is a dynatree debug option
 					url: "sample-data2.json"
 				});
 			}
@@ -59,7 +60,6 @@
             if( node ){
                 node.reloadChildren(function(node, isOk){
 //                    alert("loaded " + node);
-//                    node.render();
                 });
             }else{
                 alert("No active node.");
@@ -67,9 +67,20 @@
        });
         $("#btnLoadKeyPath").click(function(){
             var tree = $("#tree").dynatree("getTree");
-            tree.loadKeyPath("/folder4/_26/_31/_34", true, function(node, status){
-                //node.activate();
-                alert(status + " " + node);
+            // Make sure that node #_27 is loaded, by traversing the parents.
+            // The callback is executed for every node as we go:
+            tree.loadKeyPath("/folder4/_23/_26/_27", function(node, status){
+                if(status == "loaded") {
+                    // 'node' is a parent that was just traversed.
+                    // If we call expand() here, then all nodes will be expanded
+                    // as we go
+//                    node.expand();
+                }else if(status == "ok") {
+                    // 'node' is the end node of our path.
+                    // If we call activate() or makeVisible() here, then the 
+                    // whole branch will be exoanded now
+//                    node.activate();
+                }
             });
        });
 	});
@@ -90,7 +101,7 @@ a lazy tree that uses a simple test server.</p>
 <div>Active node: <span id="echoActive">-</span></div>
 <p>
     <button id="btnReloadActive">Reload active node...</button>
-    <button id="btnLoadKeyPath">Load node by path '/folder4/_26/_31/_34'...</button>
+    <button id="btnLoadKeyPath">Load node by path '/folder4/_23/_26/_27'...</button>
 </p>
 
 <!-- Start_Exclude: This block is not part of the sample code -->
