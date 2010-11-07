@@ -38,7 +38,7 @@
 	<script src="sample.js" type="text/javascript"></script>
 	<!-- End_Exclude -->
 
-<script type="text/javascript">
+<script type="text/javascript"><!--
 $(function(){
 	// --- Initialize first Dynatree -------------------------------------------
 	$("#tree").dynatree({
@@ -77,6 +77,11 @@ $(function(){
 		onDeactivate: function(node) {
 			$("#echoActive2").text("-");
 		},
+        onLazyRead: function(node){
+            node.appendAjax({
+                url: "sample-data2.json"
+            });
+        },
 		dnd: {
 			autoExpandMS: 1000,
 			preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
@@ -88,8 +93,8 @@ $(function(){
 				 *  Any other return value will calc the hitMode from the cursor position.
 				 */
 				logMsg("tree.onDragEnter(%o, %o)", node, sourceNode);
-				if(node.data.isFolder)
-					return false;
+//				if(node.data.isFolder)
+//					return false;
 				return true;
 //                return "over";
 			},
@@ -97,6 +102,11 @@ $(function(){
 				/** Return false to disallow dropping this node.
 				 *
 				 */
+//				 if(node.data.isFolder){
+//					 var dd = $.ui.ddmanager.current;
+//					 dd.cancel();
+//					 alert("folder");
+//				 }
 				logMsg("tree.onDragOver(%o, %o, %o)", node, sourceNode, hitMode);
 			},
 			onDrop: function(node, sourceNode, hitMode, ui, draggable) {
@@ -154,7 +164,7 @@ $(function(){
 		}
 	});
 });
-</script>
+--></script>
 </head>
 
 <body class="example">

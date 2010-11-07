@@ -218,80 +218,102 @@
 
 <pre class="prettyprint">
 $("#tree").dynatree({
-	title: "Dynatree root", // Name of the root node.
-	rootVisible: false, // Set to true, to make the root node visible.
-	minExpandLevel: 1, // 1: root node is not collapsible
-	imagePath: null, // Path to a folder containing icons. Defaults to 'skin/' subdirectory.
-	children: null, // Init tree structure from this object array.
-	initId: null, // Init tree structure from a &lt;ul> element with this ID.
-	initAjax: null, // Ajax options used to initialize the tree strucuture.
-	autoFocus: true, // Set focus to first child, when expanding or lazy-loading.
-	keyboard: true, // Support keyboard navigation.
-	persist: false, // Persist expand-status to a cookie
-	autoCollapse: false, // Automatically collapse all siblings, when a node is expanded.
-	clickFolderMode: 3, // 1:activate, 2:expand, 3:activate and expand
-	activeVisible: true, // Make sure, active nodes are visible (expanded).
-	checkbox: false, // Show checkboxes.
-	selectMode: 2, // 1:single, 2:multi, 3:multi-hier
-	fx: null, // Animations, e.g. null or { height: "toggle", duration: 200 }
+    title: "Dynatree", // Tree's name (only used for debug outpu)
+    minExpandLevel: 1, // 1: root node is not collapsible
+    imagePath: null, // Path to a folder containing icons. Defaults to 'skin/' subdirectory.
+    children: null, // Init tree structure from this object array.
+    initId: null, // Init tree structure from a &lt;ul> element with this ID.
+    initAjax: null, // Ajax options used to initialize the tree strucuture.
+    autoFocus: true, // Set focus to first child, when expanding or lazy-loading.
+    keyboard: true, // Support keyboard navigation.
+    persist: false, // Persist expand-status to a cookie
+    autoCollapse: false, // Automatically collapse all siblings, when a node is expanded.
+    clickFolderMode: 3, // 1:activate, 2:expand, 3:activate and expand
+    activeVisible: true, // Make sure, active nodes are visible (expanded).
+    checkbox: false, // Show checkboxes.
+    selectMode: 2, // 1:single, 2:multi, 3:multi-hier
+    fx: null, // Animations, e.g. null or { height: "toggle", duration: 200 }
+    noLink: false, // Use &lt;span> instead of &lt;a> tags for all nodes
+    // Low level event handlers: onEvent(dtnode, event): return false, to stop default processing
+    onClick: null, // null: generate focus, expand, activate, select events.
+    onDblClick: null, // (No default actions.)
+    onKeydown: null, // null: generate keyboard navigation (focus, expand, activate).
+    onKeypress: null, // (No default actions.)
+    onFocus: null, // null: set focus to node.
+    onBlur: null, // null: remove focus from node.
 
-	// Low level event handlers: onEvent(node, event): return false, to stop default processing
-	onClick: null, // null: generate focus, expand, activate, select events.
-	onDblClick: null, // (No default actions.)
-	onKeydown: null, // null: generate keyboard navigation (focus, expand, activate).
-	onKeypress: null, // (No default actions.)
-	onFocus: null, // null: handle focus.
-	onBlur: null, // null: handle unfocus.
+    // Pre-event handlers onQueryEvent(flag, dtnode): return false, to stop processing
+    onQueryActivate: null, // Callback(flag, dtnode) before a node is (de)activated.
+    onQuerySelect: null, // Callback(flag, dtnode) before a node is (de)selected.
+    onQueryExpand: null, // Callback(flag, dtnode) before a node is expanded/collpsed.
 
-	// Pre-event handlers onQueryEvent(flag, node): return false, to stop processing
-	onQueryActivate: null, // Callback(flag, node) before a node is (de)activated.
-	onQuerySelect: null, // Callback(flag, node) before a node is (de)selected.
-	onQueryExpand: null, // Callback(flag, node) before a node is expanded/collpsed.
+    // High level event handlers
+    onPostInit: null, // Callback(isReloading, isError) when tree was (re)loaded.
+    onActivate: null, // Callback(dtnode) when a node is activated.
+    onDeactivate: null, // Callback(dtnode) when a node is deactivated.
+    onSelect: null, // Callback(flag, dtnode) when a node is (de)selected.
+    onExpand: null, // Callback(dtnode) when a node is expanded/collapsed.
+    onLazyRead: null, // Callback(dtnode) when a lazy node is expanded for the first time.
 
-	// High level event handlers
-	onPostInit: null, // Callback(isReloading, isError) when tree was (re)loaded.
-	onActivate: null, // Callback(node) when a node is activated.
-	onDeactivate: null, // Callback(node) when a node is deactivated.
-	onSelect: null, // Callback(flag, node) when a node is (de)selected.
-	onExpand: null, // Callback(flag, node) when a node is expanded.
-	onLazyRead: null, // Callback(node) when a lazy node is expanded for the first time.
+    // Drag'n'drop support
+    dnd: {
+        // Make tree nodes draggable:
+        onDragStart: null, // Callback(sourceNode), return true, to enable dnd
+        onDragStop: null, // Callback(sourceNode)
+        // Make tree nodes accept draggables
+        autoExpandMS: 1000, // Expand nodes after n milliseconds of hovering.
+        preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
+        onDragEnter: null, // Callback(targetNode, sourceNode)
+        onDragOver: null, // Callback(targetNode, sourceNode, hitMode)
+        onDrop: null, // Callback(targetNode, sourceNode, hitMode)
+        onDragLeave: null // Callback(targetNode, sourceNode)
+    },
+    ajaxDefaults: { // Used by initAjax option
+        cache: false, // false: Append random '_' argument to the request url to prevent caching.
+        dataType: "json" // Expect json format and pass json object to callbacks.
+    },
+    strings: {
+        loading: "Loading&#8230;",
+        loadError: "Load error!"
+    },
+    generateIds: false, // Generate id attributes like &lt;span id='dynatree-id-KEY'>
+    idPrefix: "dynatree-id-", // Used to generate node id's like &lt;span id="dynatree-id-&lt;key>">.
+    keyPathSeparator: "/", // Used by node.getKeyPath() and tree.loadKeyPath(). 
+    cookieId: "dynatree", // Choose a more unique name, to allow multiple trees.
+    cookie: {
+        expires: null // Days or Date; null: session cookie
+    },
+    // Class names used, when rendering the HTML markup.
+    // Note: if only single entries are passed for options.classNames, all other
+    // values are still set to default.
+    classNames: {
+        container: "dynatree-container",
+        node: "dynatree-node",
+        folder: "dynatree-folder",
 
-	ajaxDefaults: { // Used by initAjax option
-		cache: false, // false: Append random '_' argument to the request url to prevent caching.
-		dataType: "json" // Expect json format and pass json object to callbacks.
-	},
-	strings: {
-		loading: "Loading&#8230;",
-		loadError: "Load error!"
-	},
-	idPrefix: "dynatree-id-", // Used to generate node id's like &lt;span id="dynatree-id-&lt;key>">.
-	cookieId: "dynatree-cookie", // Choose a more unique name, to allow multiple trees.
-	cookie: { // Options passed to $.cookie (see jquery.cookie.js)
-		expires: null, // Days or Date; null: session cookie
-		path: undefined, // String; Defaults to current page
-		domain: undefined, // String; Defaults to creator's domain
-		secure: undefined // Boolean; Defaults to false
-	},
-	// Class names used, when rendering the HTML markup.
-	// Note: if only single entries are passed for options.classNames, all other
-	// values are still set to default.
-	classNames: {
-		container: "dynatree-container",
-		node: "dynatree-node",
-		folder: "dynatree-folder",
-		empty: "dynatree-empty",
-		vline: "dynatree-vline",
-		expander: "dynatree-expander",
-		connector: "dynatree-connector",
-		checkbox: "dynatree-checkbox",
-		title: "dynatree-title",
-		nodeError: "dynatree-statusnode-error",
-		nodeWait: "dynatree-statusnode-wait",
-		active: "dynatree-active",
-		selected: "dynatree-selected",
-		expanded: "dynatree-expanded",
-		[...]
-	},
+        empty: "dynatree-empty",
+        vline: "dynatree-vline",
+        expander: "dynatree-expander",
+        connector: "dynatree-connector",
+        checkbox: "dynatree-checkbox",
+        nodeIcon: "dynatree-icon",
+        title: "dynatree-title",
+        noConnector: "dynatree-no-connector",
+
+        nodeError: "dynatree-statusnode-error",
+        nodeWait: "dynatree-statusnode-wait",
+        hidden: "dynatree-hidden",
+        combinedExpanderPrefix: "dynatree-exp-",
+        combinedIconPrefix: "dynatree-ico-",
+        hasChildren: "dynatree-has-children",
+        active: "dynatree-active",
+        selected: "dynatree-selected",
+        expanded: "dynatree-expanded",
+        lazy: "dynatree-lazy",
+        focused: "dynatree-focused",
+        partsel: "dynatree-partsel",
+        lastsib: "dynatree-lastsib"
+    },
 	debugLevel: 1 // 0:quiet, 1:normal, 2:debug
 });
 </pre>
@@ -382,23 +404,24 @@ $("#tree1").dynatree({
 <pre class="prettyprint">
 children: [
 	{
-		title: null, // (required) Displayed name of the node (html is allowed here)
-		key: null, // May be used with activate(), select(), find(), ...
-		isFolder: false, // Use a folder icon. Also the node is expandable but not selectable.
-		isLazy: false, // Call onLazyRead(), when the node is expanded for the first time to allow for delayed creation of children.
-		tooltip: null, // Show this popup text.
-		addClass: null, // Class name added to the node's span tag.
-		icon: null, // (deprecated: consider using addClass) Use a custom image (filename relative to tree.options.imagePath). 'null' for default icon, 'false' for no icon.
-		activate: false, // Initial active status.
-		focus: false, // Initial focused status.
-		expand: false, // Initial expanded status.
-		select: false, // Initial selected status.
-		hideCheckbox: false, // Suppress checkbox for this node.
-		unselectable: false, // Prevent selection.
-		// The following attributes are only valid if passed to some functions:
-		children: null // Array of child nodes.
-		// NOTE: we can also add custom attributes here.
-		// This may then also be used in the onActivate(), onSelect(), or onLazyRead() callbacks.
+    title: null, // (required) Displayed name of the node (html is allowed here)
+    key: null, // May be used with activate(), select(), find(), ...
+    isFolder: false, // Use a folder icon. Also the node is expandable but not selectable.
+    isLazy: false, // Call onLazyRead(), when the node is expanded for the first time to allow for delayed creation of children.
+    tooltip: null, // Show this popup text.
+    icon: null, // Use a custom image (filename relative to tree.options.imagePath). 'null' for default icon, 'false' for no icon.
+    addClass: null, // Class name added to the node's span tag.
+    noLink: false, // Use &lt;span> instead of &lt;a> tag for this node
+    activate: false, // Initial active status.
+    focus: false, // Initial focused status.
+    expand: false, // Initial expanded status.
+    select: false, // Initial selected status.
+    hideCheckbox: false, // Suppress checkbox display for this node.
+    unselectable: false, // Prevent selection.
+    // The following attributes are only valid if passed to some functions:
+    children: null // Array of child nodes.
+    // NOTE: we can also add custom attributes here.
+    // This may then also be used in the onActivate(), onSelect() or onLazyTree() callbacks.
 	},
 	[&#8230;]
 ]
@@ -1108,19 +1131,23 @@ $("#tree").dynatree("option", "fx", { height: "toggle", duration: 200 }); </pre>
 		If key is null, the current activation is removed.<br>
 		Return the active DynaTreeNode.
 	</dd>
-    <dt>enable()
-    <dd>
-        Complement to <code>tree.disable()</code>.
-    </dd>
     <dt>disable()
     <dd>
         Disable input for the tree and display gray. This is a shortcut for
         <code>$("#tree").dynatreee("disable")</code>.
     </dd>
+    <dt>enable()
+    <dd>
+        Complement to <code>tree.disable()</code>.
+    </dd>
     <dt>enableUpdate(enable)
     <dd>
-        Turn rendering on or off. Disabling update may speedup processing, when adding lots of nodes.<br>
-        Don't forget to turn rendering back on, after applying the changes.
+        Turn rendering on or off and return the previous mode. 
+        Disabling update may speedup processing, when adding lots of nodes.<br>
+        Don't forget to turn rendering back on, after applying the changes:
+        <pre>var prevMode = tree.enableUpdate(false);
+[...]
+tree.enableUpdate(prevMode);</pre>
     </dd>
 	<dt>getActiveNode()
 	<dd>
@@ -1133,11 +1160,13 @@ $("#tree").dynatree("option", "fx", { height: "toggle", duration: 200 }); </pre>
 	<dt>getPersistData()
 	<dd>
 		Return cookie persistence info as dictionary.<br>
-		There is also a global function available: getDynaTreePersistData(cookieId, cookieOpts)
+		There is also a global function available: 
+		<code>getDynaTreePersistData(cookieId, cookieOpts)</code>.
 	</dd>
 	<dt>getRoot()
 	<dd>
-		Return the root DynaTreeNode object.
+		Return the <i>invisible</i> root DynaTreeNode object.
+		All visible toplevel nodes are children of this system node. 
 	</dd>
 	<dt>getSelectedNodes(stopOnParents)
 	<dd>
@@ -1168,17 +1197,25 @@ $("#tree").dynatree("option", "fx", { height: "toggle", duration: 200 }); </pre>
 		Use this function in an event handler, to check if the event was fired
 		in response to a mouse click or key stroke.
 	</dd>
-	<dt>selectKey(key, flag)
-	<dd>
-		Select or deselect node with a given key and fire focus and select events.<br>
-		Return the selected DynaTreeNode.
-	</dd>
+    <dt>loadKeyPath()
+    <dd>
+        TODO.
+    </dd>
+    <dt>logDebug(msg), logInfo(msg), logWarning(msg) 
+    <dd>
+        (Internal use).
+    </dd>
 	<dt>reactivate(setFocus)
 	<dd>
 		Fire onQueryActivate and onActivate events for the currently active node
 		(if there is one).<br>
 		This may be useful when processing an onPostInit callback.
 	</dd>
+    <dt>redraw()
+    <dd>
+        Render the whole tree.
+        See <code>node.redraw()</code> for details.
+    </dd>
 	<dt>reload()
 	<dd>
 		Reload the the tree.<br>
@@ -1188,6 +1225,11 @@ $("#tree").dynatree("option", "fx", { height: "toggle", duration: 200 }); </pre>
 		&lt;UL> element, because these elements are removed after they have been
 		rendered.
 	</dd>
+    <dt>selectKey(key, flag)
+    <dd>
+        Select or deselect node with a given key and fire focus and select events.<br>
+        Return the selected DynaTreeNode.
+    </dd>
 	<dt>toDict()
 	<dd>
 		Convert the tree into a JavaScript object.<br>
@@ -1278,12 +1320,20 @@ node.addChild({title: "New Node", key: "3333"});
 	</dd>
 	<dt>hasChildren()
 	<dd>
-		Return true, if this node has child nodes.
+		Return <code>true</code>, if node has child nodes.<br>
+		For lazy nodes that have not yet been loaded, <code>undefined</code> is
+		is returned.<br>
+		A test for 'node is surely empty' would be coded like
+		<pre>if(node.hasChildren() === false) ...</pre>
 	</dd>
     <dt>isActive()
     <dd>
         Return true, if this node is activated. Only one tree node may be active
         at any time. 
+    </dd>
+    <dt>isFocused()
+    <dd>
+        Return true, if this node is has the focus.
     </dd>
     <dt>isChildOf(otherNode)
     <dd>
@@ -1443,8 +1493,9 @@ node.addChild({title: "New Node", key: "3333"});
 $("#tree").dynatree("getTree").selectKey("1234");
 // or another way:
 $("#tree").dynatree("getTree").getNodeByKey("1234").select();
-// .. or yet another way:
-$("#dynatree-id-1234").attr("node").select();
+// .. or yet another way (if 'generateIds' option was enabled):
+$("#dynatree-id-1234").attr("dtnode").select();
+
 </pre>
 
 
@@ -1461,7 +1512,7 @@ if( node )
 
 <pre class="prettyprint">
 $(".dynatree-partsel").each(function(){
-	node = $(this).attr("node");
+    var node = $(this).parents("[dtnode]").attr("dtnode");
 	[...]
 });
 </pre>
@@ -1501,12 +1552,12 @@ var childNode = node.addChild({
 <pre class="prettyprint">
 // Bind hover events to the tree's &lt;a> tags:
 $("#tree a").hover(function(){
-		// Find node object for this &lt;a> tag
-		var node = $(this).parent("[node]").attr("node");
-		// (...) for example open a tooltip.
-	}, function(){
-		// (...) for example remove the tooltip.
-	});
+        var node = $(this).parents("[dtnode]").attr("dtnode");
+        logMsg("Hover in %s", node);
+    }, function(){
+        var node = $(this).parents("[dtnode]").attr("dtnode");
+        logMsg("Hover out %s", node);
+    });
 </pre>
 
 
