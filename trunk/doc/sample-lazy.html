@@ -67,7 +67,9 @@
        });
         $("#btnLoadKeyPath").click(function(){
             var tree = $("#tree").dynatree("getTree");
-            tree.loadKeyPath("/folder4/_11/_16/_19", true, function(node, path, isOk){
+            tree.loadKeyPath("/folder4/_26/_31/_34", true, function(node, status){
+                //node.activate();
+                alert(status + " " + node);
             });
        });
 	});
@@ -88,7 +90,7 @@ a lazy tree that uses a simple test server.</p>
 <div>Active node: <span id="echoActive">-</span></div>
 <p>
     <button id="btnReloadActive">Reload active node...</button>
-    <button id="btnLoadKeyPath">Load node by path '/folder4/_11/_16/_19'...</button>
+    <button id="btnLoadKeyPath">Load node by path '/folder4/_26/_31/_34'...</button>
 </p>
 
 <!-- Start_Exclude: This block is not part of the sample code -->
