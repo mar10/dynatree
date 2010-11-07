@@ -479,7 +479,7 @@ DynaTreeNode.prototype = {
 		// Create, modify or remove the status child node (pass 'null', to remove it).
 		var firstChild = ( this.childList ? this.childList[0] : null );
 		if( !data ) {
-			if ( firstChild ) {
+			if ( firstChild && firstChild.isStatusNode()) {
 				try{
 					// I've seen exceptions here with loadKeyPath...
 					if(this.ul){
@@ -510,11 +510,11 @@ DynaTreeNode.prototype = {
 		switch( lts ) {
 			case DTNodeStatus_Ok:
 				this._setStatusNode(null);
-//				this.isRead = true;
+				$(this.span).removeClass(this.tree.options.classNames.nodeWait)
+					.removeClass(this.tree.options.classNames.nodeError);
 				this.isLoading = false;
 				this.render();
 				if( this.tree.options.autoFocus ) {
-//					if( this === this.tree.tnRoot && !this.tree.options.rootVisible && this.childList ) {
 					if( this === this.tree.tnRoot && this.childList ) {
 						// special case: using ajaxInit
 						this.childList[0].focus();
@@ -525,14 +525,18 @@ DynaTreeNode.prototype = {
 				break;
 			case DTNodeStatus_Loading:
 				this.isLoading = true;
+				$(this.span).addClass(this.tree.options.classNames.nodeWait);
+/*
 				this._setStatusNode({
 					title: this.tree.options.strings.loading + info,
 					tooltip: tooltip,
 					addClass: this.tree.options.classNames.nodeWait
 				});
+*/
 				break;
 			case DTNodeStatus_Error:
 				this.isLoading = false;
+//				$(this.span).addClass(this.tree.options.classNames.nodeError);
 				this._setStatusNode({
 					title: this.tree.options.strings.loadError + info,
 					tooltip: tooltip,
