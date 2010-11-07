@@ -5,11 +5,26 @@
 
 
 ==== Release 1.0 (alpha) ====
+===== Alpha 3 =====
+  * Load icon is now displayed in parent (not as sub node)
+  * loadKeyPath()
+  * Added a new 'skin-vista'
+  * node.reloadChildren(callback)
+  * node.getKeyPath(excludeSelf)
+  * node.setTitle(title)
+  * node.isFirstSibling()
+  * node.appendAjax() triggers event 'nodeLoaded.dynatree.tree-id.node-key'
+  * node.fromDict(dict)
+  * CSS ul.dynatree-container now uses `overflow: auto` by default
+  * Re-enabled setting focus on click events (only if not IE, issue 154)
+  * node.isFocused() 
+
 ===== Alpha 2 =====
   * Fixed context menu sample.
   * Added checkboxes for effect control to the sample.
   * Fixed initAjax for IE (not removing wait status).
   * removed obsolete files
+
 ===== Alpha 1 =====
   * Build against jQuery 1.4 and jQuery UI 1.8
   * Drag'n'drop support.
