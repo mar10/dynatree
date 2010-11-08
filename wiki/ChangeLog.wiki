@@ -33,7 +33,7 @@
 
 ==== Release 0.5 ====
 
-===== 0.5.5 (under development) =====
+===== 0.5.5 =====
   * Updated jQuery Context Menu Plugin to version 1.01
   * Fixed drag'n'drop sample
 
