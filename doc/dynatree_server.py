@@ -52,9 +52,7 @@
         This is only required, if this web service is not on the same host as 
         the web page that contains the Dynatree widget.
         JSONP can be enabled for jQuery.ajax() by passing dataType: 'jsonp'
-        instead of 'json'.
-        
-      - Dumps the POST body, if the request URL is '/submit_data' 
+        instead of 'json'. 
         
 
 Sample Dynatree options to use this service:
@@ -140,15 +138,6 @@ class DynaTreeWsgiApp(object):
             print "Sleeping %s seconds..." % argDict.get("sleep")
             time.sleep(int(argDict.get("sleep")))
             
-        # Dump POST request data, if http://HOST:PORT/submit_data was requested
-#        print "PI", environ["PATH_INFO"]
-        if environ["PATH_INFO"] == "/submit_data":
-            length = int(environ["CONTENT_LENGTH"])
-            data = environ["wsgi.input"].read(length)
-            print data
-            start_response("200 OK", [("Content-Type", "text/html")])
-            return [ "Thanks" ]
-
         # Support &depth=LEVEL argument to read more than one level (1: direct children)
         depth = int(argDict.get("depth", 0))
         if depth > 1:
@@ -190,13 +179,8 @@ class DynaTreeWsgiApp(object):
             fullPath = os.path.join(folderPath, fn)
             isFolder = os.path.isdir(fullPath)
             key = _keyFromString(fullPath)
-            try:
-                size = os.path.getsize(fullPath)
-                date = time.ctime(os.path.getmtime(fullPath))
-            except:
-                # May fail when path contains funny chars (don't care in this sample)
-                size = 0
-                date = time.ctime()
+            size = os.path.getsize(fullPath)
+            date = time.ctime(os.path.getmtime(fullPath))
             # Create a node dictionary and append it to the child list
             node = {"title": fn,
                     "key": key,
