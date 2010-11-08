@@ -1,74 +1,139 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 	<title>Dynatree - Example</title>
 
-	<script src="../jquery/jquery.js" type="text/javascript"></script>
-	<script src="../jquery/jquery-ui.custom.js" type="text/javascript"></script>
-	<script src="../jquery/jquery.cookie.js" type="text/javascript"></script>
+	<script src='../jquery/jquery.js' type='text/javascript'></script>
+	<script src='../jquery/ui.core.js' type='text/javascript'></script>
+    <script src='../jquery/jquery.cookie.js' type='text/javascript'></script>
+<!--
+    <script type="text/javascript" src="http://jqueryui.com/latest/ui/ui.draggable.js"></script>
+    <script type="text/javascript" src="http://jqueryui.com/latest/ui/ui.droppable.js"></script>
+	-->
+    <script type="text/javascript" src="http://jquery-ui.googlecode.com/svn/tags/1.7.1/ui/ui.draggable.js"></script>
+    <script type="text/javascript" src="http://jquery-ui.googlecode.com/svn/tags/1.7.1/ui/ui.droppable.js"></script>
 
-	<link href="../src/skin/ui.dynatree.css" rel="stylesheet" type="text/css">
-	<script src="../src/jquery.dynatree.js" type="text/javascript"></script>
+    <style type="text/css">
+		.drophover{ border: 1px solid blue; }
+    </style>
+
+	<link href='../src/skin/ui.dynatree.css' rel='stylesheet' type='text/css'>
+	<script src='../src/jquery.dynatree.js' type='text/javascript'></script>
 
 	<!-- Start_Exclude: This block is not part of the sample code -->
 	<link href="prettify.css" rel="stylesheet">
 	<script src="prettify.js" type='text/javascript'></script>
 	<link href='sample.css' rel='stylesheet' type='text/css'>
-	<script src='sample.js' type='text/javascript'></script>
+    <script src='sample.js' type='text/javascript'></script>
 	<!-- End_Exclude -->
-
-<script type='text/javascript'><!--
-$(function(){
-	// --- Initialize first Dynatree -------------------------------------------
-	$("#tree").dynatree({
-		initAjax: {
-			url: "sample-data3.json"
-		},
-		dnd: {
-			preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
-			onDragStart: function(node) {
-				/** This function MUST be defined to enable dragging for the tree.
-				 *  Return false to cancel dragging of node.
-				 */
-				return true;
+    
+<script type='text/javascript'>
+	// --- (Re)Bind event handlers ---------------------------------------------
+	function _bindDragDrop() {
+		// Enable document and folder nodes as drag source
+		$("#tree span.ui-dynatree-document, span.ui-dynatree-folder").draggable({
+			delay: 0,
+			distance: 4,
+			helper: 'clone',
+			opacity: 0.5,
+			addClasses: false,
+			appendTo: 'body',
+//			cursor: 'crosshair',
+			revert: 'invalid', 
+			revertDuration: 400,
+			start: function(event, ui) {
+				logMsg("draggable.start, %o, %o", event, ui);
 			},
-			onDragEnter: function(node, sourceNode) {
-				/** sourceNode may be null for non-dynatree droppables.
-				 *  Return false to disallow dropping on node. In this case
-				 *  onDragOver and onDragLeave are not called.
-				 *  Return 'over', 'before, or 'after' to force a hitMode.
-				 *  Return ['before', 'after'] to restrict available hitModes.
-				 *  Any other return value will calc the hitMode from the cursor position.
-				 */
-				// Prevent dropping a parent below another parent (only sort
-				// nodes under the same parent)
-				if(node.parent !== sourceNode.parent)
-					return false;
-				// Don't allow dropping *over* a node (would create a child)
-				return ["before", "after"];
+			drag: function(event, ui) {
+//				logMsg("draggable.drag, %o, %o", event, ui);
 			},
-			onDrop: function(node, sourceNode, hitMode, ui, draggable) {
-				/** This function MUST be defined to enable dropping of items on
-				 *  the tree.
-				 */
-				sourceNode.move(node, hitMode);
+			stop: function(event, ui) {
+				logMsg("draggable.stop, %o, %o", event, ui);
+			},
+			_last: null
+		});
+		// Enable document and folder nodes as drop target
+		$("#tree span.ui-dynatree-document, span.ui-dynatree-folder").droppable({
+			accept: '.ui-dynatree-document, .ui-dynatree-folder',
+			addClasses: false,
+//			activeClass: '.ui-state-highlight',
+			hoverClass: 'drophover',
+			tolerance: 'intersect',			
+			activate: function(event, ui) {
+//				logMsg("droppable.activate, %o, %o", event, ui);
+			},
+			deactivate: function(event, ui) {
+//				logMsg("droppable.deactivate, %o, %o", event, ui);
+			},
+			over: function(event, ui) {
+				logMsg("droppable.over, %o, %o", event, ui);
+			},
+			out: function(event, ui) {
+				logMsg("droppable.out, %o, %o", event, ui);
+			},
+			drop: function(event, ui) {
+				var srcnode = ui.draggable[0].dtnode;
+				var destnode = event.target.dtnode;
+				logMsg("droppable.drop, %o, %o", event, ui);
+				logMsg("drop source: %o", srcnode);
+				logMsg("drop target: %o", destnode);
+				var copynode = srcnode.toDict(true, function(dict){
+				  dict.title = "Copy of " + dict.title;
+				  delete dict.key; // Remove key, so a new one will be created
+				});
+				destnode.addChild(copynode);
+				// Must re-binnd, so new nodes become draggable too
+				_bindDragDrop();
+			},
+			_last: null
+		});
+	}
+	// --- Initialize Dynatree -------------------------------------------------
+	$(function(){
+		$("#tree").dynatree({
+			onActivate: function(dtnode) {
+				$("#echoActive").text(dtnode.data.title + "(" + dtnode.data.key + ")");
+			},
+			onDeactivate: function(dtnode) {
+				$("#echoActive").text("-");
 			}
-		}
+		});
+		_bindDragDrop();
 	});
-});
---></script>
+</script>
 </head>
 
 <body class="example">
-	<h1>Example: Sort nodes using drag-and-drop</h1>
+	<h1>Example: Simple drag-and-drop</h1>
 	<p class="description">
-		This sample uses Dynatree's built-in drag-and-drop feature to move nodes.<br>
-		- Nodes may only be dragged under it's original parent.<br>
-		- When dropped, the node is moved to the target.<br>
-	</p>
+		This sample uses the <a href="http://docs.jquery.com/UI/Draggable">Draggable</a>
+		and <a href="http://docs.jquery.com/UI/Droppable">Droppable</a>
+		plugins to enable copying nodes using drag-and-drop.<br>
+		- Folders and docs can be dragged and dropped over other nodes<br>
+		- Events are logged to the console (Firefox)<br>
+		- On drop, a copy is appended as child<br>
+		Drawbacks:<br>
+		- This does not use event delegation, so it may be slow for big trees.<br>
+	</p>		
+	<div id="tree">
+		<ul style="display:none">
+			<li id="key1" title="Look, a tool tip!">item1 with key and tooltip
+			<li id="key2" class="selected">item2: selected on init
+			<li id="key3" class="folder">Folder with some children
+				<ul>
+					<li id="key3.1">Sub-item 3.1
+					<li id="key3.2">Sub-item 3.2
+				</ul>
 
-	<div id="tree"> </div>
+			<li id="key4" class="expanded">Document with some children (expanded on init)
+				<ul>
+					<li id="key4.1">Sub-item 4.1
+					<li id="key4.2">Sub-item 4.2
+				</ul>
+		</ul>
+	</div>
+	<div>Active node: <span id="echoActive">-</span></div>
 
 	<!-- Start_Exclude: This block is not part of the sample code -->
 	<hr>

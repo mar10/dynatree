@@ -5,18 +5,17 @@
 function viewSourceCode()
 {
 	window.location = "view-source:" + window.location.href;
+	
 }
 
-
-function initCodeSamples()
-{
-	$('a.codeExample').each(
-		function( i ) {
-			$( this ).after( '<pre class="codeExample prettyprint"><code></code></pre>' );
-		}
-	);
+function initCodeSamples() {
+	$('a.codeExample').each (
+			function( i ) {
+				$( this ).after( '<pre class="codeExample prettyprint"><code></code></pre>' );
+			}
+	)
 	$( 'pre.codeExample' ).hide();
-	$('a.codeExample').toggle(
+	$('a.codeExample').toggle( 
 			function() {
 				if( !this.old ){
 					this.old = $(this).html();
@@ -28,10 +27,10 @@ function initCodeSamples()
 				$(this).html(this.old);
 				$(this.nextSibling).hide();
 			}
-	);
+	)
 	function parseCode(o){
 		if(!o.nextSibling.hascode){
-			$.get(o.href, function(code){
+			$.get (o.href, function(code){
 				// Doesn't work (only accepts simple/restricted html strings, not a full html page):
 //				logMsg("code.html: %o", $(code).html());
 
@@ -63,17 +62,19 @@ function initCodeSamples()
 }
 
 
+
 $(function(){
 	// Log to Google Analytics, when not running locally
 	if ( document._gat && document.URL.toLowerCase().indexOf('wwwendt.de/')>=0 ) {
 		var pageTracker = _gat._getTracker("UA-316028-1");
 		pageTracker._trackPageview();
 	}
+
 	// Show some elements only, if (not) inside the Example Browser
-	if (top.location == self.location){
+	if (top.location == self.location) 
 		$(".hideOutsideFS").hide();
-	}else{
+	else
 		$(".hideInsideFS").hide();
-	}
+	
 	initCodeSamples();
 });
