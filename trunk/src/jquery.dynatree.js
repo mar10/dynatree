@@ -127,6 +127,9 @@ DynaTreeNode.prototype = {
 		this.childList = null; // no subnodes yet
 		this.isLoading = false; // Lazy content is being loaded
 		this.hasSubSel = false;
+		this.bExpanded = false;
+		this.bSelected = false;
+
 	},
 
 	toString: function() {
@@ -1943,6 +1946,12 @@ DynaTree.prototype = {
 		if( opts.classNames !== $.ui.dynatree.prototype.options.classNames ) {
 			opts.classNames = $.extend({}, $.ui.dynatree.prototype.options.classNames, opts.classNames);
 		}
+		if( opts.ajaxDefaults !== $.ui.dynatree.prototype.options.ajaxDefaults ) {
+			opts.ajaxDefaults = $.extend({}, $.ui.dynatree.prototype.options.ajaxDefaults, opts.ajaxDefaults);
+		}
+		if( opts.dnd !== $.ui.dynatree.prototype.options.dnd ) {
+			opts.dnd = $.extend({}, $.ui.dynatree.prototype.options.dnd, opts.dnd);
+		}
 		// Guess skin path, if not specified
 		if(!opts.imagePath) {
 			$("script").each( function () {
@@ -2001,6 +2010,7 @@ DynaTree.prototype = {
 */
 		// Create the root element
 		this.tnRoot = new DynaTreeNode(null, this, {});
+		this.tnRoot.bExpanded = true;
 		this.tnRoot.render();
 		this.divTree.appendChild(this.tnRoot.ul);
 
