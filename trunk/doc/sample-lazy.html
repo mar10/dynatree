@@ -8,7 +8,7 @@
 <script src="../jquery/jquery-ui.custom.js" type="text/javascript"></script>
 <script src="../jquery/jquery.cookie.js" type="text/javascript"></script>
 
-<link href="../src/skin/ui.dynatree.css" rel="stylesheet" type="text/css">
+<link href="../src/skin/ui.dynatree.css" rel="stylesheet" type="text/css" id="skinSheet">
 <script src="../src/jquery.dynatree.js" type="text/javascript"></script>
 
 <!-- Start_Exclude: This block is not part of the sample code -->
@@ -50,7 +50,8 @@
 //              });
 				// .. but here we use a local file instead:
 				node.appendAjax({
-	                debugLazyDelay: 750, // This is a dynatree debug option
+					// We don't want the next line in production code:
+	                debugLazyDelay: 750,
 					url: "sample-data2.json"
 				});
 			}
@@ -83,6 +84,17 @@
                 }
             });
        });
+        <!-- Start_Exclude: This block is not part of the sample code -->
+        $("#skinCombo")
+        .val(0) // set state to prevent caching
+        .change(function(){
+            var href = "../src/"
+                + $(this).val()
+                + "/ui.dynatree.css" 
+                + "?reload=" + new Date().getTime();
+            $("#skinSheet").attr("href", href);
+        });
+        <!-- End_Exclude -->
 	});
 </script>
 </head>
@@ -93,8 +105,15 @@
 branches.<br>
 <br>
 You may want to try this <a href="sample-lazy-persist.html">live example</a> of
-a lazy tree that uses a simple test server.</p>
-
+a lazy tree that uses a simple test server.
+</p>
+<div>
+    Skin: 
+    <select id="skinCombo" size="1">
+        <option value="skin">Standard ('/skin/')</option>
+        <option value="skin-vista">Vista ('/skin-vista/')</option>
+    </select>
+</div>
 <div id="tree"><!-- When using initAjax, it may be nice to put a throbber here, that spins until the initial content is loaded: -->
 </div>
 

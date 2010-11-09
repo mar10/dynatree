@@ -154,6 +154,10 @@ span.dynatree-expander:hover
 {
     background-image: url("expanded_hover.gif");
 }
+.dynatree-loading span.dynatree-expander  /* 'Loading' status overrides all others */
+{
+    background-image: url("ltWait.gif"); 
+}
 
 
 /******************************************************************************* 

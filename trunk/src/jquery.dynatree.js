@@ -510,8 +510,7 @@ DynaTreeNode.prototype = {
 		switch( lts ) {
 			case DTNodeStatus_Ok:
 				this._setStatusNode(null);
-				$(this.span).removeClass(this.tree.options.classNames.nodeWait)
-					.removeClass(this.tree.options.classNames.nodeError);
+				$(this.span).removeClass(this.tree.options.classNames.nodeLoading);
 				this.isLoading = false;
 				this.render();
 				if( this.tree.options.autoFocus ) {
@@ -525,7 +524,7 @@ DynaTreeNode.prototype = {
 				break;
 			case DTNodeStatus_Loading:
 				this.isLoading = true;
-				$(this.span).addClass(this.tree.options.classNames.nodeWait);
+				$(this.span).addClass(this.tree.options.classNames.nodeLoading);
 /*
 				this._setStatusNode({
 					title: this.tree.options.strings.loading + info,
@@ -2062,24 +2061,24 @@ DynaTree.prototype = {
 		this.phase = "idle";
 	},
 
-	_setNoUpdate: function(silent) {
-		// TODO: set options to disable and re-enable updates while loading 
-		var opts = this.options;
-		var prev = {
-			fx: opts.fx, 
-			autoFocus: opts.autoFocus,
-			autoCollapse: opts.autoCollapse };
-		if(silent === true){
-			opts.autoFocus = false;
-			opts.fx = null;
-			opts.autoCollapse = false;
-		} else {
-			opts.autoFocus = silent.autoFocus;
-			opts.fx = silent.fx;
-			opts.autoCollapse = silent.autoCollapse;
-		}
-		return prev;
-	},
+//	_setNoUpdate: function(silent) {
+//		// TODO: set options to disable and re-enable updates while loading 
+//		var opts = this.options;
+//		var prev = {
+//			fx: opts.fx, 
+//			autoFocus: opts.autoFocus,
+//			autoCollapse: opts.autoCollapse };
+//		if(silent === true){
+//			opts.autoFocus = false;
+//			opts.fx = null;
+//			opts.autoCollapse = false;
+//		} else {
+//			opts.autoFocus = silent.autoFocus;
+//			opts.fx = silent.fx;
+//			opts.autoCollapse = silent.autoCollapse;
+//		}
+//		return prev;
+//	},
 
 	_reloadAjax: function() {
 		// Reload
@@ -2859,6 +2858,7 @@ $.ui.dynatree.prototype.options = {
 		hidden: "dynatree-hidden",
 		combinedExpanderPrefix: "dynatree-exp-",
 		combinedIconPrefix: "dynatree-ico-",
+		nodeLoading: "dynatree-loading",
 //		disabled: "dynatree-disabled",
 		hasChildren: "dynatree-has-children",
 		active: "dynatree-active",
@@ -2870,7 +2870,6 @@ $.ui.dynatree.prototype.options = {
 		lastsib: "dynatree-lastsib"
 	},
 	debugLevel: 2, // 0:quiet, 1:normal, 2:debug $REPLACE:	debugLevel: 1,
-//	debugLazyDelay: 0, // milliseconds to wait when loading lazily
 
 	// ------------------------------------------------------------------------
 	lastentry: undefined
