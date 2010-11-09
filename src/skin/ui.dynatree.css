@@ -159,6 +159,10 @@ span.dynatree-expander
 {
 	background-image: url("ltM_ne.gif");
 }
+.dynatree-loading span.dynatree-expander  /* 'Loading' status overrides all others */
+{
+    background-image: url("ltWait.gif"); 
+}
 
 
 /******************************************************************************* 
@@ -255,7 +259,7 @@ span.dynatree-icon /* Default icon */
 
 .dynatree-statusnode-wait span.dynatree-icon
 {
-	background-image: url("ltWait.gif");
+	background-image: url("ltWait.gif"); 
 }
 
 .dynatree-statusnode-error span.dynatree-icon
