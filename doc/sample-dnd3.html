@@ -77,11 +77,11 @@ $(function(){
 		onDeactivate: function(node) {
 			$("#echoActive2").text("-");
 		},
-        onLazyRead: function(node){
-            node.appendAjax({
-                url: "sample-data2.json"
-            });
-        },
+		onLazyRead: function(node){
+			node.appendAjax({
+				url: "sample-data2.json"
+			});
+		},
 		dnd: {
 			autoExpandMS: 1000,
 			preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
@@ -164,15 +164,15 @@ $(function(){
 		}
 	});
 	<!-- Start_Exclude: This block is not part of the sample code -->
-    $("#skinCombo")
-    .val(0) // set state to prevent caching
-    .change(function(){
-        var href = "../src/"
-        	+ $(this).val()
-        	+ "/ui.dynatree.css" 
-        	+ "?reload=" + new Date().getTime();
-	    $("#skinSheet").attr("href", href);
-    });
+	$("#skinCombo")
+	.val(0) // set state to prevent caching
+	.change(function(){
+		var href = "../src/"
+			+ $(this).val()
+			+ "/ui.dynatree.css"
+			+ "?reload=" + new Date().getTime();
+		$("#skinSheet").attr("href", href);
+	});
 	<!-- End_Exclude -->
 });
 --></script>
@@ -184,12 +184,12 @@ $(function(){
 		This sample uses the standard jQuery draggable and droppable.
 	</p>
 	<div>
-        Skin: 
-        <select id="skinCombo" size="1">
-  		    <option value="skin">Standard ('/skin/')</option>
-		    <option value="skin-vista">Vista ('/skin-vista/')</option>
-	    </select>
-    </div>
+		Skin:
+		<select id="skinCombo" size="1">
+			<option value="skin">Standard ('/skin/')</option>
+			<option value="skin-vista">Vista ('/skin-vista/')</option>
+		</select>
+	</div>
 
 	<table>
 	<thead>

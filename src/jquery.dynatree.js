@@ -691,7 +691,7 @@ DynaTreeNode.prototype = {
 			}
 			this.tree.persistence.activeKey = this.data.key;
 			$(this.span).addClass(opts.classNames.active);
-			if ( fireEvents && opts.onActivate ){ // Pass element as 'this' (jQuery convention)
+			if ( fireEvents && opts.onActivate ){ 
 				opts.onActivate.call(this.tree, this);
 			}
 		} else {
@@ -1167,7 +1167,7 @@ DynaTreeNode.prototype = {
 				$(this.tree.tnFocused.span).removeClass(opts.classNames.focused);
 			}
 			this.tree.tnFocused = this;
-			if ( opts.onFocus ){ // Pass element as 'this' (jQuery convention)
+			if ( opts.onFocus ){ 
 				opts.onFocus.call(this.tree, this);
 			}
 			$(this.tree.tnFocused.span).addClass(opts.classNames.focused);

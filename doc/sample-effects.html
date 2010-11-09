@@ -30,31 +30,31 @@
 				$("#echoActive").text("-");
 			}
 		});
-        $("#cbAutoCollapse")
-        .attr("checked", true) // set state, to prevent caching
-        .click(function(){
-            var f = $(this).attr("checked");
-            $("#tree").dynatree("option", "autoCollapse", f);
-        });
-        $("#cbEffects")
-        .attr("checked", true) // set state, to prevent caching
-        .click(function(){
-            var f = $(this).attr("checked");
-            if(f){
-                $("#tree").dynatree("option", "fx", { height: "toggle", duration: 200 });
-            }else{
-                $("#tree").dynatree("option", "fx", null);
-            }
-        });
-        $("#skinCombo")
-        .val(0) // set state to prevent caching
-        .change(function(){
-            var href = "../src/"
-            	+ $(this).val()
-            	+ "/ui.dynatree.css" 
-            	+ "?reload=" + new Date().getTime();
-		    $("#skinSheet").attr("href", href);
-        });
+		$("#cbAutoCollapse")
+		.attr("checked", true) // set state, to prevent caching
+		.click(function(){
+			var f = $(this).attr("checked");
+			$("#tree").dynatree("option", "autoCollapse", f);
+		});
+		$("#cbEffects")
+		.attr("checked", true) // set state, to prevent caching
+		.click(function(){
+			var f = $(this).attr("checked");
+			if(f){
+				$("#tree").dynatree("option", "fx", { height: "toggle", duration: 200 });
+			}else{
+				$("#tree").dynatree("option", "fx", null);
+			}
+		});
+		$("#skinCombo")
+		.val(0) // set state to prevent caching
+		.change(function(){
+			var href = "../src/"
+				+ $(this).val()
+				+ "/ui.dynatree.css"
+				+ "?reload=" + new Date().getTime();
+			$("#skinSheet").attr("href", href);
+		});
 	});
 </script>
 </head>
@@ -66,16 +66,16 @@
 		<code>autoCollapse</code> option.
 	</p>
 	<div>
-        <input type="checkbox" id="cbAutoCollapse"><label for="cbAutoCollapse">Auto collapse</label>
-        - 
-        <input type="checkbox" id="cbEffects"><label for="cbEffects">Use effects</label>
-        - 
-        Skin: 
-        <select id="skinCombo" size="1">
-  		    <option value="skin">Standard ('/skin/')</option>
-		    <option value="skin-vista">Vista ('/skin-vista/')</option>
-	    </select>
-    </div>
+		<input type="checkbox" id="cbAutoCollapse"><label for="cbAutoCollapse">Auto collapse</label>
+		-
+		<input type="checkbox" id="cbEffects"><label for="cbEffects">Use effects</label>
+		-
+		Skin:
+		<select id="skinCombo" size="1">
+			<option value="skin">Standard ('/skin/')</option>
+			<option value="skin-vista">Vista ('/skin-vista/')</option>
+		</select>
+	</div>
 	<div id="tree">
 		<ul style="display: none;">
 			<li id="id1" title="Look, a tool tip!">item1 with key and tooltip

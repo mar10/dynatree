@@ -29,7 +29,7 @@
 			.change(function(){
 				var href = "../src/"
 					+ $(this).val()
-					+ "/ui.dynatree.css" 
+					+ "/ui.dynatree.css"
 					+ "?reload=" + new Date().getTime();
 				$("#skinSheet").attr("href", href);
 			});
@@ -45,12 +45,12 @@
 		It is initalized from a hidden &lt;ul> element on this page.
 	</p>
 	<div>
-        Skin: 
-        <select id="skinCombo" size="1">
-  		    <option value="skin">Standard ('/skin/')</option>
-		    <option value="skin-vista">Vista ('/skin-vista/')</option>
-	    </select>
-    </div>
+		Skin:
+		<select id="skinCombo" size="1">
+			<option value="skin">Standard ('/skin/')</option>
+			<option value="skin-vista">Vista ('/skin-vista/')</option>
+		</select>
+	</div>
 
 	<div id="tree">
 		<ul id="treeData" style="display: none;">
