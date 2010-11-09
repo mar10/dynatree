@@ -212,10 +212,10 @@
 		$("#skinCombo")
 		.val(0) // set state to prevent caching
 		.change(function(){
-		    var href = "../src/"
-		    	+ $(this).val()
-		    	+ "/ui.dynatree.css" 
-		    	+ "?reload=" + new Date().getTime();
+			var href = "../src/"
+				+ $(this).val()
+				+ "/ui.dynatree.css"
+				+ "?reload=" + new Date().getTime();
 			$("#skinSheet").attr("href", href);
 		});
 		<!-- End_Exclude -->
@@ -239,12 +239,12 @@
 		the first click).
 	</p>
 	<div>
-        Skin: 
-        <select id="skinCombo" size="1">
-  		    <option value="skin">Standard ('/skin/')</option>
-		    <option value="skin-vista">Vista ('/skin-vista/')</option>
-	    </select>
-    </div>
+		Skin:
+		<select id="skinCombo" size="1">
+			<option value="skin">Standard ('/skin/')</option>
+			<option value="skin-vista">Vista ('/skin-vista/')</option>
+		</select>
+	</div>
 	<div id="tree1"></div>
 	<div>Active node: <span id="echoActive1">-</span></div>
 	<div>Selection: <span id="echoSelection1">-</span></div>

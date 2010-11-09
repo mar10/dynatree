@@ -18,14 +18,14 @@
 <script src='sample.js' type='text/javascript'></script>
 <!-- End_Exclude -->
 
-<script type='text/javascript'>
+<script type='text/javascript'><!--
 	$(function(){
 
 		// --- Initialize sample trees
 		$("#tree").dynatree({
 			title: "Lazy loading sample",
 			fx: { height: "toggle", duration: 200 },
-            autoFocus: false, // Set focus to first child, when expanding or lazy-loading.
+			autoFocus: false, // Set focus to first child, when expanding or lazy-loading.
 			// In real life we would call a URL on the server like this:
 //          initAjax: {
 //              url: "/getTopLevelNodesAsJson",
@@ -51,50 +51,50 @@
 				// .. but here we use a local file instead:
 				node.appendAjax({
 					// We don't want the next line in production code:
-	                debugLazyDelay: 750,
+					debugLazyDelay: 750,
 					url: "sample-data2.json"
 				});
 			}
 		});
-        $("#btnReloadActive").click(function(){
-            var node = $("#tree").dynatree("getActiveNode");
-            if( node ){
-                node.reloadChildren(function(node, isOk){
+		$("#btnReloadActive").click(function(){
+			var node = $("#tree").dynatree("getActiveNode");
+			if( node ){
+				node.reloadChildren(function(node, isOk){
 //                    alert("loaded " + node);
-                });
-            }else{
-                alert("No active node.");
-            }
-       });
-        $("#btnLoadKeyPath").click(function(){
-            var tree = $("#tree").dynatree("getTree");
-            // Make sure that node #_27 is loaded, by traversing the parents.
-            // The callback is executed for every node as we go:
-            tree.loadKeyPath("/folder4/_23/_26/_27", function(node, status){
-                if(status == "loaded") {
-                    // 'node' is a parent that was just traversed.
-                    // If we call expand() here, then all nodes will be expanded
-                    // as we go
-                    node.expand();
-                }else if(status == "ok") {
-                    // 'node' is the end node of our path.
-                    // If we call activate() or makeVisible() here, then the 
-                    // whole branch will be exoanded now
-                    node.activate();
-                }
-            });
-       });
-        <!-- Start_Exclude: This block is not part of the sample code -->
-        $("#skinCombo")
-        .val(0) // set state to prevent caching
-        .change(function(){
-            var href = "../src/"
-                + $(this).val()
-                + "/ui.dynatree.css" 
-                + "?reload=" + new Date().getTime();
-            $("#skinSheet").attr("href", href);
-        });
-        <!-- End_Exclude -->
+				});
+			}else{
+				alert("No active node.");
+			}
+	   });
+		$("#btnLoadKeyPath").click(function(){
+			var tree = $("#tree").dynatree("getTree");
+			// Make sure that node #_27 is loaded, by traversing the parents.
+			// The callback is executed for every node as we go:
+			tree.loadKeyPath("/folder4/_23/_26/_27", function(node, status){
+				if(status == "loaded") {
+					// 'node' is a parent that was just traversed.
+					// If we call expand() here, then all nodes will be expanded
+					// as we go
+					node.expand();
+				}else if(status == "ok") {
+					// 'node' is the end node of our path.
+					// If we call activate() or makeVisible() here, then the
+					// whole branch will be exoanded now
+					node.activate();
+				}
+			});
+	   });
+		<!-- Start_Exclude: This block is not part of the sample code -->
+		$("#skinCombo")
+		.val(0) // set state to prevent caching
+		.change(function(){
+			var href = "../src/"
+				+ $(this).val()
+				+ "/ui.dynatree.css"
+				+ "?reload=" + new Date().getTime();
+			$("#skinSheet").attr("href", href);
+		});
+		<!-- End_Exclude -->
 	});
 </script>
 </head>
@@ -108,19 +108,19 @@ You may want to try this <a href="sample-lazy-persist.html">live example</a> of
 a lazy tree that uses a simple test server.
 </p>
 <div>
-    Skin: 
-    <select id="skinCombo" size="1">
-        <option value="skin">Standard ('/skin/')</option>
-        <option value="skin-vista">Vista ('/skin-vista/')</option>
-    </select>
+	Skin:
+	<select id="skinCombo" size="1">
+		<option value="skin">Standard ('/skin/')</option>
+		<option value="skin-vista">Vista ('/skin-vista/')</option>
+	</select>
 </div>
 <div id="tree"><!-- When using initAjax, it may be nice to put a throbber here, that spins until the initial content is loaded: -->
 </div>
 
 <div>Active node: <span id="echoActive">-</span></div>
 <p>
-    <button id="btnReloadActive">Reload active node...</button>
-    <button id="btnLoadKeyPath">Load node by path '/folder4/_23/_26/_27'...</button>
+	<button id="btnReloadActive">Reload active node...</button>
+	<button id="btnLoadKeyPath">Load node by path '/folder4/_23/_26/_27'...</button>
 </p>
 
 <!-- Start_Exclude: This block is not part of the sample code -->

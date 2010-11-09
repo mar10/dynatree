@@ -72,12 +72,12 @@
 	<li>Support for lazy loading and Ajax.
 	<li>Optimized for large dynamic trees.
 	<li>Checkboxes and hierarchical selection.
+	<li>Supports drag and drop.
 	<li>Support for persistence.
 	<li>Keyboard aware.
 	<li>Initializes from html code or JavaScript objects.
 	<li>Implemented as a <a href="http://jquery.com">jQuery</a> plugin.<br>
 		(Note: this doesn't mean that you have to use jQuery for your whole site.)
-	<li>Supports drag and drop.
 </ul>
 
 <p class="info">
@@ -86,6 +86,11 @@
 	<a href="http://code.google.com/p/dynatree/wiki/UpdateToVersion10">migration hints</a>
 	first.<br>
 	Also, the <a href="http://wwWendt.de/tech/dynatree-0.5/doc/dynatree-doc.html">0.5 documentation</a> is  still available.
+</p>
+<p class="info">
+	Using the <code>[View source code]</code> link in the
+	<a href="samples.html">Example Browser</a> is probably the best way to learn
+	about Dynatree.
 </p>
 
 <!-- jquery.planize will generate a TOC here: -->
@@ -110,7 +115,6 @@
 	This documentation contains script examples and links.<br>
 	See also the <a href="samples.html">Example Browser</a> for some more advanced live demos.
 </p>
-
 
 <h2 id="quickExample">Quick start</h2>
 
@@ -1462,8 +1466,8 @@ node.addChild({title: "New Node", key: "3333"});
 	<dt>sortChildren(cmp, deep)
 	<dd>
 		Sort child list by title.<br>
-        <code>cmd</code>: optional compare function.<br>
-        <code>deep</code>: optional: pass true to sort all descendant nodes.
+		<code>cmd</code>: optional compare function.<br>
+		<code>deep</code>: optional: pass true to sort all descendant nodes.
 	</dd>
 	<dt>toDict(recursive, callback)
 	<dd>
