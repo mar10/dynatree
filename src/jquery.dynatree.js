@@ -528,13 +528,14 @@ DynaTreeNode.prototype = {
 			case DTNodeStatus_Loading:
 				this.isLoading = true;
 				$(this.span).addClass(this.tree.options.classNames.nodeLoading);
-/*
-				this._setStatusNode({
-					title: this.tree.options.strings.loading + info,
-					tooltip: tooltip,
-					addClass: this.tree.options.classNames.nodeWait
-				});
-*/
+				// The root is hidden, so we set a temporary status child
+				if(!this.parent){
+					this._setStatusNode({
+						title: this.tree.options.strings.loading + info,
+						tooltip: tooltip,
+						addClass: this.tree.options.classNames.nodeWait
+					});
+				}
 				break;
 			case DTNodeStatus_Error:
 				this.isLoading = false;
@@ -2030,7 +2031,7 @@ DynaTree.prototype = {
 			// Init tree from AJAX request
 			isLazy = true;
 			root.data.isLazy = true;
-			this._reloadAjax();
+			this._reloadAjax(callback);
 
 		} else if( opts.initId ) {
 			// Init tree from another UL element
@@ -2090,7 +2091,7 @@ DynaTree.prototype = {
 //		return prev;
 //	},
 
-	_reloadAjax: function() {
+	_reloadAjax: function(callback) {
 		// Reload
 		var opts = this.options;
 		if( ! opts.initAjax || ! opts.initAjax.url ){
@@ -2121,8 +2122,18 @@ DynaTree.prototype = {
 				this.logWarning("initAjax: error callback is ignored when onPostInit was specified.");
 			}
 			var isReloading = pers.isReloading();
-			ajaxOpts["success"] = function(dtnode) { opts.onPostInit.call(dtnode.tree, isReloading, false); };
-			ajaxOpts["error"] = function(dtnode) { opts.onPostInit.call(dtnode.tree, isReloading, true); };
+			ajaxOpts["success"] = function(dtnode) { 
+				opts.onPostInit.call(dtnode.tree, isReloading, false);
+				if(callback){
+					callback.call(dtnode.tree, "ok");
+				}
+			};
+			ajaxOpts["error"] = function(dtnode) { 
+				opts.onPostInit.call(dtnode.tree, isReloading, true); 
+				if(callback){
+					callback.call(dtnode.tree, "error");
+				}
+			};
 		}
 		this.logDebug("Dynatree._init(): send Ajax request...");
 		this.tnRoot.appendAjax(ajaxOpts);
@@ -2176,8 +2187,8 @@ DynaTree.prototype = {
 		this.logDebug("dynatree.redraw() done.");
 	},
 
-	reload: function() {
-		this._load();
+	reload: function(callback) {
+		this._load(callback);
 	},
 
 	getRoot: function() {
@@ -2765,15 +2776,14 @@ $.widget("ui.dynatree", {
 
 
 // The following methods return a value (thus breaking the jQuery call chain):
-
-// @@ 1.8
-//$.ui.dynatree.getter = "getTree getRoot getActiveNode getSelectedNodes";
+if( parseFloat($.ui.version) < 1.8 ) {
+	$.ui.dynatree.getter = "getTree getRoot getActiveNode getSelectedNodes";
+}
 
 
 /*******************************************************************************
  * Plugin default options:
  */
-//$.ui.dynatree.defaults = {  @@ 1.8
 $.ui.dynatree.prototype.options = {
 	title: "Dynatree", // Tree's name (only used for debug outpu)
 	minExpandLevel: 1, // 1: root node is not collapsible
@@ -2884,6 +2894,10 @@ $.ui.dynatree.prototype.options = {
 	// ------------------------------------------------------------------------
 	lastentry: undefined
 };
+// 
+if( parseFloat($.ui.version) < 1.8 ) {
+	$.ui.dynatree.defaults = $.ui.dynatree.prototype.options;
+}
 
 /*******************************************************************************
  * Reserved data attributes for a tree node.
