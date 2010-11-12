@@ -726,6 +726,10 @@ DynaTreeNode.prototype = {
 		this._activate(true, true);
 	},
 
+	activateSilent: function() {
+		this._activate(true, false);
+	},
+
 	deactivate: function() {
 //		this.tree.logDebug("dtnode.deactivate(): %o", this);
 		this._activate(false, true);
