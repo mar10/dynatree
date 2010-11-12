@@ -1292,6 +1292,8 @@ DynaTreeNode.prototype = {
 */
 				delete tn;
 			}
+			// Set to 'null' which is interpreted as 'not yet loaded' for lazy 
+			// nodes
 			this.childList = null;
 		}
 		if( ! isRecursiveCall ) {
@@ -1546,12 +1548,14 @@ DynaTreeNode.prototype = {
 		 *
 		 */
 //		this.tree.logDebug("%s.addChild(%o, %o)", this, obj, beforeNode);
-		if( !obj || obj.length === 0 ){ // Passed null or undefined or empty array
+		if(typeof(obj) == "string"){
+			throw "Invalid data type for " + obj;
+		}else if( !obj || obj.length === 0 ){ // Passed null or undefined or empty array
 			return;
-		}
-		if( obj instanceof DynaTreeNode ){
+		}else if( obj instanceof DynaTreeNode ){
 			return this._addChildNode(obj, beforeNode);
 		}
+
 		if( !obj.length ){ // Passed a single data object
 			obj = [ obj ];
 		}
@@ -1581,6 +1585,7 @@ DynaTreeNode.prototype = {
 	appendAjax: function(ajaxOptions) {
 		this.removeChildren(false, true);
 		this.setLazyNodeStatus(DTNodeStatus_Loading);
+		// Debug feature: force a delay, to simulate slow loading...
 		if(ajaxOptions.debugLazyDelay){
 			var ms = ajaxOptions.debugLazyDelay;
 			var self = this;
@@ -1596,24 +1601,25 @@ DynaTreeNode.prototype = {
 		var eventType = "nodeLoaded.dynatree." + this.tree.$tree.attr("id") 
 			+ "." + this.data.key;
 		var options = $.extend({}, this.tree.options.ajaxDefaults, ajaxOptions, {
-/*
-			complete: function(req, textStatus){
-				alert("ajax complete");
-			},
-			timeout: 5000, // 5 sec
-*/
 			success: function(data, textStatus){
 				// <this> is the request options
 //				self.tree.logDebug("appendAjax().success");
 				var prevPhase = self.tree.phase;
 				self.tree.phase = "init";
-//				self.append(data);
-				self.addChild(data, null);
+
+				if($.isArray(data) && data.length === 0){
+					// Set to [] which is interpreted as 'no children' for lazy 
+					// nodes
+					self.childList = [];
+				}else{
+					self.addChild(data, null);
+				}
+				
 				self.tree.phase = "postInit";
 				if( orgSuccess ){
 					orgSuccess.call(options, self);
 				}
-				self.tree.logInfo("trigger "+ eventType);
+				self.tree.logInfo("trigger " + eventType);
 				self.tree.$tree.trigger(eventType, [self, true]);
 				self.tree.phase = prevPhase;
 				// This should be the last command, so node.isLoading is true
@@ -1922,7 +1928,7 @@ DynaTree.prototype = {
 
 	// member functions
 
-	_load: function() {
+	_load: function(callback) {
 		var $widget = this.$widget;
 		var opts = this.options;
 		this.bEnableUpdate = true;
@@ -1941,6 +1947,7 @@ DynaTree.prototype = {
 			_log("warn", "Option 'minExpandLevel' must be >= 1.");
 			opts.minExpandLevel = 1;
 		}
+//		_log("warn", "jQuery.support.boxModel " + jQuery.support.boxModel);
 
 		// If a 'options.classNames' dictionary was passed, still use defaults
 		// for undefined classes:
