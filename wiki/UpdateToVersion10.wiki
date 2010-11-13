@@ -18,9 +18,11 @@ When updating from version 0.5 to 1.0, the following aspects have changed and ma
   * renamed dtnode -> node in the samples  
   * Changed node.visit(fn, data, includeSelf) -> node.visit(fn, includeSelf)visit() now returns nothing.<br>If the callback function returns false, the the traversal is stopped.<br>If the callback function returns 'skip', the the traversal of the current branch is stopped.<br>(Changes apply also for tree.visit())
   * hasChildren: return 'undefined' if node is unexpanded lazy, or only contains one status node
+  * tree.reload(callback) -> new callback parameter
 
 
 *New functions:*
+  * node.activateSilent()
   * node.isStatusNode()
   * node.isChildOf(otherNode)
   * node.isDescendantOf(otherNode)
