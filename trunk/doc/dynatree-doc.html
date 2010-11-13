@@ -9,9 +9,9 @@
 
 	<script src="http://www.google-analytics.com/ga.js" type="text/javascript"></script>
 
-	<script src="../jquery/jquery.js" type="text/javascript"></script>
-	<script src="../jquery/jquery.ui.core.js" type="text/javascript"></script>
-	<script src="../jquery/jquery.ui.widget.js" type="text/javascript"></script>
+    <script src="../jquery/jquery.js" type="text/javascript"></script>
+    <script src="../jquery/jquery-ui.custom.js" type="text/javascript"></script>
+    <script src="../jquery/jquery.cookie.js" type="text/javascript"></script>
 
 	<link href="../src/skin/ui.dynatree.css" rel="stylesheet" type="text/css">
 	<script src="../src/jquery.dynatree.js" type="text/javascript"></script>
@@ -61,7 +61,7 @@
 </div>
 <p>
 	Dynatree is a dynamic JavaScript tree view control with support for checkboxes,
-	persistency and lazy loading.
+	drag'n'drop, and lazy loading.
 </p>
 <p>
 	Main features:
@@ -75,7 +75,7 @@
 	<li>Supports drag and drop.
 	<li>Support for persistence.
 	<li>Keyboard aware.
-	<li>Initializes from html code or JavaScript objects.
+	<li>Initializes from html code, JSON, or JavaScript objects.
 	<li>Implemented as a <a href="http://jquery.com">jQuery</a> plugin.<br>
 		(Note: this doesn't mean that you have to use jQuery for your whole site.)
 </ul>
@@ -86,11 +86,6 @@
 	<a href="http://code.google.com/p/dynatree/wiki/UpdateToVersion10">migration hints</a>
 	first.<br>
 	Also, the <a href="http://wwWendt.de/tech/dynatree-0.5/doc/dynatree-doc.html">0.5 documentation</a> is  still available.
-</p>
-<p class="info">
-	Using the <code>[View source code]</code> link in the
-	<a href="samples.html">Example Browser</a> is probably the best way to learn
-	about Dynatree.
 </p>
 
 <!-- jquery.planize will generate a TOC here: -->
@@ -114,6 +109,10 @@
 <p>
 	This documentation contains script examples and links.<br>
 	See also the <a href="samples.html">Example Browser</a> for some more advanced live demos.
+</p>
+<p class="info">
+    Using the <code>[View source code]</code> link in the
+    Example Browser is probably the best way to learn about Dynatree.
 </p>
 
 <h2 id="quickExample">Quick start</h2>
@@ -954,6 +953,39 @@ return [ res ]
 </p>
 
 
+<h2 id="dnd">Drag'n'drop</h2>
+
+<p>
+Drag and drop functionality is enabled by defining the appropriate callbacks:
+</p>
+<pre class="prettyprint">
+    $("#tree").dynatree({
+        [...]
+        dnd: {
+            onDragStart: function(node) {
+                /** This function MUST be defined to enable dragging for the tree.
+                 *  Return false to cancel dragging of node.
+                 */
+                logMsg("tree.onDragStart(%o)", node);
+                return true;
+            },
+            onDrop: function(node, sourceNode, hitMode, ui, draggable) {
+                /** This function MUST be defined to enable dropping of items on
+                 * the tree.
+                 */
+                logMsg("tree.onDrop(%o, %o, %s)", node, sourceNode, hitMode);
+                sourceNode.move(node, hitMode);
+            }
+        }
+    });
+</pre>
+<p>
+There are a lot more callbacks that can be used to fine tune the behaviour.
+Check the source code in the samples in the <a href="samples.html">Example Browser</a>
+to learn more.
+</p>
+
+
 <h2 id="persistence">Persistence</h2>
 
 <p>
@@ -1279,7 +1311,10 @@ tree.enableUpdate(prevMode);</pre>
 		If <code>activeVisible</code> option is set, all parents will be expanded as necessary.<br>
 		Focus is <em>not</em> set.
 	</dd>
-
+    <dt>activateSilently()</dt>
+    <dd>
+        Same as <code>activate()</code>, but does not fire events.
+    </dd>
 	<dt>addChild(nodeData[, beforeNode])</dt>
 	<dd>
 		Append a new child node.<br>
@@ -1685,7 +1720,7 @@ $("#tree").dynatree({
 	by Mike Samuel for syntax highlighting in the of source code samples.
 </p>
 
-<h3>Feedback</h3>
+<h3>Feedback and support</h3>
 <p>
 	First of all: this is work in progress.<br>
 	Any kind of feedback is very welcome :-)
@@ -1694,8 +1729,8 @@ $("#tree").dynatree({
 	<li>A <a href="http://groups.google.com/group/dynatree">discussion forum</a> is in place to ask questions or discuss features.
 	<li>Use the <a href="http://code.google.com/p/dynatree/issues/list">Issue Tracker</a> to get a list of known bugs, or vote for a feature.<br>
 		Please make sure you searched the group and issue tracker, before adding a new request.
-	<li>If you like to make a donation, have a look at my
-		<a href="http://www.amazon.de/wishlist/4NVVW4520RYN">Amazon wishlist</a>.
+	<li>If you like: 
+		<a href="http://wwwendt.de/freeware/donate.html">Make a donation</a>.
 </ul>
 
 </body>
