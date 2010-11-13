@@ -4,7 +4,12 @@
 <wiki:toc max_depth="4" />
 
 
-==== Release 1.0 (alpha) ====
+==== Release 1.0 (beta) ====
+===== Beta 1 =====
+  * New parameter for tree.reload(callback)
+  * New method node.activateSilent()
+
+
 ===== Alpha 3 =====
   * Load icon is now displayed in parent (not as sub node)
   * loadKeyPath()
