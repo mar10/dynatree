@@ -17,6 +17,7 @@
 	@depends: jquery.cookie.js
 *************************************************************************/
 
+/*jslint laxbreak: true */
 
 /*************************************************************************
  *	Debug functions
@@ -158,7 +159,7 @@ DynaTreeNode.prototype = {
 
 	fromDict: function(dict) {
 		/**
-		 * Update node data. If dict contains 'children', then also replace 
+		 * Update node data. If dict contains 'children', then also replace
 		 * the hole sub tree.
 		 */
 		var children = dict.children;
@@ -173,7 +174,7 @@ DynaTreeNode.prototype = {
 		this.removeChildren();
 		this.addChild(children);
 	},
-	
+
 	_getInnerHtml: function() {
 		var opts = this.tree.options;
 		var cache = this.tree.cache;
@@ -695,7 +696,7 @@ DynaTreeNode.prototype = {
 			}
 			this.tree.persistence.activeKey = this.data.key;
 			$(this.span).addClass(opts.classNames.active);
-			if ( fireEvents && opts.onActivate ){ 
+			if ( fireEvents && opts.onActivate ){
 				opts.onActivate.call(this.tree, this);
 			}
 		} else {
@@ -944,7 +945,7 @@ DynaTreeNode.prototype = {
 			}
 		}
 		// Do not apply animations in init phase, or before lazy-loading
-		var allowEffects = !(this.data.isLazy && this.childList === null) 
+		var allowEffects = !(this.data.isLazy && this.childList === null)
 			&& !this.isLoading
 			&& !forceSync;
 		this.render(allowEffects);
@@ -1040,11 +1041,11 @@ DynaTreeNode.prototype = {
 		} else {
 			this._userActivate();
 			var aTag = this.span.getElementsByTagName("a");
-			if(aTag[0]){ 
+			if(aTag[0]){
 				// issue 154
 				// TODO: check if still required on IE 9:
-				// Chrome and Safari don't focus the a-tag on click, 
-				// but calling focus() seem to have problems on IE: 
+				// Chrome and Safari don't focus the a-tag on click,
+				// but calling focus() seem to have problems on IE:
 				// http://code.google.com/p/dynatree/issues/detail?id=154
 				if(!$.browser.msie){
 					aTag[0].focus();
@@ -1175,7 +1176,7 @@ DynaTreeNode.prototype = {
 				$(this.tree.tnFocused.span).removeClass(opts.classNames.focused);
 			}
 			this.tree.tnFocused = this;
-			if ( opts.onFocus ){ 
+			if ( opts.onFocus ){
 				opts.onFocus.call(this.tree, this);
 			}
 			$(this.tree.tnFocused.span).addClass(opts.classNames.focused);
@@ -1265,7 +1266,7 @@ DynaTreeNode.prototype = {
 
 	removeChildren: function(isRecursiveCall, retainPersistence) {
 		// Remove all child nodes (more efficiently than recursive remove())
-		this.tree.logDebug ("%s.removeChildren(%o)", this, isRecursiveCall);
+		this.tree.logDebug("%s.removeChildren(%o)", this, isRecursiveCall);
 		var tree = this.tree;
 		var ac = this.childList;
 		if( ac ) {
@@ -1296,7 +1297,7 @@ DynaTreeNode.prototype = {
 */
 				delete tn;
 			}
-			// Set to 'null' which is interpreted as 'not yet loaded' for lazy 
+			// Set to 'null' which is interpreted as 'not yet loaded' for lazy
 			// nodes
 			this.childList = null;
 		}
@@ -1327,7 +1328,7 @@ DynaTreeNode.prototype = {
 		// We listen to this, if a callback was passed to reloadChildren
 		if(callback){
 			var self = this;
-			var eventType = "nodeLoaded.dynatree." + this.tree.$tree.attr("id") 
+			var eventType = "nodeLoaded.dynatree." + this.tree.$tree.attr("id")
 				+ "." + this.data.key;
 			this.tree.$tree.bind(eventType, function(e, node, isOk){
 				self.tree.$tree.unbind(eventType);
@@ -1355,27 +1356,27 @@ DynaTreeNode.prototype = {
 	},
 
 	/**
-	 * Make sure the node with a given key path is available in the tree. 
+	 * Make sure the node with a given key path is available in the tree.
 	 */
 	_loadKeyPath: function(keyPath, callback) {
 		var tree = this.tree;
 		tree.logDebug("%s._loadKeyPath(%s)", this, keyPath);
-		if(keyPath == ""){
+		if(keyPath === ""){
 			throw "Key path must not be empty";
 		}
 		var segList = keyPath.split(tree.options.keyPathSeparator);
-		if(segList[0] == ""){
+		if(segList[0] === ""){
 			throw "Key path must be relative (don't start with '/')";
 		}
 		var seg = segList.shift();
-		
+
 		for(var i = 0; i < this.childList.length; i++){
 			var child = this.childList[i];
 			if( child.data.key === seg ){
 				if(segList.length === 0) {
 					// Found the end node
 					callback.call(tree, child, "ok");
-					
+
 				}else if(child.data.isLazy && (child.childList === null || child.childList === undefined)){
 					tree.logDebug("%s._loadKeyPath(%s) -> reloading %s...", this, keyPath, child);
 					var self = this;
@@ -1396,7 +1397,7 @@ DynaTreeNode.prototype = {
 					child._loadKeyPath(segList.join(tree.options.keyPathSeparator), callback);
 				}
 				return;
-			} 
+			}
 		}
 		// Could not find key
 		tree.logWarning("Node not found: " + seg);
@@ -1595,14 +1596,14 @@ DynaTreeNode.prototype = {
 			var self = this;
 			ajaxOptions.debugLazyDelay = 0;
 			this.tree.logInfo("appendAjax: waiting for debugLazyDelay " + ms);
-			setTimeout(function(){self.appendAjax(ajaxOptions)}, ms);
+			setTimeout(function(){self.appendAjax(ajaxOptions);}, ms);
 			return;
 		}
 		// Ajax option inheritance: $.ajaxSetup < $.ui.dynatree.prototype.options.ajaxDefaults < tree.options.ajaxDefaults < ajaxOptions
 		var self = this;
 		var orgSuccess = ajaxOptions.success;
 		var orgError = ajaxOptions.error;
-		var eventType = "nodeLoaded.dynatree." + this.tree.$tree.attr("id") 
+		var eventType = "nodeLoaded.dynatree." + this.tree.$tree.attr("id")
 			+ "." + this.data.key;
 		var options = $.extend({}, this.tree.options.ajaxDefaults, ajaxOptions, {
 			success: function(data, textStatus){
@@ -1612,13 +1613,13 @@ DynaTreeNode.prototype = {
 				self.tree.phase = "init";
 
 				if($.isArray(data) && data.length === 0){
-					// Set to [] which is interpreted as 'no children' for lazy 
+					// Set to [] which is interpreted as 'no children' for lazy
 					// nodes
 					self.childList = [];
 				}else{
 					self.addChild(data, null);
 				}
-				
+
 				self.tree.phase = "postInit";
 				if( orgSuccess ){
 					orgSuccess.call(options, self);
@@ -1788,7 +1789,7 @@ DynaTreeStatus._getTreePersistData = function(cookieId, cookieOpts) {
 	var ts = new DynaTreeStatus(cookieId, cookieOpts);
 	ts.read();
 	return ts.toDict();
-}
+};
 // Make available in global scope
 getDynaTreePersistData = DynaTreeStatus._getTreePersistData;
 
@@ -1974,7 +1975,7 @@ DynaTree.prototype = {
 					}else{
 						opts.imagePath = "skin/";
 					}
-    				logMsg("Guessing imagePath from '%s': '%s'", this.src, opts.imagePath);
+					logMsg("Guessing imagePath from '%s': '%s'", this.src, opts.imagePath);
 					return false; // first match
 				}
 			});
@@ -2084,10 +2085,10 @@ DynaTree.prototype = {
 	},
 
 //	_setNoUpdate: function(silent) {
-//		// TODO: set options to disable and re-enable updates while loading 
+//		// TODO: set options to disable and re-enable updates while loading
 //		var opts = this.options;
 //		var prev = {
-//			fx: opts.fx, 
+//			fx: opts.fx,
 //			autoFocus: opts.autoFocus,
 //			autoCollapse: opts.autoCollapse };
 //		if(silent === true){
@@ -2133,14 +2134,14 @@ DynaTree.prototype = {
 				this.logWarning("initAjax: error callback is ignored when onPostInit was specified.");
 			}
 			var isReloading = pers.isReloading();
-			ajaxOpts["success"] = function(dtnode) { 
+			ajaxOpts["success"] = function(dtnode) {
 				opts.onPostInit.call(dtnode.tree, isReloading, false);
 				if(callback){
 					callback.call(dtnode.tree, "ok");
 				}
 			};
-			ajaxOpts["error"] = function(dtnode) { 
-				opts.onPostInit.call(dtnode.tree, isReloading, true); 
+			ajaxOpts["error"] = function(dtnode) {
+				opts.onPostInit.call(dtnode.tree, isReloading, true);
 				if(callback){
 					callback.call(dtnode.tree, "error");
 				}
@@ -2280,7 +2281,7 @@ DynaTree.prototype = {
 	loadKeyPath: function(keyPath, callback) {
 		var segList = keyPath.split(this.options.keyPathSeparator);
 		// Remove leading '/'
-		if(segList[0] == ""){
+		if(segList[0] === ""){
 			segList.shift();
 		}
 		// Remove leading system root key
@@ -2291,7 +2292,7 @@ DynaTree.prototype = {
 		keyPath = segList.join(this.options.keyPathSeparator);
 		return this.tnRoot._loadKeyPath(keyPath, callback);
 	},
-	
+
 	selectKey: function(key, select) {
 		var dtnode = this.getNodeByKey(key);
 		if( !dtnode ){
@@ -2364,7 +2365,7 @@ TODO: better?
 				var dataAttr = $.trim($li.attr("data"));
 				if( dataAttr ) {
 					if( dataAttr.charAt(0) != "{" ){
-						dataAttr = "{" + dataAttr + "}"
+						dataAttr = "{" + dataAttr + "}";
 					}
 					try {
 						$.extend(data, eval("(" + dataAttr + ")"));
@@ -2501,7 +2502,7 @@ TODO: better?
 			if(node.isStatusNode()) {
 				res = false;
 			} else if(dnd.onDragStart) {
-				res = dnd.onDragStart(node)
+				res = dnd.onDragStart(node);
 			}
 			if(res === false) {
 				this.logDebug("tree.onDragStart() cancelled");
@@ -2633,7 +2634,7 @@ TODO: better?
 			 dd.cancel();
 		 }
 	},
-	
+
 	// --- end of class
 	lastentry: undefined
 };
@@ -2687,7 +2688,7 @@ $.widget("ui.dynatree", {
 		this.unbind();
 
 		var eventNames = "click.dynatree dblclick.dynatree";
-		if( o.keyboard ){ 
+		if( o.keyboard ){
 			// Note: leading ' '!
 			eventNames += " keypress.dynatree keydown.dynatree";
 		}
@@ -2857,7 +2858,7 @@ $.ui.dynatree.prototype.options = {
 	},
 	generateIds: false, // Generate id attributes like <span id='dynatree-id-KEY'>
 	idPrefix: "dynatree-id-", // Used to generate node id's like <span id="dynatree-id-<key>">.
-	keyPathSeparator: "/", // Used by node.getKeyPath() and tree.loadKeyPath(). 
+	keyPathSeparator: "/", // Used by node.getKeyPath() and tree.loadKeyPath().
 //    cookieId: "dynatree-cookie", // Choose a more unique name, to allow multiple trees.
 	cookieId: "dynatree", // Choose a more unique name, to allow multiple trees.
 	cookie: {
@@ -2905,7 +2906,7 @@ $.ui.dynatree.prototype.options = {
 	// ------------------------------------------------------------------------
 	lastentry: undefined
 };
-// 
+//
 if( parseFloat($.ui.version) < 1.8 ) {
 	$.ui.dynatree.defaults = $.ui.dynatree.prototype.options;
 }

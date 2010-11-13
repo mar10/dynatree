@@ -9,9 +9,9 @@
 
 	<script src="http://www.google-analytics.com/ga.js" type="text/javascript"></script>
 
-    <script src="../jquery/jquery.js" type="text/javascript"></script>
-    <script src="../jquery/jquery-ui.custom.js" type="text/javascript"></script>
-    <script src="../jquery/jquery.cookie.js" type="text/javascript"></script>
+	<script src="../jquery/jquery.js" type="text/javascript"></script>
+	<script src="../jquery/jquery-ui.custom.js" type="text/javascript"></script>
+	<script src="../jquery/jquery.cookie.js" type="text/javascript"></script>
 
 	<link href="../src/skin/ui.dynatree.css" rel="stylesheet" type="text/css">
 	<script src="../src/jquery.dynatree.js" type="text/javascript"></script>
@@ -111,8 +111,8 @@
 	See also the <a href="samples.html">Example Browser</a> for some more advanced live demos.
 </p>
 <p class="info">
-    Using the <code>[View source code]</code> link in the
-    Example Browser is probably the best way to learn about Dynatree.
+	Using the <code>[View source code]</code> link in the
+	Example Browser is probably the best way to learn about Dynatree.
 </p>
 
 <h2 id="quickExample">Quick start</h2>
@@ -959,25 +959,25 @@ return [ res ]
 Drag and drop functionality is enabled by defining the appropriate callbacks:
 </p>
 <pre class="prettyprint">
-    $("#tree").dynatree({
-        [...]
-        dnd: {
-            onDragStart: function(node) {
-                /** This function MUST be defined to enable dragging for the tree.
-                 *  Return false to cancel dragging of node.
-                 */
-                logMsg("tree.onDragStart(%o)", node);
-                return true;
-            },
-            onDrop: function(node, sourceNode, hitMode, ui, draggable) {
-                /** This function MUST be defined to enable dropping of items on
-                 * the tree.
-                 */
-                logMsg("tree.onDrop(%o, %o, %s)", node, sourceNode, hitMode);
-                sourceNode.move(node, hitMode);
-            }
-        }
-    });
+	$("#tree").dynatree({
+		[...]
+		dnd: {
+			onDragStart: function(node) {
+				/** This function MUST be defined to enable dragging for the tree.
+				 *  Return false to cancel dragging of node.
+				 */
+				logMsg("tree.onDragStart(%o)", node);
+				return true;
+			},
+			onDrop: function(node, sourceNode, hitMode, ui, draggable) {
+				/** This function MUST be defined to enable dropping of items on
+				 * the tree.
+				 */
+				logMsg("tree.onDrop(%o, %o, %s)", node, sourceNode, hitMode);
+				sourceNode.move(node, hitMode);
+			}
+		}
+	});
 </pre>
 <p>
 There are a lot more callbacks that can be used to fine tune the behaviour.
@@ -1311,10 +1311,10 @@ tree.enableUpdate(prevMode);</pre>
 		If <code>activeVisible</code> option is set, all parents will be expanded as necessary.<br>
 		Focus is <em>not</em> set.
 	</dd>
-    <dt>activateSilently()</dt>
-    <dd>
-        Same as <code>activate()</code>, but does not fire events.
-    </dd>
+	<dt>activateSilently()</dt>
+	<dd>
+		Same as <code>activate()</code>, but does not fire events.
+	</dd>
 	<dt>addChild(nodeData[, beforeNode])</dt>
 	<dd>
 		Append a new child node.<br>
@@ -1729,7 +1729,7 @@ $("#tree").dynatree({
 	<li>A <a href="http://groups.google.com/group/dynatree">discussion forum</a> is in place to ask questions or discuss features.
 	<li>Use the <a href="http://code.google.com/p/dynatree/issues/list">Issue Tracker</a> to get a list of known bugs, or vote for a feature.<br>
 		Please make sure you searched the group and issue tracker, before adding a new request.
-	<li>If you like: 
+	<li>If you like:
 		<a href="http://wwwendt.de/freeware/donate.html">Make a donation</a>.
 </ul>
 
