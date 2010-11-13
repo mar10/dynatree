@@ -726,7 +726,7 @@ DynaTreeNode.prototype = {
 		this._activate(true, true);
 	},
 
-	activateSilent: function() {
+	activateSilently: function() {
 		this._activate(true, false);
 	},
 
