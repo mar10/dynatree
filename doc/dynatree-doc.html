@@ -428,6 +428,7 @@ children: [
 	},
 	[&#8230;]
 ]
+
 </pre>
 
 <p>
@@ -1421,17 +1422,21 @@ node.addChild({title: "New Node", key: "3333"});
 	<dd>
 		Return true, if the node is visible, i.e. all parents are expanded.
 	</dd>
-	<dt>loadKeyPath()
-	<dd>
-		TODO.
-	</dd>
 	<dt>makeVisible()
 	<dd>
 		Expand all parents as neccessary, to make this node visible.
 	</dd>
 	<dt>move(targetNode, mode)
 	<dd>
-		TODO.
+		Move this node to <code>targetNode</code>.
+		Possible <code>mode</code>:
+		<ul>
+		<li><code>child</code>: append this node as last child of targetNode.
+			This is the default. 
+			To be compatble with the D'n'd hitMode, we also accept 'over'.
+		<li><code>before</code>: add this node as sibling before targetNode.
+		<li><code>after</code>: add this node as sibling after targetNode.
+		</ul>
 	</dd>
 	<dt>reload(force)</dt>
 	<dd>
@@ -1473,10 +1478,12 @@ node.addChild({title: "New Node", key: "3333"});
 	</dd>
 	<dt>scheduleAction(mode, ms)
 	<dd>
-		TODO.
+		Schedule a delayed action.
 		Possible <code>mode</code>:
 		<ul>
-		<li><code>xx</code>: .
+		<li><code>expand</code>: Expand this node after <i>ms</i> microseconds.
+		<li><code>activate</code>: Activate this node after <i>ms</i> microseconds.
+		<li><code>cancel</code>: cancel pending action, if any was scheduled.
 		</ul>
 	</dd>
 	<dt>select(flag)
