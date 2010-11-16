@@ -1927,7 +1927,11 @@ DynaTree.prototype = {
 		this.timer = null;
 		// find container element
 		this.divTree = this.$tree.get(0);
-		//
+
+		var parentPos = $(this.divTree).parent().offset();
+		this.parentTop = parentPos.top;
+		this.parentLeft = parentPos.left;
+
 		_initDragAndDrop(this);
 	},
 
@@ -2394,7 +2398,8 @@ TODO: better?
 		if( !this.$dndMarker ) {
 			this.$dndMarker = $("<div id='dynatree-drop-marker'></div>")
 				.hide()
-				.prependTo("body");
+				.prependTo($(this.divTree).parent());
+//				.prependTo("body");
 			logMsg("Creating marker: %o", this.$dndMarker);
 		}
 		if(hitMode === "start"){
@@ -2536,10 +2541,14 @@ TODO: better?
 			} else {
 				// Calculate hitMode from relative cursor position.
 				var nodeOfs = nodeTag.position();
-				var relPos = { x: event.clientX - nodeOfs.left,
-							y: event.clientY - nodeOfs.top };
+//				var relPos = { x: event.clientX - nodeOfs.left,
+//							y: event.clientY - nodeOfs.top };
+				nodeOfs.top += this.parentTop;
+				nodeOfs.left += this.parentLeft;
+				var relPos = { x: event.pageX - nodeOfs.left,
+							   y: event.pageY - nodeOfs.top };
 				var relPos2 = { x: relPos.x / nodeTag.width(),
-							y: relPos.y / nodeTag.height() };
+								y: relPos.y / nodeTag.height() };
 				if( enterResponse.after && relPos2.y > 0.75 ){
 					hitMode = "after";
 				} else if(!enterResponse.over && enterResponse.after && relPos2.y > 0.5 ){
@@ -2572,6 +2581,7 @@ TODO: better?
 				logMsg("hitMode: %s - %s - %s", hitMode, (node.parent === otherNode), node.isLastSibling());
 				ui.helper.data("hitMode", hitMode);
 //    			logMsg("    clientPos: %s/%s", event.clientX, event.clientY);
+//    			logMsg("    clientPos: %s/%s", event.pageX, event.pageY);
 //    			logMsg("    nodeOfs: %s/%s", nodeOfs.left, nodeOfs.top);
 //    			logMsg("    relPos: %s/%s", relPos.x, relPos.y);
 //    			logMsg("    relPos2: %s/%s: %s", relPos2.x, relPos2.y, hitMode);
