@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+	<title>Dynatree - Example</title>
+
+	<script src="../jquery/jquery.js" type="text/javascript"></script>
+	<script src="../jquery/jquery-ui.custom.js" type="text/javascript"></script>
+	<script src="../jquery/jquery.cookie.js" type="text/javascript"></script>
+
+	<link href="../src/skin/ui.dynatree.css" rel="stylesheet" type="text/css">
+	<script src="../src/jquery.dynatree.js" type="text/javascript"></script>
+
+	<!-- Start_Exclude: This block is not part of the sample code -->
+	<link href="prettify.css" rel="stylesheet">
+	<script src="prettify.js" type='text/javascript'></script>
+	<link href='sample.css' rel='stylesheet' type='text/css'>
+	<script src='sample.js' type='text/javascript'></script>
+	<!-- End_Exclude -->
+
+	<!-- Add code to initialize the tree when the document is loaded: -->
+<script type='text/javascript'>
+	$(function(){
+		$("#tree").dynatree({
+			checkbox: true,
+			// Override class name for checkbox icon:
+			//classNames: {checkbox: "dynatree-radio"},
+			selectMode: 3,
+			children: [
+				{title: "Item 1"},
+				{title: "Folder 2", isFolder: true, key: "folder2",
+					children: [
+						{title: "Sub-item 2.1"},
+						{title: "Sub-item 2.2"}
+					]
+				},
+				{title: "Item 3"}
+			]
+		});
+		$("form").submit(function() {
+			// Serialize standard form fields:
+			var formData = $(this).serializeArray();
+
+			// then append Dynatree 'checkboxes':
+			var tree = $("#tree").dynatree("getTree");
+			formData = formData.concat(tree.serializeArray());
+			alert(jQuery.param(formData));
+
+			$.post("/ajax-submit", 
+	               formData, 
+	               function(response){ 
+	                   alert(response); 
+	               } 
+            );  
+			return false;
+		});
+	});
+</script>
+</head>
+
+<body class="example">
+	<h1>Example: Form</h1>
+	<p class="description">
+		This checkbox tree is embedded in a form.
+		The [Submit] handler serializes the selected tree nodes as if they were 
+		standard checkboxes.<br>
+		The values are then POSTed to the server (together with the other form
+		elements).
+	</p>
+	<!--
+	<form action="http://127.0.0.1:8001/submit_data" method="POST">
+	 -->
+	<form>
+		Username: <input type="text" name="userName" />
+		<br>
+		<textarea name="comment"></textarea>
+		<br>
+		<input type="radio" name="rb1" value="v1" checked> Umschlag 1<br>
+		<input type="radio" name="rb1" value="v2"> Umschlag 2<br>
+		<input type="radio" name="rb1" value="v3"> Umschlag 3
+		<br>
+		<input type="checkbox" name="cb1" value="v1" checked> Umschlag 1<br>
+		<input type="checkbox" name="cb1" value="v2"> Umschlag 2<br>
+		<input type="checkbox" name="cb1" value="v3"> Umschlag 3
+		<br>
+		<div id="tree">
+		</div>
+		<input type="submit" value="Send data">
+	</form>
+
+	<!-- Start_Exclude: This block is not part of the sample code -->
+	<hr>
+	<p class="sample-links  no_code">
+		<a class="hideInsideFS" href="http://dynatree.googlecode.com">jquery.dynatree.js project home</a>
+		<a class="hideOutsideFS" href="#">Link to this page</a>
+		<a class="hideInsideFS" href="samples.html">Example Browser</a>
+		<a href="#" class="codeExample">View source code</a>
+	</p>
+	<!-- End_Exclude -->
+</body>
+</html>
