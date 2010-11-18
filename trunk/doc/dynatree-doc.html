@@ -1282,6 +1282,14 @@ tree.enableUpdate(prevMode);</pre>
 		Select or deselect node with a given key and fire focus and select events.<br>
 		Return the selected DynaTreeNode.
 	</dd>
+    <dt>serializeArray(stopOnParents)
+    <dd>
+        Return selected nodes as array of <code>{name: 'TreeName', value: 'NodeKey'}</code> 
+        objects, where name is the 'name' attribute of the tree's &lt;div> element.<br>
+        This format is compatible with jQuery's serializeArray()
+        function and may be used in $.post() calls.<br>
+        See also the 'form' sample in the Example Browser.
+    </dd>
 	<dt>toDict()
 	<dd>
 		Convert the tree into a JavaScript object.<br>
