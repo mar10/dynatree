@@ -6,7 +6,7 @@
 When updating from version 0.5 to 1.0, the following aspects have changed and may have to be adjusted.
 
 *Main Changes:*
-  * Build against jQuery 1.4 and jQuery UI 1.8
+  * Built against jQuery 1.4 and jQuery UI 1.8
   * New HTML markup<br>Using `<ul>/<li>` for faster expand / collapse and smoother effects
   * Support for drag'n'drop<br>Compatible with jquery.ui.draggable/.droppable but more efficient for a large number of nodes.
   * Modified css<br>ui-dynatree-document -> ui-dynatree-node<br>Class ui-dynatree-folder is now _additionally_ set (together with ui-dynatree-node)<br>rename classes 'ui-dynatree-...' -> 'dynatree-...'
@@ -16,29 +16,31 @@ When updating from version 0.5 to 1.0, the following aspects have changed and ma
   * All  callbacks have the Dynatree instance as 'this'
   * renamed node.reload() --> reloadChildren()
   * renamed dtnode -> node in the samples  
-  * Changed node.visit(fn, data, includeSelf) -> node.visit(fn, includeSelf)visit() now returns nothing.<br>If the callback function returns false, the the traversal is stopped.<br>If the callback function returns 'skip', the the traversal of the current branch is stopped.<br>(Changes apply also for tree.visit())
+  * Changed node.visit(fn, data, includeSelf) -> node.visit(fn, includeSelf)<br>visit() now returns nothing.<br>If the callback function returns false, the the traversal is stopped.<br>If the callback function returns 'skip', the the traversal of the current branch is stopped.<br>(Changes apply also for tree.visit())
   * hasChildren: return 'undefined' if node is unexpanded lazy, or only contains one status node
   * tree.reload(callback) -> new callback parameter
 
 
 *New functions:*
   * node.activateSilent()
-  * node.isStatusNode()
+  * node.fromDict(dict)
+  * node.getChildren(), getParent(), getPrevSibling(), getNextSibling()
+  * node.getKeyPath(excludeSelf)
   * node.isChildOf(otherNode)
   * node.isDescendantOf(otherNode)
-  * node.move(targetNode, mode)
-  * node.visitParents(fn, includeSelf)
-  * node.sortChildren(cmp, deep)
-  * New tree.disable(), .enable() (shortcut for $("#tree").dynatree("disable"))
-  * node.getChildren(), getParent(), getPrevSibling(), getNextSibling()
-  * node.scheduleAction()
-  * tree.loadKeyPath()
-  * node.reloadChildren(callback)
-  * node.getKeyPath(excludeSelf)
-  * node.setTitle(title)
   * node.isFirstSibling()
-  * node.fromDict(dict)
   * node.isFocused() 
+  * node.isStatusNode()
+  * node.move(targetNode, mode)
+  * node.reloadChildren(callback)
+  * node.scheduleAction()
+  * node.setTitle(title)
+  * node.sortChildren(cmp, deep)
+  * node.visitParents(fn, includeSelf)
+  * tree.disable(), .enable() (shortcut for $("#tree").dynatree("disable"))
+  * tree.loadKeyPath()
+  * tree.serializeArray()
+
 
 *Other Changes:*
   * Distinguish for lazy nodes<br>childList == null: 'never loaded'<br>childList == []: 'loaded, but node has no children'
