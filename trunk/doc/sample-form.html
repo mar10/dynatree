@@ -51,12 +51,12 @@
                 formData.push({name: "activeNode", value: tree.getActiveNode().data.key});
             }
 
-            alert("Todo: POST this:\n" + jQuery.param(formData));
+            alert("POSTing this:\n" + jQuery.param(formData));
 
-            $.post("/ajax-submit", 
-                   formData, 
-                   function(response){ 
-                       alert("POST returned " + response); 
+            $.post("http://127.0.0.1:8001/submit_data", 
+                   formData,
+                   function(response, textStatus, xhr){ 
+                       alert("POST returned " + response + ", " + textStatus); 
                    } 
             );  
             return false;
