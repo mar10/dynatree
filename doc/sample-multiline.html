@@ -39,6 +39,17 @@
 		// Initialize the tree inside the <div>element.
 		// The tree structure is read from the contained <ul> tag.
 		$("#tree").dynatree({
+		    onPostInit: function(isReloading, isError) {
+			    // Dynatree renders nodes 'lazily', i.e. when they are expanded.
+			    // In order to attach event handlers ot access embedded elements
+			    // we have to render first:
+			    this.redraw();
+		        $("#btn1").click(function(){
+		            alert("Thank you for clicking.");
+		            return false;
+		        });
+		        drawCanvas();
+		    },
 			onActivate: function(node) {
 				$("#echoActive").text(node.data.title);
 				if(node.data.key == "canvasNode1")
@@ -48,30 +59,6 @@
 				$("#echoSelected").text("-");
 			}
 		});
-
-		$("#btnAddObject").click(function(){
-			// Sample: add an hierarchic branch using an array
-			var obj = [
-				{ title: 'Folder node 3', isFolder: true,
-					children: [
-						{ title: 'node 3.1 line1\nline2' },
-						{ title: '<h2>node 3.2</h2>',
-							children: [
-								{ title: 'node 3.2.1' },
-								{ title: 'node 3.2.2',
-									children: [
-										{ title: 'node 3.2.2.1' }
-									]
-								}
-							]
-						}
-					]
-				}
-			];
-			$("#tree").dynatree("getRoot").addChild(obj);
-		});
-
-		drawCanvas();
 	});
 </script>
 </head>
@@ -163,14 +150,23 @@
 
 			<li class="folder">Form elements
 				<ul>
-					<li class="noLink"><span>
-						Click here: <button value="123">Click me</button>
-						</span>
+                    <li class="noLink"><span>
+                        Name: <input type="text" name="name2" />
+                        </span>
+                    <li class="noLink"><span>
+                        Comment:<br><textarea name="comment2"></textarea>
+                        </span>
 					<li class="noLink" data="icon: false"><span>
-						<input type="radio" name="rb1" value="v1" checked> Umschlag 1<br>
-						<input type="radio" name="rb1" value="v2"> Umschlag 2<br>
-						<input type="radio" name="rb1" value="v3"> Umschlag 3
+						<input type="radio" id="rb1_1" name="rb1" value="v1" checked>
+						  <label for="rb1_1">Foo</label>
+						<input type="radio" id="rb1_2" name="rb1" value="v2">
+                          <label for="rb1_2">Bar</label>
+						<input type="radio" id="rb1_3" name="rb1" value="v3">
+                          <label for="rb1_3">Baz</label>
 						</span>
+                    <li class="noLink"><span>
+                        <button id="btn1" value="123">Click me</button>
+                        </span>
 				</ul>
 
 			<li class="folder">Canvas
@@ -211,9 +207,7 @@
 	</div>
 
 	<div>Active node: <span id="echoActive">-</span></div>
-	<p>
-		<button id="btnAddObject">Add nodes using arrays</button>
-	</p>
+
 	<!-- Start_Exclude: This block is not part of the sample code -->
 	<hr>
 	<p class="sample-links  no_code">

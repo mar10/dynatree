@@ -65,7 +65,7 @@ function logMsg(msg) {
 
 
 // Forward declaration
-var getDynaTreePersistData = undefined;
+var getDynaTreePersistData = null;
 
 
 
@@ -2163,27 +2163,12 @@ DynaTree.prototype = {
 	toDict: function() {
 		return this.tnRoot.toDict(true);
 	},
-/*
-	serialize: function(prefix, stopOnParents) {
-		// Return a text string in standard URL-encoded notation for selected
-		// nodes ('treeName=id1&treeName=id2')
-		var nodeList = this.getSelectedNodes(stopOnParents),
-			name = this.$tree.attr("id"),
-			arr = [];
-		for(var i=0, l=nodeList.length; i<l; i++){
-			arr.push(name + "=" + nodeList[i].data.key);
-		}
-		if(typeof prefix === "string" && prefix !== ""){
-			return prefix + "&" + arr.join("&");
-		}
-		return arr.join("&");
-	},
-*/
+
 	serializeArray: function(stopOnParents) {
 		// Return a JavaScript array of objects, ready to be encoded as a JSON 
 		// string for selected nodes
 		var nodeList = this.getSelectedNodes(stopOnParents),
-			name = this.$tree.attr("id"),
+			name = this.$tree.attr("name") || this.$tree.attr("id"),
 			arr = [];
 		for(var i=0, l=nodeList.length; i<l; i++){
 			arr.push({name: name, value: nodeList[i].data.key});
