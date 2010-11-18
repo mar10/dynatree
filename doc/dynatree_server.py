@@ -10,7 +10,7 @@
     
     See: http://dynatree.googlecode.com
     
-    Martin Wendt, 2009
+    Martin Wendt, 2009-2010
     
     Usage:    
       1. Python 2.5 or later is required to run this server.
@@ -143,11 +143,19 @@ class DynaTreeWsgiApp(object):
         # Dump POST request data, if http://HOST:PORT/submit_data was requested
 #        print "PI", environ["PATH_INFO"]
         if environ["PATH_INFO"] == "/submit_data":
-            length = int(environ["CONTENT_LENGTH"])
-            data = environ["wsgi.input"].read(length)
-            print data
+            print "Got /submit_data request, CONTENT_LENGTH=%r" % environ.get("CONTENT_LENGTH")  
+            try:
+                length = int(environ["CONTENT_LENGTH"])
+                data = environ["wsgi.input"].read(length)
+            except:
+                print >>sys.stderr, "Couldn't read from wsgi.input! This can happen when using Firefox locally"  
+                try:
+                    data = environ["wsgi.input"].read()
+                except:
+                    print 
+            print "Data: ", data
             start_response("200 OK", [("Content-Type", "text/html")])
-            return [ "Thanks" ]
+            return [ "Thanks for sending<br><pre><code>%s</code></pre>" % data ]
 
         # Support &depth=LEVEL argument to read more than one level (1: direct children)
         depth = int(argDict.get("depth", 0))
