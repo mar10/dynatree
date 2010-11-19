@@ -1,8 +1,5 @@
 #summary Migration hints for updating from 0.5 to 1.0.
 
-*Note: 1.0 is currently alpha*
-
-
 When updating from version 0.5 to 1.0, the following aspects have changed and may have to be adjusted.
 
 *Main Changes:*
