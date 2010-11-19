@@ -39,17 +39,17 @@
 		// Initialize the tree inside the <div>element.
 		// The tree structure is read from the contained <ul> tag.
 		$("#tree").dynatree({
-		    onPostInit: function(isReloading, isError) {
-			    // Dynatree renders nodes 'lazily', i.e. when they are expanded.
-			    // In order to attach event handlers ot access embedded elements
-			    // we have to render first:
-			    this.redraw();
-		        $("#btn1").click(function(){
-		            alert("Thank you for clicking.");
-		            return false;
-		        });
-		        drawCanvas();
-		    },
+			onPostInit: function(isReloading, isError) {
+				// Dynatree renders nodes 'lazily', i.e. when they are expanded.
+				// In order to attach event handlers ot access embedded elements
+				// we have to render first:
+				this.redraw();
+				$("#btn1").click(function(){
+					alert("Thank you for clicking.");
+					return false;
+				});
+				drawCanvas();
+			},
 			onActivate: function(node) {
 				$("#echoActive").text(node.data.title);
 				if(node.data.key == "canvasNode1")
@@ -150,23 +150,23 @@
 
 			<li class="folder">Form elements
 				<ul>
-                    <li class="noLink"><span>
-                        Name: <input type="text" name="name2" />
-                        </span>
-                    <li class="noLink"><span>
-                        Comment:<br><textarea name="comment2"></textarea>
-                        </span>
+					<li class="noLink"><span>
+						Name: <input type="text" name="name2" />
+						</span>
+					<li class="noLink"><span>
+						Comment:<br><textarea name="comment2"></textarea>
+						</span>
 					<li class="noLink" data="icon: false"><span>
 						<input type="radio" id="rb1_1" name="rb1" value="v1" checked>
 						  <label for="rb1_1">Foo</label>
 						<input type="radio" id="rb1_2" name="rb1" value="v2">
-                          <label for="rb1_2">Bar</label>
+						  <label for="rb1_2">Bar</label>
 						<input type="radio" id="rb1_3" name="rb1" value="v3">
-                          <label for="rb1_3">Baz</label>
+						  <label for="rb1_3">Baz</label>
 						</span>
-                    <li class="noLink"><span>
-                        <button id="btn1" value="123">Click me</button>
-                        </span>
+					<li class="noLink"><span>
+						<button id="btn1" value="123">Click me</button>
+						</span>
 				</ul>
 
 			<li class="folder">Canvas
