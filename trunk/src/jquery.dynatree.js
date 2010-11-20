@@ -2710,42 +2710,40 @@ $.widget("ui.dynatree", {
 	},
 
 	bind: function() {
-		var $this = this.element;
-		var o = this.options;
-
 		// Prevent duplicate binding
 		this.unbind();
 
 		var eventNames = "click.dynatree dblclick.dynatree";
-		if( o.keyboard ){
+		if( this.options.keyboard ){
 			// Note: leading ' '!
 			eventNames += " keypress.dynatree keydown.dynatree";
 		}
-		$this.bind(eventNames, function(event){
+		this.element.bind(eventNames, function(event){
 			var dtnode = getDtNodeFromElement(event.target);
 			if( !dtnode ){
 				return true;  // Allow bubbling of other events
 			}
-			var prevPhase = dtnode.tree.phase;
-			dtnode.tree.phase = "userEvent";
+			var tree = dtnode.tree;
+			var o = tree.options;
+			tree.logDebug("event(%s): dtnode: %s", event.type, dtnode);
+			var prevPhase = tree.phase;
+			tree.phase = "userEvent";
 			try {
-				dtnode.tree.logDebug("bind(%o): dtnode: %o", event, dtnode);
-
 				switch(event.type) {
 				case "click":
-					return ( o.onClick && o.onClick(dtnode, event)===false ) ? false : dtnode._onClick(event);
+					return ( o.onClick && o.onClick.call(tree, dtnode, event)===false ) ? false : dtnode._onClick(event);
 				case "dblclick":
-					return ( o.onDblClick && o.onDblClick(dtnode, event)===false ) ? false : dtnode._onDblClick(event);
+					return ( o.onDblClick && o.onDblClick.call(tree, dtnode, event)===false ) ? false : dtnode._onDblClick(event);
 				case "keydown":
-					return ( o.onKeydown && o.onKeydown(dtnode, event)===false ) ? false : dtnode._onKeydown(event);
+					return ( o.onKeydown && o.onKeydown.call(tree, dtnode, event)===false ) ? false : dtnode._onKeydown(event);
 				case "keypress":
-					return ( o.onKeypress && o.onKeypress(dtnode, event)===false ) ? false : dtnode._onKeypress(event);
+					return ( o.onKeypress && o.onKeypress.call(tree, dtnode, event)===false ) ? false : dtnode._onKeypress(event);
 				}
 			} catch(e) {
 				var _ = null; // issue 117
-				dtnode.tree.logWarning("bind(%o): dtnode: %o, error: %o", event, dtnode, e);
+				tree.logWarning("bind(%o): dtnode: %o, error: %o", event, dtnode, e);
 			} finally {
-				dtnode.tree.phase = prevPhase;
+				tree.phase = prevPhase;
 			}
 		});
 
