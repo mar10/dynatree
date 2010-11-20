@@ -39,17 +39,6 @@
 		// Initialize the tree inside the <div>element.
 		// The tree structure is read from the contained <ul> tag.
 		$("#tree").dynatree({
-			onPostInit: function(isReloading, isError) {
-				// Dynatree renders nodes 'lazily', i.e. when they are expanded.
-				// In order to attach event handlers ot access embedded elements
-				// we have to render first:
-				this.redraw();
-				$("#btn1").click(function(){
-					alert("Thank you for clicking.");
-					return false;
-				});
-				drawCanvas();
-			},
 			onActivate: function(node) {
 				$("#echoActive").text(node.data.title);
 				if(node.data.key == "canvasNode1")
@@ -59,10 +48,15 @@
 				$("#echoSelected").text("-");
 			}
 		});
+        // Dynatree renders nodes 'lazily', i.e. when they are first expanded.
+        // So we to use live event binding for embedded elements.
+        $("#btn1").live("click", function(){
+            alert("Thank you for clicking.");
+            return false;
+        });
 	});
 </script>
 </head>
-
 <body class="example">
 	<h1>Example: formatted and multi-line titles</h1>
 	<p class="description">
