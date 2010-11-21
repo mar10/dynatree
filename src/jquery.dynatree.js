@@ -491,7 +491,7 @@ DynaTreeNode.prototype = {
 					}
 				}catch(e){};
 				if( this.childList.length === 1 ){
-					this.childList = null;
+					this.childList = [];
 				}else{
 					this.childList.shift();
 				}
@@ -518,7 +518,7 @@ DynaTreeNode.prototype = {
 				this.isLoading = false;
 				this.render();
 				if( this.tree.options.autoFocus ) {
-					if( this === this.tree.tnRoot && this.childList ) {
+					if( this === this.tree.tnRoot && this.childList && this.childList.length > 0) {
 						// special case: using ajaxInit
 						this.childList[0].focus();
 					} else {
@@ -1613,14 +1613,9 @@ DynaTreeNode.prototype = {
 				var prevPhase = self.tree.phase;
 				self.tree.phase = "init";
 
-				if($.isArray(data) && data.length === 0){
-					// Set to [] which is interpreted as 'no children' for lazy
-					// nodes
-					self.childList = [];
-				}else{
+				if(!$.isArray(data) || data.length !== 0){
 					self.addChild(data, null);
 				}
-
 				self.tree.phase = "postInit";
 				if( orgSuccess ){
 					orgSuccess.call(options, self);
@@ -1631,6 +1626,12 @@ DynaTreeNode.prototype = {
 				// This should be the last command, so node.isLoading is true
 				// while the callbacks run
 				self.setLazyNodeStatus(DTNodeStatus_Ok);
+				if($.isArray(data) && data.length === 0){
+					// Set to [] which is interpreted as 'no children' for lazy
+					// nodes
+					self.childList = [];
+					self.render();
+				}
 				},
 			error: function(XMLHttpRequest, textStatus, errorThrown){
 				// <this> is the request options
