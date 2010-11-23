@@ -8,10 +8,10 @@
 	<script src="../jquery/jquery-ui.custom.js" type="text/javascript"></script>
 	<script src="../jquery/jquery.cookie.js" type="text/javascript"></script>
 	<!--
-	jQuery.Preload Plugin by Ariel Flesler 
-	http://flesler.blogspot.com/2008/01/jquerypreload.html 
+	jQuery.Preload Plugin by Ariel Flesler
+	http://flesler.blogspot.com/2008/01/jquerypreload.html
 	 -->
-    <script src="../jquery/jquery.preload-min.js" type="text/javascript"></script>
+	<script src="../jquery/jquery.preload-min.js" type="text/javascript"></script>
 
 	<link href="../src/skin-vista/ui.dynatree.css" rel="stylesheet" type="text/css">
 	<script src="../src/jquery.dynatree.js" type="text/javascript"></script>
@@ -26,33 +26,33 @@
 <script type='text/javascript'>
 	$(function(){
 		// Preload images (roughly sorted by importance)
-        // Uses jQuery.Preload Plugin by Ariel Flesler (http://flesler.blogspot.com/2008/01/jquerypreload.html) 
+		// Uses jQuery.Preload Plugin by Ariel Flesler (http://flesler.blogspot.com/2008/01/jquerypreload.html)
 		$.preload([
 			"ltWait",
-            "vline",
-            "ltFld", "ltFld_o",
-            "ltL_", "ltL_ne", "ltL_nes", "ltL_ns", "ltM_ne", "ltM_nes", "ltP_ne", "ltP_nes",
-            "ltD_ne", "ltD_nes", "ltDoc",
-            "ltError", 
-            "cbUnchecked", "cbUnchecked_hover",
+			"vline",
+			"ltFld", "ltFld_o",
+			"ltL_", "ltL_ne", "ltL_nes", "ltL_ns", "ltM_ne", "ltM_nes", "ltP_ne", "ltP_nes",
+			"ltD_ne", "ltD_nes", "ltDoc",
+			"ltError",
+			"cbUnchecked", "cbUnchecked_hover",
 			"cbChecked", "cbChecked_hover",
 			"cbIntermediate", "cbIntermediate_hover",
-            "rbUnchecked", "rbUnchecked_hover",
-            "rbChecked", "rbChecked_hover",
-            "rbIntermediate", "rbIntermediate_hover",
-            "move_here", "copy_here",
+			"rbUnchecked", "rbUnchecked_hover",
+			"rbChecked", "rbChecked_hover",
+			"rbIntermediate", "rbIntermediate_hover",
+			"move_here", "copy_here",
 			"drop_accept", "drop_here", "drop_reject", "drop_sibling_here"
-		    ], {
-		    base: "skin/",
-		    ext: ".jpg",
-            onComplete: function(data){
-		        // Loaded one image
-			    logMsg("Loaded " + data.image);
-            },
-            onFinish: function(data){
-                // All images loaded:
-                logMsg("Loaded " + data.loaded + ", failed: " + data.failed);
-            }
+			], {
+			base: "skin/",
+			ext: ".jpg",
+			onComplete: function(data){
+				// Loaded one image
+				logMsg("Loaded " + data.image);
+			},
+			onFinish: function(data){
+				// All images loaded:
+				logMsg("Loaded " + data.loaded + ", failed: " + data.failed);
+			}
 		});
 		$("#tree").dynatree({
 			// In real life we would call a URL on the server like this:
@@ -62,23 +62,23 @@
 //              },
 			// .. but here we use a local file instead:
 			initAjax: {
-                url: "sample-data3.json",
-                cache: true,
-                dataType: "json",
-                type: "GET",                
-                timeout: 5000,
-                async: false
+				url: "sample-data3.json",
+				cache: true,
+				dataType: "json",
+				type: "GET",
+				timeout: 5000,
+				async: false
 				},
-            onLazyRead: function(node){
-                node.appendAjax({
-                    url: "sample-data3.json",
-                    cache: true,
-                    dataType: "json",
-                    type: "GET",                
-                    timeout: 5000,
-                    async: false
-                });
-            },
+			onLazyRead: function(node){
+				node.appendAjax({
+					url: "sample-data3.json",
+					cache: true,
+					dataType: "json",
+					type: "GET",
+					timeout: 5000,
+					async: false
+				});
+			},
 			onActivate: function(node) {
 				$("#echoActive").text(node.data.title);
 			},

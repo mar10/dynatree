@@ -1,5 +1,5 @@
 /*************************************************************************
-	(c) 2008-2009 Martin Wendt
+	(c) 2008-2010 Martin Wendt
  *************************************************************************/
 
 function viewSourceCode()
@@ -10,24 +10,22 @@ function viewSourceCode()
 
 function initCodeSamples()
 {
-	$('a.codeExample').each(
-		function( i ) {
-			$( this ).after( '<pre class="codeExample prettyprint"><code></code></pre>' );
-		}
-	);
-	$( 'pre.codeExample' ).hide();
-	$('a.codeExample').toggle(
-			function() {
-				if( !this.old ){
-					this.old = $(this).html();
-				}
-				$(this).html('Hide Code');
-				parseCode(this);
-			},
-			function() {
-				$(this).html(this.old);
-				$(this.nextSibling).hide();
+	$("a.codeExample").each(function(i){
+		$(this).after("<pre class='codeExample prettyprint'><code></code></pre>");
+	});
+	$("pre.codeExample").hide();
+	$("a.codeExample").toggle(
+		function(){
+			if( !this.old ){
+				this.old = $(this).html();
 			}
+			$(this).html("Hide Code");
+			parseCode(this);
+		},
+		function(){
+			$(this).html(this.old);
+			$(this.nextSibling).hide();
+		}
 	);
 	function parseCode(o){
 		if(!o.nextSibling.hascode){
@@ -39,14 +37,14 @@ function initCodeSamples()
 				code = code.replace(/<!-- Start_Exclude(.|\n|\r)*?End_Exclude -->/gi, "<!-- (Irrelevant source removed.) -->");
 
 /*
-				code = code.replace(/&/mg,'&#38;')
-					.replace(/</mg,'&#60;')
-					.replace(/>/mg,'&#62;')
-					.replace(/\"/mg,'&#34;')
-					.replace(/\t/g,'  ')
-					.replace(/\r?\n/g,'<br>')
-					.replace(/<br><br>/g,'<br>');
-					.replace(/ /g,'&nbsp;');
+				code = code.replace(/&/mg,"&#38;")
+					.replace(/</mg,"&#60;")
+					.replace(/>/mg,"&#62;")
+					.replace(/\"/mg,"&#34;")
+					.replace(/\t/g,"  ")
+					.replace(/\r?\n/g,"<br>")
+					.replace(/<br><br>/g,"<br>");
+					.replace(/ /g,"&nbsp;");
 */
 				// Reduce tabs from 8 to 2 characters
 				code = code.replace(/\t/g, "  ");
@@ -63,12 +61,21 @@ function initCodeSamples()
 }
 
 
+var _gaq = _gaq || [];
+
 $(function(){
 	// Log to Google Analytics, when not running locally
-	if ( document._gat && document.URL.toLowerCase().indexOf('wwwendt.de/')>=0 ) {
-		var pageTracker = _gat._getTracker("UA-316028-1");
-		pageTracker._trackPageview();
+	if ( document.URL.toLowerCase().indexOf("wwwendt.de/") >= 0 ) {
+		_gaq.push(["_setAccount", "UA-316028-1"]);
+		_gaq.push(["_trackPageview"]);
+
+		(function() {
+			var ga = document.createElement("script"); ga.type = "text/javascript"; ga.async = true;
+			ga.src = ("https:" == document.location.protocol ? "https://ssl" : "http://www") + ".google-analytics.com/ga.js";
+			var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ga, s);
+		})();
 	}
+
 	// Show some elements only, if (not) inside the Example Browser
 	if (top.location == self.location){
 		$(".hideOutsideFS").hide();

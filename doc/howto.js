@@ -3,7 +3,7 @@
  *************************************************************************/
 
 $(function(){
-	// Replace tabs inside <pre> with 4 spaces, because some browsers display 8 
+	// Replace tabs inside <pre> with 4 spaces, because some browsers display 8
 	// characters
 	$("pre.codesample, div.codesample pre, pre.prettyprint").each(function(){
 		var text = $(this).text();
