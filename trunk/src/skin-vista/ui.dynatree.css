@@ -271,11 +271,12 @@ span.dynatree-icon /* Default icon */
  * Node titles
  */
 
- /* @Chrome: otherwise hit area of node titles is broken (issue 133) */
+/* @Chrome: otherwise hit area of node titles is broken (issue 133) 
+   Removed again for issue 165; (133 couldn't be reproduced) */
 span.dynatree-node
 {
-    display: -moz-inline-box; /* @ FF 1+2 */
-    display: inline-block; /* Required to make a span sizeable */
+/*  display: -moz-inline-box; /* @ FF 1+2 */
+/*  display: inline-block; /* Required to make a span sizeable */
 }
 
 
