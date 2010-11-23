@@ -2167,7 +2167,7 @@ DynaTree.prototype = {
 	},
 
 	serializeArray: function(stopOnParents) {
-		// Return a JavaScript array of objects, ready to be encoded as a JSON 
+		// Return a JavaScript array of objects, ready to be encoded as a JSON
 		// string for selected nodes
 		var nodeList = this.getSelectedNodes(stopOnParents),
 			name = this.$tree.attr("name") || this.$tree.attr("id"),
