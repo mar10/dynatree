@@ -17,6 +17,7 @@ ul.dynatree-container
 ul.dynatree-container ul
 {
 	padding: 0 0 0 16px;
+	margin: 0;
 }
 
 ul.dynatree-container li
