@@ -1612,7 +1612,11 @@ DynaTreeNode.prototype = {
 //				self.tree.logDebug("appendAjax().success");
 				var prevPhase = self.tree.phase;
 				self.tree.phase = "init";
-
+				// postProcess is similar to the standard dataFilter hook,
+				// but it is also called for JSONP
+				if( options.postProcess ){
+					data = options.postProcess.call(this, data, this.dataType);
+				}
 				if(!$.isArray(data) || data.length !== 0){
 					self.addChild(data, null);
 				}
@@ -2167,7 +2171,7 @@ DynaTree.prototype = {
 	},
 
 	serializeArray: function(stopOnParents) {
-		// Return a JavaScript array of objects, ready to be encoded as a JSON
+		// Return a JavaScript array of objects, ready to be encoded as a JSON 
 		// string for selected nodes
 		var nodeList = this.getSelectedNodes(stopOnParents),
 			name = this.$tree.attr("name") || this.$tree.attr("id"),
