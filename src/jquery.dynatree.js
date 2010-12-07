@@ -1391,7 +1391,7 @@ DynaTreeNode.prototype = {
 							callback.call(tree, child, "error");
 						}
 					}); // Note: this line gives a JSLint warning (Don't make functions within a loop)
-					// we can ignore it, since it will only be exectuted once, the the loop is ended 
+					// we can ignore it, since it will only be exectuted once, the the loop is ended
 					// See also http://stackoverflow.com/questions/3037598/how-to-get-around-the-jslint-error-dont-make-functions-within-a-loop
 				} else {
 					callback.call(tree, child, "loaded");
@@ -2172,7 +2172,7 @@ DynaTree.prototype = {
 	},
 
 	serializeArray: function(stopOnParents) {
-		// Return a JavaScript array of objects, ready to be encoded as a JSON 
+		// Return a JavaScript array of objects, ready to be encoded as a JSON
 		// string for selected nodes
 		var nodeList = this.getSelectedNodes(stopOnParents),
 			name = this.$tree.attr("name") || this.$tree.attr("id"),
@@ -2513,7 +2513,7 @@ TODO: better?
 		var res = null;
 		var nodeTag = $(node.span);
 		var hitMode;
-		
+
 		switch (eventName) {
 		case "helper":
 			// Only event and node argument is available
