@@ -32,11 +32,11 @@ ul.dynatree-container li
 	background-color: transparent;
 	background-repeat: repeat-y;
 	background-image: url("vline.gif");
-    background-position: 0 0;
-    /*
+	background-position: 0 0;
+	/*
 	background-image: url("icons_96x256.gif");
-    background-position: -80px -64px;
-    */
+	background-position: -80px -64px;
+	*/
 	margin: 0;
 	padding: 1px 0 0 0;
 }
@@ -80,7 +80,7 @@ span.dynatree-drag-helper-img,
 	background-repeat: no-repeat;
 	background-position: left;
 	background-image: url("icons.gif");
-    background-position: 0px 0px;
+	background-position: 0px 0px;
 }
 
 /*******************************************************************************
@@ -89,7 +89,7 @@ span.dynatree-drag-helper-img,
 
 span.dynatree-connector
 {
-    background-position: -16px -64px;
+	background-position: -16px -64px;
 }
 
 /*******************************************************************************
@@ -105,30 +105,30 @@ span.dynatree-connector
 
 span.dynatree-expander
 {
-    background-position: 0px -80px;
+	background-position: 0px -80px;
 	cursor: pointer;
 }
 .dynatree-exp-cl span.dynatree-expander /* Collapsed, not delayed, last sibling */
 {
-    background-position: 0px -96px;
+	background-position: 0px -96px;
 }
 .dynatree-exp-cd span.dynatree-expander /* Collapsed, delayed, not last sibling */
 {
-    background-position: -64px -80px;
+	background-position: -64px -80px;
 }
 .dynatree-exp-cdl span.dynatree-expander /* Collapsed, delayed, last sibling */
 {
-    background-position: -64px -96px;
+	background-position: -64px -96px;
 }
 .dynatree-exp-e span.dynatree-expander,  /* Expanded, not delayed, not last sibling */
 .dynatree-exp-ed span.dynatree-expander  /* Expanded, delayed, not last sibling */
 {
-    background-position: -32px -80px;
+	background-position: -32px -80px;
 }
 .dynatree-exp-el span.dynatree-expander,  /* Expanded, not delayed, last sibling */
 .dynatree-exp-edl span.dynatree-expander  /* Expanded, delayed, last sibling */
 {
-    background-position: -32px -96px;
+	background-position: -32px -96px;
 }
 .dynatree-loading span.dynatree-expander  /* 'Loading' status overrides all others */
 {
@@ -141,30 +141,30 @@ span.dynatree-expander
  */
 span.dynatree-checkbox
 {
-/*	margin-left: 3px;*/
-    background-position: 0px -32px;
+	margin-left: 3px;
+	background-position: 0px -32px;
 }
 span.dynatree-checkbox:hover
 {
-    background-position: -16px -32px;
+	background-position: -16px -32px;
 }
 
 .dynatree-partsel span.dynatree-checkbox
 {
-    background-position: -64px -32px;
+	background-position: -64px -32px;
 }
 .dynatree-partsel span.dynatree-checkbox:hover
 {
-    background-position: -80px -32px;
+	background-position: -80px -32px;
 }
 
 .dynatree-selected span.dynatree-checkbox
 {
-    background-position: -32px -32px;
+	background-position: -32px -32px;
 }
 .dynatree-selected span.dynatree-checkbox:hover
 {
-    background-position: -48px -32px;
+	background-position: -48px -32px;
 }
 
 /*******************************************************************************
@@ -174,30 +174,30 @@ span.dynatree-checkbox:hover
  */
 span.dynatree-radio
 {
-/*	margin-left: 3px;*/
-    background-position: 0px -48px;
+	margin-left: 3px;
+	background-position: 0px -48px;
 }
 span.dynatree-radio:hover
 {
-    background-position: -16px -48px;
+	background-position: -16px -48px;
 }
 
 .dynatree-partsel span.dynatree-radio
 {
-    background-position: -64px -48px;
+	background-position: -64px -48px;
 }
 .dynatree-partsel span.dynatree-radio:hover
 {
-    background-position: -80px -48px;
+	background-position: -80px -48px;
 }
 
 .dynatree-selected span.dynatree-radio
 {
-    background-position: -32px -48px;
+	background-position: -32px -48px;
 }
 .dynatree-selected span.dynatree-radio:hover
 {
-    background-position: -48px -48px;
+	background-position: -48px -48px;
 }
 
 /*******************************************************************************
@@ -212,18 +212,18 @@ span.dynatree-radio:hover
 
 span.dynatree-icon /* Default icon */
 {
-/*	margin-left: 3px;*/
-    background-position: 0px 0px;
+	margin-left: 3px;
+	background-position: 0px 0px;
 }
 
 .dynatree-ico-cf span.dynatree-icon  /* Collapsed Folder */
 {
-    background-position: 0px -16px;
+	background-position: 0px -16px;
 }
 
 .dynatree-ico-ef span.dynatree-icon  /* Expanded Folder */
 {
-    background-position: -64px -16px;
+	background-position: -64px -16px;
 }
 
 /* Status node icons */
@@ -235,7 +235,7 @@ span.dynatree-icon /* Default icon */
 
 .dynatree-statusnode-error span.dynatree-icon
 {
-    background-position: 0px -112px;
+	background-position: 0px -112px;
 /*	background-image: url("ltError.gif");*/
 }
 
@@ -340,7 +340,7 @@ div.dynatree-drag-helper /*.dynatree-drop-accept*/
 }
 div.dynatree-drop-accept span.dynatree-drag-helper-img
 {
-    background-position: -32px -112px;
+	background-position: -32px -112px;
 /*	background-image: url("drop_accept.gif");*/
 }
 div.dynatree-drag-helper.dynatree-drop-reject
@@ -349,7 +349,7 @@ div.dynatree-drag-helper.dynatree-drop-reject
 }
 div.dynatree-drop-reject span.dynatree-drag-helper-img
 {
-    background-position: -16px -112px;
+	background-position: -16px -112px;
 /*	background-image: url("drop_reject.gif");*/
 }
 
@@ -359,24 +359,24 @@ div.dynatree-drop-reject span.dynatree-drag-helper-img
 {
 	width: 24px;
 	position: absolute;
-    background-position: 0 -128px;
+	background-position: 0 -128px;
 /*	background-image: url("drop_here.gif");*/
 }
 #dynatree-drop-marker.dynatree-drop-after,
 #dynatree-drop-marker.dynatree-drop-before
 {
 	width:64px;
-    background-position: 0 -144px;
+	background-position: 0 -144px;
 /*	background-image: url("drop_sibling_here.gif");*/
 }
 #dynatree-drop-marker.dynatree-drop-copy
 {
-    background-position: -64px -128px;
+	background-position: -64px -128px;
 /*	background-image: url("copy_here.gif");*/
 }
 #dynatree-drop-marker.dynatree-drop-move
 {
-    background-position: -64px -128px;
+	background-position: -64px -128px;
 /*	background-image: url("move_here.gif");*/
 }
 
