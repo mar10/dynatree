@@ -32,11 +32,9 @@ ul.dynatree-container li
 	background-color: transparent;
 	background-position: 0 0;
 	background-repeat: repeat-y;
-	background-image: none;  /* custom: no v-lines */
+	background-image: none;  /* no v-lines */
 
 	margin:0;
-/*    padding:3px 0 3px 16px;*/
-/*    padding:3px 0 3px 0;*/
 	padding:1px 0 0 0;
 }
 /* Suppress lines for last child node */
@@ -60,20 +58,6 @@ ul.dynatree-no-connector > li
 
 
 /*******************************************************************************
- * Default for custom icons
- */
-/*
-ul.dynatree-container img
-{
-	width: 16px;
-	height: 16px;
-	margin-left: 3px;
-	vertical-align: top;
-	border-style: none;
-}
-*/
-
-/*******************************************************************************
  * Common icon definitions
  */
 span.dynatree-empty,
@@ -93,6 +77,8 @@ span.dynatree-drag-helper-img,
 	vertical-align: top;
 	background-repeat: no-repeat;
 	background-position: left;
+	background-image: url("icons.gif");
+	background-position: 0px 0px;
 }
 
 /*******************************************************************************
@@ -106,13 +92,16 @@ span.dynatree-empty
 span.dynatree-vline
 {
 }
+*/
 span.dynatree-connector
 {
+    background-image: none;
 }
+/*
 .dynatree-lastsib span.dynatree-connector
 {
 }
-
+*/
 /*******************************************************************************
  * Expander icon
  * Note: IE6 doesn't correctly evaluate multiples class names,
@@ -126,11 +115,12 @@ span.dynatree-connector
 
 span.dynatree-expander
 {
-	background-image: url("collapsed.gif");
+	background-position: 0px -80px;
+	cursor: pointer;
 }
 span.dynatree-expander:hover
 {
-	background-image: url("collapsed_hover.gif");
+	background-position: -16px -80px;
 }
 .dynatree-exp-cl span.dynatree-expander /* Collapsed, not delayed, last sibling */
 {
@@ -146,18 +136,18 @@ span.dynatree-expander:hover
 .dynatree-exp-el span.dynatree-expander,  /* Expanded, not delayed, last sibling */
 .dynatree-exp-edl span.dynatree-expander  /* Expanded, delayed, last sibling */
 {
-	background-image: url("expanded.gif");
+	background-position: -32px -80px;
 }
 .dynatree-exp-e span.dynatree-expander:hover,  /* Expanded, not delayed, not last sibling */
 .dynatree-exp-ed span.dynatree-expander:hover,  /* Expanded, delayed, not last sibling */
 .dynatree-exp-el span.dynatree-expander:hover,  /* Expanded, not delayed, last sibling */
 .dynatree-exp-edl span.dynatree-expander:hover  /* Expanded, delayed, last sibling */
 {
-	background-image: url("expanded_hover.gif");
+	background-position: -48px -80px;
 }
 .dynatree-loading span.dynatree-expander  /* 'Loading' status overrides all others */
 {
-	background-image: url("ltWait.gif");
+	background-image: url("loading.gif");
 }
 
 
@@ -167,29 +157,29 @@ span.dynatree-expander:hover
 span.dynatree-checkbox
 {
 	margin-left: 3px;
-	background-image: url("cbUnchecked.gif");
+	background-position: 0px -32px;
 }
 span.dynatree-checkbox:hover
 {
-	background-image: url("cbUnchecked_hover.gif");
+	background-position: -16px -32px;
 }
 
 .dynatree-partsel span.dynatree-checkbox
 {
-	background-image: url("cbIntermediate.gif");
+	background-position: -64px -32px;
 }
 .dynatree-partsel span.dynatree-checkbox:hover
 {
-	background-image: url("cbIntermediate_hover.gif");
+	background-position: -80px -32px;
 }
 
 .dynatree-selected span.dynatree-checkbox
 {
-	background-image: url("cbChecked.gif");
+	background-position: -32px -32px;
 }
 .dynatree-selected span.dynatree-checkbox:hover
 {
-	background-image: url("cbChecked_hover.gif");
+	background-position: -48px -32px;
 }
 
 /*******************************************************************************
@@ -200,29 +190,29 @@ span.dynatree-checkbox:hover
 span.dynatree-radio
 {
 	margin-left: 3px;
-	background-image: url("rbUnchecked.gif");
+	background-position: 0px -48px;
 }
 span.dynatree-radio:hover
 {
-	background-image: url("rbUnchecked_hover.gif");
+	background-position: -16px -48px;
 }
 
 .dynatree-partsel span.dynatree-radio
 {
-	background-image: url("rbIntermediate.gif");
+	background-position: -64px -48px;
 }
 .dynatree-partsel span.dynatree-radio:hover
 {
-	background-image: url("rbIntermediate_hover.gif");
+	background-position: -80px -48px;
 }
 
 .dynatree-selected span.dynatree-radio
 {
-	background-image: url("rbChecked.gif");
+	background-position: -32px -48px;
 }
 .dynatree-selected span.dynatree-radio:hover
 {
-	background-image: url("rbChecked_hover.gif");
+	background-position: -48px -48px;
 }
 
 /*******************************************************************************
@@ -238,34 +228,35 @@ span.dynatree-radio:hover
 span.dynatree-icon /* Default icon */
 {
 	margin-left: 3px;
-	background-image: url("document.gif");
+	background-position: 0px 0px;
 }
 
 .dynatree-has-children span.dynatree-icon /* Default icon */
 {
-/*    background-image: url("doc_with_children.gif");*/
+/*    background-position: 0px -16px; */
 }
 
 .dynatree-ico-cf span.dynatree-icon  /* Collapsed Folder */
 {
-	background-image: url("folder.gif");
+	background-position: 0px -16px;
 }
 
 .dynatree-ico-ef span.dynatree-icon  /* Expanded Folder */
 {
-	background-image: url("folder.gif");
+	background-position: -64px -16px;
 }
 
 /* Status node icons */
 
 .dynatree-statusnode-wait span.dynatree-icon
 {
-	background-image: url("ltWait.gif");
+	background-image: url("loading.gif");
 }
 
 .dynatree-statusnode-error span.dynatree-icon
 {
-	background-image: url("ltError.gif");
+	background-position: 0px -112px;
+/*	background-image: url("ltError.gif");*/
 }
 
 /*******************************************************************************
@@ -375,7 +366,7 @@ div.dynatree-drag-helper /*.dynatree-drop-accept*/
 }
 div.dynatree-drop-accept span.dynatree-drag-helper-img
 {
-	background-image: url("drop_accept.gif");
+	background-position: -32px -112px;
 }
 div.dynatree-drag-helper.dynatree-drop-reject
 {
@@ -383,30 +374,30 @@ div.dynatree-drag-helper.dynatree-drop-reject
 }
 div.dynatree-drop-reject span.dynatree-drag-helper-img
 {
-	background-image: url("drop_reject.gif");
+	background-position: -16px -112px;
 }
 
 /*** Drop marker icon *********************************************************/
 
 #dynatree-drop-marker
 {
-	width:24px;
+	width: 24px;
 	position: absolute;
-	background-image: url("drop_here.gif");
+	background-position: 0 -128px;
 }
 #dynatree-drop-marker.dynatree-drop-after,
 #dynatree-drop-marker.dynatree-drop-before
 {
 	width:64px;
-	background-image: url("drop_sibling_here.gif");
+	background-position: 0 -144px;
 }
 #dynatree-drop-marker.dynatree-drop-copy
 {
-	background-image: url("copy_here.gif");
+	background-position: -64px -128px;
 }
 #dynatree-drop-marker.dynatree-drop-move
 {
-	background-image: url("move_here.gif");
+	background-position: -64px -128px;
 }
 
 /*** Source node while dragging ***********************************************/
