@@ -7,6 +7,7 @@
 ==== Release 1.0 ====
 
 ===== 1.0.3 (not yet released) =====
+  * Skins using CSS sprites (improved load time)
   * Fixed layout for IE 6,7 (issue 166).
 
 ===== 1.0.2 =====
