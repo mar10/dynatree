@@ -17,7 +17,8 @@
 	@depends: jquery.cookie.js
 *************************************************************************/
 
-/*jslint laxbreak: true */
+// Note: We currently allow eval() to parse the 'data' attribtes, when initializing from HTML.
+/*jslint laxbreak: true, browser: true, evil: true */
 
 /*************************************************************************
  *	Debug functions
@@ -102,6 +103,8 @@ function getDtNodeFromElement(el) {
 	return null;
 }
 
+function noop() {
+}
 
 /*************************************************************************
  *	Class DynaTreeNode
@@ -200,6 +203,7 @@ DynaTreeNode.prototype = {
 			res += "<img src='" + opts.imagePath + this.data.icon + "' alt='' />";
 		} else if ( this.data.icon === false ) {
 			// icon == false means 'no icon'
+			noop(); // keep JSLint happy
 		} else {
 			// icon == null means 'default icon'
 			res += cache.tagNodeIcon;
@@ -350,8 +354,9 @@ DynaTreeNode.prototype = {
 		// Hide children, if node is collapsed
 		if( this.ul ) {
 			var isHidden = (this.ul.style.display === "none");
+			var isExpanded = !!this.bExpanded;
 //			logMsg("isHidden:%s", isHidden);
-			if( useEffects && opts.fx && !!isHidden === !!this.bExpanded ) {
+			if( useEffects && opts.fx && (isHidden === isExpanded) ) {
 				var duration = opts.fx.duration || 200;
 				$(this.ul).animate(opts.fx, duration);
 			} else {
@@ -2421,11 +2426,13 @@ TODO: better?
 //				.prependTo("body");
 			logMsg("Creating marker: %o", this.$dndMarker);
 		}
+/*		
 		if(hitMode === "start"){
 		}
 		if(hitMode === "stop"){
 //			sourceNode.removeClass("dynatree-drop-target");
 		}
+*/
 //		this.$dndMarker.attr("class", hitMode);
 		if(hitMode === "after" || hitMode === "before" || hitMode === "over"){
 //			$source && $source.addClass("dynatree-drag-source");
@@ -2467,20 +2474,28 @@ TODO: better?
 			$target.removeClass("dynatree-drop-before");
 		}
 		if(accept === true){
-			$source && $source.addClass("dynatree-drop-accept");
+			if($source){
+				$source.addClass("dynatree-drop-accept");
+			}
 			$target.addClass("dynatree-drop-accept");
 			helper.addClass("dynatree-drop-accept");
 		}else{
-			$source && $source.removeClass("dynatree-drop-accept");
+			if($source){
+				$source.removeClass("dynatree-drop-accept");
+			}
 			$target.removeClass("dynatree-drop-accept");
 			helper.removeClass("dynatree-drop-accept");
 		}
 		if(accept === false){
-			$source && $source.addClass("dynatree-drop-reject");
+			if($source){
+				$source.addClass("dynatree-drop-reject");
+			}
 			$target.addClass("dynatree-drop-reject");
 			helper.addClass("dynatree-drop-reject");
 		}else{
-			$source && $source.removeClass("dynatree-drop-reject");
+			if($source){
+				$source.removeClass("dynatree-drop-reject");
+			}
 			$target.removeClass("dynatree-drop-reject");
 			helper.removeClass("dynatree-drop-reject");
 		}
@@ -2763,7 +2778,12 @@ $.widget("ui.dynatree", {
 		function __focusHandler(event) {
 			// Handles blur and focus.
 			// Fix event for IE:
-			event = arguments[0] = $.event.fix( event || window.event );
+			// doesn't pass JSLint:
+//			event = arguments[0] = $.event.fix( event || window.event );
+			// what jQuery does:
+//			var args = jQuery.makeArray( arguments );
+//			event = args[0] = jQuery.event.fix( event || window.event );
+			event = $.event.fix( event || window.event );
 			var dtnode = getDtNodeFromElement(event.target);
 			return dtnode ? dtnode._onFocus(event) : false;
 		}
@@ -3076,6 +3096,7 @@ var _registerDnd = function() {
 			if(targetNode){
 				if(!targetNode.tree.options.dnd.onDrop) {
 					// not enabled as drop target
+					noop(); // Keep JSLint happy
 				} else if(targetNode === prevTargetNode) {
 					// Moving over same node
 					targetNode.tree._onDragEvent("over", targetNode, sourceNode, event, ui, draggable);
