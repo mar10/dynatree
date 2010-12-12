@@ -7,8 +7,11 @@
 ==== Release 1.0 ====
 
 ===== 1.0.3 (not yet released) =====
-  * Skins using CSS sprites (improved load time)
+  * Default skins using CSS sprites (improved load time)
+  * Checked with JSLint
+  * Some minor speed improvements (issue 159)
   * Fixed layout for IE 6,7 (issue 166).
+  * Updated to jQuery 1.4.4
 
 ===== 1.0.2 =====
   * Fixed layout when not using strict mode (issue 165).
