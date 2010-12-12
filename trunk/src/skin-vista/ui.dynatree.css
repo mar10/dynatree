@@ -81,6 +81,17 @@ span.dynatree-drag-helper-img,
 	background-position: 0px 0px;
 }
 
+/** Used by 'icon' node option: */
+ul.dynatree-container img
+{
+    width: 16px;
+    height: 16px;
+    margin-left: 3px;
+    vertical-align: top;
+    border-style: none;
+}
+
+
 /*******************************************************************************
  * Lines and connectors
  */

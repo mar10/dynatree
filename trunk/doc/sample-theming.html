@@ -8,7 +8,8 @@
 	<script src="../jquery/jquery-ui.custom.js" type="text/javascript"></script>
 	<script src="../jquery/jquery.cookie.js" type="text/javascript"></script>
 	<!-- Include a customized stylesheet: -->
-	<link href="skin-custom/ui.dynatree.css" rel="stylesheet" type="text/css" >
+    <link href="../src/skin-vista/ui.dynatree.css" rel="stylesheet" type="text/css">
+	<link href="skin-custom/custom.css" rel="stylesheet" type="text/css" >
 	<script src="../src/jquery.dynatree.js" type="text/javascript"></script>
 
 	<!-- Start_Exclude: This block is not part of the sample code -->
@@ -35,7 +36,7 @@
 <body class="example">
 	<h1>Example: Theming</h1>
 	<p class="description">
-		Includes a custom CSS for a new theming (inspired by Windows Vista).<br>
+		Includes a custom CSS <i>after</i> the standard CSS to overrride theming.<br>
 		Some nodes have their <code>data.addClass</code> attribute set.<br>
 		Finally, the last two nodes use the <code>data.icon</code> attribute.
 	</p>
@@ -52,7 +53,7 @@
 					<li>Sub-item 4.2
 				</ul>
 
-			<li class="folder">A folder
+			<li class="folder">A folder (different icon when expanded)
 				<ul>
 					<li>Node 2.1
 					<li>Node 2.2
