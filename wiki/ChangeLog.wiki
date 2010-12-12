@@ -6,7 +6,7 @@
 
 ==== Release 1.0 ====
 
-===== 1.0.3 (not yet released) =====
+===== 1.0.3 =====
   * Default skins now using CSS sprites (improved load time).
   * Simplified custom theming.
   * Checked with JSLint.
