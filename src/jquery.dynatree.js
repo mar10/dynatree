@@ -17,8 +17,7 @@
 	@depends: jquery.cookie.js
 *************************************************************************/
 
-// Note: We currently allow eval() to parse the 'data' attribtes, when initializing from HTML.
-/*jslint laxbreak: true, browser: true, evil: true */
+/*jslint laxbreak: true */
 
 /*************************************************************************
  *	Debug functions
@@ -79,7 +78,7 @@ var DTNodeStatus_Ok      = 0;
 
 
 // Start of local namespace
-(function($) {
+;(function($) {
 
 /*************************************************************************
  *	Common tool functions.
@@ -103,8 +102,6 @@ function getDtNodeFromElement(el) {
 	return null;
 }
 
-function noop() {
-}
 
 /*************************************************************************
  *	Class DynaTreeNode
@@ -151,7 +148,7 @@ DynaTreeNode.prototype = {
 		}
 		if( recursive && this.childList ) {
 			dict.children = [];
-			for(var i=0, l=this.childList.length; i<l; i++ ){
+			for(var i=0; i<this.childList.length; i++ ){
 				dict.children.push(this.childList[i].toDict(true, callback));
 			}
 		} else {
@@ -203,7 +200,6 @@ DynaTreeNode.prototype = {
 			res += "<img src='" + opts.imagePath + this.data.icon + "' alt='' />";
 		} else if ( this.data.icon === false ) {
 			// icon == false means 'no icon'
-			noop(); // keep JSLint happy
 		} else {
 			// icon == null means 'default icon'
 			res += cache.tagNodeIcon;
@@ -228,7 +224,7 @@ DynaTreeNode.prototype = {
 			return;
 		}
 		var childLI = this.ul.firstChild;
-		for(var i=0, l=cl.length-1; i<l; i++) {
+		for(var i=0; i<cl.length-1; i++) {
 			var childNode1 = cl[i];
 			var childNode2 = childLI.dtnode;
 			if( childNode1 !== childNode2 ) {
@@ -248,8 +244,8 @@ DynaTreeNode.prototype = {
 		 * <li id='key'> // This div contains the node's span and list of child div's.
 		 *   <span class='title'>S S S A</span> // Span contains graphic spans and title <a> tag
 		 *   <ul> // only present, when node has children
-		 *       <li>child1</li>
-		 *       <li>child2</li>
+		 *   	<li>child1</li>
+		 *   	<li>child2</li>
 		 *   </ul>
 		 * </li>
 		 */
@@ -346,7 +342,7 @@ DynaTreeNode.prototype = {
 		}
 
 		if( this.bExpanded && this.childList ) {
-			for(var i=0, l=this.childList.length; i<l; i++) {
+			for(var i=0; i<this.childList.length; i++) {
 				this.childList[i].render();
 			}
 			this._fixOrder();
@@ -354,9 +350,8 @@ DynaTreeNode.prototype = {
 		// Hide children, if node is collapsed
 		if( this.ul ) {
 			var isHidden = (this.ul.style.display === "none");
-			var isExpanded = !!this.bExpanded;
 //			logMsg("isHidden:%s", isHidden);
-			if( useEffects && opts.fx && (isHidden === isExpanded) ) {
+			if( useEffects && opts.fx && !!isHidden === !!this.bExpanded ) {
 				var duration = opts.fx.duration || 200;
 				$(this.ul).animate(opts.fx, duration);
 			} else {
@@ -416,7 +411,7 @@ DynaTreeNode.prototype = {
 			return null;
 		}
 		var ac = this.parent.childList;
-		for(var i=1, l=ac.length; i<l; i++){ // start with 1, so prev(first) = null
+		for(var i=1; i<ac.length; i++){ // start with 1, so prev(first) = null
 			if( ac[i] === this ){
 				return ac[i-1];
 			}
@@ -429,7 +424,7 @@ DynaTreeNode.prototype = {
 			return null;
 		}
 		var ac = this.parent.childList;
-		for(var i=0, l=ac.length-1; i<l; i++){ // up to length-2, so next(last) = null
+		for(var i=0; i<ac.length-1; i++){ // up to length-2, so next(last) = null
 			if( ac[i] === this ){
 				return ac[i+1];
 			}
@@ -473,7 +468,7 @@ DynaTreeNode.prototype = {
 			};
 		cl.sort(cmp);
 		if( deep ){
-			for(var i=0, l=cl.length; i<l; i++){
+			for(var i=0; i<cl.length; i++){
 				if( cl[i].childList ){
 					cl[i].sortChildren(cmp, "$norender$");
 				}
@@ -494,7 +489,7 @@ DynaTreeNode.prototype = {
 					if(this.ul){
 						this.ul.removeChild(firstChild.li);
 					}
-				}catch(e){}
+				}catch(e){};
 				if( this.childList.length === 1 ){
 					this.childList = [];
 				}else{
@@ -598,7 +593,7 @@ DynaTreeNode.prototype = {
 		var eventX = event.pageX - target.offsetLeft;
 		var eventY = event.pageY - target.offsetTop;
 
-		for(var i=0, l=target.childNodes.length; i<l; i++) {
+		for(var i=0; i<target.childNodes.length; i++) {
 			var cn = target.childNodes[i];
 			var x = cn.offsetLeft - target.offsetLeft;
 			var y = cn.offsetTop - target.offsetTop;
@@ -646,7 +641,7 @@ DynaTreeNode.prototype = {
 	isVisible: function() {
 		// Return true, if all parents are expanded.
 		var parents = this._parentList(true, false);
-		for(var i=0, l=parents.length; i<l; i++){
+		for(var i=0; i<parents.length; i++){
 			if( ! parents[i].bExpanded ){ return false; }
 		}
 		return true;
@@ -655,7 +650,7 @@ DynaTreeNode.prototype = {
 	makeVisible: function() {
 		// Make sure, all parents are expanded
 		var parents = this._parentList(true, false);
-		for(var i=0, l=parents.length; i<l; i++){
+		for(var i=0; i<parents.length; i++){
 			parents[i]._expand(true);
 		}
 	},
@@ -707,6 +702,7 @@ DynaTreeNode.prototype = {
 		} else {
 			// Deactivate
 			if( this.tree.activeNode === this ) {
+				var opts = this.tree.options;
 				if ( opts.onQueryActivate && opts.onQueryActivate.call(this.tree, false, this) === false ){
 					return; // Callback returned false
 				}
@@ -784,7 +780,6 @@ DynaTreeNode.prototype = {
 	_fixSelectionState: function() {
 		// fix selection status, for multi-hier mode
 //		this.tree.logDebug("_fixSelectionState(%o) - %o", this.bSelected, this);
-		var p, i, l;
 		if( this.bSelected ) {
 			// Select all children
 			this.visit(function(node){
@@ -792,11 +787,11 @@ DynaTreeNode.prototype = {
 				node._select(true, false, false);
 			});
 			// Select parents, if all children are selected
-			p = this.parent;
+			var p = this.parent;
 			while( p ) {
 				p._setSubSel(true);
 				var allChildsSelected = true;
-				for(i=0, l=p.childList.length; i<l;  i++) {
+				for(var i=0; i<p.childList.length;  i++) {
 					var n = p.childList[i];
 					if( !n.bSelected && !n.data.isStatusNode ) {
 						allChildsSelected = false;
@@ -816,11 +811,11 @@ DynaTreeNode.prototype = {
 				node._select(false, false, false);
 			});
 			// Deselect parents, and recalc hasSubSel
-			p = this.parent;
+			var p = this.parent;
 			while( p ) {
 				p._select(false, false, false);
 				var isPartSel = false;
-				for(i=0, l=p.childList.length; i<l;  i++) {
+				for(var i=0; i<p.childList.length;  i++) {
 					if( p.childList[i].bSelected || p.childList[i].hasSubSel ) {
 						isPartSel = true;
 						break;
@@ -958,7 +953,7 @@ DynaTreeNode.prototype = {
 		// Auto-collapse mode: collapse all siblings
 		if( this.bExpanded && this.parent && opts.autoCollapse ) {
 			var parents = this._parentList(false, true);
-			for(var i=0, l=parents.length; i<l; i++){
+			for(var i=0; i<parents.length; i++){
 				parents[i].collapseSiblings();
 			}
 		}
@@ -1026,7 +1021,7 @@ DynaTreeNode.prototype = {
 			return;
 		}
 		var ac = this.parent.childList;
-		for (var i=0, l=ac.length; i<l; i++) {
+		for (var i=0; i<ac.length; i++) {
 			if ( ac[i] !== this && ac[i].bExpanded ){
 				ac[i]._expand(false);
 			}
@@ -1071,8 +1066,7 @@ DynaTreeNode.prototype = {
 
 	_onKeydown: function(event) {
 //		this.tree.logDebug("dtnode.onKeydown(" + event.type + "): dtnode:" + this + ", charCode:" + event.charCode + ", keyCode: " + event.keyCode + ", which: " + event.which);
-		var handled = true,
-			sib;
+		var handled = true;
 //		alert("keyDown" + event.which);
 
 		switch( event.which ) {
@@ -1121,7 +1115,7 @@ DynaTreeNode.prototype = {
 				}
 				break;
 			case 38: // <up>
-				sib = this.getPrevSibling();
+				var sib = this.getPrevSibling();
 				while( sib && sib.bExpanded && sib.childList ){
 					sib = sib.childList[sib.childList.length-1];
 				}
@@ -1134,6 +1128,7 @@ DynaTreeNode.prototype = {
 				}
 				break;
 			case 40: // <down>
+				var sib;
 				if( this.bExpanded && this.childList ) {
 					sib = this.childList[0];
 				} else {
@@ -1204,7 +1199,7 @@ DynaTreeNode.prototype = {
 			}
 		}
 		if(this.childList){
-			for(var i=0, l=this.childList.length; i<l; i++){
+			for(var i=0; i<this.childList.length; i++){
 				res = this.childList[i].visit(fn, true);
 				if( res === false ){
 					break;
@@ -1261,10 +1256,10 @@ DynaTreeNode.prototype = {
 		tn.removeChildren(true);
 //		this.div.removeChild(tn.div);
 		this.ul.removeChild(tn.li);
-		for(var i=0, l=ac.length; i<l; i++) {
+		for(var i=0; i<ac.length; i++) {
 			if( ac[i] === tn ) {
 				this.childList.splice(i, 1);
-//				delete tn;  // JSLint complained
+				delete tn;
 				break;
 			}
 		}
@@ -1276,8 +1271,9 @@ DynaTreeNode.prototype = {
 		var tree = this.tree;
 		var ac = this.childList;
 		if( ac ) {
-			for(var i=0, l=ac.length; i<l; i++) {
-				var tn = ac[i];
+			for(var i=0; i<ac.length; i++) {
+				var tn=ac[i];
+//        		this.tree.logDebug ("del %o", tn);
 				if ( tn === tree.activeNode && !retainPersistence ){
 					tn.deactivate();
 				}
@@ -1300,7 +1296,7 @@ DynaTreeNode.prototype = {
 					this.tree.logDebug("%s.removeChildren: couldnt remove LI", this, e);
 				}
 */
-//				delete tn;  JSLint complained
+				delete tn;
 			}
 			// Set to 'null' which is interpreted as 'not yet loaded' for lazy
 			// nodes
@@ -1375,7 +1371,7 @@ DynaTreeNode.prototype = {
 		}
 		var seg = segList.shift();
 
-		for(var i=0, l=this.childList.length; i < l; i++){
+		for(var i = 0; i < this.childList.length; i++){
 			var child = this.childList[i];
 			if( child.data.key === seg ){
 				if(segList.length === 0) {
@@ -1395,9 +1391,7 @@ DynaTreeNode.prototype = {
 							tree.logWarning("%s._loadKeyPath(%s) -> reloadChildren() failed.", self, keyPath);
 							callback.call(tree, child, "error");
 						}
-					}); // Note: this line gives a JSLint warning (Don't make functions within a loop)
-					// we can ignore it, since it will only be exectuted once, the the loop is ended
-					// See also http://stackoverflow.com/questions/3037598/how-to-get-around-the-jslint-error-dont-make-functions-within-a-loop
+					});
 				} else {
 					callback.call(tree, child, "loaded");
 					// Look for direct child with that key
@@ -1574,7 +1568,7 @@ DynaTreeNode.prototype = {
 		var prevFlag = this.tree.enableUpdate(false);
 
 		var tnFirst = null;
-		for (var i=0, l=obj.length; i<l; i++) {
+		for (var i=0; i<obj.length; i++) {
 			var data = obj[i];
 			var dtnode = this._addChildNode(new DynaTreeNode(this, this.tree, data), beforeNode);
 			if( !tnFirst ){
@@ -1595,18 +1589,19 @@ DynaTreeNode.prototype = {
 	},
 
 	appendAjax: function(ajaxOptions) {
-		var self = this;
 		this.removeChildren(false, true);
 		this.setLazyNodeStatus(DTNodeStatus_Loading);
 		// Debug feature: force a delay, to simulate slow loading...
 		if(ajaxOptions.debugLazyDelay){
 			var ms = ajaxOptions.debugLazyDelay;
+			var self = this;
 			ajaxOptions.debugLazyDelay = 0;
 			this.tree.logInfo("appendAjax: waiting for debugLazyDelay " + ms);
 			setTimeout(function(){self.appendAjax(ajaxOptions);}, ms);
 			return;
 		}
 		// Ajax option inheritance: $.ajaxSetup < $.ui.dynatree.prototype.options.ajaxDefaults < tree.options.ajaxDefaults < ajaxOptions
+		var self = this;
 		var orgSuccess = ajaxOptions.success;
 		var orgError = ajaxOptions.error;
 		var eventType = "nodeLoaded.dynatree." + this.tree.$tree.attr("id")
@@ -1617,11 +1612,7 @@ DynaTreeNode.prototype = {
 //				self.tree.logDebug("appendAjax().success");
 				var prevPhase = self.tree.phase;
 				self.tree.phase = "init";
-				// postProcess is similar to the standard dataFilter hook,
-				// but it is also called for JSONP
-				if( options.postProcess ){
-					data = options.postProcess.call(this, data, this.dataType);
-				}
+
 				if(!$.isArray(data) || data.length !== 0){
 					self.addChild(data, null);
 				}
@@ -1663,7 +1654,6 @@ DynaTreeNode.prototype = {
 		 *  mode 'before': add this node as sibling before targetNode.
 		 *  mode 'after': add this node as sibling after targetNode.
 		 */
-		var pos;
 		if(this === targetNode){
 			return;
 		}
@@ -1683,7 +1673,7 @@ DynaTreeNode.prototype = {
 			this.parent.childList = null;
 			this.parent.bExpanded = false;
 		} else {
-			pos = $.inArray(this, this.parent.childList);
+			var pos = $.inArray(this, this.parent.childList);
 			if( pos < 0 ){
 				throw "Internal error";
 			}
@@ -1702,7 +1692,7 @@ DynaTreeNode.prototype = {
 				break;
 			case "before":
 				// Insert this node before target node
-				pos = $.inArray(targetNode, targetParent.childList);
+				var pos = $.inArray(targetNode, targetParent.childList);
 				if( pos < 0 ){
 					throw "Internal error";
 				}
@@ -1710,7 +1700,7 @@ DynaTreeNode.prototype = {
 				break;
 			case "after":
 				// Insert this node after target node
-				pos = $.inArray(targetNode, targetParent.childList);
+				var pos = $.inArray(targetNode, targetParent.childList);
 				if( pos < 0 ){
 					throw "Internal error";
 				}
@@ -2150,13 +2140,13 @@ DynaTree.prototype = {
 				this.logWarning("initAjax: error callback is ignored when onPostInit was specified.");
 			}
 			var isReloading = pers.isReloading();
-			ajaxOpts.success = function(dtnode) {
+			ajaxOpts["success"] = function(dtnode) {
 				opts.onPostInit.call(dtnode.tree, isReloading, false);
 				if(callback){
 					callback.call(dtnode.tree, "ok");
 				}
 			};
-			ajaxOpts.error = function(dtnode) {
+			ajaxOpts["error"] = function(dtnode) {
 				opts.onPostInit.call(dtnode.tree, isReloading, true);
 				if(callback){
 					callback.call(dtnode.tree, "error");
@@ -2426,13 +2416,11 @@ TODO: better?
 //				.prependTo("body");
 			logMsg("Creating marker: %o", this.$dndMarker);
 		}
-/*		
 		if(hitMode === "start"){
 		}
 		if(hitMode === "stop"){
 //			sourceNode.removeClass("dynatree-drop-target");
 		}
-*/
 //		this.$dndMarker.attr("class", hitMode);
 		if(hitMode === "after" || hitMode === "before" || hitMode === "over"){
 //			$source && $source.addClass("dynatree-drag-source");
@@ -2474,28 +2462,20 @@ TODO: better?
 			$target.removeClass("dynatree-drop-before");
 		}
 		if(accept === true){
-			if($source){
-				$source.addClass("dynatree-drop-accept");
-			}
+			$source && $source.addClass("dynatree-drop-accept");
 			$target.addClass("dynatree-drop-accept");
 			helper.addClass("dynatree-drop-accept");
 		}else{
-			if($source){
-				$source.removeClass("dynatree-drop-accept");
-			}
+			$source && $source.removeClass("dynatree-drop-accept");
 			$target.removeClass("dynatree-drop-accept");
 			helper.removeClass("dynatree-drop-accept");
 		}
 		if(accept === false){
-			if($source){
-				$source.addClass("dynatree-drop-reject");
-			}
+			$source && $source.addClass("dynatree-drop-reject");
 			$target.addClass("dynatree-drop-reject");
 			helper.addClass("dynatree-drop-reject");
 		}else{
-			if($source){
-				$source.removeClass("dynatree-drop-reject");
-			}
+			$source && $source.removeClass("dynatree-drop-reject");
 			$target.removeClass("dynatree-drop-reject");
 			helper.removeClass("dynatree-drop-reject");
 		}
@@ -2527,8 +2507,6 @@ TODO: better?
 		var dnd = this.options.dnd;
 		var res = null;
 		var nodeTag = $(node.span);
-		var hitMode;
-
 		switch (eventName) {
 		case "helper":
 			// Only event and node argument is available
@@ -2567,7 +2545,7 @@ TODO: better?
 			break;
 		case "over":
 			var enterResponse = ui.helper.data("enterResponse");
-			hitMode = null;
+			var hitMode = null;
 			if(enterResponse === false){
 				// Don't call onDragOver if onEnter returned false.
 				break;
@@ -2622,14 +2600,12 @@ TODO: better?
 				}
 				this.logDebug("hitMode: %s - %s - %s", hitMode, (node.parent === otherNode), node.isLastSibling());
 				ui.helper.data("hitMode", hitMode);
-/*
-				logMsg("    clientPos: %s/%s", event.clientX, event.clientY);
-				logMsg("    clientPos: %s/%s", event.pageX, event.pageY);
-				logMsg("    nodeOfs: %s/%s", nodeOfs.left, nodeOfs.top);
-				logMsg("    relPos: %s/%s", relPos.x, relPos.y);
-				logMsg("    relPos2: %s/%s: %s", relPos2.x, relPos2.y, hitMode);
-				logMsg("    e:%o", event);
-*/
+//    			logMsg("    clientPos: %s/%s", event.clientX, event.clientY);
+//    			logMsg("    clientPos: %s/%s", event.pageX, event.pageY);
+//    			logMsg("    nodeOfs: %s/%s", nodeOfs.left, nodeOfs.top);
+//    			logMsg("    relPos: %s/%s", relPos.x, relPos.y);
+//    			logMsg("    relPos2: %s/%s: %s", relPos2.x, relPos2.y, hitMode);
+//    			logMsg("    e:%o", event);
 			}
 /*			var checkPos = function(node, pos) {
 				var dyClick = this.offset.click.top, dxClick = this.offset.click.left;
@@ -2652,7 +2628,7 @@ TODO: better?
 			break;
 		case "drop":
 //          var enterResponse = ui.helper.data("enterResponse");
-			hitMode = ui.helper.data("hitMode");
+			var hitMode = ui.helper.data("hitMode");
 //			if(dnd.onDrop && enterResponse !== false)
 //				dnd.onDrop(node, otherNode, hitMode)
 			if(hitMode && dnd.onDrop){
@@ -2723,7 +2699,7 @@ $.widget("ui.dynatree", {
 		this.options.event += ".dynatree"; // namespace event
 
 		var divTree = this.element.get(0);
-/*		// Clear container, in case it contained some 'waiting' or 'error' text
+/*    	// Clear container, in case it contained some 'waiting' or 'error' text
 		// for clients that don't support JS
 		if( opts.children || (opts.initAjax && opts.initAjax.url) || opts.initId )
 			$(divTree).empty();
@@ -2778,12 +2754,7 @@ $.widget("ui.dynatree", {
 		function __focusHandler(event) {
 			// Handles blur and focus.
 			// Fix event for IE:
-			// doesn't pass JSLint:
-//			event = arguments[0] = $.event.fix( event || window.event );
-			// what jQuery does:
-//			var args = jQuery.makeArray( arguments );
-//			event = args[0] = jQuery.event.fix( event || window.event );
-			event = $.event.fix( event || window.event );
+			event = arguments[0] = $.event.fix( event || window.event );
 			var dtnode = getDtNodeFromElement(event.target);
 			return dtnode ? dtnode._onFocus(event) : false;
 		}
@@ -3061,8 +3032,8 @@ var _registerDnd = function() {
 				logMsg("    draggable.positionAbs: %s/%s", draggable.positionAbs.left, draggable.positionAbs.top);
 */
 				// Adjust helper offset, so cursor is slightly outside top/left corner
-//				draggable.offset.click.top -= event.target.offsetTop;
-//				draggable.offset.click.left -= event.target.offsetLeft;
+//	        	draggable.offset.click.top -= event.target.offsetTop;
+//	            draggable.offset.click.left -= event.target.offsetLeft;
 				draggable.offset.click.top = -2;
 				draggable.offset.click.left = + 16;
 //				logMsg("    draggable.offset.click FIXED: %s/%s", draggable.offset.click.left, draggable.offset.click.top);
@@ -3087,7 +3058,7 @@ var _registerDnd = function() {
 					return;
 				}
 			}
-//			logMsg("draggable-connectToDynatree.drag: targetNode(from event): %s, dtTargetNode: %s", targetNode, ui.helper.data("dtTargetNode"));
+//        	logMsg("draggable-connectToDynatree.drag: targetNode(from event): %s, dtTargetNode: %s", targetNode, ui.helper.data("dtTargetNode"));
 			ui.helper.data("dtTargetNode", targetNode);
 			// Leaving a tree node
 			if(prevTargetNode && prevTargetNode !== targetNode ) {
@@ -3096,7 +3067,6 @@ var _registerDnd = function() {
 			if(targetNode){
 				if(!targetNode.tree.options.dnd.onDrop) {
 					// not enabled as drop target
-					noop(); // Keep JSLint happy
 				} else if(targetNode === prevTargetNode) {
 					// Moving over same node
 					targetNode.tree._onDragEvent("over", targetNode, sourceNode, event, ui, draggable);

@@ -17,7 +17,6 @@ ul.dynatree-container
 ul.dynatree-container ul
 {
 	padding: 0 0 0 16px;
-	margin: 0;
 }
 
 ul.dynatree-container li
@@ -30,15 +29,14 @@ ul.dynatree-container li
 	-moz-background-origin: padding;
 	background-attachment: scroll;
 	background-color: transparent;
-	background-repeat: repeat-y;
-	background-image: url("vline.gif");
 	background-position: 0 0;
-	/*
-	background-image: url("icons_96x256.gif");
-	background-position: -80px -64px;
-	*/
-	margin: 0;
-	padding: 1px 0 0 0;
+	background-repeat: repeat-y;
+	background-image: url(vline.gif);
+
+	margin:0;
+/*    padding:3px 0 3px 16px;*/
+/*    padding:3px 0 3px 0;*/
+	padding:1px 0 0 0;
 }
 /* Suppress lines for last child node */
 ul.dynatree-container li.dynatree-lastsib
@@ -58,6 +56,21 @@ ul.dynatree-no-connector > li
 /*	filter: alpha(opacity=50); /* Yields a css warning */
 	background-color: silver;
 }
+
+
+/*******************************************************************************
+ * Default for custom icons
+ */
+/*
+ul.dynatree-container img
+{
+	width: 16px;
+	height: 16px;
+	margin-left: 3px;
+	vertical-align: top;
+	border-style: none;
+}
+*/
 
 /*******************************************************************************
  * Common icon definitions
@@ -79,17 +92,33 @@ span.dynatree-drag-helper-img,
 	vertical-align: top;
 	background-repeat: no-repeat;
 	background-position: left;
-	background-image: url("icons.gif");
-	background-position: 0px 0px;
 }
 
 /*******************************************************************************
  * Lines and connectors
  */
 
+/*
+span.dynatree-empty
+{
+}
+span.dynatree-vline
+{
+	background-image: url("ltL_ns.gif");
+}
 span.dynatree-connector
 {
-	background-position: -16px -64px;
+	background-image: url("ltL_nes.gif");
+}
+.dynatree-lastsib span.dynatree-connector
+{
+	background-image: url("ltL_ne.gif");
+}
+*/
+
+span.dynatree-connector
+{
+	background-image: url("ltL_ne.gif");
 }
 
 /*******************************************************************************
@@ -105,34 +134,34 @@ span.dynatree-connector
 
 span.dynatree-expander
 {
-	background-position: 0px -80px;
+	background-image: url("ltP_nes.gif");
 	cursor: pointer;
 }
 .dynatree-exp-cl span.dynatree-expander /* Collapsed, not delayed, last sibling */
 {
-	background-position: 0px -96px;
+	background-image: url("ltP_ne.gif");
 }
 .dynatree-exp-cd span.dynatree-expander /* Collapsed, delayed, not last sibling */
 {
-	background-position: -64px -80px;
+	background-image: url("ltD_nes.gif");
 }
 .dynatree-exp-cdl span.dynatree-expander /* Collapsed, delayed, last sibling */
 {
-	background-position: -64px -96px;
+	background-image: url("ltD_ne.gif");
 }
 .dynatree-exp-e span.dynatree-expander,  /* Expanded, not delayed, not last sibling */
 .dynatree-exp-ed span.dynatree-expander  /* Expanded, delayed, not last sibling */
 {
-	background-position: -32px -80px;
+	background-image: url("ltM_nes.gif");
 }
 .dynatree-exp-el span.dynatree-expander,  /* Expanded, not delayed, last sibling */
 .dynatree-exp-edl span.dynatree-expander  /* Expanded, delayed, last sibling */
 {
-	background-position: -32px -96px;
+	background-image: url("ltM_ne.gif");
 }
 .dynatree-loading span.dynatree-expander  /* 'Loading' status overrides all others */
 {
-	background-image: url("loading.gif");
+	background-image: url("ltWait.gif");
 }
 
 
@@ -142,29 +171,29 @@ span.dynatree-expander
 span.dynatree-checkbox
 {
 	margin-left: 3px;
-	background-position: 0px -32px;
+	background-image: url("cbUnchecked.gif");
 }
 span.dynatree-checkbox:hover
 {
-	background-position: -16px -32px;
+	background-image: url("cbUnchecked_hover.gif");
 }
 
 .dynatree-partsel span.dynatree-checkbox
 {
-	background-position: -64px -32px;
+	background-image: url("cbIntermediate.gif");
 }
 .dynatree-partsel span.dynatree-checkbox:hover
 {
-	background-position: -80px -32px;
+	background-image: url("cbIntermediate_hover.gif");
 }
 
 .dynatree-selected span.dynatree-checkbox
 {
-	background-position: -32px -32px;
+	background-image: url("cbChecked.gif");
 }
 .dynatree-selected span.dynatree-checkbox:hover
 {
-	background-position: -48px -32px;
+	background-image: url("cbChecked_hover.gif");
 }
 
 /*******************************************************************************
@@ -175,29 +204,29 @@ span.dynatree-checkbox:hover
 span.dynatree-radio
 {
 	margin-left: 3px;
-	background-position: 0px -48px;
+	background-image: url("rbUnchecked.gif");
 }
 span.dynatree-radio:hover
 {
-	background-position: -16px -48px;
+	background-image: url("rbUnchecked_hover.gif");
 }
 
 .dynatree-partsel span.dynatree-radio
 {
-	background-position: -64px -48px;
+	background-image: url("rbIntermediate.gif");
 }
 .dynatree-partsel span.dynatree-radio:hover
 {
-	background-position: -80px -48px;
+	background-image: url("rbIntermediate_hover.gif");
 }
 
 .dynatree-selected span.dynatree-radio
 {
-	background-position: -32px -48px;
+	background-image: url("rbChecked.gif");
 }
 .dynatree-selected span.dynatree-radio:hover
 {
-	background-position: -48px -48px;
+	background-image: url("rbChecked_hover.gif");
 }
 
 /*******************************************************************************
@@ -213,30 +242,29 @@ span.dynatree-radio:hover
 span.dynatree-icon /* Default icon */
 {
 	margin-left: 3px;
-	background-position: 0px 0px;
+	background-image: url("ltDoc.gif");
 }
 
 .dynatree-ico-cf span.dynatree-icon  /* Collapsed Folder */
 {
-	background-position: 0px -16px;
+	background-image: url("ltFld.gif");
 }
 
 .dynatree-ico-ef span.dynatree-icon  /* Expanded Folder */
 {
-	background-position: -64px -16px;
+	background-image: url("ltFld_o.gif");
 }
 
 /* Status node icons */
 
 .dynatree-statusnode-wait span.dynatree-icon
 {
-	background-image: url("loading.gif");
+	background-image: url("ltWait.gif");
 }
 
 .dynatree-statusnode-error span.dynatree-icon
 {
-	background-position: 0px -112px;
-/*	background-image: url("ltError.gif");*/
+	background-image: url("ltError.gif");
 }
 
 /*******************************************************************************
@@ -340,7 +368,7 @@ div.dynatree-drag-helper /*.dynatree-drop-accept*/
 }
 div.dynatree-drop-accept span.dynatree-drag-helper-img
 {
-	background-position: -32px -112px;
+	background-image: url("drop_accept.gif");
 }
 div.dynatree-drag-helper.dynatree-drop-reject
 {
@@ -348,30 +376,30 @@ div.dynatree-drag-helper.dynatree-drop-reject
 }
 div.dynatree-drop-reject span.dynatree-drag-helper-img
 {
-	background-position: -16px -112px;
+	background-image: url("drop_reject.gif");
 }
 
 /*** Drop marker icon *********************************************************/
 
 #dynatree-drop-marker
 {
-	width: 24px;
+	width:24px;
 	position: absolute;
-	background-position: 0 -128px;
+	background-image: url("drop_here.gif");
 }
 #dynatree-drop-marker.dynatree-drop-after,
 #dynatree-drop-marker.dynatree-drop-before
 {
 	width:64px;
-	background-position: 0 -144px;
+	background-image: url("drop_sibling_here.gif");
 }
 #dynatree-drop-marker.dynatree-drop-copy
 {
-	background-position: -64px -128px;
+	background-image: url("copy_here.gif");
 }
 #dynatree-drop-marker.dynatree-drop-move
 {
-	background-position: -64px -128px;
+	background-image: url("move_here.gif");
 }
 
 /*** Source node while dragging ***********************************************/
