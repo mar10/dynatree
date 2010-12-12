@@ -1,11 +1,9 @@
 /*******************************************************************************
- * 
+ * Sample for a Dynatree custom stylesheet.
+ * This is expected to be included after the standard ui.dynatree.css, thus
+ * overridung the defaults. 
  */
-/*******************************************************************************
- * Default for custom icons
- */
-
-.dynatree-has-children span.dynatree-icon /* Default icon */
+.dynatree-has-children span.dynatree-icon
 {
     background-position: 0 0;
 	background-image: url("doc_with_children.gif");
@@ -37,10 +35,11 @@ span.dynatree-selected a
 	font-style: italic;
 }
 
-span.dynatree-active a
+span.dynatree-active a,
+span.dynatree-active a:hover
 {
-	border: 1px solid #99DEFD;
-	background-color: #D8F0FA;
+	border: 1px solid maroon;
+	background-color: #FAD8F0 !important; /* reddish */
 }
 
 
@@ -55,6 +54,7 @@ span.custom1 a
 }
 span.custom1 span.dynatree-icon
 {
+    background-position: 0 0;
 	background-image: url("customDoc2.gif");
 }
 
@@ -66,5 +66,6 @@ span.custom2 a
 }
 span.custom2 span.dynatree-icon
 {
+    background-position: 0 0;
 	background-image: url("folder_page.gif");
 }

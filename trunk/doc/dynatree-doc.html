@@ -68,14 +68,14 @@
 </p>
 <ul>
 	<li>Open source (<a href="http://code.google.com/p/dynatree/wiki/LicenseInfo">MIT and GPL License</a>)
-	<li>Programmable through an object oriented interface.
+	<li>Optimized for large dynamic trees (DOM elements are only created when really needed).
+	<li>Programmable through a rich object oriented interface.
 	<li>Support for lazy loading and Ajax.
-	<li>Optimized for large dynamic trees.
 	<li>Checkboxes and hierarchical selection.
 	<li>Supports drag and drop.
 	<li>Support for persistence.
 	<li>Keyboard aware.
-	<li>Initializes from html code, JSON, or JavaScript objects.
+	<li>Initializes from HTML code, JSON, or JavaScript objects.
 	<li>Implemented as a <a href="http://jquery.com">jQuery</a> plugin.<br>
 		(Note: this doesn't mean that you have to use jQuery for your whole site.)
 </ul>
@@ -591,7 +591,8 @@ $("#tree").dynatree({
 </pre>
 
 <p>
-	The web service is expected to return a JSON node list, formatted like this:<br>
+	The web service is expected to return a <a href="http://json.org/">valid JSON</a>
+	node list, formatted like this:<br>
 	<code>[ { ... }, { ... }, ... ]</code>.
 </p>
 <p>
@@ -850,7 +851,8 @@ $("#tree").dynatree({
 </p>
 <ul>
 	<li>Mark some or all nodes as lazy, by setting the <code>isLazy</code> option to true.
-	<li>Implement a backend web service that delivers a JSON formatted node list.
+	<li>Implement a backend web service that delivers a <a href="http://json.org/">JSON</a>
+	formatted node list.
 	<li>Implement the <code>onLazyRead</code> callback to send an Ajax request,
 		create the child nodes, and set the 'ok' status.
 </ul>
@@ -896,6 +898,9 @@ $("#tree").dynatree({
 						   data: {"key": node.data.key, // Optional url arguments
 								  "mode": "all"
 								  },
+						   // (Optional) use JSONP to allow cross-site-requests
+						   // (must be supported by the server):
+//                         dataType: "jsonp",
 						   success: function(node) {
 							   // Called after nodes have been created and the waiting icon was removed.
 							   // 'this' is the options for this Ajax request
@@ -910,7 +915,8 @@ $("#tree").dynatree({
 });
 </pre>
 <p>
-	The web service is expected to return a JSON node list, formatted like this:<br>
+	The web service is expected to return a <a href="http://json.org/">valid JSON</a>
+	node list, formatted like this:<br>
 	<code>[ { "title": "Node1", "isLazy": true, "key": "BC13B21636CD6D5C", &#8230; }, { &#8230; }, &#8230; ]</code><br>
 	See <a href="#nodeOptions">Node options</a> for a list of supported attributes.
 </p><p>
@@ -952,6 +958,47 @@ return [ res ]
 	When this server is running, you can try this <a href="sample-lazy-persist.html">live example</a>
 	of a lazy tree.
 </p>
+
+
+<h4 id="lazyCustom">Loading custom formats</h4>
+<p>
+If we need more control, or if the server cannot provide JSON in Dynatree's
+native format, we could also use <a href="http://docs.jquery.com/Ajax/jQuery.ajax">jQuery.ajax()</a>
+to fetch the data, then transform it and call <code>node.addChild()</code>:
+</p>
+<pre class="prettyprint">
+$("#tree").dynatree({
+	[&#8230;]
+	onLazyRead: function(node){
+		$.ajax({
+			url: [&#8230;],
+			success: function(data, textStatus){
+				// In this sample we assume that the server returns JSON like
+				// { "status": "...", "result": [ {...}, {...}, ...]}
+				if(data.status == "ok"){
+					// Convert the response to a native Dynatree JavaScipt object.
+					var list = data.result;
+					res = [];
+					for(var i=0, l=list.length; i&lt;l; i++){
+						var e = list[i];
+						res.push({title: "" + i + ": " + e.fcurr + "-" + e.tcurr + ":" + e.ukurs,
+							icon: false});
+					}
+					// PWS status OK
+					node.setLazyNodeStatus(DTNodeStatus_Ok);
+					node.addChild(res);
+				}else{
+					// Server returned an error condition: set node status accordingly
+					node.setLazyNodeStatus(DTNodeStatus_Error, {
+						tooltip: data.faultDetails,
+						info: data.faultString
+					});
+				}
+			}
+		});
+	[&#8230;]
+});
+</pre>
 
 
 <h2 id="dnd">Drag'n'drop</h2>
@@ -1650,22 +1697,26 @@ var dict = $("#tree").dynatree("getTree").toDict();
 </pre>
 
 
-<h2>Theming and translation</h2>
+<h2 id="theming">Theming and translation</h2>
 
 <p>
 	The tree's fonts, colors, and icons are defined using CSS, so changing the
-	appearance is simply a matter of including a custom stylesheet.
+	appearance is simply a matter of including a custom stylesheet or by
+	replacing <a href="../src/skin/icons.gif">icons.gif</a> with another
+	version.
 </p>
 <div class="codesample">
 <a href="sample-theming.html">Try this example...</a>
 <pre class="prettyprint">
-&lt;script src='../jquery/jquery.js' type='text/javascript'>&lt;/script>
-&lt;script src='../jquery/jquery.ui.core.js' type='text/javascript'>&lt;/script>
-&lt;script src='../src/jquery.dynatree.js' type='text/javascript'>&lt;/script>
-&lt;!-- Include a customized stylesheet: -->
-&lt;link href='custom-skin/ui.dynatree.css' rel='stylesheet' type='text/css' >
+&lt;script src="../jquery/jquery.js" type="text/javascript">&lt;/script>
+&lt;script src="../jquery/jquery-ui.custom.js" type="text/javascript">&lt;/script>
+&lt;script src="../src/jquery.dynatree.js" type="text/javascript">&lt;/script>
+&lt;!-- Include the basic stylesheet: -->
+&lt;link href="../src/skin-vista/ui.dynatree.css" rel="stylesheet" type="text/css">
+&lt;!-- Override CSS with a custom stylesheet : -->
+&lt;link href="skin-custom/custom.css" rel="stylesheet" type="text/css" >
 
-&lt;script type='text/javascript'>
+&lt;script type="text/javascript">
 	$(function(){
 		$("#tree").dynatree({
 			[&#8230;]
@@ -1676,7 +1727,18 @@ var dict = $("#tree").dynatree("getTree").toDict();
 </div>
 
 <p>
-	Changing the appearance and icons of single nodes is done by assigning a
+	Custom.css would include lines like this:
+</p>
+<pre class="prettyprint">
+.dynatree-has-children span.dynatree-icon
+{
+	background-position: 0 0;
+	background-image: url("doc_with_children.gif");
+}
+</pre>
+
+<p>
+	Changing the appearance and icons of <b>single nodes</b> is done by assigning a
 	custom class:
 </p>
 <pre class="prettyprint">
@@ -1699,16 +1761,18 @@ children: [
 <pre class="prettyprint">
 span.custom1 a
 {
-	background-color: maroon;
-	color: yellow;
+	background-color: #ffffbb;
+	color: maroon;
 }
 span.custom1 span.dynatree-icon
 {
-	background-image: url("doc_with_children.gif");
+	background-position: 0 0;
+	background-image: url("customDoc2.gif");
 }
 </pre>
 
 
+<h3>Translation</h3>
 <p>
 	Strings can be translated in the tree options:
 </p>

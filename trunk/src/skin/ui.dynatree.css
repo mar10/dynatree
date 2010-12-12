@@ -86,11 +86,11 @@ span.dynatree-drag-helper-img,
 /** Used by 'icon' node option: */
 ul.dynatree-container img
 {
-    width: 16px;
-    height: 16px;
-    margin-left: 3px;
-    vertical-align: top;
-    border-style: none;
+	width: 16px;
+	height: 16px;
+	margin-left: 3px;
+	vertical-align: top;
+	border-style: none;
 }
 
 
