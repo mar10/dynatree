@@ -2426,7 +2426,7 @@ TODO: better?
 //				.prependTo("body");
 			logMsg("Creating marker: %o", this.$dndMarker);
 		}
-/*		
+/*
 		if(hitMode === "start"){
 		}
 		if(hitMode === "stop"){
