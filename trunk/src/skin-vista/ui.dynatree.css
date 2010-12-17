@@ -78,7 +78,7 @@ span.dynatree-drag-helper-img,
 	background-repeat: no-repeat;
 	background-position: left;
 	background-image: url("icons.gif");
-	background-position: 0px 0px;
+	background-position: 0 0;
 }
 
 /** Used by 'icon' node option: */
@@ -158,6 +158,7 @@ span.dynatree-expander:hover
 }
 .dynatree-loading span.dynatree-expander  /* 'Loading' status overrides all others */
 {
+	background-position: 0 0;
 	background-image: url("loading.gif");
 }
 
