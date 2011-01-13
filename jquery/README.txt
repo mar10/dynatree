@@ -4,10 +4,10 @@ Dynatree 1.0
 Currently using 
 
 - jquery.js:
-  jQuery 1.4.2
+  jQuery 1.4.4
 
 - jquery-ui.custom.js:
-  jQuery UI 1.8.5 with 'UI Core' and 'Interactions' modules.
+  jQuery UI 1.8.7 with 'UI Core' and 'Interactions' modules.
   ('Widgets' and 'Effects' are not contained in this custom build)
   
 - jquery.min.js and jquery-ui.custom.min.js:
