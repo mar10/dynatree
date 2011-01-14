@@ -10,7 +10,7 @@
     
     See: http://dynatree.googlecode.com
     
-    Martin Wendt, 2009-2010
+    Martin Wendt, 2009-2011
     
     Usage:    
       1. Python 2.5 or later is required to run this server.
@@ -162,6 +162,9 @@ class DynaTreeWsgiApp(object):
         if depth > 1:
             print "'depth' mode: loading %s levels" % depth
 
+        # Return empty list when '&returnEmpty' is passed
+        returnEmpty = "returnEmpty" in argDict
+        
         # Eval 'mode' and 'key' arguments
         rootPath = self.optionDict["rootPath"]
         if argDict.get("mode") == "baseFolders":
@@ -176,7 +179,8 @@ class DynaTreeWsgiApp(object):
 
         # Get list of child nodes (may be recursive)
         childList = [ ]
-        self.makeChildList(argDict, folderPath, childList, depth)
+        if not returnEmpty:
+            self.makeChildList(argDict, folderPath, childList, depth)
         
         # Convert result list to a JSON string
         res = json.dumps(childList, encoding="Latin-1")

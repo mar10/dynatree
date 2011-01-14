@@ -44,7 +44,8 @@
 					   dataType: "jsonp", // Enable JSONP, so this sample can be run from the local file system against a localhost server
 					   data: {key: "",
 							  sleep: 1,
-							  depth: 3,
+//	                          returnEmpty: true,							  
+//							  depth: 3,
 							  mode: "baseFolders"
 							  },
 					   addExpandedKeyList: true // Send list of expanded keys, so the webservice can deliver these children also
@@ -55,6 +56,7 @@
 					 dataType: "jsonp", // Enable JSONP, so this sample can be run from the local file system against a localhost server
 					 data: {key: node.data.key,
 							sleep: 1,
+//							returnEmpty: true,
 							mode: "branch"
 							}
 				});
