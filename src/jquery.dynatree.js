@@ -224,7 +224,7 @@ DynaTreeNode.prototype = {
 		 * Make sure, that <li> order matches childList order.
 		 */
 		var cl = this.childList;
-		if( !cl ){
+		if( !cl || !this.ul ){
 			return;
 		}
 		var childLI = this.ul.firstChild;
