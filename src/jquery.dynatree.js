@@ -2,7 +2,7 @@
 	jquery.dynatree.js
 	Dynamic tree view control, with support for lazy loading of branches.
 
-	Copyright (c) 2008-2010, Martin Wendt (http://wwWendt.de)
+	Copyright (c) 2008-2011, Martin Wendt (http://wwWendt.de)
 	Dual licensed under the MIT or GPL Version 2 licenses.
 	http://code.google.com/p/dynatree/wiki/LicenseInfo
 
@@ -179,10 +179,12 @@ DynaTreeNode.prototype = {
 	},
 
 	_getInnerHtml: function() {
-		var opts = this.tree.options;
-		var cache = this.tree.cache;
-		var level = this.getLevel();
-		var res = "";
+		var tree = this.tree,
+			opts = tree.options,
+			cache = tree.cache,
+			level = this.getLevel(),
+			data = this.data,
+			res = "";
 		// connector (expanded, expandable or simple)
 		if( level < opts.minExpandLevel ) {
 			if(level > 1){
@@ -195,26 +197,33 @@ DynaTreeNode.prototype = {
 			res += cache.tagConnector;
 		}
 		// Checkbox mode
-		if( opts.checkbox && this.data.hideCheckbox !== true && !this.data.isStatusNode ) {
+		if( opts.checkbox && data.hideCheckbox !== true && !data.isStatusNode ) {
 			res += cache.tagCheckbox;
 		}
 		// folder or doctype icon
-		if ( this.data.icon ) {
-			res += "<img src='" + opts.imagePath + this.data.icon + "' alt='' />";
-		} else if ( this.data.icon === false ) {
+		if ( data.icon ) {
+			res += "<img src='" + opts.imagePath + data.icon + "' alt='' />";
+		} else if ( data.icon === false ) {
 			// icon == false means 'no icon'
 			noop(); // keep JSLint happy
 		} else {
 			// icon == null means 'default icon'
 			res += cache.tagNodeIcon;
 		}
-		// node name
-		var tooltip = this.data.tooltip ? " title='" + this.data.tooltip + "'" : "";
-		if( opts.noLink || this.data.noLink ) {
-			res += "<span style='display: inline-block;' class='" + opts.classNames.title + "'" + tooltip + ">" + this.data.title + "</span>";
-		}else{
-			res += "<a href='#' class='" + opts.classNames.title + "'" + tooltip + ">" + this.data.title + "</a>";
+		// node title
+		var nodeTitle = "";
+		if ( opts.onCustomRender ){
+			nodeTitle = opts.onCustomRender.call(tree, this) || "";
 		}
+		if(!nodeTitle){
+			var tooltip = data.tooltip ? " title='" + data.tooltip + "'" : "";
+			if( opts.noLink || data.noLink ) {
+				nodeTitle = "<span style='display: inline-block;' class='" + opts.classNames.title + "'" + tooltip + ">" + data.title + "</span>";
+			}else{
+				nodeTitle = "<a href='#' class='" + opts.classNames.title + "'" + tooltip + ">" + data.title + "</a>";
+			}
+		}
+		res += nodeTitle;
 		return res;
 	},
 
@@ -294,7 +303,6 @@ DynaTreeNode.prototype = {
 			}
 			// set node connector images, links and text
 			this.span.innerHTML = this._getInnerHtml();
-
 			// Set classes for current status
 			var cnList = [];
 			cnList.push(cn.node);
@@ -343,12 +351,17 @@ DynaTreeNode.prototype = {
 
 			// Hide children, if node is collapsed
 //			this.ul.style.display = ( this.bExpanded || !this.parent ) ? "" : "none";
+			// Allow tweaking, binding, ...
+			if(opts.onRender){
+				opts.onRender.call(this.tree, this, this.span);
+			}
 		}
-
+		// Visit child nodes
 		if( this.bExpanded && this.childList ) {
 			for(var i=0, l=this.childList.length; i<l; i++) {
 				this.childList[i].render();
 			}
+			// Make sure the tag order matches the child array
 			this._fixOrder();
 		}
 		// Hide children, if node is collapsed
@@ -683,7 +696,6 @@ DynaTreeNode.prototype = {
 		if ( fireEvents && opts.onQueryActivate && opts.onQueryActivate.call(this.tree, flag, this) === false ){
 			return; // Callback returned false
 		}
-
 		if( flag ) {
 			// Activate
 			if( this.tree.activeNode ) {
@@ -2869,6 +2881,8 @@ $.ui.dynatree.prototype.options = {
 	onSelect: null, // Callback(flag, dtnode) when a node is (de)selected.
 	onExpand: null, // Callback(dtnode) when a node is expanded/collapsed.
 	onLazyRead: null, // Callback(dtnode) when a lazy node is expanded for the first time.
+	onCustomRender: null, // Callback(dtnode) before a node is rendered. Return a HTML string to override.
+	onRender: null, // Callback(dtnode, nodeSpan) after a node was rendered.
 
 	// Drag'n'drop support
 	dnd: {
