@@ -6,7 +6,7 @@
 
 ==== Release 1.x ====
 
-===== 1.1.0 (not yet released) =====
+===== 1.1.0 =====
   * Expander icon disappeared while lazy loading (issue 167).
   * Allow empty lists when loading lazily (issue 168).
   * New callback `tree.onRender(node, span)` allows changing or binding after HTML markup was created.
