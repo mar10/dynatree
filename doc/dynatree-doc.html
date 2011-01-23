@@ -81,11 +81,10 @@
 </ul>
 
 <p class="info">
-	This document describes <strong>release 1.0</strong>.<br>
+	This document describes <strong>release 1.x</strong>.<br>
 	If you are updating from version 0.5 please read the
 	<a href="http://code.google.com/p/dynatree/wiki/UpdateToVersion10">migration hints</a>
-	first.<br>
-	Also, the <a href="http://wwWendt.de/tech/dynatree-0.5/doc/dynatree-doc.html">0.5 documentation</a> is  still available.
+	first.
 </p>
 
 <!-- jquery.planize will generate a TOC here: -->
@@ -1242,6 +1241,10 @@ $("#tree").dynatree("option", "fx", { height: "toggle", duration: 200 }); </pre>
 		If key is null, the current activation is removed.<br>
 		Return the active DynaTreeNode.
 	</dd>
+	<dt>count()
+	<dd>
+		Return the number of nodes.
+	</dd>
 	<dt>disable()
 	<dd>
 		Disable input for the tree and display gray. This is a shortcut for
@@ -1339,8 +1342,8 @@ tree.enableUpdate(prevMode);</pre>
 	</dd>
 	<dt>redraw()
 	<dd>
-		Render the whole tree.
-		See <code>node.redraw()</code> for details.
+		Render all visible nodes.
+		See <code>node.render()</code> for details.
 	</dd>
 	<dt>reload()
 	<dd>
@@ -1350,6 +1353,15 @@ tree.enableUpdate(prevMode);</pre>
 		This will <strong>not</strong> work, if the tree was loaded from an embedded
 		&lt;UL> element, because these elements are removed after they have been
 		rendered.
+	</dd>
+	<dt>renderInvisibleNodes()
+	<dd>
+		Force immediate HTML creation for all nodes, even if inside collapsed
+		branches.
+		This may be useful, if we want to bind events or otherwise must access
+		these HTML elements.<br>
+		It will however degrade performance, especially on large trees!<br>
+		See <code>node.render()</code> for details.
 	</dd>
 	<dt>selectKey(key, flag)
 	<dd>
@@ -1425,6 +1437,10 @@ node.addChild({title: "New Node", key: "3333"});
 		<code>children</code> object.<br>
 		Use the <code>setLazyNodeStatus()</code> function to display the result.<br>
 		See <a href="#lazyLoading">Loading child nodes on demand ('lazy loading')</a> for details.
+	</dd>
+	<dt>countChildren()</dt>
+	<dd>
+		Return the number of child nodes.
 	</dd>
 	<dt>deactivate()</dt>
 	<dd>
@@ -1542,14 +1558,24 @@ node.addChild({title: "New Node", key: "3333"});
 	<dd>
 		Remove all child nodes and descendents.
 	</dd>
-	<dt>render(useEffects)
+	<dt>render(useEffects, includeInvisible)
 	<dd>
-		Redraw this nodes with current attributes. All HTML markup is updated
+		Redraw this node with current attributes. All HTML markup is updated
 		and class names are added according to current status.<br>
 		If this node is expanded, markup for children is recursively generated
-		as well.<br>
-		Set <code>useEffects</code> to false to prevent expand effects, which
-		would be applied asyncheonusliy.<br>
+		as well.
+		<ul>
+		<li><code>useEffects</code>:<br>
+			(default: false) Set to false to prevent animated expand effects,
+			which would be applied asynchronously.
+		<li><code>includeInvisible</code>:<br>
+			(default: false) Force HTML creation for all descendants, even if
+			inside a collapsed branch.<br>
+			This may be useful, if we want to bind events or otherwise access
+			these HTML elements. It will however degrade performance, especially
+			on large trees.
+		</ul>
+		<br>
 		Most of the time, there is no need to call this explicitly, since it is
 		internally called on state changes.
 	</dd>

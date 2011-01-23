@@ -64,6 +64,13 @@
 			for(var i = 0; i<root.childList.length; i++)
 				root.childList[i].removeChildren();
 		});
+		$("#btnRenderAll").click(function(){
+			var tree = $("#tree").dynatree("getTree");
+			var count = tree.count();
+			logMsg("Benchmarking node creation for " + count + " nodes...");
+			tree.renderInvisibleNodes();
+			logMsg("Benchmarking node creation for " + count + " nodes done.");
+		});
 	});
 
 	function addNodes(node, level1, level2, level3, forceUpdate) {
@@ -108,6 +115,7 @@
 	</p>
 	<p>
 		<button id="btnClear">remove children</button>
+		<button id="btnRenderAll">Create HTML markup for all nodes</button>
 	</p>
 	<!-- Start_Exclude: This block is not part of the sample code -->
 	<hr>
