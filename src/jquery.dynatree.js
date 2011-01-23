@@ -18,7 +18,7 @@
 *************************************************************************/
 
 // Note: We currently allow eval() to parse the 'data' attribtes, when initializing from HTML.
-/*jslint laxbreak: true, browser: true, evil: true */
+/*jslint laxbreak: true, browser: true, evil: true, indent: 0, white: false, onevar: false */
 
 /*************************************************************************
  *	Debug functions
