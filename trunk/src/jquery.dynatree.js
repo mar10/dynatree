@@ -498,7 +498,7 @@ DynaTreeNode.prototype = {
 			return;
 		}
 		cmp = cmp || function(a, b) {
-			return a.data.title === b.data.title ? 0 : a.data.title > b.data.title;
+			return a.data.title === b.data.title ? 0 : a.data.title > b.data.title ? 1 : -1;
 			};
 		cl.sort(cmp);
 		if( deep ){
