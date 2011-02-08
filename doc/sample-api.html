@@ -154,7 +154,13 @@
 		});
 		$("#btnSortActive").click(function(){
 			var node = $("#tree").dynatree("getActiveNode");
-			node.sortChildren();
+			// Custom compare function (optional) that sorts case insensitive
+	        var cmp = function(a, b) {
+				a = a.data.title.toLowerCase();
+				b = b.data.title.toLowerCase();
+	            return a > b ? 1 : a < b ? -1 : 0;
+	        };
+			node.sortChildren(cmp, false);
 		});
 		$("#btnSortAll").click(function(){
 			var node = $("#tree").dynatree("getRoot");
