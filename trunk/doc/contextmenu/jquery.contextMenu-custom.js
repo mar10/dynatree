@@ -1,6 +1,6 @@
 // jQuery Context Menu Plugin
 //
-// Version 1.01
+// Version 1.01 customized version (see comment below)
 //
 // Cory S.N. LaViska
 // A Beautiful Site (http://abeautifulsite.net/)
@@ -11,6 +11,11 @@
 //
 // This plugin is dual-licensed under the GNU General Public License
 //   and the MIT License and is copyright A Beautiful Site, LLC.
+//
+// 2011-02-17 Martin Wendt: 
+//            Changed stopPropagation() to preventDefault() in order to make it
+//            work with Dynatree drag'n'drop.  
+//            See http://code.google.com/p/dynatree/issues/detail?id=174
 //
 if(jQuery)( function() {
 	$.extend($.fn, {
@@ -32,9 +37,11 @@ if(jQuery)( function() {
 				// Simulate a true right click
 				$(this).mousedown( function(e) {
 					var evt = e;
-					evt.stopPropagation();
+//					evt.stopPropagation();
+					evt.preventDefault();
 					$(this).mouseup( function(e) {
-						e.stopPropagation();
+//						e.stopPropagation();
+						e.preventDefault();
 						var srcElement = $(this);
 						$(this).unbind('mouseup');
 						if( evt.button == 2 ) {
