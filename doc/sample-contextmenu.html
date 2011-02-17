@@ -12,7 +12,7 @@
 	<script src="../src/jquery.dynatree.js" type="text/javascript"></script>
 
 	<!-- jquery.contextmenu,  A Beautiful Site (http://abeautifulsite.net/) -->
-	<script src="contextmenu/jquery.contextMenu.js" type="text/javascript"></script>
+	<script src="contextmenu/jquery.contextMenu-custom.js" type="text/javascript"></script>
 	<link href="contextmenu/jquery.contextMenu.css" rel="stylesheet" type="text/css" >
 
 	<!-- Start_Exclude: This block is not part of the sample code -->
@@ -149,7 +149,23 @@
 					}
 					break;
 				}
+			},
+		/* D'n'd, just to show it's compatible with a context menu.
+		   See http://code.google.com/p/dynatree/issues/detail?id=174 */
+		dnd: {
+			preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
+			onDragStart: function(node) {
+				return true;
+			},
+			onDragEnter: function(node, sourceNode) {
+				if(node.parent !== sourceNode.parent)
+					return false;
+				return ["before", "after"];
+			},
+			onDrop: function(node, sourceNode, hitMode, ui, draggable) {
+				sourceNode.move(node, hitMode);
 			}
+		}
 		});
 		// Add context menu handler to tree nodes
 		bindContextMenu();
