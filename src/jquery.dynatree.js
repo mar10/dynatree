@@ -1089,7 +1089,7 @@ DynaTreeNode.prototype = {
 			}
 		}
 		// Make sure that clicks stop, otherwise <a href='#'> jumps to the top
-		return false;
+		event.preventDefault();
 	},
 
 	_onDblClick: function(event) {
@@ -1179,6 +1179,9 @@ DynaTreeNode.prototype = {
 		}
 		// Return false, if handled, to prevent default processing
 		return !handled;
+		if(handled){
+			event.preventDefault();
+		}
 	},
 
 	_onKeypress: function(event) {
