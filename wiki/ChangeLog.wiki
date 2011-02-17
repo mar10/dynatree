@@ -6,6 +6,12 @@
 
 ==== Release 1.x ====
 
+===== 1.1.1 (not yet released) =====
+  * Enable event bubbling in click events (issue 181)
+  * Sample that combines context menu with drag'n'drop (issue 174).
+  * Fixed sortChildren() on Safari (issue 180)
+  * Removed debug messages (issue 178)
+
 ===== 1.1.0 =====
   * Expander icon disappeared while lazy loading (issue 167).
   * Allow empty lists when loading lazily (issue 168).
