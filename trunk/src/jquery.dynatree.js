@@ -1178,7 +1178,7 @@ DynaTreeNode.prototype = {
 				handled = false;
 		}
 		// Return false, if handled, to prevent default processing
-		return !handled;
+//		return !handled;
 		if(handled){
 			event.preventDefault();
 		}
