@@ -1473,7 +1473,9 @@ DynaTreeNode.prototype = {
 			this.childList = [];
 		} else if( ! beforeNode ) {
 			// Fix 'lastsib'
-			$(this.childList[this.childList.length-1].span).removeClass(opts.classNames.lastsib);
+			if(this.childList.length > 0) {
+				$(this.childList[this.childList.length-1].span).removeClass(opts.classNames.lastsib);
+			}
 		}
 		if( beforeNode ) {
 			var iBefore = $.inArray(beforeNode, this.childList);
