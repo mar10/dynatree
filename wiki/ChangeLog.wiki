@@ -11,6 +11,7 @@
   * Sample that combines context menu with drag'n'drop (issue 174).
   * Fixed sortChildren() on Safari (issue 180)
   * Removed debug messages (issue 178)
+  * Fixed source pretty printing for IE.
 
 ===== 1.1.0 =====
   * Expander icon disappeared while lazy loading (issue 167).
