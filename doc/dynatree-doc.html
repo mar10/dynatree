@@ -1618,11 +1618,11 @@ node.addChild({title: "New Node", key: "3333"});
 		Sort child list by title.<br>
 		<code>cmd</code>: optional compare function. If ommitted sorting is done by node titles.<br>
 		<code>deep</code>: optional: pass true to sort all descendant nodes.<br>
-        Example<pre class="prettyprint">// Custom compare function (optional) that sorts case insensitive
+		Example<pre class="prettyprint">// Custom compare function (optional) that sorts case insensitive
 var cmp = function(a, b) {
-    a = a.data.title.toLowerCase();
-    b = b.data.title.toLowerCase();
-    return a > b ? 1 : a < b ? -1 : 0;
+	a = a.data.title.toLowerCase();
+	b = b.data.title.toLowerCase();
+	return a > b ? 1 : a < b ? -1 : 0;
 };
 node.sortChildren(cmp, false);</pre>
 	</dd>
