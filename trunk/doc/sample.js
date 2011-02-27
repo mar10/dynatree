@@ -25,7 +25,7 @@ function initCodeSamples()
 					// Format code samples
 					try {
 						prettyPrint();
-					} catch (e) { 
+					} catch (e) {
 						alert(e);
 					}
 				}, "html");
