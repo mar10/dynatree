@@ -262,7 +262,7 @@ DynaTreeNode.prototype = {
 		 *   </ul>
 		 * </li>
 		 */
-//		this.tree.logDebug("%s.render(%s)", this, useEffects);
+		this.tree.logDebug("%s.render(%s)", this, useEffects);
 		// ---
 		var tree = this.tree,
 			parent = this.parent,
@@ -550,7 +550,7 @@ DynaTreeNode.prototype = {
 				this._setStatusNode(null);
 				$(this.span).removeClass(this.tree.options.classNames.nodeLoading);
 				this.isLoading = false;
-				this.render();
+//				this.render();
 				if( this.tree.options.autoFocus ) {
 					if( this === this.tree.tnRoot && this.childList && this.childList.length > 0) {
 						// special case: using ajaxInit
