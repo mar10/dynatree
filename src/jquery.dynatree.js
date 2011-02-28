@@ -262,7 +262,7 @@ DynaTreeNode.prototype = {
 		 *   </ul>
 		 * </li>
 		 */
-		this.tree.logDebug("%s.render(%s)", this, useEffects);
+//		this.tree.logDebug("%s.render(%s)", this, useEffects);
 		// ---
 		var tree = this.tree,
 			parent = this.parent,
