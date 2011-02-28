@@ -50,6 +50,7 @@ When updating from version 0.5 to 1.0, the following aspects have changed and ma
   * Added a new 'skin-vista'
   * node.appendAjax() triggers event 'nodeLoaded.dynatree.tree-id.node-key'
   * CSS ul.dynatree-container now uses `overflow: auto` by default
+  * The functions<br>`  var tree = $("#elem").dynatree("getTree");`<br>and<br>`  var node = $("#elem").dynatree("getRoot");`<br>used to return `null`, when the tree was not initialized. Now they return an object.
 
 
 === Markup has changed ===
