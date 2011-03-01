@@ -254,11 +254,11 @@ DynaTreeNode.prototype = {
 		/**
 		 * Create <li><span>..</span> .. </li> tags for this node.
 		 *
-		 * <li id='key'> // This div contains the node's span and list of child div's.
+		 * <li id='KEY' dtnode=NODE> // This div contains the node's span and list of child div's.
 		 *   <span class='title'>S S S A</span> // Span contains graphic spans and title <a> tag
 		 *   <ul> // only present, when node has children
-		 *       <li>child1</li>
-		 *       <li>child2</li>
+		 *       <li id='KEY' dtnode=NODE>child1</li>
+		 *       <li id='KEY' dtnode=NODE>child2</li>
 		 *   </ul>
 		 * </li>
 		 */
@@ -2054,21 +2054,9 @@ DynaTree.prototype = {
 		// We don't do this however, if we try to load from an embedded UL element.
 		if( opts.children || (opts.initAjax && opts.initAjax.url) || opts.initId ){
 			$(this.divTree).empty();
-		}else if( this.divRoot ){
-			$(this.divRoot).remove();
 		}
-/*
-		// create the root element
-		this.tnRoot = new DynaTreeNode(null, this, {title: opts.title, key: "root"});
-		this.tnRoot.data.isFolder = true;
-		this.tnRoot.render(false, false);
-		this.divRoot = this.tnRoot.div;
-		this.divRoot.className = opts.classNames.container;
+		var $ulInitialize = this.$tree.find(">ul:first").hide();
 
-		// add root to container
-		// TODO: this should be delayed until all children have been created for performance reasons
-		this.divTree.appendChild(this.divRoot);
-*/
 		// Create the root element
 		this.tnRoot = new DynaTreeNode(null, this, {});
 		this.tnRoot.bExpanded = true;
@@ -2099,9 +2087,9 @@ DynaTree.prototype = {
 
 		} else {
 			// Init tree from the first UL element inside the container <div>
-			var $ul = this.$tree.find(">ul:first").hide();
-			this._createFromTag(root, $ul);
-			$ul.remove();
+//			var $ul = this.$tree.find(">ul:first").hide();
+			this._createFromTag(root, $ulInitialize);
+			$ulInitialize.remove();
 		}
 
 		this._checkConsistency();
