@@ -326,7 +326,7 @@ $("#tree").dynatree({
 	<strong>Details:</strong>
 </p>
 <dl class="optionList">
-	<dt>classNames
+	<dt>opts.classNames
 	<dd>
 		Type: <code>dictionary</code>, default: <code>$.ui.dynatree.defaults.classNames</code>.<br>
 		Override class names, that are used, when rendering the HTML markup.<br>
@@ -341,7 +341,7 @@ $("#tree1").dynatree({
 	[...]
 </pre>
 	</dd>
-	<dt>clickFolderMode
+	<dt>opts.clickFolderMode
 	<dd>
 		Type: <code>integer</code>, default: <code>3</code>.<br>
 		Define, how a mouse click will change a folder status.
@@ -354,7 +354,7 @@ $("#tree1").dynatree({
 		<li>Single-clicking a folder title will activate and expand it.
 		</ol>
 	</dd>
-	<dt>persist
+	<dt>opts.persist
 	<dd>
 		Type: <code>boolean</code>, default: <code>false</code>.<br>
 		True: the tree's expansion, activation, focus and selection state is saved
@@ -445,11 +445,11 @@ onActivate: function(node) {
 	<strong>Details:</strong>
 </p>
 <dl class="optionList">
-	<dt>activate
+	<dt>data.activate
 	<dd>
 		If set to true, the node will be initially activated.
 	</dd>
-	<dt>addClass
+	<dt>data.addClass
 	<dd>
 		Class name that is added to the node's &lt;span> element.<br>
 		Example:
@@ -459,20 +459,20 @@ onActivate: function(node) {
 		can be styled using css as
 		<pre class="prettyprint">span.customClass1 a { background-color: maroon; color: yellow; }</pre>
 	</dd>
-	<dt>children
+	<dt>data.children
 	<dd>
 		Array of node options, that are used to generate child nodes.<br>
 		This option is only valid when passed to certain functions, like <code>DynTreeNode.addChild()</code>.
 	</dd>
-	<dt>expand
+	<dt>data.expand
 	<dd>
 		If set to true, the node will be initially expanded.
 	</dd>
-	<dt>focus
+	<dt>data.focus
 	<dd>
 		If set to true, the node will be initially focused.
 	</dd>
-	<dt>hideCheckbox
+	<dt>data.hideCheckbox
 	<dd>
 		Suppress display of checkbox icon.<br>
 		It is still possible to (de)select the node using the API, keyboard or
@@ -480,24 +480,24 @@ onActivate: function(node) {
 		style.)<br>
 		See also <code>unselectable</code>.
 	</dd>
-	<dt>icon
+	<dt>data.icon
 	<dd>
 		Optional name of an image file relative to the image directory. <br>
 		If <i>null</i> specified, a default image is used depending on the node type (folder
 		or document). This is the default.<br>
 		If <i>false</i> specified, no image is displayed.
 	</dd>
-	<dt>isFolder
+	<dt>data.isFolder
 	<dd>
 		Marks node as folder (treated as a document otherwise).<br>
 		See <a href="#foldersAndDocs">Folders and Documents</a>
 	</dd>
-	<dt>isLazy
+	<dt>data.isLazy
 	<dd>
 		Enables delayed loading of the node contents. When a lazy node is expanded
 		for the first time, the onLazyRead() callback is called.
 	</dd>
-	<dt>key
+	<dt>data.key
 	<dd>
 		Uniquely identifies this node. It is optional, but we need it for some
 		functions like <code>tree.activateKey()</code>.<br>
@@ -505,21 +505,21 @@ onActivate: function(node) {
 		like this: <code>dynatree-id-<i>1234</i></code>.<br>
 		If <i>not</i> specified, a random key id is generated.
 	</dd>
-	<dt>select
+	<dt>data.select
 	<dd>
 		If set to true, the node will be initially selected.
 	</dd>
-	<dt>title
+	<dt>data.title
 	<dd>
 		Type: string, default: "".<br>
 		Displayed name of the node (html markup is allowed here).
 	</dd>
-	<dt>tooltip
+	<dt>data.tooltip
 	<dd>
 		Optional string to display in a popup window when the cursor hovers over
 		the node.
 	</dd>
-	<dt>unselectable
+	<dt>data.unselectable
 	<dd>
 		Prevent (de)selection of this node using API, mouse, and keyboard.<br>
 		It is still possible, to (de)select this node in the initialization data
@@ -738,26 +738,118 @@ onActivate: function(node) {
 
 <h3><code>DynaTree</code> callbacks</h3>
 
+The <code>this</code> context is set to the tree object.
+
 <dl class="optionList">
-	<dt>onCustomRender(node)
-	<dd>
-		Called before a node's title HTML tag will be created.
-		This happens when a node becomes visible for the first time.<br>
-		This callback may return a string that will be used instead of the
-		default HTML markup.
-		<pre class="prettyprint">onCustomRender: function(node) {
-	return "&lt;span class='dynatree-title'>SPAM&lt;/span>"
+    <dt>opts.onQueryActivate(flag, node)
+    <dd>
+    Called before a node is (de)activated. Return <code>false</code> to prevent
+    this.
+    </dd>
+    
+    <dt>opts.onQuerySelect(flag, node)
+    <dd>
+    Called before a node is (de)selected. Return <code>false</code> to prevent
+    this.
+    </dd>
+    
+    <dt>opts.onQueryExpand(flag, node)
+    <dd>
+    Called before a node is expanded/collapsed. Return <code>false</code> to prevent
+    this.
+    </dd>
+    
+    <dt>opts.onPostInit(isReloading, isError)
+    <dd>
+    Called when the tree was (re)loaded.
+    </dd>
+    
+    <dt>opts.onActivate(node)
+    <dd>
+    Called when a node was activated.
+    </dd>
+    
+    <dt>opts.onDeactivate(node)
+    <dd>
+    Called when a node was deactivated.
+    </dd>
+    
+    <dt>opts.onSelect(flag, node)
+    <dd>
+    Called when a node was (de)selected.
+    </dd>
+    
+    <dt>opts.onExpand(flag, node)
+    <dd>
+    Called when a node was expanded/collapsed.
+    </dd>
+    
+    <dt>opts.onLazyRead(node)
+    <dd>
+    Called when a lazy node is expanded for the first time.
+    </dd>
+    
+    <dt>opts.onCustomRender(node)
+    <dd>
+        Called before a node's title HTML tag will be created.
+        This happens when a node becomes visible for the first time.<br>
+        This callback may return a string that will be used instead of the
+        default HTML markup.
+        <pre class="prettyprint">onCustomRender: function(node) {
+    return "&lt;span class='dynatree-title'>SPAM&lt;/span>"
 }</pre>
-	</dd>
-	<dt>onRender(node, nodeSpan)
-	<dd>
-		Called after a node's HTML tag was created. This happens when a node
-		becomes visible for the first time.<br>
-		This callback may be used to modify the HTML markup, or bind events.
-		<pre class="prettyprint">onRender: function(node, nodeSpan) {
-	$(nodeSpan).find("a.dynatree-title").css("color", "red");
+    </dd>
+
+    <dt>opts.onRender(node, nodeSpan)
+    <dd>
+        Called after a node's HTML tag was created. This happens when a node
+        becomes visible for the first time.<br>
+        This callback may be used to modify the HTML markup, or bind events.
+        <pre class="prettyprint">onRender: function(node, nodeSpan) {
+    $(nodeSpan).find("a.dynatree-title").css("color", "red");
 }</pre>
-	</dd>
+    </dd>
+
+    <dt>opts.dnd.onDragStart(sourceNode)
+    <dd>
+    This function <i>must</i> be defined to enable dragging for the tree.
+    Return <code>false</code> to cancel dragging of node.
+    </dd>
+
+    <dt>opts.dnd.onDragStop(sourceNode)
+    <dd>
+    </dd>
+
+    <dt>opts.dnd.onDragEnter(targetNode, sourceNode)
+    <dd>
+    Return <code>true</code> to make tree nodes accept dropping of draggables.
+    </dd>
+
+    <dt>opts.dnd.onDragOver(targetNode, sourceNode, hitMode)
+    <dd>
+    </dd>
+
+    <dt>opts.dnd.onDrop(targetNode, sourceNode, hitMode)
+    <dd>
+    This function <i>must</i> be defined to enable dropping of items on the tree.
+    </dd>
+
+    <dt>opts.dnd.onDragLeave(targetNode, sourceNode)
+    <dd>
+    </dd>
+
+    <dt>ajaxOptions.success(node)
+    <dd>
+    (Passed as argument to <code>node.appendAjax(...)</code>.)<br>
+    Called after nodes have been created and the waiting icon was removed.
+    'this' is the options for this Ajax request
+    </dd>
+
+    <dt>ajaxOptions.error(node, XMLHttpRequest, textStatus, errorThrown)
+    <dd>
+    (Passed as argument to <code>node.appendAjax(...)</code>.)<br>
+    </dd>
+
 </dl>
 
 
@@ -1234,27 +1326,27 @@ $("#tree").dynatree("option", "fx", { height: "toggle", duration: 200 }); </pre>
 <h3><code>DynaTree</code> class members</h3>
 
 <dl class="optionList">
-	<dt>activateKey(key)
+	<dt>tree.activateKey(key)
 	<dd>
 		Activate and focus node with a given key and fire focus and activate events.<br>
 		If <code>activeVisible</code> option is set, all parents will be expanded as necessary.<br>
 		If key is null, the current activation is removed.<br>
 		Return the active DynaTreeNode.
 	</dd>
-	<dt>count()
+	<dt>tree.count()
 	<dd>
 		Return the number of nodes.
 	</dd>
-	<dt>disable()
+	<dt>tree.disable()
 	<dd>
 		Disable input for the tree and display gray. This is a shortcut for
 		<code>$("#tree").dynatreee("disable")</code>.
 	</dd>
-	<dt>enable()
+	<dt>tree.enable()
 	<dd>
 		Complement to <code>tree.disable()</code>.
 	</dd>
-	<dt>enableUpdate(enable)
+	<dt>tree.enableUpdate(enable)
 	<dd>
 		Turn rendering on or off and return the previous mode.
 		Disabling update may speedup processing, when adding lots of nodes.<br>
@@ -1263,55 +1355,55 @@ $("#tree").dynatree("option", "fx", { height: "toggle", duration: 200 }); </pre>
 [...]
 tree.enableUpdate(prevMode);</pre>
 	</dd>
-	<dt>getActiveNode()
+	<dt>tree.getActiveNode()
 	<dd>
 		Return the currently active DynaTreeNode or null.
 	</dd>
-	<dt>getNodeByKey(key)
+	<dt>tree.getNodeByKey(key)
 	<dd>
 		Return DynaTreeNode with a given key or 'null' if not found.
 	</dd>
-	<dt>getPersistData()
+	<dt>tree.getPersistData()
 	<dd>
 		Return cookie persistence info as dictionary.<br>
 		There is also a global function available:
 		<code>getDynaTreePersistData(cookieId, cookieOpts)</code>.
 	</dd>
-	<dt>getRoot()
+	<dt>tree.getRoot()
 	<dd>
 		Return the <i>invisible</i> root DynaTreeNode object.
 		All visible toplevel nodes are children of this system node.
 	</dd>
-	<dt>getSelectedNodes(stopOnParents)
+	<dt>tree.getSelectedNodes(stopOnParents)
 	<dd>
 		Return a list of currently selected DynaTreeNodes (may be an empty array).<br>
 		If stopOnParents is set to <code>true</code>, children of selected nodes
 		are skipped. This may be convenient in selectMode:3 (multi-hier).
 	</dd>
-	<dt>initialize()
+	<dt>tree.initialize()
 	<dd>
 		Constructor (internal use).
 	</dd>
-	<dt>isInitializing()
+	<dt>tree.isInitializing()
 	<dd>
 		Return true, if the tree is in the init phase.<br>
 		Use this function in an event handler, to check if the event was fired
 		during a page reload, when the cookie persistence is applied.
 	</dd>
-	<dt>isReloading()
+	<dt>tree.isReloading()
 	<dd>
 		Return true, if the tree is in the init phase and persistence is on,
 		and the current status was read from existing cookies.<br>
 		Use this function in an event handler, to check if the event was fired
 		during a page reload, when the cookie persistence is applied.
 	</dd>
-	<dt>isUserEvent()
+	<dt>tree.isUserEvent()
 	<dd>
 		Return true, if the tree is processing a user event.<br>
 		Use this function in an event handler, to check if the event was fired
 		in response to a mouse click or key stroke.
 	</dd>
-	<dt>loadKeyPath(keyPath, callback)
+	<dt>tree.loadKeyPath(keyPath, callback)
 	<dd>
 		Make sure that a node with a given ID is loaded, by traversing - and
 		loading - its parents. This method is ment for lazy hierarchies.<br>
@@ -1330,22 +1422,22 @@ tree.enableUpdate(prevMode);</pre>
 	}
 });</pre>
 	</dd>
-	<dt>logDebug(msg), logInfo(msg), logWarning(msg)
+	<dt>tree.logDebug(msg), logInfo(msg), logWarning(msg)
 	<dd>
 		(Internal use).
 	</dd>
-	<dt>reactivate(setFocus)
+	<dt>tree.reactivate(setFocus)
 	<dd>
 		Fire onQueryActivate and onActivate events for the currently active node
 		(if there is one).<br>
 		This may be useful when processing an onPostInit callback.
 	</dd>
-	<dt>redraw()
+	<dt>tree.redraw()
 	<dd>
 		Render all visible nodes.
 		See <code>node.render()</code> for details.
 	</dd>
-	<dt>reload()
+	<dt>tree.reload()
 	<dd>
 		Reload the the tree.<br>
 		For lazy trees this is done, by re-submitting the Ajax request that was
@@ -1354,7 +1446,7 @@ tree.enableUpdate(prevMode);</pre>
 		&lt;UL> element, because these elements are removed after they have been
 		rendered.
 	</dd>
-	<dt>renderInvisibleNodes()
+	<dt>tree.renderInvisibleNodes()
 	<dd>
 		Force immediate HTML creation for all nodes, even if inside collapsed
 		branches.
@@ -1363,12 +1455,12 @@ tree.enableUpdate(prevMode);</pre>
 		It will however degrade performance, especially on large trees!<br>
 		See <code>node.render()</code> for details.
 	</dd>
-	<dt>selectKey(key, flag)
+	<dt>tree.selectKey(key, flag)
 	<dd>
 		Select or deselect node with a given key and fire focus and select events.<br>
 		Return the selected DynaTreeNode.
 	</dd>
-	<dt>serializeArray(stopOnParents)
+	<dt>tree.serializeArray(stopOnParents)
 	<dd>
 		Return selected nodes as array of <code>{name: 'TreeName', value: 'NodeKey'}</code>
 		objects, where name is the 'name' attribute of the tree's &lt;div> element.<br>
@@ -1376,12 +1468,12 @@ tree.enableUpdate(prevMode);</pre>
 		function and may be used in $.post() calls.<br>
 		See also the 'form' sample in the Example Browser.
 	</dd>
-	<dt>toDict()
+	<dt>tree.toDict()
 	<dd>
 		Convert the tree into a JavaScript object.<br>
 		See <code>node.toDict()</code> for details.
 	</dd>
-	<dt>visit(fn, includeRoot)
+	<dt>tree.visit(fn, includeRoot)
 	<dd>
 		Call <code>fn(node)</code> for all nodes.<br>
 		Stop iteration, if fn() returns false.
@@ -1400,17 +1492,17 @@ tree.enableUpdate(prevMode);</pre>
 		For example <code>node.data.title</code> or <code>node.data.tooltip</code>.
 		See also <a href="#nodeOptions">Node options</a>.
 	</dd>
-	<dt>activate()</dt>
+	<dt>node.activate()</dt>
 	<dd>
 		Activate this node - according to flag - and fire a onActivate event.<br>
 		If <code>activeVisible</code> option is set, all parents will be expanded as necessary.<br>
 		Focus is <em>not</em> set.
 	</dd>
-	<dt>activateSilently()</dt>
+	<dt>node.activateSilently()</dt>
 	<dd>
 		Same as <code>activate()</code>, but does not fire events.
 	</dd>
-	<dt>addChild(nodeData[, beforeNode])</dt>
+	<dt>node.addChild(nodeData[, beforeNode])</dt>
 	<dd>
 		Append a new child node.<br>
 		<i>nodeData</i> may be a node data object as defined in
@@ -1428,7 +1520,7 @@ node.addChild({title: "New Node", key: "3333"});
 		or omitted, the new node will be appended.)
 	</dd>
 
-	<dt>appendAjax(ajaxOptions)</dt>
+	<dt>node.appendAjax(ajaxOptions)</dt>
 	<dd>
 		Accepts a standard jQuery Ajax option object.<br>
 		An asynchronous request is started, so this function returns immediately.
@@ -1438,40 +1530,40 @@ node.addChild({title: "New Node", key: "3333"});
 		Use the <code>setLazyNodeStatus()</code> function to display the result.<br>
 		See <a href="#lazyLoading">Loading child nodes on demand ('lazy loading')</a> for details.
 	</dd>
-	<dt>countChildren()</dt>
+	<dt>node.countChildren()</dt>
 	<dd>
 		Return the number of child nodes.
 	</dd>
-	<dt>deactivate()</dt>
+	<dt>node.deactivate()</dt>
 	<dd>
 		Deactivate this node and fire an onDeactivate event.
 	</dd>
-	<dt>expand(flag)</dt>
+	<dt>node.expand(flag)</dt>
 	<dd>
 		Expand or collapse this node - according to flag.
 	</dd>
-	<dt>focus()</dt>
+	<dt>node.focus()</dt>
 	<dd>
 		Set focus to this node. Parent nodes are expanded, if this is necessary
 		to make it visible.
 	</dd>
-	<dt>getEventTargetType(event)</dt>
+	<dt>node.getEventTargetType(event)</dt>
 	<dd>
 		Return the part of a node, that a click event occurred on.<br>
 		Possible values: 'prefix' 'expander', 'checkbox', 'title'.<br>
 		<code>null</code> is returned else.<br>
 		Note: there is no check, if the event was fired on <strong>this</strong> node.
 	</dd>
-	<dt>getLevel()
+	<dt>node.getLevel()
 	<dd>
 		Return the depth (i.e. number of parent nodes).<br>
 		0 is returned for the root node.
 	</dd>
-	<dt>getChildren()
+	<dt>node.getChildren()
 	<dd>
 		Return list of child nodes or <code>null</code>.
 	</dd>
-	<dt>hasChildren()
+	<dt>node.hasChildren()
 	<dd>
 		Return <code>true</code>, if node has child nodes.<br>
 		For lazy nodes that have not yet been loaded, <code>undefined</code> is
@@ -1479,52 +1571,52 @@ node.addChild({title: "New Node", key: "3333"});
 		A test for 'node is surely empty' would be coded like
 		<pre class="prettyprint">if(node.hasChildren() === false) ...</pre>
 	</dd>
-	<dt>isActive()
+	<dt>node.isActive()
 	<dd>
 		Return true, if this node is activated. Only one tree node may be active
 		at any time.
 	</dd>
-	<dt>isFocused()
+	<dt>node.isFocused()
 	<dd>
 		Return true, if this node is has the focus.
 	</dd>
-	<dt>isChildOf(otherNode)
+	<dt>node.isChildOf(otherNode)
 	<dd>
 		Return true, if this node is a <i>direct</i> child of
 		<code>otherNode</code>.
 	</dd>
-	<dt>isDescendantOf(otherNode)
+	<dt>node.isDescendantOf(otherNode)
 	<dd>
 		Return true, if this node is a descendent (direct or indirect child) of
 		<code>otherNode</code>.
 	</dd>
-	<dt>isFirstSibling()
+	<dt>node.isFirstSibling()
 	<dd>
 		Return true, if this node is the first of all children of the current parent.
 	</dd>
-	<dt>isLastSibling()
+	<dt>node.isLastSibling()
 	<dd>
 		Return true, if this node is the last of all children of the current parent.
 	</dd>
-	<dt>isSelected()
+	<dt>node.isSelected()
 	<dd>
 		Return true, if the node is selected.
 	</dd>
-	<dt>isStatusNode()
+	<dt>node.isStatusNode()
 	<dd>
 		Return true, if this is an temporary status node. Status nodes are
 		created while loading lazy data, to display a throbber or error
 		condition.
 	</dd>
-	<dt>isVisible()
+	<dt>node.isVisible()
 	<dd>
 		Return true, if the node is visible, i.e. all parents are expanded.
 	</dd>
-	<dt>makeVisible()
+	<dt>node.makeVisible()
 	<dd>
 		Expand all parents as neccessary, to make this node visible.
 	</dd>
-	<dt>move(targetNode, mode)
+	<dt>node.move(targetNode, mode)
 	<dd>
 		Move this node to <code>targetNode</code>.
 		Possible <code>mode</code>:
@@ -1536,11 +1628,11 @@ node.addChild({title: "New Node", key: "3333"});
 		<li><code>after</code>: add this node as sibling after targetNode.
 		</ul>
 	</dd>
-	<dt>reload(force)</dt>
+	<dt>node.reload(force)</dt>
 	<dd>
 		Deprecated. Use <code>reloadChildren()</code> instead.
 	</dd>
-	<dt>reloadChildren(callback)</dt>
+	<dt>node.reloadChildren(callback)</dt>
 	<dd>
 		Discard and reload all children of a lazy node by triggering
 		the <code>onLazyRead</code> event.
@@ -1550,15 +1642,15 @@ node.addChild({title: "New Node", key: "3333"});
 	if(!isOk) alert("Node " + node + " could not be reloaded.");
 });</pre>
 	</dd>
-	<dt>remove()
+	<dt>node.remove()
 	<dd>
 		Remove this node and descendents from tree.
 	</dd>
-	<dt>removeChildren()
+	<dt>node.removeChildren()
 	<dd>
 		Remove all child nodes and descendents.
 	</dd>
-	<dt>render(useEffects, includeInvisible)
+	<dt>node.render(useEffects, includeInvisible)
 	<dd>
 		Redraw this node with current attributes. All HTML markup is updated
 		and class names are added according to current status.<br>
@@ -1579,12 +1671,12 @@ node.addChild({title: "New Node", key: "3333"});
 		Most of the time, there is no need to call this explicitly, since it is
 		internally called on state changes.
 	</dd>
-	<dt>resetLazy()
+	<dt>node.resetLazy()
 	<dd>
 		Remove all children from a lazy node and make sure it is collapsed.
 		The node will be re-loaded when expanded the next time.
 	</dd>
-	<dt>scheduleAction(mode, ms)
+	<dt>node.scheduleAction(mode, ms)
 	<dd>
 		Schedule a delayed action.
 		Possible <code>mode</code>:
@@ -1594,11 +1686,11 @@ node.addChild({title: "New Node", key: "3333"});
 		<li><code>cancel</code>: cancel pending action, if any was scheduled.
 		</ul>
 	</dd>
-	<dt>select(flag)
+	<dt>node.select(flag)
 	<dd>
 		Select or deselect this node - according to flag - and fire an onSelect event.
 	</dd>
-	<dt>setLazyNodeStatus(status)
+	<dt>node.setLazyNodeStatus(status)
 	<dd>
 		Display a dummy child node, to provide feedback, when loading a lazy node's content. <br>
 		Possible status:
@@ -1609,11 +1701,11 @@ node.addChild({title: "New Node", key: "3333"});
 		</ul>
 		Messages may be customized using the <code>strings.loading</code> and <code>strings.loadError</code> options.
 	</dd>
-	<dt>setTitle(title)
+	<dt>node.setTitle(title)
 	<dd>
 		Change current node title and redraw.
 	</dd>
-	<dt>sortChildren(cmp, deep)
+	<dt>node.sortChildren(cmp, deep)
 	<dd>
 		Sort child list by title.<br>
 		<code>cmd</code>: optional compare function. If ommitted sorting is done by node titles.<br>
@@ -1626,7 +1718,7 @@ var cmp = function(a, b) {
 };
 node.sortChildren(cmp, false);</pre>
 	</dd>
-	<dt>toDict(recursive, callback)
+	<dt>node.toDict(recursive, callback)
 	<dd>
 		Convert the node into a JavaScript object.<br>
 		<code>recursive</code>: set to true, to include child nodes.<br>
@@ -1636,23 +1728,23 @@ node.sortChildren(cmp, false);</pre>
 	delete dict.key; // prevent duplicate keys
 });</pre>
 	</dd>
-	<dt>toggleExpand()
+	<dt>node.toggleExpand()
 	<dd>
 		Toggle expansion state.<br>
 		Expanding a lazy node, fires a onLazyRead event.
 	</dd>
-	<dt>toggleSelect()
+	<dt>node.toggleSelect()
 	<dd>
 		Toggle selection state.
 	</dd>
-	<dt>visit(fn, includeSelf)
+	<dt>node.visit(fn, includeSelf)
 	<dd>
 		Call <code>fn(node)</code> for all child nodes.<br>
 		Stop iteration, if fn() returns false.
 		Stop iteration <i>of the current branch</i>, if fn() returns the string
 		'skip'.
 	</dd>
-	<dt>visitParents(fn, includeSelf)
+	<dt>node.visitParents(fn, includeSelf)
 	<dd>
 		Call <code>fn(node)</code> for all parent nodes.<br>
 		Stop iteration, if fn(node) returns false.
