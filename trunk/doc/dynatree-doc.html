@@ -741,114 +741,114 @@ onActivate: function(node) {
 The <code>this</code> context is set to the tree object.
 
 <dl class="optionList">
-    <dt>opts.onQueryActivate(flag, node)
-    <dd>
-    Called before a node is (de)activated. Return <code>false</code> to prevent
-    this.
-    </dd>
-    
-    <dt>opts.onQuerySelect(flag, node)
-    <dd>
-    Called before a node is (de)selected. Return <code>false</code> to prevent
-    this.
-    </dd>
-    
-    <dt>opts.onQueryExpand(flag, node)
-    <dd>
-    Called before a node is expanded/collapsed. Return <code>false</code> to prevent
-    this.
-    </dd>
-    
-    <dt>opts.onPostInit(isReloading, isError)
-    <dd>
-    Called when the tree was (re)loaded.
-    </dd>
-    
-    <dt>opts.onActivate(node)
-    <dd>
-    Called when a node was activated.
-    </dd>
-    
-    <dt>opts.onDeactivate(node)
-    <dd>
-    Called when a node was deactivated.
-    </dd>
-    
-    <dt>opts.onSelect(flag, node)
-    <dd>
-    Called when a node was (de)selected.
-    </dd>
-    
-    <dt>opts.onExpand(flag, node)
-    <dd>
-    Called when a node was expanded/collapsed.
-    </dd>
-    
-    <dt>opts.onLazyRead(node)
-    <dd>
-    Called when a lazy node is expanded for the first time.
-    </dd>
-    
-    <dt>opts.onCustomRender(node)
-    <dd>
-        Called before a node's title HTML tag will be created.
-        This happens when a node becomes visible for the first time.<br>
-        This callback may return a string that will be used instead of the
-        default HTML markup.
-        <pre class="prettyprint">onCustomRender: function(node) {
-    return "&lt;span class='dynatree-title'>SPAM&lt;/span>"
+	<dt>opts.onQueryActivate(flag, node)
+	<dd>
+	Called before a node is (de)activated. Return <code>false</code> to prevent
+	this.
+	</dd>
+
+	<dt>opts.onQuerySelect(flag, node)
+	<dd>
+	Called before a node is (de)selected. Return <code>false</code> to prevent
+	this.
+	</dd>
+
+	<dt>opts.onQueryExpand(flag, node)
+	<dd>
+	Called before a node is expanded/collapsed. Return <code>false</code> to prevent
+	this.
+	</dd>
+
+	<dt>opts.onPostInit(isReloading, isError)
+	<dd>
+	Called when the tree was (re)loaded.
+	</dd>
+
+	<dt>opts.onActivate(node)
+	<dd>
+	Called when a node was activated.
+	</dd>
+
+	<dt>opts.onDeactivate(node)
+	<dd>
+	Called when a node was deactivated.
+	</dd>
+
+	<dt>opts.onSelect(flag, node)
+	<dd>
+	Called when a node was (de)selected.
+	</dd>
+
+	<dt>opts.onExpand(flag, node)
+	<dd>
+	Called when a node was expanded/collapsed.
+	</dd>
+
+	<dt>opts.onLazyRead(node)
+	<dd>
+	Called when a lazy node is expanded for the first time.
+	</dd>
+
+	<dt>opts.onCustomRender(node)
+	<dd>
+		Called before a node's title HTML tag will be created.
+		This happens when a node becomes visible for the first time.<br>
+		This callback may return a string that will be used instead of the
+		default HTML markup.
+		<pre class="prettyprint">onCustomRender: function(node) {
+	return "&lt;span class='dynatree-title'>SPAM&lt;/span>"
 }</pre>
-    </dd>
+	</dd>
 
-    <dt>opts.onRender(node, nodeSpan)
-    <dd>
-        Called after a node's HTML tag was created. This happens when a node
-        becomes visible for the first time.<br>
-        This callback may be used to modify the HTML markup, or bind events.
-        <pre class="prettyprint">onRender: function(node, nodeSpan) {
-    $(nodeSpan).find("a.dynatree-title").css("color", "red");
+	<dt>opts.onRender(node, nodeSpan)
+	<dd>
+		Called after a node's HTML tag was created. This happens when a node
+		becomes visible for the first time.<br>
+		This callback may be used to modify the HTML markup, or bind events.
+		<pre class="prettyprint">onRender: function(node, nodeSpan) {
+	$(nodeSpan).find("a.dynatree-title").css("color", "red");
 }</pre>
-    </dd>
+	</dd>
 
-    <dt>opts.dnd.onDragStart(sourceNode)
-    <dd>
-    This function <i>must</i> be defined to enable dragging for the tree.
-    Return <code>false</code> to cancel dragging of node.
-    </dd>
+	<dt>opts.dnd.onDragStart(sourceNode)
+	<dd>
+	This function <i>must</i> be defined to enable dragging for the tree.
+	Return <code>false</code> to cancel dragging of node.
+	</dd>
 
-    <dt>opts.dnd.onDragStop(sourceNode)
-    <dd>
-    </dd>
+	<dt>opts.dnd.onDragStop(sourceNode)
+	<dd>
+	</dd>
 
-    <dt>opts.dnd.onDragEnter(targetNode, sourceNode)
-    <dd>
-    Return <code>true</code> to make tree nodes accept dropping of draggables.
-    </dd>
+	<dt>opts.dnd.onDragEnter(targetNode, sourceNode)
+	<dd>
+	Return <code>true</code> to make tree nodes accept dropping of draggables.
+	</dd>
 
-    <dt>opts.dnd.onDragOver(targetNode, sourceNode, hitMode)
-    <dd>
-    </dd>
+	<dt>opts.dnd.onDragOver(targetNode, sourceNode, hitMode)
+	<dd>
+	</dd>
 
-    <dt>opts.dnd.onDrop(targetNode, sourceNode, hitMode)
-    <dd>
-    This function <i>must</i> be defined to enable dropping of items on the tree.
-    </dd>
+	<dt>opts.dnd.onDrop(targetNode, sourceNode, hitMode)
+	<dd>
+	This function <i>must</i> be defined to enable dropping of items on the tree.
+	</dd>
 
-    <dt>opts.dnd.onDragLeave(targetNode, sourceNode)
-    <dd>
-    </dd>
+	<dt>opts.dnd.onDragLeave(targetNode, sourceNode)
+	<dd>
+	</dd>
 
-    <dt>ajaxOptions.success(node)
-    <dd>
-    (Passed as argument to <code>node.appendAjax(...)</code>.)<br>
-    Called after nodes have been created and the waiting icon was removed.
-    'this' is the options for this Ajax request
-    </dd>
+	<dt>ajaxOptions.success(node)
+	<dd>
+	(Passed as argument to <code>node.appendAjax(...)</code>.)<br>
+	Called after nodes have been created and the waiting icon was removed.
+	'this' is the options for this Ajax request
+	</dd>
 
-    <dt>ajaxOptions.error(node, XMLHttpRequest, textStatus, errorThrown)
-    <dd>
-    (Passed as argument to <code>node.appendAjax(...)</code>.)<br>
-    </dd>
+	<dt>ajaxOptions.error(node, XMLHttpRequest, textStatus, errorThrown)
+	<dd>
+	(Passed as argument to <code>node.appendAjax(...)</code>.)<br>
+	</dd>
 
 </dl>
 
