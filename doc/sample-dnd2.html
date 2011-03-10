@@ -66,6 +66,9 @@ $(function(){
 				 *
 				 */
 				logMsg("tree.onDragOver(%o, %o, %o)", node, sourceNode, hitMode);
+				// Prevent dropping a parent below it's own child
+				if(node.isDescendantOf(sourceNode))
+					return false;
 				// Prohibit creating childs in non-folders (only sorting allowed)
 //				if( !node.isFolder && hitMode == "over" )
 //					return "after";
