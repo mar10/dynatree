@@ -1367,7 +1367,7 @@ DynaTreeNode.prototype = {
 				+ "." + this.data.key;
 			this.tree.$tree.bind(eventType, function(e, node, isOk){
 				self.tree.$tree.unbind(eventType);
-				self.tree.logInfo("loaded %o, %o, %o", e, node, isOk);
+				self.tree.logDebug("loaded %o, %o, %o", e, node, isOk);
 				if(node !== self){
 					throw "got invalid load event";
 				}
@@ -1661,7 +1661,7 @@ DynaTreeNode.prototype = {
 				if( orgSuccess ){
 					orgSuccess.call(options, self);
 				}
-				self.tree.logInfo("trigger " + eventType);
+				self.tree.logDebug("trigger " + eventType);
 				self.tree.$tree.trigger(eventType, [self, true]);
 				self.tree.phase = prevPhase;
 				// This should be the last command, so node.isLoading is true
@@ -1841,7 +1841,7 @@ getDynaTreePersistData = DynaTreeStatus._getTreePersistData;
 DynaTreeStatus.prototype = {
 	// Constructor
 	initialize: function(cookieId, cookieOpts) {
-		this._log("DynaTreeStatus: initialize");
+//		this._log("DynaTreeStatus: initialize");
 		if( cookieId === undefined ){
 			cookieId = $.ui.dynatree.prototype.options.cookieId;
 		}
@@ -1862,7 +1862,7 @@ DynaTreeStatus.prototype = {
 		_log.apply(this, arguments);
 	},
 	read: function() {
-		this._log("DynaTreeStatus: read");
+//		this._log("DynaTreeStatus: read");
 		// Read or init cookies.
 		this.cookiesFound = false;
 
@@ -1888,21 +1888,21 @@ DynaTreeStatus.prototype = {
 		}
 	},
 	write: function() {
-		this._log("DynaTreeStatus: write");
+//		this._log("DynaTreeStatus: write");
 		$.cookie(this.cookieId + "-active", ( this.activeKey === null ) ? "" : this.activeKey, this.cookieOpts);
 		$.cookie(this.cookieId + "-focus", ( this.focusedKey === null ) ? "" : this.focusedKey, this.cookieOpts);
 		$.cookie(this.cookieId + "-expand", ( this.expandedKeyList === null ) ? "" : this.expandedKeyList.join(","), this.cookieOpts);
 		$.cookie(this.cookieId + "-select", ( this.selectedKeyList === null ) ? "" : this.selectedKeyList.join(","), this.cookieOpts);
 	},
 	addExpand: function(key) {
-		this._log("addExpand(%o)", key);
+//		this._log("addExpand(%o)", key);
 		if( $.inArray(key, this.expandedKeyList) < 0 ) {
 			this.expandedKeyList.push(key);
 			$.cookie(this.cookieId + "-expand", this.expandedKeyList.join(","), this.cookieOpts);
 		}
 	},
 	clearExpand: function(key) {
-		this._log("clearExpand(%o)", key);
+//		this._log("clearExpand(%o)", key);
 		var idx = $.inArray(key, this.expandedKeyList);
 		if( idx >= 0 ) {
 			this.expandedKeyList.splice(idx, 1);
@@ -1910,14 +1910,14 @@ DynaTreeStatus.prototype = {
 		}
 	},
 	addSelect: function(key) {
-		this._log("addSelect(%o)", key);
+//		this._log("addSelect(%o)", key);
 		if( $.inArray(key, this.selectedKeyList) < 0 ) {
 			this.selectedKeyList.push(key);
 			$.cookie(this.cookieId + "-select", this.selectedKeyList.join(","), this.cookieOpts);
 		}
 	},
 	clearSelect: function(key) {
-		this._log("clearSelect(%o)", key);
+//		this._log("clearSelect(%o)", key);
 		var idx = $.inArray(key, this.selectedKeyList);
 		if( idx >= 0 ) {
 			this.selectedKeyList.splice(idx, 1);
@@ -1983,7 +1983,8 @@ DynaTree.prototype = {
 
 	_load: function(callback) {
 		var $widget = this.$widget;
-		var opts = this.options;
+		var opts = this.options,
+			self = this;
 		this.bEnableUpdate = true;
 		this._nodeCount = 1;
 		this.activeNode = null;
@@ -1991,13 +1992,10 @@ DynaTree.prototype = {
 
 		// Some deprecation warnings to help with migration
 		if( opts.rootVisible !== undefined ){
-			_log("warn", "Option 'rootVisible' is no longer supported.");
+			this.logWarning("Option 'rootVisible' is no longer supported.");
 		}
-//		if( opts.title  !== undefined ){
-//			_log("warn", "Option 'title' is no longer supported.");
-//		}
 		if( opts.minExpandLevel < 1 ) {
-			_log("warn", "Option 'minExpandLevel' must be >= 1.");
+			this.logWarning("Option 'minExpandLevel' must be >= 1.");
 			opts.minExpandLevel = 1;
 		}
 //		_log("warn", "jQuery.support.boxModel " + jQuery.support.boxModel);
@@ -2023,7 +2021,7 @@ DynaTree.prototype = {
 					}else{
 						opts.imagePath = "skin/";
 					}
-					logMsg("Guessing imagePath from '%s': '%s'", this.src, opts.imagePath);
+					self.logDebug("Guessing imagePath from '%s': '%s'", this.src, opts.imagePath);
 					return false; // first match
 				}
 			});
@@ -2713,17 +2711,22 @@ $.widget("ui.dynatree", {
 	_init: function() {
 		if( parseFloat($.ui.version) < 1.8 ) {
 			// jquery.ui.core 1.8 renamed _init() to _create(): this stub assures backward compatibility
-			_log("warn", "ui.dynatree._init() was called; you should upgrade to jquery.ui.core.js v1.8 or higher.");
+			if(this.options.debugLevel >= 0){
+				_log("warn", "ui.dynatree._init() was called; you should upgrade to jquery.ui.core.js v1.8 or higher.");
+			}
 			return this._create();
 		}
 		// jquery.ui.core 1.8 still uses _init() to perform "default functionality"
-		_log("debug", "ui.dynatree._init() was called; no current default functionality.");
+		if(this.options.debugLevel >= 2){
+			_log("debug", "ui.dynatree._init() was called; no current default functionality.");
+		}
 	},
 
 	_create: function() {
-		logMsg("Dynatree._create(): version='%s', debugLevel=%o.", DynaTree.version, this.options.debugLevel);
-
 		var opts = this.options;
+		if(opts.debugLevel >= 1){
+			logMsg("Dynatree._create(): version='%s', debugLevel=%o.", DynaTree.version, this.options.debugLevel);
+		}
 		// The widget framework supplies this.element and this.options.
 		this.options.event += ".dynatree"; // namespace event
 
