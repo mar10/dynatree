@@ -1773,8 +1773,9 @@ $("#dynatree-id-1234").attr("dtnode").select();
 
 <pre class="prettyprint">
 var node = $("#tree").dynatree("getActiveNode");
-if( node )
+if( node ){
 	alert("Currently active: " + node.data.title);
+}
 </pre>
 
 
@@ -1846,6 +1847,31 @@ $("#tree").dynatree("getRoot").visit(function(node){
 // Get a JavaScript object copy of the tree
 var dict = $("#tree").dynatree("getTree").toDict();
 // ... then use Ajax to send this to your server...
+</pre>
+
+
+<h4>Example: activate a node depending on URL</h4>
+
+This sample shows how to parse the page URL and activate a node accordingly:
+<code>http://server/_test-194.html?activate=_11</code>
+
+<pre class="prettyprint">
+// Add a helper function to parse the URL
+function getURLParameter(name) {
+    return unescape(
+        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+    );
+}
+// Evaluate the URL after the tree was loaded
+$(function(){
+    $("#tree").dynatree({
+        [...]
+        onPostInit: function(isReloading, isError) {
+            var key = getURLParameter("activate");
+            if( key ) {
+                this.activateKey(key);
+            }
+        },
 </pre>
 
 
