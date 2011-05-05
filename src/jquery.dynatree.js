@@ -2896,7 +2896,7 @@ $.ui.dynatree.prototype.options = {
 	onActivate: null, // Callback(dtnode) when a node is activated.
 	onDeactivate: null, // Callback(dtnode) when a node is deactivated.
 	onSelect: null, // Callback(flag, dtnode) when a node is (de)selected.
-	onExpand: null, // Callback(dtnode) when a node is expanded/collapsed.
+	onExpand: null, // Callback(flag, dtnode) when a node is expanded/collapsed.
 	onLazyRead: null, // Callback(dtnode) when a lazy node is expanded for the first time.
 	onCustomRender: null, // Callback(dtnode) before a node is rendered. Return a HTML string to override.
 	onRender: null, // Callback(dtnode, nodeSpan) after a node was rendered.
