@@ -6,7 +6,9 @@
 
 ==== Release 1.x ====
 
-===== 1.1.1 (not yet released) =====
+===== 1.1.2 (not yet released) =====
+
+===== 1.1.1 =====
   * Enable event bubbling in click events (issue 181)
   * Sample that combines context menu with drag'n'drop (issue 174).
   * Fixed sortChildren() on Safari (issue 180)
