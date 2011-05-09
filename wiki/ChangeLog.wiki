@@ -7,6 +7,9 @@
 ==== Release 1.x ====
 
 ===== 1.1.2 (not yet released) =====
+  * Added sample on how to activate nodes according to URL.
+  * Fixed d'n'd sample (issue 185)
+  * Removed some more debug messages.
 
 ===== 1.1.1 =====
   * Enable event bubbling in click events (issue 181)
