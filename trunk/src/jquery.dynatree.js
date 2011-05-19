@@ -219,6 +219,7 @@ DynaTreeNode.prototype = {
 			var tooltip = data.tooltip ? " title='" + data.tooltip + "'" : "";
 			if( opts.noLink || data.noLink ) {
 				nodeTitle = "<span style='display: inline-block;' class='" + opts.classNames.title + "'" + tooltip + ">" + data.title + "</span>";
+//				this.tree.logDebug("nodeTitle: " + nodeTitle);
 			}else{
 				nodeTitle = "<a href='#' class='" + opts.classNames.title + "'" + tooltip + ">" + data.title + "</a>";
 			}
@@ -302,6 +303,9 @@ DynaTreeNode.prototype = {
 //						parent.ul.className = cn.noConnector;
 //					}
 				}
+				// set node connector images, links and text
+//				this.span.innerHTML = this._getInnerHtml();
+
 				parent.ul.appendChild(this.li);
 			}
 			// set node connector images, links and text
@@ -2378,17 +2382,25 @@ TODO: better?
 		this.$tabs = this.$lis.map(function() { return $("a", this)[0]; });
  */
 		$ulParent.find(">li").each(function() {
-			var $li = $(this);
-			var $liSpan = $li.find(">span:first");
-			var title;
+			var $li = $(this),
+				$liSpan = $li.find(">span:first"),
+				$liA = $li.find(">a:first"),
+				title,
+				href = null,
+				target = null;
 			if( $liSpan.length ) {
 				// If a <li><span> tag is specified, use it literally.
 				title = $liSpan.html();
+			} else if( $liA.length ) {
+				title = $liA.html();
+				href = $liA.attr("href");
+				target = $liA.attr("target");
 			} else {
-				// If only a <li> tag is specified, use the trimmed string up to the next child <ul> tag.
+				// If only a <li> tag is specified, use the trimmed string up to
+				// the next child <ul> tag.
 				title = $li.html();
 				var iPos = title.search(/<ul/i);
-				if( iPos>=0 ){
+				if( iPos >= 0 ){
 					title = $.trim(title.substring(0, iPos));
 				}else{
 					title = $.trim(title);
@@ -2406,6 +2418,10 @@ TODO: better?
 				focus: $li.hasClass("focused"),
 				noLink: $li.hasClass("noLink")
 			};
+			if( href ){
+				data.href = href;
+				data.target = target;
+			}
 			if( $li.attr("title") ){
 				data.tooltip = $li.attr("title");
 			}
