@@ -7,6 +7,7 @@
 ==== Release 1.x ====
 
 ===== 1.1.2 (not yet released) =====
+  * Support <a> tags (issue 138)
   * Added sample on how to activate nodes according to URL.
   * Fixed d'n'd sample (issue 185)
   * Removed some more debug messages.
