@@ -480,6 +480,16 @@ onActivate: function(node) {
 		style.)<br>
 		See also <code>unselectable</code>.
 	</dd>
+	<dt>data.href
+	<dd>
+		Contains the link URL, if the tree was initialized from a &lt;ul> tag:
+<pre class="prettyprint">&lt;div id="tree">&lt;ul>
+	&lt;li class="expanded folder">Search engines
+	&lt;ul>
+		&lt;li>&lt;a href="http://www.google.com" target="_self">Google&lt;/a>
+		&lt;li>&lt;a href="http://www.bing.com">Bing&lt;/a>
+</pre>
+	</dd>
 	<dt>data.icon
 	<dd>
 		Optional name of an image file relative to the image directory. <br>
@@ -508,6 +518,10 @@ onActivate: function(node) {
 	<dt>data.select
 	<dd>
 		If set to true, the node will be initially selected.
+	</dd>
+	<dt>data.target
+	<dd>
+		See data.href.
 	</dd>
 	<dt>data.title
 	<dd>
@@ -629,6 +643,13 @@ $("#tree").dynatree({
 	Nested &lt;ul> elements are used to build a hierarchical tree structure.<br>
 	After the &lt;ul> element was parsed, it is removed from the DOM tree.
 </p>
+<p>
+    Note that &lt;a> elements are recognized:<br>
+    <code>&lt;li>&lt;a href='URL' target='TARGET'>TITLE&lt;/a></code> will result in<br>
+    node.data.title = TITLE<br>
+    node.data.href = URL<br>
+    node.data.target = TARGET
+</p>
 
 <div class="codesample">
 	<a href="sample-ul.html">Try this example...</a>
@@ -738,55 +759,38 @@ onActivate: function(node) {
 
 <h3><code>DynaTree</code> callbacks</h3>
 
-The <code>this</code> context is set to the tree object.
+The <code>this</code> context is set to the tree object.<br>
+Use <code>tree.isUserEvent()</code>, <code>tree.isInitializing()</code>,
+and <code>tree.isReloading()</code> to determine who generated this event.
 
 <dl class="optionList">
-	<dt>opts.onQueryActivate(flag, node)
-	<dd>
-	Called before a node is (de)activated. Return <code>false</code> to prevent
-	this.
-	</dd>
-
-	<dt>opts.onQuerySelect(flag, node)
-	<dd>
-	Called before a node is (de)selected. Return <code>false</code> to prevent
-	this.
-	</dd>
-
-	<dt>opts.onQueryExpand(flag, node)
-	<dd>
-	Called before a node is expanded/collapsed. Return <code>false</code> to prevent
-	this.
-	</dd>
-
-	<dt>opts.onPostInit(isReloading, isError)
-	<dd>
-	Called when the tree was (re)loaded.
-	</dd>
-
 	<dt>opts.onActivate(node)
 	<dd>
 	Called when a node was activated.
+	<pre class="prettyprint">onActivate: function(node) {
+	if(node.tree.isUserEvent()){
+		[...] // Do something after user activated the node (using mouse or keyboad)
+	}
+}</pre>
 	</dd>
 
-	<dt>opts.onDeactivate(node)
+	<dt>opts.onBlur(node)
 	<dd>
-	Called when a node was deactivated.
+	Called when a node lost the focus.
 	</dd>
 
-	<dt>opts.onSelect(flag, node)
+	<dt>opts.onClick(node, event)
 	<dd>
-	Called when a node was (de)selected.
-	</dd>
-
-	<dt>opts.onExpand(flag, node)
-	<dd>
-	Called when a node was expanded/collapsed.
-	</dd>
-
-	<dt>opts.onLazyRead(node)
-	<dd>
-	Called when a lazy node is expanded for the first time.
+	Called when a node was clicked.<br>
+	Use <code>node.getEventTargetType(event)</code> to check which area was clicked.<br>
+	Return <code>false</code> to prevent default processing
+	(setting focus, activate the node, expand folders, etc.).
+	<pre class="prettyprint">onClick: function(node, event) {
+	if(node.getEventTargetType(event) == "title"){
+		[...] // Handle the click event
+		return false;// Prevent default processing
+	}
+}</pre>
 	</dd>
 
 	<dt>opts.onCustomRender(node)
@@ -798,6 +802,74 @@ The <code>this</code> context is set to the tree object.
 		<pre class="prettyprint">onCustomRender: function(node) {
 	return "&lt;span class='dynatree-title'>SPAM&lt;/span>"
 }</pre>
+	</dd>
+
+	<dt>opts.onDblClick(node, event)
+	<dd>
+	Called when a node was double clicked.<br>
+	Use <code>node.getEventTargetType(event)</code> to check which area was clicked.<br>
+	Return <code>false</code> to prevent default processing (currently none).
+	</dd>
+
+	<dt>opts.onDeactivate(node)
+	<dd>
+	Called when a node was deactivated.
+	</dd>
+
+	<dt>opts.onExpand(flag, node)
+	<dd>
+	Called when a node was expanded/collapsed.
+	</dd>
+
+	<dt>opts.onFocus(node)
+	<dd>
+	Called when a node receives the focus.
+	</dd>
+
+	<dt>opts.onKeydown(node, event)
+	<dd>
+	Called on keydown events.<br>
+	Return <code>false</code> to prevent default processing
+	(generate keyboard navigation, focus, expand, activate, etc.).
+	</dd>
+
+	<dt>opts.onKeypress(node, event)
+	<dd>
+	Called on keypress events.<br>
+	Return <code>false</code> to prevent default processing (currently none).
+	</dd>
+
+	<dt>opts.onLazyRead(node)
+	<dd>
+	Called when a lazy node is expanded for the first time.
+	</dd>
+
+	<dt>opts.onPostInit(isReloading, isError)
+	<dd>
+	Called when the tree was (re)loaded.
+	</dd>
+
+	<dt>opts.onQueryActivate(flag, node)
+	<dd>
+	Called before a node is (de)activated. Return <code>false</code> to prevent
+	this.
+	</dd>
+
+	<dt>opts.onQueryExpand(flag, node)
+	<dd>
+	Called before a node is expanded/collapsed. Return <code>false</code> to prevent
+	this.
+	</dd>
+
+	<dt>opts.onQuerySelect(flag, node)
+	<dd>
+	Called before a node is (de)selected. Return <code>false</code> to prevent
+	this.
+	</dd>
+
+	<dt>opts.onSelect(flag, node)
+	<dd>
+	Called when a node was (de)selected.
 	</dd>
 
 	<dt>opts.onRender(node, nodeSpan)
@@ -816,10 +888,6 @@ The <code>this</code> context is set to the tree object.
 	Return <code>false</code> to cancel dragging of node.
 	</dd>
 
-	<dt>opts.dnd.onDragStop(sourceNode)
-	<dd>
-	</dd>
-
 	<dt>opts.dnd.onDragEnter(targetNode, sourceNode)
 	<dd>
 	Return <code>true</code> to make tree nodes accept dropping of draggables.
@@ -829,12 +897,16 @@ The <code>this</code> context is set to the tree object.
 	<dd>
 	</dd>
 
+	<dt>opts.dnd.onDragLeave(targetNode, sourceNode)
+	<dd>
+	</dd>
+
 	<dt>opts.dnd.onDrop(targetNode, sourceNode, hitMode)
 	<dd>
 	This function <i>must</i> be defined to enable dropping of items on the tree.
 	</dd>
 
-	<dt>opts.dnd.onDragLeave(targetNode, sourceNode)
+	<dt>opts.dnd.onDragStop(sourceNode)
 	<dd>
 	</dd>
 
@@ -1386,22 +1458,24 @@ tree.enableUpdate(prevMode);</pre>
 	</dd>
 	<dt>tree.isInitializing()
 	<dd>
-		Return true, if the tree is in the init phase.<br>
+		Return <code>true</code>, if the tree is in the init phase.<br>
 		Use this function in an event handler, to check if the event was fired
 		during a page reload, when the cookie persistence is applied.
 	</dd>
 	<dt>tree.isReloading()
 	<dd>
-		Return true, if the tree is in the init phase and persistence is on,
+		Return <code>true</code>, if the tree is in the init phase and persistence is on,
 		and the current status was read from existing cookies.<br>
 		Use this function in an event handler, to check if the event was fired
 		during a page reload, when the cookie persistence is applied.
 	</dd>
 	<dt>tree.isUserEvent()
 	<dd>
-		Return true, if the tree is processing a user event.<br>
+		Return <code>true</code>, if the tree is processing a user event.<br>
 		Use this function in an event handler, to check if the event was fired
-		in response to a mouse click or key stroke.
+		in response to a mouse click or key stroke.<br>
+		Otherwise, the the event was generated by an API call or during
+		initialization.
 	</dd>
 	<dt>tree.loadKeyPath(keyPath, callback)
 	<dd>
@@ -1550,7 +1624,7 @@ node.addChild({title: "New Node", key: "3333"});
 	<dt>node.getEventTargetType(event)</dt>
 	<dd>
 		Return the part of a node, that a click event occurred on.<br>
-		Possible values: 'prefix' 'expander', 'checkbox', 'title'.<br>
+		Possible values: 'prefix' 'expander', 'checkbox', 'icon', 'title'.<br>
 		<code>null</code> is returned else.<br>
 		Note: there is no check, if the event was fired on <strong>this</strong> node.
 	</dd>
@@ -1858,20 +1932,20 @@ This sample shows how to parse the page URL and activate a node accordingly:
 <pre class="prettyprint">
 // Add a helper function to parse the URL
 function getURLParameter(name) {
-    return unescape(
-        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
-    );
+	return unescape(
+		(RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+	);
 }
 // Evaluate the URL after the tree was loaded
 $(function(){
-    $("#tree").dynatree({
-        [...]
-        onPostInit: function(isReloading, isError) {
-            var key = getURLParameter("activate");
-            if( key ) {
-                this.activateKey(key);
-            }
-        },
+	$("#tree").dynatree({
+		[...]
+		onPostInit: function(isReloading, isError) {
+			var key = getURLParameter("activate");
+			if( key ) {
+				this.activateKey(key);
+			}
+		},
 </pre>
 
 
