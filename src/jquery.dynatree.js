@@ -400,6 +400,9 @@ DynaTreeNode.prototype = {
 	},
 
 	getChildren: function() {
+		if(this.hasChildren() === undefined){
+			return undefined; // Lazy node: unloaded, currently loading, or load error 
+		}
 		return this.childList;
 	},
 
