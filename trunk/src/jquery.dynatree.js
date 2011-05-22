@@ -401,7 +401,7 @@ DynaTreeNode.prototype = {
 
 	getChildren: function() {
 		if(this.hasChildren() === undefined){
-			return undefined; // Lazy node: unloaded, currently loading, or load error 
+			return undefined; // Lazy node: unloaded, currently loading, or load error
 		}
 		return this.childList;
 	},
@@ -2390,7 +2390,8 @@ TODO: better?
 				$liA = $li.find(">a:first"),
 				title,
 				href = null,
-				target = null;
+				target = null,
+				tooltip;
 			if( $liSpan.length ) {
 				// If a <li><span> tag is specified, use it literally.
 				title = $liSpan.html();
@@ -2398,6 +2399,7 @@ TODO: better?
 				title = $liA.html();
 				href = $liA.attr("href");
 				target = $liA.attr("target");
+				tooltip = $liA.attr("title");
 			} else {
 				// If only a <li> tag is specified, use the trimmed string up to
 				// the next child <ul> tag.
@@ -2413,6 +2415,7 @@ TODO: better?
 			// Parse node options from ID, title and class attributes
 			var data = {
 				title: title,
+				tooltip: tooltip,
 				isFolder: $li.hasClass("folder"),
 				isLazy: $li.hasClass("lazy"),
 				expand: $li.hasClass("expanded"),
@@ -2426,7 +2429,7 @@ TODO: better?
 				data.target = target;
 			}
 			if( $li.attr("title") ){
-				data.tooltip = $li.attr("title");
+				data.tooltip = $li.attr("title"); // overrides <a title='...'>
 			}
 			if( $li.attr("id") ){
 				data.key = $li.attr("id");
