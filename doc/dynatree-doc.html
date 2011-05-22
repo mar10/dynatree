@@ -644,11 +644,11 @@ $("#tree").dynatree({
 	After the &lt;ul> element was parsed, it is removed from the DOM tree.
 </p>
 <p>
-    Note that &lt;a> elements are recognized:<br>
-    <code>&lt;li>&lt;a href='URL' target='TARGET'>TITLE&lt;/a></code> will result in<br>
-    node.data.title = TITLE<br>
-    node.data.href = URL<br>
-    node.data.target = TARGET
+	Note that &lt;a> elements are recognized:<br>
+	<code>&lt;li>&lt;a href='URL' target='TARGET'>TITLE&lt;/a></code> will result in<br>
+	node.data.title = TITLE<br>
+	node.data.href = URL<br>
+	node.data.target = TARGET
 </p>
 
 <div class="codesample">
@@ -1635,7 +1635,9 @@ node.addChild({title: "New Node", key: "3333"});
 	</dd>
 	<dt>node.getChildren()
 	<dd>
-		Return list of child nodes or <code>null</code>.
+		Return list of child nodes or <code>null</code>.<br>
+		For lazy nodes that have not yet been loaded, <code>undefined</code> is
+		is returned.
 	</dd>
 	<dt>node.hasChildren()
 	<dd>

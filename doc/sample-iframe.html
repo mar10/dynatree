@@ -43,9 +43,9 @@
 				// Use <a> href and target attributes to load the content:
 				if( node.data.href ){
 					// Open target
-//                    window.open(node.data.href, node.data.target);
+					window.open(node.data.href, node.data.target);
 					// or open target in iframe
-				  $("[name=contentFrame]").attr("src", node.data.href);
+//                $("[name=contentFrame]").attr("src", node.data.href);
 				}
 			}
 		});
@@ -53,10 +53,10 @@
 	</script>
 </head>
 <body class="example">
-	<h1>Example: iframes and URL navigation</h1>
+	<h1>Example: URL navigation and iframes</h1>
 	<p class="description">
 		This sample shows, how to use dynatree as a navigation menu.<br>
-		The tree initialisation contains <code>&lt;a href='URL', target='TARGET'>title&lt;/a></code>
+		The tree initialisation uses <code>&lt;a href='URL', target='TARGET'>title&lt;/a></code>
 		tags.<br>
 		The <code>onActivate</code> handler then uses <code>node.data.href</code>
 		to open the the pages in the embedded iframe.<br>
@@ -79,22 +79,22 @@
 			<ul>
 				<li class="expanded folder">Search engines
 				<ul>
-					<li><a href="http://www.google.com">Google</a>
-					<li><a href="http://www.google.com" target="_self">Google (self)</a>
-					<li><a href="http://www.google.com" target="_top">Google (top)</a>
-					<li><a href="http://www.bing.com">Bing</a>
-					<li><a href="http://www.wolframalpha.com/">WolframAlpha</a>
+					<li><a href="http://www.google.com" target="contentFrame">Google (target='contentFrame')</a>
+					<li><a href="http://www.google.com" target="_self">Google (target='_self')</a>
+					<li><a href="http://www.google.com" target="_top" title="This link replaces the current page">Google (target='_top')</a>
+					<li><a href="http://www.bing.com" target="contentFrame">Bing</a>
+					<li><a href="http://www.wolframalpha.com/" target="contentFrame">WolframAlpha</a>
 				</ul>
 				<li class="expanded folder">jQuery
 				<ul>
-					<li><a href="http://www.jquery.com/">jQuery</a>
-					<li><a href="http://ui.jquery.com/">jQuery UI</a>
-					<li><a href="http://api.jquery.com/">API browser</a>
-					<li><a href="http://code.google.com/p/dynatree/">Dynatree</a>
+					<li><a href="http://www.jquery.com/" target="contentFrame">jQuery</a>
+					<li><a href="http://ui.jquery.com/" target="contentFrame">jQuery UI</a>
+					<li><a href="http://api.jquery.com/" target="contentFrame">API browser</a>
+					<li><a href="http://code.google.com/p/dynatree/" target="contentFrame">Dynatree</a>
 				</ul>
 				<li class="expanded folder">Misc
 				<ul>
-					<li><a href="sample-iframe-1.html">Welcome</a>
+					<li><a href="sample-iframe-1.html" target="contentFrame">Welcome</a>
 				</ul>
 			</ul>
 			</div>
