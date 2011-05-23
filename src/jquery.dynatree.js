@@ -505,7 +505,10 @@ DynaTreeNode.prototype = {
 			return;
 		}
 		cmp = cmp || function(a, b) {
-			return a.data.title === b.data.title ? 0 : a.data.title > b.data.title ? 1 : -1;
+//			return a.data.title === b.data.title ? 0 : a.data.title > b.data.title ? 1 : -1;
+			var x = a.data.title.toLowerCase(),
+				y = b.data.title.toLowerCase();
+			return x === y ? 0 : x > y ? 1 : -1;
 			};
 		cl.sort(cmp);
 		if( deep ){
