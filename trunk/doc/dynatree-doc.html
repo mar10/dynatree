@@ -1840,7 +1840,7 @@ $("#tree").dynatree("getTree").selectKey("1234");
 // or another way:
 $("#tree").dynatree("getTree").getNodeByKey("1234").select();
 // .. or yet another way (if 'generateIds' option was enabled):
-$("#dynatree-id-1234").attr("dtnode").select();
+$("#dynatree-id-1234").prop("dtnode").select();
 
 </pre>
 
@@ -1859,12 +1859,16 @@ if( node ){
 
 <pre class="prettyprint">
 $(".dynatree-partsel").each(function(){
-	var node = $(this).parents("[dtnode]").attr("dtnode");
+	var node = $(this).parents("[dtnode]").prop("dtnode");
 	[...]
 });
 </pre>
 <p>
-	Note: The selector must evaluate to the node's &lt;span> tag.
+	The selector must evaluate to the node's &lt;span> tag.
+</p>
+<p class="info">
+    With jQuery versions prior to 1.6, use <code>.attr("dtnode")</code>
+    instead of <code>.prop("dtnode")</code>.
 </p>
 
 
@@ -1899,10 +1903,10 @@ var childNode = node.addChild({
 <pre class="prettyprint">
 // Bind hover events to the tree's &lt;a> tags:
 $("#tree a").hover(function(){
-		var node = $(this).parents("[dtnode]").attr("dtnode");
+		var node = $(this).parents("[dtnode]").prop("dtnode");
 		logMsg("Hover in %s", node);
 	}, function(){
-		var node = $(this).parents("[dtnode]").attr("dtnode");
+		var node = $(this).parents("[dtnode]").prop("dtnode");
 		logMsg("Hover out %s", node);
 	});
 </pre>
