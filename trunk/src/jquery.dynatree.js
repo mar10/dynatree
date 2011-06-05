@@ -1664,6 +1664,11 @@ DynaTreeNode.prototype = {
 				if( options.postProcess ){
 					data = options.postProcess.call(this, data, this.dataType);
 				}
+				// Process ASPX WebMethod JSON object inside "d" property
+				// http://code.google.com/p/dynatree/issues/detail?id=202
+				else if (data && data.hasOwnProperty("d")) {
+					data = data.d;
+				}
 				if(!$.isArray(data) || data.length !== 0){
 					self.addChild(data, null);
 				}
