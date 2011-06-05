@@ -7,6 +7,7 @@
 ==== Release 1.x ====
 
 ===== 1.1.2 (not yet released) =====
+  * Updated to jQuery 1.6.1<br>*NOTE*: Starting with jQuery 1.6 we must use `.prop('dtnode')` instead of `.attr('dtnode')` to get the Dynatree node from an HTML element.<br>See issue 203 for details.
   * Support <a> tags (issue 138)
   * Added sample on how to activate nodes according to URL.
   * Fixed d'n'd sample (issue 185)
