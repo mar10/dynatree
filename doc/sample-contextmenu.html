@@ -63,8 +63,6 @@
 				node.addChild(cb);
 			}
 			clipboardNode = pasteMode = null;
-			// Must enable context menu for new nodes
-			bindContextMenu();
 			break;
 		default:
 			alert("Unhandled clipboard action '" + action + "'");
@@ -72,12 +70,9 @@
 	};
 
 	// --- Contextmenu helper --------------------------------------------------
-
-	function bindContextMenu() {
-		// Add context menu to all nodes:
-		$("span.dynatree-node")
-			.destroyContextMenu() // unbind first, to prevent duplicates
-			.contextMenu({menu: "myMenu"}, function(action, el, pos) {
+	function bindContextMenu(span) {
+		// Add context menu to this node:
+		$(span).contextMenu({menu: "myMenu"}, function(action, el, pos) {
 			// The event was bound to the <span> tag, but the node object
 			// is stored in the parent <li> tag
 			var node = el.parents("[dtnode]").prop("dtnode");
@@ -103,9 +98,10 @@
 				$("#echoActivated").text(node.data.title + ", key=" + node.data.key);
 			},
 			onClick: function(node, event) {
-				// Eat mouse events, while a menu is open
+				// Close menu on click
 				if( $(".contextMenu:visible").length > 0 ){
-					return false;
+					$(".contextMenu").hide();
+//					return false;
 				}
 			},
 			onKeydown: function(node, event) {
@@ -150,6 +146,16 @@
 					break;
 				}
 			},
+			/*Bind context menu for every node when it's DOM element is created.*/
+			onRender: function(node, span){
+				bindContextMenu(span);
+			},
+			/*Load lazy content (to show that context menu will work for new items too)*/
+			onLazyRead: function(node){
+				node.appendAjax({
+					url: "sample-data2.json"
+				});
+			},
 		/* D'n'd, just to show it's compatible with a context menu.
 		   See http://code.google.com/p/dynatree/issues/detail?id=174 */
 		dnd: {
@@ -167,8 +173,6 @@
 			}
 		}
 		});
-		// Add context menu handler to tree nodes
-		bindContextMenu();
 	});
 </script>
 </head>
