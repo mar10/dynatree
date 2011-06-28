@@ -1768,14 +1768,14 @@ DynaTreeNode.prototype = {
 			}
 		} else {
 			targetParent.childList = [ this ];
-			// Parent has no <ul> tag yet:
-			if( !targetParent.ul ) {
-				// This is the parent's first child: create UL tag
-				// (Hidden, because it will be
-				targetParent.ul = document.createElement("ul");
-				targetParent.ul.style.display = "none";
-				targetParent.li.appendChild(targetParent.ul);
-			}
+		}
+		// Parent has no <ul> tag yet:
+		if( !targetParent.ul ) {
+			// This is the parent's first child: create UL tag
+			// (Hidden, because it will be
+			targetParent.ul = document.createElement("ul");
+			targetParent.ul.style.display = "none";
+			targetParent.li.appendChild(targetParent.ul);
 		}
 		// Add to target DOM parent
 		targetParent.ul.appendChild(this.li);
