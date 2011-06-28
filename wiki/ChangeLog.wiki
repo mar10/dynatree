@@ -12,6 +12,7 @@
   * Support `<a>` tags (issue 138)
   * Added sample on how to activate nodes according to URL.
   * Fixed d'n'd sample (issue 185)
+  * Fixed dropping over a collapsed node
   * Removed some more debug messages.
 
 ===== 1.1.1 =====
