@@ -146,8 +146,11 @@
 					break;
 				}
 			},
-			/*Bind context menu for every node when it's DOM element is created.*/
-			onRender: function(node, span){
+			/*Bind context menu for every node when it's DOM element is created.
+			  We do it here, so we can also bind to lazy nodes, which do not 
+			  exist at load-time. (abeautifulsite.net menu control does not
+			  support event delegation)*/
+			onCreate: function(node, span){
 				bindContextMenu(span);
 			},
 			/*Load lazy content (to show that context menu will work for new items too)*/
