@@ -257,6 +257,7 @@ $("#tree").dynatree({
 	onExpand: null, // Callback(flag, dtnode) when a node is expanded/collapsed.
 	onLazyRead: null, // Callback(dtnode) when a lazy node is expanded for the first time.
 	onCustomRender: null, // Callback(dtnode) before a node is rendered. Return a HTML string to override.
+	onCreate: null, // Callback(dtnode, nodeSpan) after a node was rendered for the first time.
 	onRender: null, // Callback(dtnode, nodeSpan) after a node was rendered.
 
 	// Drag'n'drop support
@@ -769,7 +770,7 @@ and <code>tree.isReloading()</code> to determine who generated this event.
 	Called when a node was activated.
 	<pre class="prettyprint">onActivate: function(node) {
 	if(node.tree.isUserEvent()){
-		[...] // Do something after user activated the node (using mouse or keyboad)
+		[...] // Do something after user activated the node (using mouse or keyboard)
 	}
 }</pre>
 	</dd>
@@ -791,6 +792,21 @@ and <code>tree.isReloading()</code> to determine who generated this event.
 		return false;// Prevent default processing
 	}
 }</pre>
+	</dd>
+
+	<dt>opts.onCreate(node, nodeSpan)
+	<dd>
+		Called after a node's HTML tag was created, i.e. when a node becomes
+		visible for the first time.<br>
+		This callback may be used to bind events or widgets for nodes that are
+		created lazily or programatically.<br>
+		<pre class="prettyprint">onCreate: function(node, nodeSpan) {
+	$(span).click(function(e){
+		alert('clicked ' + node);
+	});
+}</pre>
+	(Note that the use of jQuery live events may often be a more efficient solution.)<br>
+	See also <code>opts.onRender</code>.
 	</dd>
 
 	<dt>opts.onCustomRender(node)
@@ -867,19 +883,19 @@ and <code>tree.isReloading()</code> to determine who generated this event.
 	this.
 	</dd>
 
-	<dt>opts.onSelect(flag, node)
-	<dd>
-	Called when a node was (de)selected.
-	</dd>
-
 	<dt>opts.onRender(node, nodeSpan)
 	<dd>
-		Called after a node's HTML tag was created. This happens when a node
-		becomes visible for the first time.<br>
-		This callback may be used to modify the HTML markup, or bind events.
+		Called after every time a node's HTML tag was created or changed.<br>
+		This callback may be used to modify the HTML markup.
 		<pre class="prettyprint">onRender: function(node, nodeSpan) {
 	$(nodeSpan).find("a.dynatree-title").css("color", "red");
 }</pre>
+	See also <code>opts.onCreate</code>.
+	</dd>
+
+	<dt>opts.onSelect(flag, node)
+	<dd>
+	Called when a node was (de)selected.
 	</dd>
 
 	<dt>opts.dnd.onDragStart(sourceNode)
@@ -1867,8 +1883,8 @@ $(".dynatree-partsel").each(function(){
 	The selector must evaluate to the node's &lt;span> tag.
 </p>
 <p class="info">
-    With jQuery versions prior to 1.6, use <code>.attr("dtnode")</code>
-    instead of <code>.prop("dtnode")</code>.
+	With jQuery versions prior to 1.6, use <code>.attr("dtnode")</code>
+	instead of <code>.prop("dtnode")</code>.
 </p>
 
 

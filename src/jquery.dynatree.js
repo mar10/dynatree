@@ -270,7 +270,8 @@ DynaTreeNode.prototype = {
 			data = this.data,
 			opts = tree.options,
 			cn = opts.classNames,
-			isLastSib = this.isLastSibling();
+			isLastSib = this.isLastSibling(),
+			firstTime = false;
 
 		if( !parent && !this.ul ) {
 			// Root node has only a <ul>
@@ -284,6 +285,7 @@ DynaTreeNode.prototype = {
 		} else if( parent ) {
 			// Create <li><span /> </li>
 			if( ! this.li ) {
+				firstTime = true;
 				this.li = document.createElement("li");
 				this.li.dtnode = this;
 				if( data.key && opts.generateIds ){
@@ -356,9 +358,13 @@ DynaTreeNode.prototype = {
 			// TODO: we should not set this in the <span> tag also, if we set it here:
 			this.li.className = isLastSib ? cn.lastsib : "";
 
+			// Allow tweaking, binding, after node was created for the first time
+			if(firstTime && opts.onCreate){
+				opts.onCreate.call(tree, this, this.span);
+			}
 			// Hide children, if node is collapsed
 //			this.ul.style.display = ( this.bExpanded || !parent ) ? "" : "none";
-			// Allow tweaking, binding, ...
+			// Allow tweaking after node state was rendered
 			if(opts.onRender){
 				opts.onRender.call(tree, this, this.span);
 			}
@@ -2929,6 +2935,7 @@ $.ui.dynatree.prototype.options = {
 	onExpand: null, // Callback(flag, dtnode) when a node is expanded/collapsed.
 	onLazyRead: null, // Callback(dtnode) when a lazy node is expanded for the first time.
 	onCustomRender: null, // Callback(dtnode) before a node is rendered. Return a HTML string to override.
+	onCreate: null, // Callback(dtnode, nodeSpan) after a node was rendered for the first time.
 	onRender: null, // Callback(dtnode, nodeSpan) after a node was rendered.
 
 	// Drag'n'drop support
