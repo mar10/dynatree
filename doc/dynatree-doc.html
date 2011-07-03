@@ -1369,8 +1369,25 @@ $("#tree").dynatree({
 	[&#8230;]
 });
 </pre>
+
 <p>
-	the following methods are directly available from the plugin:
+    The following methods are globally available from the ui.dynatree namespace:
+</p>
+<dl class="optionList">
+    <dt> $.ui.dynatree.getNode(el)
+    <dd>
+        Return a DynaTreeNode object for a given DOM element.<br>
+        `el` may be a DOM element or a jQuery object.
+    </dd>
+    <dt> $.ui.dynatree.version
+    <dd>
+        Release version number.
+    </dd>
+</dl>
+
+
+<p>
+	The following methods are directly available from the plugin:
 </p>
 <dl class="optionList">
 	<dt>$("#tree").dynatree("disable")
@@ -1879,7 +1896,7 @@ if( node ){
 
 <pre class="prettyprint">
 $(".dynatree-partsel").each(function(){
-	var node = $(this).parents("[dtnode]").prop("dtnode");
+	var node = $.ui.dynatree.getNode(this);
 	[...]
 });
 </pre>
@@ -1923,10 +1940,10 @@ var childNode = node.addChild({
 <pre class="prettyprint">
 // Bind hover events to the tree's &lt;a> tags:
 $("#tree a").hover(function(){
-		var node = $(this).parents("[dtnode]").prop("dtnode");
+		var node = $.ui.dynatree.getNode(this);
 		logMsg("Hover in %s", node);
 	}, function(){
-		var node = $(this).parents("[dtnode]").prop("dtnode");
+		var node = $.ui.dynatree.getNode(this);
 		logMsg("Hover out %s", node);
 	});
 </pre>

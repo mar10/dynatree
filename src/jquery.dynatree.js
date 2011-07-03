@@ -1977,6 +1977,7 @@ var DynaTree = Class.create();
 // --- Static members ----------------------------------------------------------
 
 DynaTree.version = "$Version:$";
+
 /*
 DynaTree._initTree = function() {
 };
@@ -2767,7 +2768,7 @@ $.widget("ui.dynatree", {
 	_create: function() {
 		var opts = this.options;
 		if(opts.debugLevel >= 1){
-			logMsg("Dynatree._create(): version='%s', debugLevel=%o.", DynaTree.version, this.options.debugLevel);
+			logMsg("Dynatree._create(): version='%s', debugLevel=%o.", $.ui.dynatree.version, this.options.debugLevel);
 		}
 		// The widget framework supplies this.element and this.options.
 		this.options.event += ".dynatree"; // namespace event
@@ -2899,6 +2900,31 @@ if( parseFloat($.ui.version) < 1.8 ) {
 	$.ui.dynatree.getter = "getTree getRoot getActiveNode getSelectedNodes";
 }
 
+/*******************************************************************************
+ * Static class methods
+ */
+$.ui.dynatree.version = "$Version:$";
+
+/**
+ * Return a DynaTreeNode object for a given DOM element
+ */
+$.ui.dynatree.getNode = function(el) {
+	if(el instanceof DynaTreeNode){
+		return el; // el already was a DynaTreeNode
+	}
+	// TODO: for some reason $el.parents("[dtnode]") does not work (jQuery 1.6.1)
+	// maybe, because dtnode is a property, not an attribute 
+	var $el = el.selector === undefined ? $(el) : el,
+//		parent = $el.closest("[dtnode]"),
+		parent = $el.parents("[dtnode]").first(),
+		node;
+	if(typeof parent.prop == "function"){
+		node = parent.prop("dtnode");
+	}else{ // pre jQuery 1.6
+		node = parent.attr("dtnode");
+	}
+	return node;
+}
 
 /*******************************************************************************
  * Plugin default options:
