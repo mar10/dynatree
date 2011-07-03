@@ -832,7 +832,9 @@ DynaTreeNode.prototype = {
 			// Select all children
 			this.visit(function(node){
 				node.parent._setSubSel(true);
-				node._select(true, false, false);
+				if(!node.data.unselectable){
+					node._select(true, false, false);
+				}
 			});
 			// Select parents, if all children are selected
 			p = this.parent;
@@ -841,7 +843,7 @@ DynaTreeNode.prototype = {
 				var allChildsSelected = true;
 				for(i=0, l=p.childList.length; i<l;  i++) {
 					var n = p.childList[i];
-					if( !n.bSelected && !n.data.isStatusNode ) {
+					if( !n.bSelected && !n.data.isStatusNode && !n.data.unselectable) {
 						allChildsSelected = false;
 						break;
 					}
