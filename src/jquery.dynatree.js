@@ -2528,8 +2528,8 @@ TODO: better?
 
 	_setDndStatus: function(sourceNode, targetNode, helper, hitMode, accept) {
 		// hitMode: 'after', 'before', 'over', 'out', 'start', 'stop'
-		var $source = sourceNode ? $(sourceNode.span) : null;
-		var $target = $(targetNode.span);
+		var $source = sourceNode ? $(sourceNode.span) : null,
+			$target = $(targetNode.span);
 		if( !this.$dndMarker ) {
 			this.$dndMarker = $("<div id='dynatree-drop-marker'></div>")
 				.hide()
@@ -2547,7 +2547,8 @@ TODO: better?
 //		this.$dndMarker.attr("class", hitMode);
 		if(hitMode === "after" || hitMode === "before" || hitMode === "over"){
 //			$source && $source.addClass("dynatree-drag-source");
-			var pos = $target.position();
+			var pos = $target.position(),
+				divPos = $(this.divTree).position();
 			switch(hitMode){
 			case "before":
 				this.$dndMarker.removeClass("dynatree-drop-after dynatree-drop-over");
@@ -2565,7 +2566,11 @@ TODO: better?
 				$target.addClass("dynatree-drop-target");
 				pos.left += 8;
 			}
-			this.$dndMarker.css({"left": (pos.left) + "px", "top": (pos.top) + "px" })
+			this.$dndMarker.css({
+					"z-index": 1000,
+					"left": (pos.left + divPos.left) + "px",
+					"top": (pos.top + divPos.top) + "px"
+				})
 				.show();
 //			helper.addClass("dynatree-drop-hover");
 		} else {
