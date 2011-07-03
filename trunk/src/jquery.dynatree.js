@@ -823,9 +823,50 @@ DynaTreeNode.prototype = {
 			$(this.span).removeClass(this.tree.options.classNames.partsel);
 		}
 	},
+	/**
+	 * Fix selection and partsel status, of parent nodes, according to current status of
+	 * end nodes.
+	 */
+	_updatePartSelectionState: function() {
+		var sel;
+		// Return `true` or `false` for end nodes and remove part-sel flag
+		if( ! this.hasChildren() ){
+			sel = (this.bSelected && !this.data.unselectable && !this.data.isStatusNode);
+			this._setSubSel(false);
+			return sel;
+		}
+		// Return `true`, `false`, or `undefined` for parent nodes
+		var i, l,
+			cl = this.childList,
+			allSelected = true,
+			allDeselected = true;
+		for(i=0, l=cl.length; i<l;  i++) {
+			var n = cl[i],
+				s = n._updatePartSelectionState();
+			if( s !== false){
+				allDeselected = false;
+			}
+			if( s !== true){
+				allSelected = false;
+			}
+		}
+		if( allSelected ){
+			sel = true;
+		} else if ( allDeselected ){
+			sel = false;
+		} else {
+			sel = undefined;
+		}
+		this._setSubSel(sel === undefined);
+		this.bSelected = (sel === true);
+		return sel;
+	},
 
+	/**
+	 * Fix selection status, after this node was (de)selected in multi-hier mode.
+	 * This includes (de)selecting all children.
+	 */
 	_fixSelectionState: function() {
-		// fix selection status, for multi-hier mode
 //		this.tree.logDebug("_fixSelectionState(%o) - %o", this.bSelected, this);
 		var p, i, l;
 		if( this.bSelected ) {
@@ -1479,9 +1520,9 @@ DynaTreeNode.prototype = {
 		 * Internal function to add one single DynatreeNode as a child.
 		 *
 		 */
-		var tree = this.tree;
-		var opts = tree.options;
-		var pers = tree.persistence;
+		var tree = this.tree,
+			opts = tree.options,
+			pers = tree.persistence;
 
 //		tree.logDebug("%s._addChildNode(%o)", this, dtnode);
 
@@ -1505,7 +1546,6 @@ DynaTreeNode.prototype = {
 				throw "<beforeNode> must be a child of <this>";
 			}
 			this.childList.splice(iBefore, 0, dtnode);
-//			alert(this.childList);
 		} else {
 			// Append node
 			this.childList.push(dtnode);
@@ -1519,10 +1559,10 @@ DynaTreeNode.prototype = {
 		if( opts.persist && pers.cookiesFound && isInitializing ) {
 			// Init status from cookies
 //			tree.logDebug("init from cookie, pa=%o, dk=%o", pers.activeKey, dtnode.data.key);
-			if( pers.activeKey == dtnode.data.key ){
+			if( pers.activeKey === dtnode.data.key ){
 				tree.activeNode = dtnode;
 			}
-			if( pers.focusedKey == dtnode.data.key ){
+			if( pers.focusedKey === dtnode.data.key ){
 				tree.focusNode = dtnode;
 			}
 			dtnode.bExpanded = ($.inArray(dtnode.data.key, pers.expandedKeyList) >= 0);
@@ -2119,6 +2159,10 @@ DynaTree.prototype = {
 		}
 
 		this._checkConsistency();
+		// Fix part-sel flags
+		if(opts.selectMode == 3){
+			root._updatePartSelectionState();
+		}
 		// Render html markup
 		this.logDebug("Dynatree._load(): render nodes...");
 		this.enableUpdate(prevFlag);
@@ -2901,7 +2945,7 @@ if( parseFloat($.ui.version) < 1.8 ) {
 }
 
 /*******************************************************************************
- * Static class methods
+ * Tools in ui.dynatree namespace
  */
 $.ui.dynatree.version = "$Version:$";
 
@@ -2913,7 +2957,7 @@ $.ui.dynatree.getNode = function(el) {
 		return el; // el already was a DynaTreeNode
 	}
 	// TODO: for some reason $el.parents("[dtnode]") does not work (jQuery 1.6.1)
-	// maybe, because dtnode is a property, not an attribute 
+	// maybe, because dtnode is a property, not an attribute
 	var $el = el.selector === undefined ? $(el) : el,
 //		parent = $el.closest("[dtnode]"),
 		parent = $el.parents("[dtnode]").first(),

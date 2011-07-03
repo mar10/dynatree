@@ -75,7 +75,7 @@
 		$(span).contextMenu({menu: "myMenu"}, function(action, el, pos) {
 			// The event was bound to the <span> tag, but the node object
 			// is stored in the parent <li> tag
-            var node = $.ui.dynatree.getNode(el);
+			var node = $.ui.dynatree.getNode(el);
 			switch( action ) {
 			case "cut":
 			case "copy":
@@ -147,7 +147,7 @@
 				}
 			},
 			/*Bind context menu for every node when it's DOM element is created.
-			  We do it here, so we can also bind to lazy nodes, which do not 
+			  We do it here, so we can also bind to lazy nodes, which do not
 			  exist at load-time. (abeautifulsite.net menu control does not
 			  support event delegation)*/
 			onCreate: function(node, span){
