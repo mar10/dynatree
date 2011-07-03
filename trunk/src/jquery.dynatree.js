@@ -2547,8 +2547,7 @@ TODO: better?
 //		this.$dndMarker.attr("class", hitMode);
 		if(hitMode === "after" || hitMode === "before" || hitMode === "over"){
 //			$source && $source.addClass("dynatree-drag-source");
-			var pos = $target.position(),
-				divPos = $(this.divTree).position();
+			var pos = $target.offset();
 			switch(hitMode){
 			case "before":
 				this.$dndMarker.removeClass("dynatree-drop-after dynatree-drop-over");
@@ -2568,8 +2567,8 @@ TODO: better?
 			}
 			this.$dndMarker.css({
 					"z-index": 1000,
-					"left": (pos.left + divPos.left) + "px",
-					"top": (pos.top + divPos.top) + "px"
+					"left": pos.left + "px",
+					"top": pos.top + "px"
 				})
 				.show();
 //			helper.addClass("dynatree-drop-hover");
