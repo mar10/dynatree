@@ -1019,6 +1019,10 @@ DynaTreeNode.prototype = {
 		}
 	},
 
+	isExpanded: function() {
+		return this.bExpanded;
+	},
+
 	expand: function(flag) {
 		flag = (flag !== false);
 		if( !this.childList && !this.data.isLazy && flag ){
