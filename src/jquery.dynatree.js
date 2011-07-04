@@ -1902,7 +1902,7 @@ DynaTreeStatus._getTreePersistData = function(cookieId, cookieOpts) {
 	return ts.toDict();
 };
 // Make available in global scope
-getDynaTreePersistData = DynaTreeStatus._getTreePersistData;
+getDynaTreePersistData = DynaTreeStatus._getTreePersistData; // TODO: deprecated
 
 
 DynaTreeStatus.prototype = {
@@ -2565,10 +2565,17 @@ TODO: better?
 				$target.addClass("dynatree-drop-target");
 				pos.left += 8;
 			}
-			this.$dndMarker.css({
-					"z-index": 1000,
-					"left": pos.left + "px",
-					"top": pos.top + "px"
+//			logMsg("Creating marker: %o", this.$dndMarker);
+//			logMsg("    $target.offset=%o", $target);
+//			logMsg("    pos/$target.offset=%o", pos);
+//			logMsg("    $target.position=%o", $target.position());
+//			logMsg("    $target.offsetParent=%o, ot:%o", $target.offsetParent(), $target.offsetParent().offset());
+//			logMsg("    $(this.divTree).offset=%o", $(this.divTree).offset());
+//			logMsg("    $(this.divTree).parent=%o", $(this.divTree).parent());
+			
+			this.$dndMarker.offset({left: pos.left, top: pos.top})
+				.css({
+					"z-index": 1000
 				})
 				.show();
 //			helper.addClass("dynatree-drop-hover");
@@ -2973,6 +2980,9 @@ $.ui.dynatree.getNode = function(el) {
 	}
 	return node;
 }
+
+/**Return persistence information from cookies.*/
+$.ui.dynatree.getPersistData = DynaTreeStatus._getTreePersistData;
 
 /*******************************************************************************
  * Plugin default options:
