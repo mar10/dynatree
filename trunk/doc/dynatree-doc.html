@@ -1374,12 +1374,22 @@ $("#tree").dynatree({
 	The following methods are globally available from the ui.dynatree namespace:
 </p>
 <dl class="optionList">
-	<dt> $.ui.dynatree.getNode(el)
+	<dt>$.ui.dynatree.getNode(el)
 	<dd>
 		Return a DynaTreeNode object for a given DOM element.<br>
 		`el` may be a DOM element or a jQuery object.
+		Example: <pre class="prettyprint">$("#tree a").hover(function(){
+        var node = $.ui.dynatree.getNode(this);
+        logMsg("Hover in %s", node);
+    }, function(){
+        [...]
+    });</pre>
 	</dd>
-	<dt> $.ui.dynatree.version
+    <dt>$.ui.dynatree.getPersistData(cookieId, cookieOpts)
+    <dd>
+        Return cookie persistence info as dictionary.
+    </dd>
+	<dt>$.ui.dynatree.version
 	<dd>
 		Release version number.
 	</dd>
@@ -1472,7 +1482,7 @@ tree.enableUpdate(prevMode);</pre>
 	<dd>
 		Return cookie persistence info as dictionary.<br>
 		There is also a global function available:
-		<code>getDynaTreePersistData(cookieId, cookieOpts)</code>.
+		<code>$.ui.dynatree.getPersistData(cookieId, cookieOpts)</code>.
 	</dd>
 	<dt>tree.getRoot()
 	<dd>
