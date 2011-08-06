@@ -1,0 +1,48 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Test ISSUE</title>
+	<script src="../jquery/jquery.js" type="text/javascript"></script>
+	<script src="../jquery/jquery-ui.custom.js" type="text/javascript"></script>
+	<script src="../jquery/jquery.cookie.js" type="text/javascript"></script>
+
+	<link href="../src/skin/ui.dynatree.css" rel="stylesheet" type="text/css" id="skinSheet">
+	<script src="../src/jquery.dynatree.js" type="text/javascript"></script>
+
+	<style type="text/css">
+	</style>
+
+	<script  type="text/javascript">
+$(function () {
+	$("#tree").dynatree({
+		initAjax: {
+			url: "sample-data3.json"
+		},
+		onActivate: function(node) {
+			$("#echoActive").text("" + node + " (" + node.getKeyPath()+ ")");
+		},
+		onLazyRead: function(node){
+			node.appendAjax({
+				url: "sample-data2.json"
+			});
+		}
+	});
+	$("#btn1").click(function(e){
+		var node = $("#tree").dynatree("getActiveNode");
+		alert("1");
+	});
+	$("#btn2").click(function(e){
+		var node = $("#tree").dynatree("getActiveNode");
+		alert("2");
+	});
+});
+	</script>
+</head>
+<body>
+	<div id="tree">
+	</div>
+	<div>Active node: <span id="echoActive">-</span></div>
+
+	<button id="btn1">Action 1</button>
+	<button id="btn2">Action 2</button>
+</body>
+</html>
