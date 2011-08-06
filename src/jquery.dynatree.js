@@ -538,6 +538,7 @@ DynaTreeNode.prototype = {
 					// I've seen exceptions here with loadKeyPath...
 					if(this.ul){
 						this.ul.removeChild(firstChild.li);
+						firstChild.li = null; // avoid leaks (issue 215)
 					}
 				}catch(e){}
 				if( this.childList.length === 1 ){
