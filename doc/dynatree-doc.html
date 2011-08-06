@@ -1379,16 +1379,16 @@ $("#tree").dynatree({
 		Return a DynaTreeNode object for a given DOM element.<br>
 		`el` may be a DOM element or a jQuery object.
 		Example: <pre class="prettyprint">$("#tree a").hover(function(){
-        var node = $.ui.dynatree.getNode(this);
-        logMsg("Hover in %s", node);
-    }, function(){
-        [...]
-    });</pre>
+		var node = $.ui.dynatree.getNode(this);
+		logMsg("Hover in %s", node);
+	}, function(){
+		[...]
+	});</pre>
 	</dd>
-    <dt>$.ui.dynatree.getPersistData(cookieId, cookieOpts)
-    <dd>
-        Return cookie persistence info as dictionary.
-    </dd>
+	<dt>$.ui.dynatree.getPersistData(cookieId, cookieOpts)
+	<dd>
+		Return cookie persistence info as dictionary.
+	</dd>
 	<dt>$.ui.dynatree.version
 	<dd>
 		Release version number.
@@ -1721,6 +1721,10 @@ node.addChild({title: "New Node", key: "3333"});
 	<dd>
 		Return true, if this node is the last of all children of the current parent.
 	</dd>
+    <dt>node.isLazy()
+    <dd>
+        Return true, if the node is lazy (loaded or not).
+    </dd>
 	<dt>node.isSelected()
 	<dd>
 		Return true, if the node is selected.

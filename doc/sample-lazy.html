@@ -58,12 +58,11 @@
 		});
 		$("#btnReloadActive").click(function(){
 			var node = $("#tree").dynatree("getActiveNode");
-			if( node ){
+			if( node && node.isLazy() ){
 				node.reloadChildren(function(node, isOk){
-//                    alert("loaded " + node);
 				});
 			}else{
-				alert("No active node.");
+				alert("Please activate a lazy node first.");
 			}
 	   });
 		$("#btnLoadKeyPath").click(function(){

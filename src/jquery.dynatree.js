@@ -994,6 +994,10 @@ DynaTreeNode.prototype = {
 		return this.bSelected;
 	},
 
+	isLazy: function() {
+		return !!this.data.isLazy;
+	},
+
 	_loadContent: function() {
 		try {
 			var opts = this.tree.options;
@@ -2573,7 +2577,7 @@ TODO: better?
 //			logMsg("    $target.offsetParent=%o, ot:%o", $target.offsetParent(), $target.offsetParent().offset());
 //			logMsg("    $(this.divTree).offset=%o", $(this.divTree).offset());
 //			logMsg("    $(this.divTree).parent=%o", $(this.divTree).parent());
-			
+
 			this.$dndMarker.offset({left: pos.left, top: pos.top})
 				.css({
 					"z-index": 1000
