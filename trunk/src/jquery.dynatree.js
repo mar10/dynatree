@@ -829,6 +829,8 @@ DynaTreeNode.prototype = {
 	 * end nodes.
 	 */
 	_updatePartSelectionState: function() {
+//		alert("_updatePartSelectionState " + this);
+//		this.tree.logDebug("_updatePartSelectionState() - %o", this);
 		var sel;
 		// Return `true` or `false` for end nodes and remove part-sel flag
 		if( ! this.hasChildren() ){
@@ -868,7 +870,8 @@ DynaTreeNode.prototype = {
 	 * This includes (de)selecting all children.
 	 */
 	_fixSelectionState: function() {
-//		this.tree.logDebug("_fixSelectionState(%o) - %o", this.bSelected, this);
+//		alert("_fixSelectionState " + this);
+//		this.tree.logDebug("_fixSelectionState(%s) - %o", this.bSelected, this);
 		var p, i, l;
 		if( this.bSelected ) {
 			// Select all children
@@ -2165,7 +2168,7 @@ DynaTree.prototype = {
 
 		this._checkConsistency();
 		// Fix part-sel flags
-		if(opts.selectMode == 3){
+		if(!isLazy && opts.selectMode == 3){
 			root._updatePartSelectionState();
 		}
 		// Render html markup
@@ -2195,25 +2198,6 @@ DynaTree.prototype = {
 		this.phase = "idle";
 	},
 
-//	_setNoUpdate: function(silent) {
-//		// TODO: set options to disable and re-enable updates while loading
-//		var opts = this.options;
-//		var prev = {
-//			fx: opts.fx,
-//			autoFocus: opts.autoFocus,
-//			autoCollapse: opts.autoCollapse };
-//		if(silent === true){
-//			opts.autoFocus = false;
-//			opts.fx = null;
-//			opts.autoCollapse = false;
-//		} else {
-//			opts.autoFocus = silent.autoFocus;
-//			opts.fx = silent.fx;
-//			opts.autoCollapse = silent.autoCollapse;
-//		}
-//		return prev;
-//	},
-
 	_reloadAjax: function(callback) {
 		// Reload
 		var opts = this.options;
@@ -2237,27 +2221,36 @@ DynaTree.prototype = {
 			ajaxOpts.data.selectedKeyList = pers.selectedKeyList.join(",");
 		}
 		// Set up onPostInit callback to be called when Ajax returns
-		if( opts.onPostInit ) {
-			if( ajaxOpts.success ){
-				this.logWarning("initAjax: success callback is ignored when onPostInit was specified.");
-			}
-			if( ajaxOpts.error ){
-				this.logWarning("initAjax: error callback is ignored when onPostInit was specified.");
-			}
-			var isReloading = pers.isReloading();
-			ajaxOpts.success = function(dtnode) {
-				opts.onPostInit.call(dtnode.tree, isReloading, false);
-				if(callback){
-					callback.call(dtnode.tree, "ok");
-				}
-			};
-			ajaxOpts.error = function(dtnode) {
-				opts.onPostInit.call(dtnode.tree, isReloading, true);
-				if(callback){
-					callback.call(dtnode.tree, "error");
-				}
-			};
+//		if( opts.onPostInit || opts.selectMode == 3 ) {
+		if( ajaxOpts.success ){
+//				this.logWarning("initAjax: success callback is ignored when onPostInit was specified.");
+			this.logError("initAjax: success callback is ignored; use onPostInit instead.");
 		}
+		if( ajaxOpts.error ){
+//				this.logWarning("initAjax: error callback is ignored when onPostInit was specified.");
+			this.logError("initAjax: error callback is ignored; use onPostInit instead.");
+		}
+		var isReloading = pers.isReloading();
+		ajaxOpts.success = function(dtnode) {
+			if(opts.selectMode == 3){
+				dtnode.tree.tnRoot._updatePartSelectionState();
+			}
+			if(opts.onPostInit){
+				opts.onPostInit.call(dtnode.tree, isReloading, false);
+			}
+			if(callback){
+				callback.call(dtnode.tree, "ok");
+			}
+		};
+		ajaxOpts.error = function(dtnode) {
+			if(opts.onPostInit){
+				opts.onPostInit.call(dtnode.tree, isReloading, true);
+			}
+			if(callback){
+				callback.call(dtnode.tree, "error");
+			}
+		};
+//		}
 		this.logDebug("Dynatree._init(): send Ajax request...");
 		this.tnRoot.appendAjax(ajaxOpts);
 	},
