@@ -34,6 +34,11 @@ body.example p.sample-links
 	font-size: small;
 }
 
+p.version-info
+{
+	color: gray;
+	font-size: 0.6em;
+}
 p.sample-links a,
 p.sample-links a:visited
 {
