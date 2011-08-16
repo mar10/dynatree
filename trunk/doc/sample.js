@@ -37,10 +37,12 @@ function initCodeSamples()
 			$source.hide("fast");
 		}
 	);
-	var info = "Dynatree " + jQuery.ui.dynatree.version
-		+ ", jQuery UI " + jQuery.ui.version
-		+ ", jQuery " + jQuery.fn.jquery;
-	$("p.sample-links").after("<p class='version-info'>" + info + "</p>");
+	if(jQuery.ui){
+		var info = "Dynatree " + jQuery.ui.dynatree.version
+			+ ", jQuery UI " + jQuery.ui.version
+			+ ", jQuery " + jQuery.fn.jquery;
+		$("p.sample-links").after("<p class='version-info'>" + info + "</p>");
+	}
 }
 
 
