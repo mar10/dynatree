@@ -12,6 +12,7 @@
   * Updated to jQuery 1.6.1<br>*NOTE*: Starting with jQuery 1.6 we must use `.prop('dtnode')` instead of `.attr('dtnode')` to get the Dynatree node from an HTML element.<br>See issue 203 for details.
   * Support `<a>` tags (issue 138)
   * Added node.isLazy()
+  * New helper function $.ui.dynatree.getNode(el) returns a !DynaTreeNode object for a given DOM element or jQuery object.
   * Fixed problem with partial selection initialization (issue 193)
   * Fixed d'n'd sample (issue 185)
   * Fixed issue 186: Selecting parent selects unselectable children
