@@ -2192,8 +2192,13 @@ DynaTree.prototype = {
 			this.logDebug("Focus on init: %o", this.focusNode);
 			this.focusNode.focus();
 		}
-		if( !isLazy && opts.onPostInit ) {
-			opts.onPostInit.call(this, isReloading, false);
+		if( !isLazy ) {
+			if( opts.onPostInit ) {
+				opts.onPostInit.call(this, isReloading, false);
+			}
+			if( callback ){
+				callback.call(this, "ok");
+			}
 		}
 		this.phase = "idle";
 	},
