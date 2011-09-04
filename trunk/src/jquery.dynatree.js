@@ -2226,14 +2226,11 @@ DynaTree.prototype = {
 			ajaxOpts.data.selectedKeyList = pers.selectedKeyList.join(",");
 		}
 		// Set up onPostInit callback to be called when Ajax returns
-//		if( opts.onPostInit || opts.selectMode == 3 ) {
 		if( ajaxOpts.success ){
-//				this.logWarning("initAjax: success callback is ignored when onPostInit was specified.");
-			this.logError("initAjax: success callback is ignored; use onPostInit instead.");
+			this.logWarning("initAjax: success callback is ignored; use onPostInit instead.");
 		}
 		if( ajaxOpts.error ){
-//				this.logWarning("initAjax: error callback is ignored when onPostInit was specified.");
-			this.logError("initAjax: error callback is ignored; use onPostInit instead.");
+			this.logWarning("initAjax: error callback is ignored; use onPostInit instead.");
 		}
 		var isReloading = pers.isReloading();
 		ajaxOpts.success = function(dtnode) {
