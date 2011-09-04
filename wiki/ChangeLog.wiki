@@ -7,6 +7,7 @@
 ==== Release 1.x ====
 
 ===== 1.2.0 =====
+  * Pass additional error info to onPostInit() (issue 224)
   * New node.onCreate() event to allow lazy binding (issue 210)
   * Native support for ASP.NET 3.5 Ajax services (issue 202)
   * Updated to jQuery 1.6.1<br>*NOTE*: Starting with jQuery 1.6 we must use `.prop('dtnode')` instead of `.attr('dtnode')` to get the Dynatree node from an HTML element.<br>See issue 203 for details.
