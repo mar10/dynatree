@@ -860,9 +860,11 @@ and <code>tree.isReloading()</code> to determine who generated this event.
 	Called when a lazy node is expanded for the first time.
 	</dd>
 
-	<dt>opts.onPostInit(isReloading, isError)
+	<dt>opts.onPostInit(isReloading, isError [, XMLHttpRequest, textStatus, errorThrown])
 	<dd>
-	Called when the tree was (re)loaded.
+	Called when the tree was (re)loaded.<br>
+	In case of an error, <code>isError</code> will be <code>true</code> and
+	addition info is passed: XMLHttpRequest, textStatus, errorThrown.
 	</dd>
 
 	<dt>opts.onQueryActivate(flag, node)
@@ -1265,7 +1267,7 @@ $("#tree").dynatree({
 	onPostInit: function(isReloading, isError) {
 		// 'this' is the current tree
 		// isReloading is true, if status was read from existing cookies
-		// isError is only used in Ajay mode
+		// isError is only used in Ajax mode
 		// Fire an onActivate() event for the currently active node
 		this.reactivate();
 	},

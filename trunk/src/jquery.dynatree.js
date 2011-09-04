@@ -1734,7 +1734,7 @@ DynaTreeNode.prototype = {
 				}
 				self.tree.phase = "postInit";
 				if( orgSuccess ){
-					orgSuccess.call(options, self);
+					orgSuccess.call(options, self, data, textStatus);
 				}
 				self.tree.logDebug("trigger " + eventType);
 				self.tree.$tree.trigger(eventType, [self, true]);
@@ -2233,7 +2233,7 @@ DynaTree.prototype = {
 			this.logWarning("initAjax: error callback is ignored; use onPostInit instead.");
 		}
 		var isReloading = pers.isReloading();
-		ajaxOpts.success = function(dtnode) {
+		ajaxOpts.success = function(dtnode, data, textStatus) {
 			if(opts.selectMode == 3){
 				dtnode.tree.tnRoot._updatePartSelectionState();
 			}
@@ -2244,12 +2244,12 @@ DynaTree.prototype = {
 				callback.call(dtnode.tree, "ok");
 			}
 		};
-		ajaxOpts.error = function(dtnode) {
+		ajaxOpts.error = function(dtnode, XMLHttpRequest, textStatus, errorThrown) {
 			if(opts.onPostInit){
-				opts.onPostInit.call(dtnode.tree, isReloading, true);
+				opts.onPostInit.call(dtnode.tree, isReloading, true, XMLHttpRequest, textStatus, errorThrown);
 			}
 			if(callback){
-				callback.call(dtnode.tree, "error");
+				callback.call(dtnode.tree, "error", XMLHttpRequest, textStatus, errorThrown);
 			}
 		};
 //		}
