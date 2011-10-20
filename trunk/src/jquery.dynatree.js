@@ -216,12 +216,12 @@ DynaTreeNode.prototype = {
 			nodeTitle = opts.onCustomRender.call(tree, this) || "";
 		}
 		if(!nodeTitle){
-			var tooltip = data.tooltip ? " title='" + data.tooltip + "'" : "";
+			var tooltip = data.tooltip ? ' title="' + data.tooltip.replace(/\"/g, '&quot;') + '"' : '';
 			if( opts.noLink || data.noLink ) {
-				nodeTitle = "<span style='display: inline-block;' class='" + opts.classNames.title + "'" + tooltip + ">" + data.title + "</span>";
+				nodeTitle = '<span style="display:inline-block;" class="' + opts.classNames.title + '"' + tooltip + '>' + data.title + '</span>';
 //				this.tree.logDebug("nodeTitle: " + nodeTitle);
-			}else{
-				nodeTitle = "<a href='#' class='" + opts.classNames.title + "'" + tooltip + ">" + data.title + "</a>";
+			} else {
+				nodeTitle = '<a href="#" class="' + opts.classNames.title + '"' + tooltip + '>' + data.title + '</a>';
 			}
 		}
 		res += nodeTitle;
