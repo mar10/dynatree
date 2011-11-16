@@ -6,6 +6,10 @@
 
 ==== Release 1.x ====
 
+===== 1.2.1 =====
+  * Fixed $.dynatree.getNode() (issue 247)
+  * Updated to jQuery 1.7
+
 ===== 1.2.0 =====
   * Pass additional error info to onPostInit() (issue 224)
   * New node.onCreate() event to allow lazy binding (issue 210)
