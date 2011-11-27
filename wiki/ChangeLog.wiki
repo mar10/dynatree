@@ -7,6 +7,7 @@
 ==== Release 1.x ====
 
 ===== 1.2.1 =====
+  * Improved ASP.NET support to decode data.d JSON strings (issue 202, credits to Joel)
   * Fixed $.dynatree.getNode() (issue 247)
   * Updated to jQuery 1.7
 
