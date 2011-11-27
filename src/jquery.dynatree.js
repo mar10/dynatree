@@ -1727,8 +1727,8 @@ DynaTreeNode.prototype = {
 				// Process ASPX WebMethod JSON object inside "d" property
 				// http://code.google.com/p/dynatree/issues/detail?id=202
 				else if (data && data.hasOwnProperty("d")) {
-					data = data.d;
-				}
+				   data = (typeof data.d) == "string" ? $.parseJSON(data.d) : response.d;
+				}				
 				if(!$.isArray(data) || data.length !== 0){
 					self.addChild(data, null);
 				}
