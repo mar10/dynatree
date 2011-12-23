@@ -73,8 +73,8 @@ span.dynatree-drag-helper-img,
 {
 	width: 16px;
 	height: 16px;
-	display: -moz-inline-box; /* @ FF 1+2 */
-	-moz-box-align: start; /* issue 221 */
+/*	display: -moz-inline-box; /* @ FF 1+2 removed for issue 221*/
+/*	-moz-box-align: start; /* issue 221 */
 	display: inline-block; /* Required to make a span sizeable */
 	vertical-align: top;
 	background-repeat: no-repeat;
@@ -281,8 +281,8 @@ span.dynatree-icon /* Default icon */
    Removed again for issue 165; (133 couldn't be reproduced) */
 span.dynatree-node
 {
-	display: -moz-inline-box; /* issue 133, 165, 172, 192 */
-	-moz-box-align: start; /* issue 221 */
+/*	display: -moz-inline-box; /* issue 133, 165, 172, 192. removed for issue 221 */
+/*	-moz-box-align: start; /* issue 221 */
 /*  display: inline-block; /* Required to make a span sizeable */
 }
 
