@@ -3170,10 +3170,16 @@ function _initDragAndDrop(tree) {
 			// Let source tree create the helper element
 			helper: function(event) {
 				var sourceNode = $.ui.dynatree.getNode(event.target);
+				if(!sourceNode){ // issue 211
+                    return "<div></div>";
+				}
 				return sourceNode.tree._onDragEvent("helper", sourceNode, null, event, null, null);
 			},
             start: function(event, ui) {
                 var sourceNode = $.ui.dynatree.getNode(event.srcElement);
+                if(!sourceNode){// issue 211
+                    return false;
+                }
             },
 			_last: null
 		});
