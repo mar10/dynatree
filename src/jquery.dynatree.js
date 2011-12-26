@@ -95,12 +95,16 @@ var Class = {
 
 // Tool function to get dtnode from the event target:
 function getDtNodeFromElement(el) {
+	alert("getDtNodeFromElement is deprecated");
+	return $.ui.dynatree.getNode(el);
+/*
 	var iMax = 5;
 	while( el && iMax-- ) {
 		if(el.dtnode) { return el.dtnode; }
 		el = el.parentNode;
 	}
 	return null;
+*/
 }
 
 function noop() {
@@ -2850,7 +2854,7 @@ $.widget("ui.dynatree", {
 			eventNames += " keypress.dynatree keydown.dynatree";
 		}
 		this.element.bind(eventNames, function(event){
-			var dtnode = getDtNodeFromElement(event.target);
+			var dtnode = $.ui.dynatree.getNode(event.target);
 			if( !dtnode ){
 				return true;  // Allow bubbling of other events
 			}
@@ -2890,7 +2894,7 @@ $.widget("ui.dynatree", {
 //			var args = jQuery.makeArray( arguments );
 //			event = args[0] = jQuery.event.fix( event || window.event );
 			event = $.event.fix( event || window.event );
-			var dtnode = getDtNodeFromElement(event.target);
+			var dtnode = $.ui.dynatree.getNode(event.target);
 			return dtnode ? dtnode._onFocus(event) : false;
 		}
 		var div = this.tree.divTree;
@@ -2969,6 +2973,14 @@ $.ui.dynatree.getNode = function(el) {
 	}
 	// TODO: for some reason $el.parents("[dtnode]") does not work (jQuery 1.6.1)
 	// maybe, because dtnode is a property, not an attribute
+	while( el ) {
+		if(el.dtnode) { 
+			return el.dtnode; 
+		}
+		el = el.parentNode;
+	}
+	return null;
+/*
 	var $el = el.selector === undefined ? $(el) : el,
 //		parent = $el.closest("[dtnode]"),
 //		parent = $el.parents("[dtnode]").first(),
@@ -2980,14 +2992,8 @@ $.ui.dynatree.getNode = function(el) {
 			return false;
 		}
 	});
-	/*
-	if(typeof parent.prop == "function"){
-		node = parent.prop("dtnode");
-	}else{ // pre jQuery 1.6
-		node = parent.attr("dtnode");
-	}
-	*/
 	return node;
+*/
 }
 
 /**Return persistence information from cookies.*/
@@ -3163,9 +3169,12 @@ function _initDragAndDrop(tree) {
 			connectToDynatree: true,
 			// Let source tree create the helper element
 			helper: function(event) {
-				var sourceNode = getDtNodeFromElement(event.target);
+				var sourceNode = $.ui.dynatree.getNode(event.target);
 				return sourceNode.tree._onDragEvent("helper", sourceNode, null, event, null, null);
 			},
+            start: function(event, ui) {
+                var sourceNode = $.ui.dynatree.getNode(event.srcElement);
+            },
 			_last: null
 		});
 	}
@@ -3211,8 +3220,8 @@ var _registerDnd = function() {
 			var draggable = $(this).data("draggable");
 			var sourceNode = ui.helper.data("dtSourceNode") || null;
 			var prevTargetNode = ui.helper.data("dtTargetNode") || null;
-			var targetNode = getDtNodeFromElement(event.target);
-//			logMsg("getDtNodeFromElement(%o): %s", event.target, targetNode);
+			var targetNode = $.ui.dynatree.getNode(event.target);
+//			logMsg("$.ui.dynatree.getNode(%o): %s", event.target, targetNode);
 			if(event.target && !targetNode){
 				// We got a drag event, but the targetNode could not be found
 				// at the event location. This may happen, if the mouse
