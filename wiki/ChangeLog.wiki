@@ -13,7 +13,7 @@
   * Fixed broken icons, when line-height > 1em (issue 237)
   * Fixed $.dynatree.getNode() (issue 247)
   * Deprecated getDtNodeFromElement()
-  * Updated to jQuery 1.7
+  * Updated to jQuery 1.7.1
 
 ===== 1.2.0 =====
   * Pass additional error info to onPostInit() (issue 224)
