@@ -3212,10 +3212,10 @@ var _registerDnd = function() {
 		start: function(event, ui) {
 			var draggable = $(this).data("draggable"),
 				sourceNode = ui.helper.data("dtSourceNode") || null;
-			logMsg("draggable-connectToDynatree.start, %s", sourceNode);
+//			logMsg("draggable-connectToDynatree.start, %s", sourceNode);
 //			logMsg("    this: %o", this);
 //			logMsg("    event: %o", event);
-			logMsg("    draggable: %o", draggable);
+//			logMsg("    draggable: %o", draggable);
 //			logMsg("    ui: %o", ui);
 
 			if(sourceNode) {
@@ -3224,10 +3224,6 @@ var _registerDnd = function() {
 //				draggable.offset.click.left -= event.target.offsetLeft;
 				draggable.offset.click.top = -2;
 				draggable.offset.click.left = + 16;
-
-//				draggable.scrollParent = $(sourceNode.tree.divTree);
-//				draggable.overflowOffset = draggable.scrollParent.offset()
-
 //				logMsg("    draggable2: %o", draggable);
 //				logMsg("    draggable.offset.click FIXED: %s/%s", draggable.offset.click.left, draggable.offset.click.top);
 				// Trigger onDragStart event
