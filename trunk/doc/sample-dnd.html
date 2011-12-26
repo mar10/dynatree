@@ -43,8 +43,9 @@ $(function(){
 				 */
 				// Prevent dropping a parent below another parent (only sort
 				// nodes under the same parent)
-				if(node.parent !== sourceNode.parent)
+				if(node.parent !== sourceNode.parent){
 					return false;
+				}
 				// Don't allow dropping *over* a node (would create a child)
 				return ["before", "after"];
 			},

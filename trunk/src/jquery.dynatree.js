@@ -1732,7 +1732,7 @@ DynaTreeNode.prototype = {
 				// http://code.google.com/p/dynatree/issues/detail?id=202
 				else if (data && data.hasOwnProperty("d")) {
 				   data = (typeof data.d) == "string" ? $.parseJSON(data.d) : response.d;
-				}				
+				}
 				if(!$.isArray(data) || data.length !== 0){
 					self.addChild(data, null);
 				}
@@ -2649,21 +2649,25 @@ TODO: better?
 //		if(eventName !== "over"){
 //			this.logDebug("tree._onDragEvent(%s, %o, %o) - %o", eventName, node, otherNode, this);
 //		}
-		var opts = this.options;
-		var dnd = this.options.dnd;
-		var res = null;
-		var nodeTag = $(node.span);
-		var hitMode;
+		var opts = this.options,
+			dnd = this.options.dnd,
+			res = null,
+			nodeTag = $(node.span),
+			hitMode;
 
 		switch (eventName) {
 		case "helper":
 			// Only event and node argument is available
-			var helper = $("<div class='dynatree-drag-helper'><span class='dynatree-drag-helper-img' /></div>")
+			var $helper = $("<div class='dynatree-drag-helper'><span class='dynatree-drag-helper-img' /></div>")
 				.append($(event.target).closest('a').clone());
+			// issue 244: helper should be child of scrollParent
+			$("ul.dynatree-container", node.tree.divTree).append($helper);
+//			$(node.tree.divTree).append($helper);
 			// Attach node reference to helper object
-			helper.data("dtSourceNode", node);
-//			this.logDebug("helper.sourceNode=%o", helper.data("dtSourceNode"));
-			res = helper;
+			$helper.data("dtSourceNode", node);
+			this.logDebug("helper=%o", $helper);
+			this.logDebug("helper.sourceNode=%o", $helper.data("dtSourceNode"));
+			res = $helper;
 			break;
 		case "start":
 			if(node.isStatusNode()) {
@@ -2974,8 +2978,8 @@ $.ui.dynatree.getNode = function(el) {
 	// TODO: for some reason $el.parents("[dtnode]") does not work (jQuery 1.6.1)
 	// maybe, because dtnode is a property, not an attribute
 	while( el ) {
-		if(el.dtnode) { 
-			return el.dtnode; 
+		if(el.dtnode) {
+			return el.dtnode;
 		}
 		el = el.parentNode;
 	}
@@ -3165,22 +3169,25 @@ function _initDragAndDrop(tree) {
 			delay: 0,
 			distance: 4,
 			revert: false,
+			scroll: true, // issue 244: enable scrolling (if ul.dynatree-container)
+			scrollSpeed: 7,
+			scrollSensitivity: 10,
 			// Delegate draggable.start, drag, and stop events to our handler
 			connectToDynatree: true,
 			// Let source tree create the helper element
 			helper: function(event) {
 				var sourceNode = $.ui.dynatree.getNode(event.target);
 				if(!sourceNode){ // issue 211
-                    return "<div></div>";
+					return "<div></div>";
 				}
 				return sourceNode.tree._onDragEvent("helper", sourceNode, null, event, null, null);
 			},
-            start: function(event, ui) {
-                var sourceNode = $.ui.dynatree.getNode(event.srcElement);
-                if(!sourceNode){// issue 211
-                    return false;
-                }
-            },
+			start: function(event, ui) {
+				var sourceNode = $.ui.dynatree.getNode(event.target);
+				if(!sourceNode){// issue 211
+					return false;
+				}
+			},
 			_last: null
 		});
 	}
@@ -3203,19 +3210,25 @@ var _registerDnd = function() {
 	}
 	$.ui.plugin.add("draggable", "connectToDynatree", {
 		start: function(event, ui) {
-			var draggable = $(this).data("draggable");
-			var sourceNode = ui.helper.data("dtSourceNode") || null;
-//			logMsg("draggable-connectToDynatree.start, %s", sourceNode);
+			var draggable = $(this).data("draggable"),
+				sourceNode = ui.helper.data("dtSourceNode") || null;
+			logMsg("draggable-connectToDynatree.start, %s", sourceNode);
 //			logMsg("    this: %o", this);
 //			logMsg("    event: %o", event);
-//			logMsg("    draggable: %o", draggable);
+			logMsg("    draggable: %o", draggable);
 //			logMsg("    ui: %o", ui);
+
 			if(sourceNode) {
 				// Adjust helper offset, so cursor is slightly outside top/left corner
 //				draggable.offset.click.top -= event.target.offsetTop;
 //				draggable.offset.click.left -= event.target.offsetLeft;
 				draggable.offset.click.top = -2;
 				draggable.offset.click.left = + 16;
+
+//				draggable.scrollParent = $(sourceNode.tree.divTree);
+//				draggable.overflowOffset = draggable.scrollParent.offset()
+
+//				logMsg("    draggable2: %o", draggable);
 //				logMsg("    draggable.offset.click FIXED: %s/%s", draggable.offset.click.left, draggable.offset.click.top);
 				// Trigger onDragStart event
 				// TODO: when called as connectTo..., the return value is ignored(?)
@@ -3223,10 +3236,10 @@ var _registerDnd = function() {
 			}
 		},
 		drag: function(event, ui) {
-			var draggable = $(this).data("draggable");
-			var sourceNode = ui.helper.data("dtSourceNode") || null;
-			var prevTargetNode = ui.helper.data("dtTargetNode") || null;
-			var targetNode = $.ui.dynatree.getNode(event.target);
+			var draggable = $(this).data("draggable"),
+				sourceNode = ui.helper.data("dtSourceNode") || null,
+				prevTargetNode = ui.helper.data("dtTargetNode") || null,
+				targetNode = $.ui.dynatree.getNode(event.target);
 //			logMsg("$.ui.dynatree.getNode(%o): %s", event.target, targetNode);
 			if(event.target && !targetNode){
 				// We got a drag event, but the targetNode could not be found
@@ -3259,16 +3272,16 @@ var _registerDnd = function() {
 			// else go ahead with standard event handling
 		},
 		stop: function(event, ui) {
-			var draggable = $(this).data("draggable");
-			var sourceNode = ui.helper.data("dtSourceNode") || null;
-			var targetNode = ui.helper.data("dtTargetNode") || null;
+			var draggable = $(this).data("draggable"),
+				sourceNode = ui.helper.data("dtSourceNode") || null,
+				targetNode = ui.helper.data("dtTargetNode") || null,
+				mouseDownEvent = draggable._mouseDownEvent,
+				eventType = event.type,
+				dropped = (eventType == "mouseup" && event.which == 1);
 //			logMsg("draggable-connectToDynatree.stop: targetNode(from event): %s, dtTargetNode: %s", targetNode, ui.helper.data("dtTargetNode"));
 //			logMsg("draggable-connectToDynatree.stop, %s", sourceNode);
-			var mouseDownEvent = draggable._mouseDownEvent;
-			var eventType = event.type;
 //			logMsg("    type: %o, downEvent: %o, upEvent: %o", eventType, mouseDownEvent, event);
 //			logMsg("    targetNode: %o", targetNode);
-			var dropped = (eventType == "mouseup" && event.which == 1);
 			if(!dropped){
 				logMsg("Drag was cancelled");
 			}
