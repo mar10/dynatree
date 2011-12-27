@@ -375,6 +375,8 @@ div.dynatree-drop-reject span.dynatree-drag-helper-img
 	width: 24px;
 	position: absolute;
 	background-position: 0 -128px;
+	margin: 0;
+/*	border: 1px solid red; */
 }
 #dynatree-drop-marker.dynatree-drop-after,
 #dynatree-drop-marker.dynatree-drop-before
