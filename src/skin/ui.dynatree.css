@@ -282,7 +282,7 @@ ul.dynatree-container a
 ul.dynatree-container a:hover
 {
 /*	text-decoration: underline; */
-	background: #F2F7FD; /* light blue */
+	background-color: #F2F7FD; /* light blue */
 	border-color: #B8D6FB; /* darker light blue */
 }
 
