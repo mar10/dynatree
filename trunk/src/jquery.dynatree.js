@@ -2552,6 +2552,9 @@ TODO: better?
 		if(hitMode === "after" || hitMode === "before" || hitMode === "over"){
 //			$source && $source.addClass("dynatree-drag-source");
 			var pos = $target.offset();
+
+//			$target.addClass("dynatree-drop-target");
+			
 			switch(hitMode){
 			case "before":
 				this.$dndMarker.removeClass("dynatree-drop-after dynatree-drop-over");
@@ -2576,9 +2579,14 @@ TODO: better?
 //			logMsg("    $target.offsetParent=%o, ot:%o", $target.offsetParent(), $target.offsetParent().offset());
 //			logMsg("    $(this.divTree).offset=%o", $(this.divTree).offset());
 //			logMsg("    $(this.divTree).parent=%o", $(this.divTree).parent());
-
-			this.$dndMarker.offset({left: pos.left, top: pos.top})
+//			var pos = $target.offset();
+//			var parentPos = $target.offsetParent().offset();
+//			var bodyPos = $target.offsetParent().offset();
+			
+			this.$dndMarker //.offset({left: pos.left, top: pos.top})
 				.css({
+					"left": pos.left, 
+					"top": pos.top,
 					"z-index": 1000
 				})
 				.show();
@@ -2665,8 +2673,8 @@ TODO: better?
 //			$(node.tree.divTree).append($helper);
 			// Attach node reference to helper object
 			$helper.data("dtSourceNode", node);
-			this.logDebug("helper=%o", $helper);
-			this.logDebug("helper.sourceNode=%o", $helper.data("dtSourceNode"));
+//			this.logDebug("helper=%o", $helper);
+//			this.logDebug("helper.sourceNode=%o", $helper.data("dtSourceNode"));
 			res = $helper;
 			break;
 		case "start":
@@ -3237,6 +3245,7 @@ var _registerDnd = function() {
 				prevTargetNode = ui.helper.data("dtTargetNode") || null,
 				targetNode = $.ui.dynatree.getNode(event.target);
 //			logMsg("$.ui.dynatree.getNode(%o): %s", event.target, targetNode);
+//			logMsg("connectToDynatree.drag: helper: %o", ui.helper[0]);
 			if(event.target && !targetNode){
 				// We got a drag event, but the targetNode could not be found
 				// at the event location. This may happen, if the mouse
