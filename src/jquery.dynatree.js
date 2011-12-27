@@ -2554,7 +2554,7 @@ TODO: better?
 			var pos = $target.offset();
 
 //			$target.addClass("dynatree-drop-target");
-			
+
 			switch(hitMode){
 			case "before":
 				this.$dndMarker.removeClass("dynatree-drop-after dynatree-drop-over");
@@ -2582,10 +2582,10 @@ TODO: better?
 //			var pos = $target.offset();
 //			var parentPos = $target.offsetParent().offset();
 //			var bodyPos = $target.offsetParent().offset();
-			
+
 			this.$dndMarker //.offset({left: pos.left, top: pos.top})
 				.css({
-					"left": pos.left, 
+					"left": pos.left,
 					"top": pos.top,
 					"z-index": 1000
 				})
