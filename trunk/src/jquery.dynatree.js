@@ -220,12 +220,13 @@ DynaTreeNode.prototype = {
 			nodeTitle = opts.onCustomRender.call(tree, this) || "";
 		}
 		if(!nodeTitle){
-			var tooltip = data.tooltip ? ' title="' + data.tooltip.replace(/\"/g, '&quot;') + '"' : '';
+			var tooltip = data.tooltip ? ' title="' + data.tooltip.replace(/\"/g, '&quot;') + '"' : '',
+				href = data.href || "#";
 			if( opts.noLink || data.noLink ) {
 				nodeTitle = '<span style="display:inline-block;" class="' + opts.classNames.title + '"' + tooltip + '>' + data.title + '</span>';
 //				this.tree.logDebug("nodeTitle: " + nodeTitle);
 			} else {
-				nodeTitle = '<a href="#" class="' + opts.classNames.title + '"' + tooltip + '>' + data.title + '</a>';
+				nodeTitle = '<a href="' + href + '" class="' + opts.classNames.title + '"' + tooltip + '>' + data.title + '</a>';
 			}
 		}
 		res += nodeTitle;
@@ -564,8 +565,8 @@ DynaTreeNode.prototype = {
 	},
 
 	setLazyNodeStatus: function(lts, opts) {
-		var tooltip = (opts && opts.tooltip) ? opts.tooltip : null;
-		var info = (opts && opts.info) ? " (" + opts.info + ")" : "";
+		var tooltip = (opts && opts.tooltip) ? opts.tooltip : null,
+			info = (opts && opts.info) ? " (" + opts.info + ")" : "";
 		switch( lts ) {
 			case DTNodeStatus_Ok:
 				this._setStatusNode(null);
@@ -3141,6 +3142,7 @@ $.ui.dynatree.nodedatadefaults = {
 	isFolder: false, // Use a folder icon. Also the node is expandable but not selectable.
 	isLazy: false, // Call onLazyRead(), when the node is expanded for the first time to allow for delayed creation of children.
 	tooltip: null, // Show this popup text.
+	href: null, // Added to the generated <a> tag.
 	icon: null, // Use a custom image (filename relative to tree.options.imagePath). 'null' for default icon, 'false' for no icon.
 	addClass: null, // Class name added to the node's span tag.
 	noLink: false, // Use <span> instead of <a> tag for this node
