@@ -7,7 +7,7 @@
 ==== Release 1.x ====
 
 ===== 1.2.1 =====
-  * Scrolling is enabled for drag'n'drop (requires CSS `overflow: scroll` on the container)(issue 244)
+  * Scrolling is enabled for drag'n'drop (requires CSS `overflow: scroll` on the container) (issue 244)
   * Improved ASP.NET support to decode data.d JSON strings (issue 202, credits to Joel Nelson)
   * New option `data.href` for JSON data (issue 241)
   * New method `node.isLoading()` (issue 260)
