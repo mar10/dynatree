@@ -1401,15 +1401,9 @@ DynaTreeNode.prototype = {
 				}
 				tn.removeChildren(true, retainPersistence);
 				if(this.ul){
-					this.ul.removeChild(tn.li);
+//					this.ul.removeChild(tn.li);
+					$("li", $(this.ul)).remove(); // issue 231
 				}
-/*
-				try{
-					this.ul.removeChild(tn.li);
-				}catch(e){
-					this.tree.logDebug("%s.removeChildren: couldnt remove LI", this, e);
-				}
-*/
 //				delete tn;  JSLint complained
 			}
 			// Set to 'null' which is interpreted as 'not yet loaded' for lazy
