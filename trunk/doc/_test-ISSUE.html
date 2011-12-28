@@ -17,13 +17,15 @@ $(function () {
 		initAjax: {
 			url: "sample-data3.json"
 		},
+		onLazyRead: function(node){
+			// Mockup a slow reqeuest ...
+			node.appendAjax({
+				url: "sample-data2.json",
+				debugLazyDelay: 750 // don't do this in production code
+			});
+		},
 		onActivate: function(node) {
 			$("#echoActive").text("" + node + " (" + node.getKeyPath()+ ")");
-		},
-		onLazyRead: function(node){
-			node.appendAjax({
-				url: "sample-data2.json"
-			});
 		}
 	});
 	$("#btn1").click(function(e){

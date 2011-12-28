@@ -1699,10 +1699,6 @@ node.addChild({title: "New Node", key: "3333"});
 		Return true, if this node is activated. Only one tree node may be active
 		at any time.
 	</dd>
-	<dt>node.isFocused()
-	<dd>
-		Return true, if this node is has the focus.
-	</dd>
 	<dt>node.isChildOf(otherNode)
 	<dd>
 		Return true, if this node is a <i>direct</i> child of
@@ -1721,6 +1717,10 @@ node.addChild({title: "New Node", key: "3333"});
 	<dd>
 		Return true, if this node is the first of all children of the current parent.
 	</dd>
+	<dt>node.isFocused()
+	<dd>
+		Return true, if this node is has the focus.
+	</dd>
 	<dt>node.isLastSibling()
 	<dd>
 		Return true, if this node is the last of all children of the current parent.
@@ -1728,6 +1728,10 @@ node.addChild({title: "New Node", key: "3333"});
 	<dt>node.isLazy()
 	<dd>
 		Return true, if the node is lazy (loaded or not).
+	</dd>
+	<dt>node.isLoading()
+	<dd>
+		Return true, if the node is lazy and currently loading (i.e. an Ajax request is active).
 	</dd>
 	<dt>node.isSelected()
 	<dd>
