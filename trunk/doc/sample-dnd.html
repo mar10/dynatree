@@ -25,6 +25,13 @@ $(function(){
 		initAjax: {
 			url: "sample-data3.json"
 		},
+		onLazyRead: function(node){
+			// Mockup a slow reqeuest ...
+			node.appendAjax({
+				url: "sample-data2.json",
+				debugLazyDelay: 750 // don't do thi in production code
+			});
+		},
 		dnd: {
 			preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
 			onDragStart: function(node) {

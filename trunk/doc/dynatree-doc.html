@@ -1686,9 +1686,10 @@ node.addChild({title: "New Node", key: "3333"});
 	</dd>
 	<dt>node.hasChildren()
 	<dd>
-		Return <code>true</code>, if node has child nodes.<br>
-		For lazy nodes that have not yet been loaded, <code>undefined</code> is
-		is returned.<br>
+		Return <code>true</code> if node has child nodes.<br>
+		Return <code>false</code> if node is a leaf, i.e. has no child nodes.<br>
+		Return <code>undefined</code> if this is a lazy node, that was not yet 
+		successfully loaded.<br>
 		A test for 'node is surely empty' would be coded like
 		<pre class="prettyprint">if(node.hasChildren() === false) ...</pre>
 	</dd>
