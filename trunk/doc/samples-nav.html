@@ -16,7 +16,6 @@
 body {
 	background-color: #39414A;
 	color: white;
-	padding: 3px 10px;
 	font-family: Helvetica, Arial, sans-serif;
 	font-size: smaller;
 	background-image: url("nav_bg.png");
@@ -29,7 +28,16 @@ a {
 a:hover {
 	text-decoration: underline;
 }
+div#tree {
+    position: absolute;
+    height: 95%;
+    width: 95%;
+    padding: 5px;
+    margin-right: 16px;
+}
 ul.dynatree-container {
+    height: 100%;
+    width: 100%;
 	background-color: transparent;
 }
 ul.dynatree-container a {
@@ -73,6 +81,8 @@ ul.dynatree-container a:focus, span.dynatree-focused a:link {
 <body>
 	<div id="tree">
 	<ul>
+    <li><a target="_blank" href="dynatree-doc.html">Documentation</a>
+    <li><a target="_blank" href="http://dynatree.googlecode.com">jquery.dynatree.js</a>
 	<li class="folder expnded"> Examples
 		<ul>
 			<li><a target="content" href="sample-default.html">Default options</a>
@@ -117,9 +127,5 @@ ul.dynatree-container a:focus, span.dynatree-focused a:link {
 		</ul>
 	</ul>
 	</div>
-	<hr>
-	<p><a href="dynatree-doc.html" target="_blank">Documentation</a></p>
-	<hr>
-	<p><a href="http://dynatree.googlecode.com" target="_blank">jquery.dynatree.js</a></p>
 </body>
 </html><html><body></body></html>
