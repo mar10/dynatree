@@ -20,12 +20,12 @@
 
 <script type="text/javascript">
 /**
- * 
+ * Implement inline editing for a dynatree node
  */
 function editNode(node){
 	var prevTitle = node.data.title,
 		tree = node.tree; 
-	// Disable tree mouse- and key handling
+	// Disable dynatree mouse- and key handling
 	tree.$widget.unbind();
 	// Replace node with <input>
 	$(".dynatree-title", node.span).html("<input id='editNode' value='" + prevTitle + "'>");
@@ -61,7 +61,7 @@ $(function(){
 	$("#tree").dynatree({
 		title: "Event samples",
 		onClick: function(node, event) {
-			if( event.shiftKey || node.isActive() ){
+			if( event.shiftKey ){
 				editNode(node);
 				return false;
 			}
@@ -92,7 +92,7 @@ $(function(){
 	<p class="description">
 		Demos how to edit node titles with<br>
 		- dblclick<br>
-		- Slow click (i.e. clicking an active node)<br>
+		- Shift + click
 		- [F2]<br>
 		- [Enter] (on Mac)<br>
 	</p>
