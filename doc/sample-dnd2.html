@@ -34,6 +34,13 @@ $(function(){
 		initAjax: {
 			url: "sample-data3.json"
 		},
+		onLazyRead: function(node){
+			// Mockup a slow reqeuest ...
+			node.appendAjax({
+				url: "sample-data2.json",
+				debugLazyDelay: 750 // don't do this in production code
+			});
+		},
 		dnd: {
 			onDragStart: function(node) {
 				/** This function MUST be defined to enable dragging for the tree.
