@@ -436,9 +436,6 @@ span.dynatree-drop-target
 }
 span.dynatree-drop-target a
 {
-	/*background-repeat: no-repeat;
-	background-position: right;
-	background-image: url("drop_child.gif");*/
 }
 span.dynatree-drop-target.dynatree-drop-accept a
 {
@@ -453,7 +450,4 @@ span.dynatree-drop-target.dynatree-drop-reject
 }
 span.dynatree-drop-target.dynatree-drop-after a
 {
-	/*background-repeat: repeat-x;
-	background-position: bottom;
-	background-image: url("drop_append.gif");*/
 }
