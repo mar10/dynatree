@@ -9,10 +9,13 @@
 ===== 1.2.1 =====
   * Scrolling is enabled for drag'n'drop (requires CSS `overflow: scroll` on the container)(issue 244)
   * Improved ASP.NET support to decode data.d JSON strings (issue 202, credits to Joel Nelson)
+  * New option `href` for JSON data (issue 241)
   * Fixed drag'n'drop for scrollable containers (issue 211)
   * Fixed broken icons, when line-height > 1em (issue 237)
   * Fixed $.dynatree.getNode() (issue 247)
   * Deprecated getDtNodeFromElement()
+  * Added sample for inline editing node titles.
+  * Using dynatree for sample navigator.
   * Updated to jQuery 1.7.1
 
 ===== 1.2.0 =====
