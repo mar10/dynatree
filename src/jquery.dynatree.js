@@ -133,7 +133,7 @@ DynaTreeNode.prototype = {
 		this.span = null; // not yet created
 		this.ul = null; // not yet created
 		this.childList = null; // no subnodes yet
-		this.isLoading = false; // Lazy content is being loaded
+		this._isLoading = false; // Lazy content is being loaded
 		this.hasSubSel = false;
 		this.bExpanded = false;
 		this.bSelected = false;
@@ -445,6 +445,10 @@ DynaTreeNode.prototype = {
 		return !p || p.childList[p.childList.length-1] === this;
 	},
 
+	isLoading: function() {
+		return !!this._isLoading;
+	},
+
 	getPrevSibling: function() {
 		if( !this.parent ){
 			return null;
@@ -571,7 +575,7 @@ DynaTreeNode.prototype = {
 			case DTNodeStatus_Ok:
 				this._setStatusNode(null);
 				$(this.span).removeClass(this.tree.options.classNames.nodeLoading);
-				this.isLoading = false;
+				this._isLoading = false;
 //				this.render();
 				if( this.tree.options.autoFocus ) {
 					if( this === this.tree.tnRoot && this.childList && this.childList.length > 0) {
@@ -583,7 +587,7 @@ DynaTreeNode.prototype = {
 				}
 				break;
 			case DTNodeStatus_Loading:
-				this.isLoading = true;
+				this._isLoading = true;
 				$(this.span).addClass(this.tree.options.classNames.nodeLoading);
 				// The root is hidden, so we set a temporary status child
 				if(!this.parent){
@@ -595,7 +599,7 @@ DynaTreeNode.prototype = {
 				}
 				break;
 			case DTNodeStatus_Error:
-				this.isLoading = false;
+				this._isLoading = false;
 //				$(this.span).addClass(this.tree.options.classNames.nodeError);
 				this._setStatusNode({
 					title: this.tree.options.strings.loadError + info,
@@ -1050,7 +1054,7 @@ DynaTreeNode.prototype = {
 		}
 		// Do not apply animations in init phase, or before lazy-loading
 		var allowEffects = !(this.data.isLazy && this.childList === null)
-			&& !this.isLoading
+			&& !this._isLoading
 			&& !forceSync;
 		this.render(allowEffects);
 
@@ -1066,7 +1070,7 @@ DynaTreeNode.prototype = {
 			this.tree.activeNode.deactivate();
 		}
 		// Expanding a lazy node: set 'loading...' and call callback
-		if( bExpand && this.data.isLazy && this.childList === null && !this.isLoading ) {
+		if( bExpand && this.data.isLazy && this.childList === null && !this._isLoading ) {
 			this._loadContent();
 			return;
 		}
@@ -1415,7 +1419,7 @@ DynaTreeNode.prototype = {
 		if( ! isRecursiveCall ) {
 //			this._expand(false);
 //			this.isRead = false;
-			this.isLoading = false;
+			this._isLoading = false;
 			this.render();
 		}
 	},
@@ -1744,7 +1748,7 @@ DynaTreeNode.prototype = {
 				self.tree.logDebug("trigger " + eventType);
 				self.tree.$tree.trigger(eventType, [self, true]);
 				self.tree.phase = prevPhase;
-				// This should be the last command, so node.isLoading is true
+				// This should be the last command, so node._isLoading is true
 				// while the callbacks run
 				self.setLazyNodeStatus(DTNodeStatus_Ok);
 				if($.isArray(data) && data.length === 0){
