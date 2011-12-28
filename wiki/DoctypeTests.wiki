@@ -19,7 +19,7 @@ All browsers behave well!
  * IE9: problems with d'n'd hit area detection (source node highlight and helper is misplaced)
  * IE8: problems with d'n'd hit area detection (source node highlight and helper is misplaced)
  * IE7: OK
- * IE6: ?
+ * IE6: OK(!)
  * FF9: Source node highlight Ok, but helper is misplaced.
  * Opera11: FAIL: even mouse clicks are calculated wrong (issue 229)
 
@@ -30,6 +30,6 @@ All browsers behave well!
  * IE9: OK
  * IE8: OK
  * IE7: OK
- * IE6: ?
+ * IE6: OK
  * FF9: Source node highlight Ok, but helper is misplaced.
  * Opera11: FAIL: even mouse clicks are calculated wrong (issue 229)
