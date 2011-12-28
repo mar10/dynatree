@@ -10,9 +10,11 @@
   * Scrolling is enabled for drag'n'drop (requires CSS `overflow: scroll` on the container)(issue 244)
   * Improved ASP.NET support to decode data.d JSON strings (issue 202, credits to Joel Nelson)
   * New option `href` for JSON data (issue 241)
+  * Fixed Helper appears outside container during drag ('flashing') (issue 258)
   * Fixed drag'n'drop for scrollable containers (issue 211)
   * Fixed broken icons, when line-height > 1em (issue 237)
   * Fixed $.dynatree.getNode() (issue 247)
+  * Fixed tooltip doesn't support the caracter ' (apostrophe) (issue 226)
   * Deprecated getDtNodeFromElement()
   * Added sample for inline editing node titles.
   * Using dynatree for sample navigator.
