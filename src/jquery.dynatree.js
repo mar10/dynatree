@@ -2982,6 +2982,9 @@ $.ui.dynatree.getNode = function(el) {
 	if(el instanceof DynaTreeNode){
 		return el; // el already was a DynaTreeNode
 	}
+	if(el.selector !== undefined){
+		el = el[0]; // el was a jQuery object: use the DOM element
+	}
 	// TODO: for some reason $el.parents("[dtnode]") does not work (jQuery 1.6.1)
 	// maybe, because dtnode is a property, not an attribute
 	while( el ) {
