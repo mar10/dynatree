@@ -1667,6 +1667,12 @@ node.addChild({title: "New Node", key: "3333"});
 		Set focus to this node. Parent nodes are expanded, if this is necessary
 		to make it visible.
 	</dd>
+    <dt>node.getChildren()
+    <dd>
+        Return list of child nodes or <code>null</code>.<br>
+        For lazy nodes that have not yet been loaded, <code>undefined</code> is
+        is returned.
+    </dd>
 	<dt>node.getEventTargetType(event)</dt>
 	<dd>
 		Return the part of a node, that a click event occurred on.<br>
@@ -1679,12 +1685,18 @@ node.addChild({title: "New Node", key: "3333"});
 		Return the depth (i.e. number of parent nodes).<br>
 		0 is returned for the root node.
 	</dd>
-	<dt>node.getChildren()
-	<dd>
-		Return list of child nodes or <code>null</code>.<br>
-		For lazy nodes that have not yet been loaded, <code>undefined</code> is
-		is returned.
-	</dd>
+    <dt>node.getNextSibling()
+    <dd>
+        Return the successor node or <code>null</code>.
+    </dd>
+    <dt>node.getParent()
+    <dd>
+        Return the parent node or <code>null</code>.
+    </dd>
+    <dt>node.getPrevSibling()
+    <dd>
+        Return the predecessor node or <code>null</code>.
+    </dd>
 	<dt>node.hasChildren()
 	<dd>
 		Return <code>true</code> if node has child nodes.<br>
