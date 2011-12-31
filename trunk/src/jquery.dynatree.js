@@ -1712,12 +1712,11 @@ DynaTreeNode.prototype = {
 			return;
 		}
 		// Ajax option inheritance: $.ajaxSetup < $.ui.dynatree.prototype.options.ajaxDefaults < tree.options.ajaxDefaults < ajaxOptions
-		var orgSuccess = ajaxOptions.success;
-		var orgError = ajaxOptions.error;
-		var eventType = "nodeLoaded.dynatree." + this.tree.$tree.attr("id")
-			+ "." + this.data.key;
+		var orgSuccess = ajaxOptions.success,
+			orgError = ajaxOptions.error,
+			eventType = "nodeLoaded.dynatree." + this.tree.$tree.attr("id") + "." + this.data.key;
 		var options = $.extend({}, this.tree.options.ajaxDefaults, ajaxOptions, {
-			success: function(data, textStatus){
+			success: function(data, textStatus, jqXHR){
 				// <this> is the request options
 //				self.tree.logDebug("appendAjax().success");
 				var prevPhase = self.tree.phase;
@@ -1752,14 +1751,14 @@ DynaTreeNode.prototype = {
 					self.render();
 				}
 				},
-			error: function(XMLHttpRequest, textStatus, errorThrown){
+			error: function(jqXHR, textStatus, errorThrown){
 				// <this> is the request options
-				self.tree.logWarning("appendAjax failed:", textStatus, ":\n", XMLHttpRequest, "\n", errorThrown);
+				self.tree.logWarning("appendAjax failed:", textStatus, ":\n", jqXHR, "\n", errorThrown);
 				if( orgError ){
-					orgError.call(options, self, XMLHttpRequest, textStatus, errorThrown);
+					orgError.call(options, self, jqXHR, textStatus, errorThrown);
 				}
 				self.tree.$tree.trigger(eventType, [self, false]);
-				self.setLazyNodeStatus(DTNodeStatus_Error, {info: textStatus, tooltip: ""+errorThrown});
+				self.setLazyNodeStatus(DTNodeStatus_Error, {info: textStatus, tooltip: "" + errorThrown});
 				}
 		});
 		$.ajax(options);
@@ -3017,7 +3016,7 @@ $.ui.dynatree.getPersistData = DynaTreeStatus._getTreePersistData;
  * Plugin default options:
  */
 $.ui.dynatree.prototype.options = {
-	title: "Dynatree", // Tree's name (only used for debug outpu)
+	title: "Dynatree", // Tree's name (only used for debug output)
 	minExpandLevel: 1, // 1: root node is not collapsible
 	imagePath: null, // Path to a folder containing icons. Defaults to 'skin/' subdirectory.
 	children: null, // Init tree structure from this object array.
@@ -3073,6 +3072,7 @@ $.ui.dynatree.prototype.options = {
 	},
 	ajaxDefaults: { // Used by initAjax option
 		cache: false, // false: Append random '_' argument to the request url to prevent caching.
+		timeout: 10000, // Make sure we get an ajax error for invalid URLs 
 		dataType: "json" // Expect json format and pass json object to callbacks.
 	},
 	strings: {
