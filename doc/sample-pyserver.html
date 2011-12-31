@@ -42,6 +42,7 @@
 			// initAjax is hard to fake, so we pass the children as object array:
 			initAjax: {url: "http://127.0.0.1:8001",
 					   dataType: "jsonp", // Enable JSONP, so this sample can be run from the local file system against a localhost server
+					   timeout: 10000, // timeout, otherwise 'connection refused' is not recognized if server is not running
 					   data: {key: "",
 							  sleep: debugDelay,
 //	                          returnEmpty: true,
