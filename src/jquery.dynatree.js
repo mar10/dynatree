@@ -676,9 +676,9 @@ DynaTreeNode.prototype = {
 
 	getEventTargetType: function(event) {
 		// Return the part of a node, that a click event occured on.
-		// Note: there is no check, if the event was fired on TIHS node.
-		var tcn = event && event.target ? event.target.className : "";
-		var cns = this.tree.options.classNames;
+		// Note: there is no check, if the event was fired on THIS node.
+		var tcn = event && event.target ? event.target.className : "",
+			cns = this.tree.options.classNames;
 
 		if( tcn === cns.title ){
 			return "title";
@@ -3194,10 +3194,8 @@ function _initDragAndDrop(tree) {
 				return sourceNode.tree._onDragEvent("helper", sourceNode, null, event, null, null);
 			},
 			start: function(event, ui) {
-				var sourceNode = $.ui.dynatree.getNode(event.target);
-				if(!sourceNode){// issue 211
-					return false;
-				}
+//				var sourceNode = $.ui.dynatree.getNode(event.target);
+				// don't return false if sourceNode == null (see issue 268)
 			},
 			_last: null
 		});
@@ -3219,6 +3217,7 @@ var _registerDnd = function() {
 	if(didRegisterDnd){
 		return;
 	}
+	// Register proxy-functions for draggable.start/drag/stop
 	$.ui.plugin.add("draggable", "connectToDynatree", {
 		start: function(event, ui) {
 			var draggable = $(this).data("draggable"),
@@ -3251,8 +3250,10 @@ var _registerDnd = function() {
 //			logMsg("connectToDynatree.drag: helper: %o", ui.helper[0]);
 			if(event.target && !targetNode){
 				// We got a drag event, but the targetNode could not be found
-				// at the event location. This may happen, if the mouse
-				// jumped over the drag helper, in which case we ignore it:
+				// at the event location. This may happen,
+				// 1. if the mouse jumped over the drag helper,
+				// 2. or if non-dynatree element is dragged
+				// We ignore it:
 				var isHelper = $(event.target).closest("div.dynatree-drag-helper,#dynatree-drop-marker").length > 0;
 				if(isHelper){
 //					logMsg("Drag event over helper: ignored.");
