@@ -8,7 +8,7 @@
 
 ===== 1.2.1 =====
   * RC3: Fixed issue 268 (regression of issue 211)
-  * RC3: Fixed issue 263
+  * RC3: Fixed IE9 overflow:auto causes container div to grow on hover (issue 263)
 
   * Scrolling is enabled for drag'n'drop (requires CSS `overflow: scroll` on the container) (issue 244)
   * Improved ASP.NET support to decode data.d JSON strings (issue 202, credits to Joel Nelson)
