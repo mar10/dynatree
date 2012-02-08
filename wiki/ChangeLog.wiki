@@ -23,7 +23,7 @@
   * Deprecated getDtNodeFromElement() (use $.dynatree.getNode() instead)
   * Added sample for inline editing node titles.
   * Using dynatree for sample navigator.
-  * Updated to jQuery 1.7.1, jQuery UI 1.8.16
+  * Updated to jQuery 1.7.1, jQuery UI 1.8.17
 
 ===== 1.2.0 =====
   * Pass additional error info to onPostInit() (issue 224)
