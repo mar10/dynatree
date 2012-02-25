@@ -25,6 +25,13 @@ $(function(){
 		initAjax: {
 			url: "sample-data3.json"
 		},
+		onLazyRead: function(node){
+			// Mockup a slow reqeuest ...
+			node.appendAjax({
+				url: "sample-data2.json",
+				debugLazyDelay: 750 // don't do thi in production code
+			});
+		},
 		dnd: {
 			preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
 			onDragStart: function(node) {
@@ -43,8 +50,9 @@ $(function(){
 				 */
 				// Prevent dropping a parent below another parent (only sort
 				// nodes under the same parent)
-				if(node.parent !== sourceNode.parent)
+				if(node.parent !== sourceNode.parent){
 					return false;
+				}
 				// Don't allow dropping *over* a node (would create a child)
 				return ["before", "after"];
 			},

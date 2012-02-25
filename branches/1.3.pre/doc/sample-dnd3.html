@@ -45,6 +45,13 @@ $(function(){
 		initAjax: {
 			url: "sample-data3.json"
 		},
+		onLazyRead: function(node){
+			// Mockup a slow reqeuest ...
+			node.appendAjax({
+				url: "sample-data2.json",
+				debugLazyDelay: 750 // don't do thi in production code
+			});
+		},
 		onActivate: function(node) {
 			$("#echoActive").text(node.data.title + "(" + node.data.key + ")");
 		},
@@ -70,6 +77,13 @@ $(function(){
 	$("#tree2").dynatree({
 		initAjax: {
 			url: "sample-data3.json"
+		},
+		onLazyRead: function(node){
+			// Mockup a slow reqeuest ...
+			node.appendAjax({
+				url: "sample-data2.json",
+				debugLazyDelay: 750 // don't do thi in production code
+			});
 		},
 		onActivate: function(node) {
 			$("#echoActive2").text(node.data.title + "(" + node.data.key + ")");
