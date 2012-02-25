@@ -81,10 +81,10 @@
 </ul>
 
 <p class="info">
-	This document describes <strong>release 1.x</strong>.<br>
-	If you are updating from version 0.5 please read the
-	<a href="http://code.google.com/p/dynatree/wiki/UpdateToVersion10">migration hints</a>
-	first.
+	Dynatree runs best, when the HTML document is rendered in a strict mode like<br>
+	<code>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"></code>.
+	<br>
+	Avoid the <a href="http://en.wikipedia.org/wiki/Quirks_mode">quirks mode</a>.
 </p>
 
 <!-- jquery.planize will generate a TOC here: -->
@@ -275,6 +275,7 @@ $("#tree").dynatree({
 	},
 	ajaxDefaults: { // Used by initAjax option
 		cache: false, // false: Append random '_' argument to the request url to prevent caching.
+		timeout: 0, // >0: Make sure we get an ajax error for invalid URLs
 		dataType: "json" // Expect json format and pass json object to callbacks.
 	},
 	strings: {
@@ -414,6 +415,7 @@ children: [
 	isFolder: false, // Use a folder icon. Also the node is expandable but not selectable.
 	isLazy: false, // Call onLazyRead(), when the node is expanded for the first time to allow for delayed creation of children.
 	tooltip: null, // Show this popup text.
+	href: null, // Added to the generated &lt;a> tag.
 	icon: null, // Use a custom image (filename relative to tree.options.imagePath). 'null' for default icon, 'false' for no icon.
 	addClass: null, // Class name added to the node's span tag.
 	noLink: false, // Use &lt;span> instead of &lt;a> tag for this node
@@ -1163,7 +1165,7 @@ return [ res ]
 <p>
 	See <a href="dynatree_server.py">dynatree_server.py</a> for a sample
 	implementation of a web server that handles this (~150 lines of Python code).<br>
-	When this server is running, you can try this <a href="sample-lazy-persist.html">live example</a>
+	When this server is running, you can try this <a href="sample-pyserver.html">live example</a>
 	of a lazy tree.
 </p>
 
@@ -1299,7 +1301,7 @@ information to the web service.
 </p><p>
 	See <a href="dynatree_server.py">dynatree_server.py</a> for a sample
 	implementation of a web server that handles this (~150 lines of Python code).<br>
-	When this server is running, you can try this <a href="sample-lazy-persist.html">live example</a>
+	When this server is running, you can try this <a href="sample-pyserver.html">live example</a>
 	of a lazy tree.
 </p>
 
@@ -1666,6 +1668,12 @@ node.addChild({title: "New Node", key: "3333"});
 		Set focus to this node. Parent nodes are expanded, if this is necessary
 		to make it visible.
 	</dd>
+	<dt>node.getChildren()
+	<dd>
+		Return list of child nodes or <code>null</code>.<br>
+		For lazy nodes that have not yet been loaded, <code>undefined</code> is
+		is returned.
+	</dd>
 	<dt>node.getEventTargetType(event)</dt>
 	<dd>
 		Return the part of a node, that a click event occurred on.<br>
@@ -1678,17 +1686,24 @@ node.addChild({title: "New Node", key: "3333"});
 		Return the depth (i.e. number of parent nodes).<br>
 		0 is returned for the root node.
 	</dd>
-	<dt>node.getChildren()
+	<dt>node.getNextSibling()
 	<dd>
-		Return list of child nodes or <code>null</code>.<br>
-		For lazy nodes that have not yet been loaded, <code>undefined</code> is
-		is returned.
+		Return the successor node or <code>null</code>.
+	</dd>
+	<dt>node.getParent()
+	<dd>
+		Return the parent node or <code>null</code>.
+	</dd>
+	<dt>node.getPrevSibling()
+	<dd>
+		Return the predecessor node or <code>null</code>.
 	</dd>
 	<dt>node.hasChildren()
 	<dd>
-		Return <code>true</code>, if node has child nodes.<br>
-		For lazy nodes that have not yet been loaded, <code>undefined</code> is
-		is returned.<br>
+		Return <code>true</code> if node has child nodes.<br>
+		Return <code>false</code> if node is a leaf, i.e. has no child nodes.<br>
+		Return <code>undefined</code> if this is a lazy node, that was not yet
+		successfully loaded.<br>
 		A test for 'node is surely empty' would be coded like
 		<pre class="prettyprint">if(node.hasChildren() === false) ...</pre>
 	</dd>
@@ -1696,10 +1711,6 @@ node.addChild({title: "New Node", key: "3333"});
 	<dd>
 		Return true, if this node is activated. Only one tree node may be active
 		at any time.
-	</dd>
-	<dt>node.isFocused()
-	<dd>
-		Return true, if this node is has the focus.
 	</dd>
 	<dt>node.isChildOf(otherNode)
 	<dd>
@@ -1719,6 +1730,10 @@ node.addChild({title: "New Node", key: "3333"});
 	<dd>
 		Return true, if this node is the first of all children of the current parent.
 	</dd>
+	<dt>node.isFocused()
+	<dd>
+		Return true, if this node is has the focus.
+	</dd>
 	<dt>node.isLastSibling()
 	<dd>
 		Return true, if this node is the last of all children of the current parent.
@@ -1726,6 +1741,10 @@ node.addChild({title: "New Node", key: "3333"});
 	<dt>node.isLazy()
 	<dd>
 		Return true, if the node is lazy (loaded or not).
+	</dd>
+	<dt>node.isLoading()
+	<dd>
+		Return true, if the node is lazy and currently loading (i.e. an Ajax request is active).
 	</dd>
 	<dt>node.isSelected()
 	<dd>
@@ -1908,7 +1927,7 @@ if( node ){
 </pre>
 
 
-<h4>Example: Retrieve a node using a jQuery selector</h4>
+<h4>Example: Retrieve a node using for a DOM element or jQuery object</h4>
 
 <pre class="prettyprint">
 $(".dynatree-partsel").each(function(){
@@ -1916,13 +1935,6 @@ $(".dynatree-partsel").each(function(){
 	[...]
 });
 </pre>
-<p>
-	The selector must evaluate to the node's &lt;span> tag.
-</p>
-<p class="info">
-	With jQuery versions prior to 1.6, use <code>.attr("dtnode")</code>
-	instead of <code>.prop("dtnode")</code>.
-</p>
 
 
 <h4>Example: Rename the active node</h4>

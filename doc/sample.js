@@ -41,6 +41,13 @@ function initCodeSamples()
 		var info = "Dynatree " + jQuery.ui.dynatree.version
 			+ ", jQuery UI " + jQuery.ui.version
 			+ ", jQuery " + jQuery.fn.jquery;
+/*
+		info += "\n<br>";
+		info += "document.compatMode: " + document.compatMode + "\n";
+		for(e in jQuery.support){
+			info += "<br>\n" + e + ": " + jQuery.support[e];
+		}
+*/
 		$("p.sample-links").after("<p class='version-info'>" + info + "</p>");
 	}
 }
