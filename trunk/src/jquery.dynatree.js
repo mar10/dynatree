@@ -2,7 +2,7 @@
 	jquery.dynatree.js
 	Dynamic tree view control, with support for lazy loading of branches.
 
-	Copyright (c) 2008-2011, Martin Wendt (http://wwWendt.de)
+	Copyright (c) 2008-2012, Martin Wendt (http://wwWendt.de)
 	Dual licensed under the MIT or GPL Version 2 licenses.
 	http://code.google.com/p/dynatree/wiki/LicenseInfo
 
@@ -17,8 +17,16 @@
 	@depends: jquery.cookie.js
 *************************************************************************/
 
+/* jsLint options*/
+// TODO: does not pass jsLint 
 // Note: We currently allow eval() to parse the 'data' attribtes, when initializing from HTML.
-/*jslint laxbreak: true, browser: true, evil: true, indent: 0, white: false, onevar: false */
+/*js lint browser: true, evil: true, indent: 4, white: false, vars: true, sloppy: true, nomen: true, white: true, plusplus: true*/
+/*global alert*/
+
+/* jsHint options*/
+// TODO: pass jsHint with the options given in grunt.js only.
+//       The following should not be required:
+/*jshint nomen:false, smarttabs:true, eqeqeq:false, evil:true, regexp:false */
 
 /*************************************************************************
  *	Debug functions
@@ -1489,6 +1497,8 @@ DynaTreeNode.prototype = {
 				}else if(child.data.isLazy && (child.childList === null || child.childList === undefined)){
 					tree.logDebug("%s._loadKeyPath(%s) -> reloading %s...", this, keyPath, child);
 					var self = this;
+					// Note: this line gives a JSLint warning (Don't make functions within a loop)
+					/*jshint loopfunc:true */
 					child.reloadChildren(function(node, isOk){
 						// After loading, look for direct child with that key
 						if(isOk){
@@ -1499,7 +1509,7 @@ DynaTreeNode.prototype = {
 							tree.logWarning("%s._loadKeyPath(%s) -> reloadChildren() failed.", self, keyPath);
 							callback.call(tree, child, "error");
 						}
-					}); // Note: this line gives a JSLint warning (Don't make functions within a loop)
+					}); 
 					// we can ignore it, since it will only be exectuted once, the the loop is ended
 					// See also http://stackoverflow.com/questions/3037598/how-to-get-around-the-jslint-error-dont-make-functions-within-a-loop
 				} else {
@@ -3007,7 +3017,7 @@ $.ui.dynatree.getNode = function(el) {
 	});
 	return node;
 */
-}
+};
 
 /**Return persistence information from cookies.*/
 $.ui.dynatree.getPersistData = DynaTreeStatus._getTreePersistData;
@@ -3055,6 +3065,9 @@ $.ui.dynatree.prototype.options = {
 	onCustomRender: null, // Callback(dtnode) before a node is rendered. Return a HTML string to override.
 	onCreate: null, // Callback(dtnode, nodeSpan) after a node was rendered for the first time.
 	onRender: null, // Callback(dtnode, nodeSpan) after a node was rendered.
+				// postProcess is similar to the standard dataFilter hook,
+				// but it is also called for JSONP
+	postProcess: null, // Callback(data, dataType) before an Ajax result is passed to dynatree
 
 	// Drag'n'drop support
 	dnd: {
@@ -3309,4 +3322,4 @@ var _registerDnd = function() {
 };
 
 // ---------------------------------------------------------------------------
-})(jQuery);
+}(jQuery));
