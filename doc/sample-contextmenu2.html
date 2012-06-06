@@ -98,14 +98,14 @@ $("#tree").dynatree({
     */
     onKeydown: function(node, event) {
         // Eat keyboard events, when a menu is open
-        if( $(".contextMenu:visible").length > 0 )
+        if( $(".contextMenu:visible").length > 0 ){
             return false;
-
+        }
         switch( event.which ) {
 
         // Open context menu on [Space] key (simulate right click)
         case 32: // [Space]
-            $(node.span).contextMenu();
+            $("a", node.span).contextMenu();
             return false;
 
         // Handle Ctrl-C, -X and -V
@@ -163,7 +163,7 @@ $(document).on('contextmenu.contextMenu', function(e){
 $(document).on('mousedown.contextMenu', function(e){
     var node = $.ui.dynatree.getNode(e.target);
     window.console && console.log("e: %o, node: %o", e, node);
-    node.activate();
+    node && node.activate();
 });
 
 $.contextMenu({

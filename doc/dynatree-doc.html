@@ -259,6 +259,7 @@ $("#tree").dynatree({
 	onCustomRender: null, // Callback(dtnode) before a node is rendered. Return a HTML string to override.
 	onCreate: null, // Callback(dtnode, nodeSpan) after a node was rendered for the first time.
 	onRender: null, // Callback(dtnode, nodeSpan) after a node was rendered.
+	postProcess: null, // Callback(data, dataType) before an Ajax result is passed to dynatree.
 
 	// Drag'n'drop support
 	dnd: {
