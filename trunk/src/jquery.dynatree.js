@@ -17,11 +17,12 @@
 	@depends: jquery.cookie.js
 *************************************************************************/
 
+// Note: We currently allow eval() to parse the 'data' attribtes, when initializing from HTML.
+
 /* jsLint options*/
 // TODO: does not pass jsLint 
-// Note: We currently allow eval() to parse the 'data' attribtes, when initializing from HTML.
-/*js lint browser: true, evil: true, indent: 4, white: false, vars: true, sloppy: true, nomen: true, white: true, plusplus: true*/
-/*global alert*/
+/*NOT_YET_jslint browser: true, evil: true, indent: 4, sloppy: true, nomen: true, vars: true, white: true, plusplus: true*/
+/*global alert */
 
 /* jsHint options*/
 // TODO: pass jsHint with the options given in grunt.js only.
@@ -1809,7 +1810,9 @@ DynaTreeNode.prototype = {
 			this.parent.childList.splice(pos, 1);
 		}
 		// Remove from source DOM parent
-		this.parent.ul.removeChild(this.li);
+		if(this.parent.ul){
+			this.parent.ul.removeChild(this.li);
+		}
 
 		// Insert this node to target parent's child list
 		this.parent = targetParent;
@@ -1849,8 +1852,10 @@ DynaTreeNode.prototype = {
 			targetParent.ul.style.display = "none";
 			targetParent.li.appendChild(targetParent.ul);
 		}
-		// Add to target DOM parent
-		targetParent.ul.appendChild(this.li);
+		// Issue 319: Add to target DOM parent (only if node was already rendered(expanded))
+		if(this.li){
+			targetParent.ul.appendChild(this.li);
+		}
 
 		if( this.tree !== targetNode.tree ) {
 			// Fix node.tree for all source nodes
