@@ -3212,8 +3212,10 @@ function _initDragAndDrop(tree) {
 				return sourceNode.tree._onDragEvent("helper", sourceNode, null, event, null, null);
 			},
 			start: function(event, ui) {
+				// See issues 211, 268, 278
 //				var sourceNode = $.ui.dynatree.getNode(event.target);
-				// don't return false if sourceNode == null (see issue 268)
+				var sourceNode = ui.helper.data("dtSourceNode");
+				return !!sourceNode; // Abort dragging if no Node could be found
 			},
 			_last: null
 		});
