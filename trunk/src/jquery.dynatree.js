@@ -1279,7 +1279,7 @@ DynaTreeNode.prototype = {
 
 	_onFocus: function(event) {
 		// Handles blur and focus events.
-//		this.tree.logDebug("dtnode.onFocus(%o): %o", event, this);
+		this.tree.logDebug("dtnode._onFocus(%o): %o", event, this);
 		var opts = this.tree.options;
 		if ( event.type == "blur" || event.type == "focusout" ) {
 			if ( opts.onBlur ){
@@ -1801,7 +1801,7 @@ DynaTreeNode.prototype = {
 		}
 		// Unlink this node from current parent
 		if( this.parent.childList.length == 1 ) {
-			this.parent.childList = null;
+			this.parent.childList = this.parent.data.isLazy ? [] : null;
 			this.parent.bExpanded = false;
 		} else {
 			pos = $.inArray(this, this.parent.childList);
@@ -2155,10 +2155,10 @@ DynaTree.prototype = {
 		this.tnRoot.render();
 		this.divTree.appendChild(this.tnRoot.ul);
 
-		var root = this.tnRoot;
-		var isReloading = ( opts.persist && this.persistence.isReloading() );
-		var isLazy = false;
-		var prevFlag = this.enableUpdate(false);
+		var root = this.tnRoot,
+			isReloading = ( opts.persist && this.persistence.isReloading() ),
+			isLazy = false,
+			prevFlag = this.enableUpdate(false);
 
 		this.logDebug("Dynatree._load(): read tree structure...");
 
@@ -2924,6 +2924,7 @@ $.widget("ui.dynatree", {
 			return dtnode ? dtnode._onFocus(event) : false;
 		}
 		var div = this.tree.divTree;
+
 		if( div.addEventListener ) {
 			div.addEventListener("focus", __focusHandler, true);
 			div.addEventListener("blur", __focusHandler, true);
