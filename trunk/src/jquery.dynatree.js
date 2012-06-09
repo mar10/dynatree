@@ -1279,7 +1279,7 @@ DynaTreeNode.prototype = {
 
 	_onFocus: function(event) {
 		// Handles blur and focus events.
-		this.tree.logDebug("dtnode._onFocus(%o): %o", event, this);
+//		this.tree.logDebug("dtnode._onFocus(%o): %o", event, this);
 		var opts = this.tree.options;
 		if ( event.type == "blur" || event.type == "focusout" ) {
 			if ( opts.onBlur ){
@@ -2675,7 +2675,8 @@ TODO: better?
 			dnd = this.options.dnd,
 			res = null,
 			nodeTag = $(node.span),
-			hitMode;
+			hitMode,
+			enterResponse;
 
 		switch (eventName) {
 		case "helper":
@@ -2718,7 +2719,7 @@ TODO: better?
 //			this.logDebug("helper.enterResponse: %o", res);
 			break;
 		case "over":
-			var enterResponse = ui.helper.data("enterResponse");
+			enterResponse = ui.helper.data("enterResponse");
 			hitMode = null;
 			if(enterResponse === false){
 				// Don't call onDragOver if onEnter returned false.
@@ -2786,8 +2787,10 @@ TODO: better?
 			this._setDndStatus(otherNode, node, ui.helper, hitMode, res!==false);
 			break;
 		case "drop":
+			// issue 286: don't trigger onDrop, if DnD status is 'reject'
+			var isForbidden = ui.helper.hasClass("dynatree-drop-reject");
 			hitMode = ui.helper.data("hitMode");
-			if(hitMode && dnd.onDrop){
+			if(hitMode && dnd.onDrop && !isForbidden){
 				dnd.onDrop(node, otherNode, hitMode, ui, draggable);
 			}
 			break;
