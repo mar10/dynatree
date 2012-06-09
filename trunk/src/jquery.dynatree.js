@@ -1485,38 +1485,39 @@ DynaTreeNode.prototype = {
 			throw "Key path must be relative (don't start with '/')";
 		}
 		var seg = segList.shift();
+		if(this.childList){
+			for(var i=0, l=this.childList.length; i < l; i++){
+				var child = this.childList[i];
+				if( child.data.key === seg ){
+					if(segList.length === 0) {
+						// Found the end node
+						callback.call(tree, child, "ok");
 
-		for(var i=0, l=this.childList.length; i < l; i++){
-			var child = this.childList[i];
-			if( child.data.key === seg ){
-				if(segList.length === 0) {
-					// Found the end node
-					callback.call(tree, child, "ok");
-
-				}else if(child.data.isLazy && (child.childList === null || child.childList === undefined)){
-					tree.logDebug("%s._loadKeyPath(%s) -> reloading %s...", this, keyPath, child);
-					var self = this;
-					// Note: this line gives a JSLint warning (Don't make functions within a loop)
-					/*jshint loopfunc:true */
-					child.reloadChildren(function(node, isOk){
-						// After loading, look for direct child with that key
-						if(isOk){
-							tree.logDebug("%s._loadKeyPath(%s) -> reloaded %s.", node, keyPath, node);
-							callback.call(tree, child, "loaded");
-							node._loadKeyPath(segList.join(tree.options.keyPathSeparator), callback);
-						}else{
-							tree.logWarning("%s._loadKeyPath(%s) -> reloadChildren() failed.", self, keyPath);
-							callback.call(tree, child, "error");
-						}
-					}); 
-					// we can ignore it, since it will only be exectuted once, the the loop is ended
-					// See also http://stackoverflow.com/questions/3037598/how-to-get-around-the-jslint-error-dont-make-functions-within-a-loop
-				} else {
-					callback.call(tree, child, "loaded");
-					// Look for direct child with that key
-					child._loadKeyPath(segList.join(tree.options.keyPathSeparator), callback);
+					}else if(child.data.isLazy && (child.childList === null || child.childList === undefined)){
+						tree.logDebug("%s._loadKeyPath(%s) -> reloading %s...", this, keyPath, child);
+						var self = this;
+						// Note: this line gives a JSLint warning (Don't make functions within a loop)
+						/*jshint loopfunc:true */
+						child.reloadChildren(function(node, isOk){
+							// After loading, look for direct child with that key
+							if(isOk){
+								tree.logDebug("%s._loadKeyPath(%s) -> reloaded %s.", node, keyPath, node);
+								callback.call(tree, child, "loaded");
+								node._loadKeyPath(segList.join(tree.options.keyPathSeparator), callback);
+							}else{
+								tree.logWarning("%s._loadKeyPath(%s) -> reloadChildren() failed.", self, keyPath);
+								callback.call(tree, child, "error");
+							}
+						}); 
+						// we can ignore it, since it will only be exectuted once, the the loop is ended
+						// See also http://stackoverflow.com/questions/3037598/how-to-get-around-the-jslint-error-dont-make-functions-within-a-loop
+					} else {
+						callback.call(tree, child, "loaded");
+						// Look for direct child with that key
+						child._loadKeyPath(segList.join(tree.options.keyPathSeparator), callback);
+					}
+					return;
 				}
-				return;
 			}
 		}
 		// Could not find key
