@@ -907,6 +907,8 @@ DynaTreeNode.prototype = {
 				for(i=0, l=p.childList.length; i<l;  i++) {
 					var n = p.childList[i];
 					if( !n.bSelected && !n.data.isStatusNode && !n.data.unselectable) {
+					// issue 305 proposes this:
+//					if( !n.bSelected && !n.data.isStatusNode ) {
 						allChildsSelected = false;
 						break;
 					}
@@ -1518,6 +1520,8 @@ DynaTreeNode.prototype = {
 			}
 		}
 		// Could not find key
+		// Callback params: child: undefined, the segment, isEndNode (segList.length === 0)
+		callback.call(tree, undefined, "notfound", seg, segList.length === 0);
 		tree.logWarning("Node not found: " + seg);
 		return;
 	},
