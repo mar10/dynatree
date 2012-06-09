@@ -6,8 +6,8 @@
 
 ==== Release 1.x ====
 
-===== 1.2.1 =====
-  * RC4: fixed regression in issue 202
+===== 1.2.1 (not yet released) =====
+  * RC4: fixed a regression in issue 202
   * RC4: fixed issue 277: loadKeyPath exception when key doesn't exist when parent has no children
   * RC4: fixed issue 278: Clicking on the scroll bar in a scrollable tree (overflow: scroll) causes onDragStart
   * RC4: fixed issue 285: Emptying Lazy Loaded Nodes Causes Reload / Duplicate Children
