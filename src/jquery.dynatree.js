@@ -2,7 +2,7 @@
 	jquery.dynatree.js
 	Dynamic tree view control, with support for lazy loading of branches.
 
-	Copyright (c) 2008-2012, Martin Wendt (http://wwWendt.de)
+	Copyright (c) 2006-2012, Martin Wendt (http://wwWendt.de)
 	Dual licensed under the MIT or GPL Version 2 licenses.
 	http://code.google.com/p/dynatree/wiki/LicenseInfo
 
