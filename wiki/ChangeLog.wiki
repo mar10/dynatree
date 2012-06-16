@@ -6,19 +6,20 @@
 
 ==== Release 1.x ====
 
-===== 1.2.1 (not yet released) =====
-  * RC4: fixed a regression in issue 202
-  * RC4: fixed issue 277: loadKeyPath exception when key doesn't exist when parent has no children
-  * RC4: fixed issue 278: Clicking on the scroll bar in a scrollable tree (overflow: scroll) causes onDragStart
-  * RC4: fixed issue 285: Emptying Lazy Loaded Nodes Causes Reload / Duplicate Children
-  * RC4: fixed issue 286: Dropping a node over it's own child causes JS error (second DND example)
-  * RC4: fixed issue 304: feedback that the node is not found
-  * RC4: fixed issue 313: IE9 have problem with link focus
-  * RC4: fixed issue 319: Moving a newly added node fails if it has never been rendered
+===== 1.2.2 (not yet released) =====
+  *
 
-  * RC3: Fixed D'n'd is broken for jQuery 1.6.1 (issue 268, regression of issue 211)
-  * RC3: Fixed IE9 overflow:auto causes container div to grow on hover (issue 263)
-
+===== 1.2.1 =====
+  * Fixed a regression in issue 202
+  * Fixed issue 277: loadKeyPath exception when key doesn't exist when parent has no children
+  * Fixed issue 278: Clicking on the scroll bar in a scrollable tree (overflow: scroll) causes onDragStart
+  * Fixed issue 285: Emptying Lazy Loaded Nodes Causes Reload / Duplicate Children
+  * Fixed issue 286: Dropping a node over it's own child causes JS error (second DND example)
+  * Fixed issue 304: feedback that the node is not found
+  * Fixed issue 313: IE9 have problem with link focus
+  * Fixed issue 319: Moving a newly added node fails if it has never been rendered
+  * Fixed D'n'd is broken for jQuery 1.6.1 (issue 268, regression of issue 211)
+  * Fixed IE9 overflow:auto causes container div to grow on hover (issue 263)
   * Scrolling is enabled for drag'n'drop (requires CSS `overflow: scroll` on the container) (issue 244)
   * Improved ASP.NET support to decode data.d JSON strings (issue 202, credits to Joel Nelson)
   * New option `data.href` for JSON data (issue 241)
