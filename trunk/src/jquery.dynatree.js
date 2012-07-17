@@ -2710,11 +2710,16 @@ TODO: better?
 			break;
 		case "enter":
 			res = dnd.onDragEnter ? dnd.onDragEnter(node, otherNode) : null;
-			res = {
-				over: (res !== false) && ((res === true) || (res === "over") || $.inArray("over", res) >= 0),
-				before: (res !== false) && ((res === true) || (res === "before") || $.inArray("before", res) >= 0),
-				after: (res !== false) && ((res === true) || (res === "after") || $.inArray("after", res) >= 0)
-			};
+			if(!res){
+				// convert null, undefined, false to false
+				res = false;
+			}else{
+				res = {
+					over: ((res === true) || (res === "over") || $.inArray("over", res) >= 0),
+					before: ((res === true) || (res === "before") || $.inArray("before", res) >= 0),
+					after: ((res === true) || (res === "after") || $.inArray("after", res) >= 0)
+				};
+			}
 			ui.helper.data("enterResponse", res);
 //			this.logDebug("helper.enterResponse: %o", res);
 			break;
@@ -2723,7 +2728,8 @@ TODO: better?
 			hitMode = null;
 			if(enterResponse === false){
 				// Don't call onDragOver if onEnter returned false.
-				break;
+				// issue 332
+//				break;
 			} else if(typeof enterResponse === "string") {
 				// Use hitMode from onEnter if provided.
 				hitMode = enterResponse;
@@ -2784,7 +2790,9 @@ TODO: better?
 			if(hitMode && dnd.onDragOver){
 				res = dnd.onDragOver(node, otherNode, hitMode);
 			}
-			this._setDndStatus(otherNode, node, ui.helper, hitMode, res!==false);
+			// issue 332
+//			this._setDndStatus(otherNode, node, ui.helper, hitMode, res!==false);
+			this._setDndStatus(otherNode, node, ui.helper, hitMode, res!==false && hitMode !== null);
 			break;
 		case "drop":
 			// issue 286: don't trigger onDrop, if DnD status is 'reject'
