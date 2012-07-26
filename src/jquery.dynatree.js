@@ -2551,8 +2551,9 @@ TODO: better?
 		if( !this.$dndMarker ) {
 			this.$dndMarker = $("<div id='dynatree-drop-marker'></div>")
 				.hide()
+				.css({"z-index": 1000})
 				.prependTo($(this.divTree).parent());
-//				.prependTo("body");
+
 //			logMsg("Creating marker: %o", this.$dndMarker);
 		}
 /*
@@ -2562,29 +2563,28 @@ TODO: better?
 //			sourceNode.removeClass("dynatree-drop-target");
 		}
 */
-//		this.$dndMarker.attr("class", hitMode);
 		if(hitMode === "after" || hitMode === "before" || hitMode === "over"){
 //			$source && $source.addClass("dynatree-drag-source");
-			var pos = $target.offset();
-
 //			$target.addClass("dynatree-drop-target");
+			
+			var markerOffset = "0 0";
 
 			switch(hitMode){
 			case "before":
 				this.$dndMarker.removeClass("dynatree-drop-after dynatree-drop-over");
 				this.$dndMarker.addClass("dynatree-drop-before");
-				pos.top -= 8;
+				markerOffset = "0 -8";
 				break;
 			case "after":
 				this.$dndMarker.removeClass("dynatree-drop-before dynatree-drop-over");
 				this.$dndMarker.addClass("dynatree-drop-after");
-				pos.top += 8;
+				markerOffset = "0 8";
 				break;
 			default:
 				this.$dndMarker.removeClass("dynatree-drop-after dynatree-drop-before");
 				this.$dndMarker.addClass("dynatree-drop-over");
 				$target.addClass("dynatree-drop-target");
-				pos.left += 8;
+				markerOffset = "8 0";
 			}
 //			logMsg("Creating marker: %o", this.$dndMarker);
 //			logMsg("    $target.offset=%o", $target);
@@ -2597,13 +2597,15 @@ TODO: better?
 //			var parentPos = $target.offsetParent().offset();
 //			var bodyPos = $target.offsetParent().offset();
 
-			this.$dndMarker //.offset({left: pos.left, top: pos.top})
-				.css({
-					"left": pos.left,
-					"top": pos.top,
-					"z-index": 1000
-				})
-				.show();
+			this.$dndMarker
+				.show()
+				.position({
+					my: "left top",
+					at: "left top",
+					of: $target,
+					offset: markerOffset
+				});
+			
 //			helper.addClass("dynatree-drop-hover");
 		} else {
 //			$source && $source.removeClass("dynatree-drag-source");
