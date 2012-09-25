@@ -20,7 +20,7 @@
 // Note: We currently allow eval() to parse the 'data' attribtes, when initializing from HTML.
 
 /* jsLint options*/
-// TODO: does not pass jsLint 
+// TODO: does not pass jsLint
 /*NOT_YET_jslint browser: true, evil: true, indent: 4, sloppy: true, nomen: true, vars: true, white: true, plusplus: true*/
 /*global alert */
 
@@ -197,7 +197,8 @@ DynaTreeNode.prototype = {
 			cache = tree.cache,
 			level = this.getLevel(),
 			data = this.data,
-			res = "";
+			res = "",
+			imageSrc;
 		// connector (expanded, expandable or simple)
 		if( level < opts.minExpandLevel ) {
 			if(level > 1){
@@ -215,7 +216,12 @@ DynaTreeNode.prototype = {
 		}
 		// folder or doctype icon
 		if ( data.icon ) {
-			res += "<img src='" + opts.imagePath + data.icon + "' alt='' />";
+			if (data.icon.charAt(0) === "/"){
+				imageSrc = data.icon;
+			}else{
+				imageSrc = opts.imagePath + data.icon;
+			}
+			res += "<img src='" + imageSrc + "' alt='' />";
 		} else if ( data.icon === false ) {
 			// icon == false means 'no icon'
 			noop(); // keep JSLint happy
@@ -1508,7 +1514,7 @@ DynaTreeNode.prototype = {
 								tree.logWarning("%s._loadKeyPath(%s) -> reloadChildren() failed.", self, keyPath);
 								callback.call(tree, child, "error");
 							}
-						}); 
+						});
 						// we can ignore it, since it will only be exectuted once, the the loop is ended
 						// See also http://stackoverflow.com/questions/3037598/how-to-get-around-the-jslint-error-dont-make-functions-within-a-loop
 					} else {
@@ -2566,7 +2572,7 @@ TODO: better?
 		if(hitMode === "after" || hitMode === "before" || hitMode === "over"){
 //			$source && $source.addClass("dynatree-drag-source");
 //			$target.addClass("dynatree-drop-target");
-			
+
 			var markerOffset = "0 0";
 
 			switch(hitMode){
@@ -2605,7 +2611,7 @@ TODO: better?
 					of: $target,
 					offset: markerOffset
 				});
-			
+
 //			helper.addClass("dynatree-drop-hover");
 		} else {
 //			$source && $source.removeClass("dynatree-drag-source");
