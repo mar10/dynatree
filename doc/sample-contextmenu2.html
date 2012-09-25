@@ -12,16 +12,16 @@
 	<script src="../src/jquery.dynatree.js" type="text/javascript"></script>
 
 	<!-- jquery.contextmenu,  A Beautiful Site (http://abeautifulsite.net/) -->
-    <!--
+	<!--
 	<script src="contextmenu/jquery.contextMenu-custom.js" type="text/javascript"></script>
 	<link href="contextmenu/jquery.contextMenu.css" rel="stylesheet" type="text/css" >
-    -->
+	-->
 	<!-- medialize jQuery contextMenu (http://github.com/medialize/jQuery-contextMenu) -->
-    <!--
-    -->
-    <script src="jq.context/jquery.ui.position.js" type="text/javascript"></script>
-    <script src="jq.context/jquery.contextMenu.js" type="text/javascript"></script>
-    <link href="jq.context/jquery.contextMenu.css" rel="stylesheet" type="text/css" />
+	<!--
+	-->
+	<script src="jq.context/jquery.ui.position.js" type="text/javascript"></script>
+	<script src="jq.context/jquery.contextMenu.js" type="text/javascript"></script>
+	<link href="jq.context/jquery.contextMenu.css" rel="stylesheet" type="text/css" />
 
 
 	<!-- Start_Exclude: This block is not part of the sample code -->
@@ -38,44 +38,44 @@ var clipboardNode = null;
 var pasteMode = null;
 
 function copyPaste(action, node) {
-    switch( action ) {
-    case "cut":
-    case "copy":
-        clipboardNode = node;
-        pasteMode = action;
-        break;
-    case "paste":
-        if( !clipboardNode ) {
-            alert("Clipoard is empty.");
-            break;
-        }
-        if( pasteMode == "cut" ) {
-            // Cut mode: check for recursion and remove source
-            var isRecursive = false;
-            var cb = clipboardNode.toDict(true, function(dict){
-                // If one of the source nodes is the target, we must not move
-                if( dict.key == node.data.key )
-                    isRecursive = true;
-            });
-            if( isRecursive ) {
-                alert("Cannot move a node to a sub node.");
-                return;
-            }
-            node.addChild(cb);
-            clipboardNode.remove();
-        } else {
-            // Copy mode: prevent duplicate keys:
-            var cb = clipboardNode.toDict(true, function(dict){
-                dict.title = "Copy of " + dict.title;
-                delete dict.key; // Remove key, so a new one will be created
-            });
-            node.addChild(cb);
-        }
-        clipboardNode = pasteMode = null;
-        break;
-    default:
-        alert("Unhandled clipboard action '" + action + "'");
-    }
+	switch( action ) {
+	case "cut":
+	case "copy":
+		clipboardNode = node;
+		pasteMode = action;
+		break;
+	case "paste":
+		if( !clipboardNode ) {
+			alert("Clipoard is empty.");
+			break;
+		}
+		if( pasteMode == "cut" ) {
+			// Cut mode: check for recursion and remove source
+			var isRecursive = false;
+			var cb = clipboardNode.toDict(true, function(dict){
+				// If one of the source nodes is the target, we must not move
+				if( dict.key == node.data.key )
+					isRecursive = true;
+			});
+			if( isRecursive ) {
+				alert("Cannot move a node to a sub node.");
+				return;
+			}
+			node.addChild(cb);
+			clipboardNode.remove();
+		} else {
+			// Copy mode: prevent duplicate keys:
+			var cb = clipboardNode.toDict(true, function(dict){
+				dict.title = "Copy of " + dict.title;
+				delete dict.key; // Remove key, so a new one will be created
+			});
+			node.addChild(cb);
+		}
+		clipboardNode = pasteMode = null;
+		break;
+	default:
+		alert("Unhandled clipboard action '" + action + "'");
+	}
 };
 
 // --- Init dynatree during startup ----------------------------------------
@@ -83,108 +83,108 @@ function copyPaste(action, node) {
 $(function(){
 
 $("#tree").dynatree({
-    persist: true,
-    onActivate: function(node) {
-        $("#echoActivated").text(node.data.title + ", key=" + node.data.key);
-    },
-    /*
-    onClick: function(node, event) {
-        // Close menu on click
-        if( $(".contextMenu:visible").length > 0 ){
-            $(".contextMenu").hide();
+	persist: true,
+	onActivate: function(node) {
+		$("#echoActivated").text(node.data.title + ", key=" + node.data.key);
+	},
+	/*
+	onClick: function(node, event) {
+		// Close menu on click
+		if( $(".contextMenu:visible").length > 0 ){
+			$(".contextMenu").hide();
 //					return false;
-        }
-    },
-    */
-    onKeydown: function(node, event) {
-        // Eat keyboard events, when a menu is open
-        if( $(".contextMenu:visible").length > 0 ){
-            return false;
-        }
-        switch( event.which ) {
+		}
+	},
+	*/
+	onKeydown: function(node, event) {
+		// Eat keyboard events, when a menu is open
+		if( $(".contextMenu:visible").length > 0 ){
+			return false;
+		}
+		switch( event.which ) {
 
-        // Open context menu on [Space] key (simulate right click)
-        case 32: // [Space]
-            $("a", node.span).contextMenu();
-            return false;
+		// Open context menu on [Space] key (simulate right click)
+		case 32: // [Space]
+			$("a", node.span).contextMenu();
+			return false;
 
-        // Handle Ctrl-C, -X and -V
-        case 67:
-            if( event.ctrlKey ) { // Ctrl-C
-                copyPaste("copy", node);
-                return false;
-            }
-            break;
-        case 86:
-            if( event.ctrlKey ) { // Ctrl-V
-                copyPaste("paste", node);
-                return false;
-            }
-            break;
-        case 88:
-            if( event.ctrlKey ) { // Ctrl-X
-                copyPaste("cut", node);
-                return false;
-            }
-            break;
-        }
-    },
-    /*Load lazy content (to show that context menu will work for new items too)*/
-    onLazyRead: function(node){
-        node.appendAjax({
-            url: "sample-data2.json"
-        });
-    },
-    /* D'n'd, just to show it's compatible with a context menu.
-       See http://code.google.com/p/dynatree/issues/detail?id=174 */
-    dnd: {
-        preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
-        onDragStart: function(node) {
-            return true;
-        },
-        onDragEnter: function(node, sourceNode) {
-            if(node.parent !== sourceNode.parent)
-                return false;
-            return ["before", "after"];
-        },
-        onDrop: function(node, sourceNode, hitMode, ui, draggable) {
-            sourceNode.move(node, hitMode);
-        }
-    }
+		// Handle Ctrl-C, -X and -V
+		case 67:
+			if( event.ctrlKey ) { // Ctrl-C
+				copyPaste("copy", node);
+				return false;
+			}
+			break;
+		case 86:
+			if( event.ctrlKey ) { // Ctrl-V
+				copyPaste("paste", node);
+				return false;
+			}
+			break;
+		case 88:
+			if( event.ctrlKey ) { // Ctrl-X
+				copyPaste("cut", node);
+				return false;
+			}
+			break;
+		}
+	},
+	/*Load lazy content (to show that context menu will work for new items too)*/
+	onLazyRead: function(node){
+		node.appendAjax({
+			url: "sample-data2.json"
+		});
+	},
+	/* D'n'd, just to show it's compatible with a context menu.
+	   See http://code.google.com/p/dynatree/issues/detail?id=174 */
+	dnd: {
+		preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
+		onDragStart: function(node) {
+			return true;
+		},
+		onDragEnter: function(node, sourceNode) {
+			if(node.parent !== sourceNode.parent)
+				return false;
+			return ["before", "after"];
+		},
+		onDrop: function(node, sourceNode, hitMode, ui, draggable) {
+			sourceNode.move(node, hitMode);
+		}
+	}
 }); // $.dynatree
 /*
 $(document).on('contextmenu.contextMenu', function(e){
-    alert("on contextmenu");
+	alert("on contextmenu");
 });
 */
 
 // jQuery contextMenu blocks mouse events, so we have to catch them in order to
 // activate the node on click
 $(document).on('mousedown.contextMenu', function(e){
-    var node = $.ui.dynatree.getNode(e.target);
-    window.console && console.log("e: %o, node: %o", e, node);
-    node && node.activate();
+	var node = $.ui.dynatree.getNode(e.target);
+	window.console && console.log("e: %o, node: %o", e, node);
+	node && node.activate();
 });
 
 $.contextMenu({
-    // bind menu to every dynatree node
-    selector: 'a.dynatree-title', 
-    // called for every menu command
-    callback: function(cmd, options) {
-        var node = $.ui.dynatree.getNode(this);
-        window.console && console.log(cmd + " - " + node);
-        node.activate();
-        copyPaste(cmd, node);
-    },
-    items: {
-        "edit": {name: "Edit", icon: "edit"},
-        "cut": {name: "Cut", icon: "cut"},
-        "copy": {name: "Copy", icon: "copy"},
-        "paste": {name: "Paste", icon: "paste"},
-        "delete": {name: "Delete", icon: "delete"},
-        "sep1": "---------",
-        "quit": {name: "Quit", icon: "quit"}
-    }
+	// bind menu to every dynatree node
+	selector: 'a.dynatree-title',
+	// called for every menu command
+	callback: function(cmd, options) {
+		var node = $.ui.dynatree.getNode(this);
+		window.console && console.log(cmd + " - " + node);
+		node.activate();
+		copyPaste(cmd, node);
+	},
+	items: {
+		"edit": {name: "Edit", icon: "edit"},
+		"cut": {name: "Cut", icon: "cut"},
+		"copy": {name: "Copy", icon: "copy"},
+		"paste": {name: "Paste", icon: "paste"},
+		"delete": {name: "Delete", icon: "delete"},
+		"sep1": "---------",
+		"quit": {name: "Quit", icon: "quit"}
+	}
 }); // $.contextMenu()
 
 }); // $(function){...}
