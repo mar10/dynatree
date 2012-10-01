@@ -16,6 +16,8 @@
 //            Changed stopPropagation() to preventDefault() in order to make it
 //            work with Dynatree drag'n'drop.  
 //            See http://code.google.com/p/dynatree/issues/detail?id=174
+// 2012-09-27 Martin Wendt: 
+//            fixed position in a fancy layout
 //
 if(jQuery)( function() {
 	$.extend($.fn, {
@@ -76,7 +78,9 @@ if(jQuery)( function() {
 							
 							// Show the menu
 							$(document).unbind('click');
-							$(menu).css({ top: y, left: x }).fadeIn(o.inSpeed);
+							// MW: fixed position in a fancy layout
+//							$(menu).css({ top: y, left: x }).fadeIn(o.inSpeed);
+							$(menu).fadeIn(o.inSpeed).offset({ top: y, left: x }); // must be visible, before calling offset()
 							// Hover events
 							$(menu).find('A').mouseover( function() {
 								$(menu).find('LI.hover').removeClass('hover');
