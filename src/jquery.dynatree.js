@@ -17,16 +17,11 @@
 	@depends: jquery.cookie.js
 *************************************************************************/
 
-// Note: We currently allow eval() to parse the 'data' attribtes, when initializing from HTML.
-
-/* jsLint options*/
-// TODO: does not pass jsLint
-/*NOT_YET_jslint browser: true, evil: true, indent: 4, sloppy: true, nomen: true, vars: true, white: true, plusplus: true*/
-/*global alert */
-
 /* jsHint options*/
+// Note: We currently allow eval() to parse the 'data' attribtes, when initializing from HTML.
 // TODO: pass jsHint with the options given in grunt.js only.
 //       The following should not be required:
+/*global alert */
 /*jshint nomen:false, smarttabs:true, eqeqeq:false, evil:true, regexp:false */
 
 /*************************************************************************
@@ -224,7 +219,7 @@ DynaTreeNode.prototype = {
 			res += "<img src='" + imageSrc + "' alt='' />";
 		} else if ( data.icon === false ) {
 			// icon == false means 'no icon'
-			noop(); // keep JSLint happy
+//			noop(); // keep JSLint happy
 		} else {
 			// icon == null means 'default icon'
 			res += cache.tagNodeIcon;
@@ -3310,7 +3305,7 @@ var _registerDnd = function() {
 			if(targetNode){
 				if(!targetNode.tree.options.dnd.onDrop) {
 					// not enabled as drop target
-					noop(); // Keep JSLint happy
+//					noop(); // Keep JSLint happy
 				} else if(targetNode === prevTargetNode) {
 					// Moving over same node
 					targetNode.tree._onDragEvent("over", targetNode, sourceNode, event, ui, draggable);
