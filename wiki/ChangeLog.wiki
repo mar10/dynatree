@@ -17,6 +17,7 @@ This release was especially supported by Ben Gillis.
   * Fixed issue 321: Drag helper icons display offset is incorrect
   * Fixed issue 332: Drag and Drop Allowed when returning false
   * Added a sample for RTL support
+  * Using [http://gruntjs.com/ grunt] and [https://github.com/mishoo/UglifyJS uglify] in the build process.<br>jquery.dynatree.min.js has been reduced to 80% of previous size.
   * Dropped compliance with [http://www.jslint.com/ JSLint] in favor of [http://www.jshint.com/ JSHint]
   
 
