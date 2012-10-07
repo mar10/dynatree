@@ -17,11 +17,16 @@
 	@depends: jquery.cookie.js
 *************************************************************************/
 
-/* jsHint options*/
 // Note: We currently allow eval() to parse the 'data' attribtes, when initializing from HTML.
+
+/* jsLint options*/
+// TODO: does not pass jsLint 
+/*NOT_YET_jslint browser: true, evil: true, indent: 4, sloppy: true, nomen: true, vars: true, white: true, plusplus: true*/
+/*global alert */
+
+/* jsHint options*/
 // TODO: pass jsHint with the options given in grunt.js only.
 //       The following should not be required:
-/*global alert */
 /*jshint nomen:false, smarttabs:true, eqeqeq:false, evil:true, regexp:false */
 
 /*************************************************************************
@@ -192,8 +197,7 @@ DynaTreeNode.prototype = {
 			cache = tree.cache,
 			level = this.getLevel(),
 			data = this.data,
-			res = "",
-			imageSrc;
+			res = "";
 		// connector (expanded, expandable or simple)
 		if( level < opts.minExpandLevel ) {
 			if(level > 1){
@@ -211,15 +215,10 @@ DynaTreeNode.prototype = {
 		}
 		// folder or doctype icon
 		if ( data.icon ) {
-			if (data.icon.charAt(0) === "/"){
-				imageSrc = data.icon;
-			}else{
-				imageSrc = opts.imagePath + data.icon;
-			}
-			res += "<img src='" + imageSrc + "' alt='' />";
+			res += "<img src='" + opts.imagePath + data.icon + "' alt='' />";
 		} else if ( data.icon === false ) {
 			// icon == false means 'no icon'
-//			noop(); // keep JSLint happy
+			noop(); // keep JSLint happy
 		} else {
 			// icon == null means 'default icon'
 			res += cache.tagNodeIcon;
@@ -1509,7 +1508,7 @@ DynaTreeNode.prototype = {
 								tree.logWarning("%s._loadKeyPath(%s) -> reloadChildren() failed.", self, keyPath);
 								callback.call(tree, child, "error");
 							}
-						});
+						}); 
 						// we can ignore it, since it will only be exectuted once, the the loop is ended
 						// See also http://stackoverflow.com/questions/3037598/how-to-get-around-the-jslint-error-dont-make-functions-within-a-loop
 					} else {
@@ -2552,9 +2551,8 @@ TODO: better?
 		if( !this.$dndMarker ) {
 			this.$dndMarker = $("<div id='dynatree-drop-marker'></div>")
 				.hide()
-				.css({"z-index": 1000})
 				.prependTo($(this.divTree).parent());
-
+//				.prependTo("body");
 //			logMsg("Creating marker: %o", this.$dndMarker);
 		}
 /*
@@ -2564,28 +2562,29 @@ TODO: better?
 //			sourceNode.removeClass("dynatree-drop-target");
 		}
 */
+//		this.$dndMarker.attr("class", hitMode);
 		if(hitMode === "after" || hitMode === "before" || hitMode === "over"){
 //			$source && $source.addClass("dynatree-drag-source");
-//			$target.addClass("dynatree-drop-target");
+			var pos = $target.offset();
 
-			var markerOffset = "0 0";
+//			$target.addClass("dynatree-drop-target");
 
 			switch(hitMode){
 			case "before":
 				this.$dndMarker.removeClass("dynatree-drop-after dynatree-drop-over");
 				this.$dndMarker.addClass("dynatree-drop-before");
-				markerOffset = "0 -8";
+				pos.top -= 8;
 				break;
 			case "after":
 				this.$dndMarker.removeClass("dynatree-drop-before dynatree-drop-over");
 				this.$dndMarker.addClass("dynatree-drop-after");
-				markerOffset = "0 8";
+				pos.top += 8;
 				break;
 			default:
 				this.$dndMarker.removeClass("dynatree-drop-after dynatree-drop-before");
 				this.$dndMarker.addClass("dynatree-drop-over");
 				$target.addClass("dynatree-drop-target");
-				markerOffset = "8 0";
+				pos.left += 8;
 			}
 //			logMsg("Creating marker: %o", this.$dndMarker);
 //			logMsg("    $target.offset=%o", $target);
@@ -2598,15 +2597,13 @@ TODO: better?
 //			var parentPos = $target.offsetParent().offset();
 //			var bodyPos = $target.offsetParent().offset();
 
-			this.$dndMarker
-				.show()
-				.position({
-					my: "left top",
-					at: "left top",
-					of: $target,
-					offset: markerOffset
-				});
-
+			this.$dndMarker //.offset({left: pos.left, top: pos.top})
+				.css({
+					"left": pos.left,
+					"top": pos.top,
+					"z-index": 1000
+				})
+				.show();
 //			helper.addClass("dynatree-drop-hover");
 		} else {
 //			$source && $source.removeClass("dynatree-drag-source");
@@ -2713,16 +2710,11 @@ TODO: better?
 			break;
 		case "enter":
 			res = dnd.onDragEnter ? dnd.onDragEnter(node, otherNode) : null;
-			if(!res){
-				// convert null, undefined, false to false
-				res = false;
-			}else{
-				res = {
-					over: ((res === true) || (res === "over") || $.inArray("over", res) >= 0),
-					before: ((res === true) || (res === "before") || $.inArray("before", res) >= 0),
-					after: ((res === true) || (res === "after") || $.inArray("after", res) >= 0)
-				};
-			}
+			res = {
+				over: (res !== false) && ((res === true) || (res === "over") || $.inArray("over", res) >= 0),
+				before: (res !== false) && ((res === true) || (res === "before") || $.inArray("before", res) >= 0),
+				after: (res !== false) && ((res === true) || (res === "after") || $.inArray("after", res) >= 0)
+			};
 			ui.helper.data("enterResponse", res);
 //			this.logDebug("helper.enterResponse: %o", res);
 			break;
@@ -2731,8 +2723,7 @@ TODO: better?
 			hitMode = null;
 			if(enterResponse === false){
 				// Don't call onDragOver if onEnter returned false.
-				// issue 332
-//				break;
+				break;
 			} else if(typeof enterResponse === "string") {
 				// Use hitMode from onEnter if provided.
 				hitMode = enterResponse;
@@ -2793,9 +2784,7 @@ TODO: better?
 			if(hitMode && dnd.onDragOver){
 				res = dnd.onDragOver(node, otherNode, hitMode);
 			}
-			// issue 332
-//			this._setDndStatus(otherNode, node, ui.helper, hitMode, res!==false);
-			this._setDndStatus(otherNode, node, ui.helper, hitMode, res!==false && hitMode !== null);
+			this._setDndStatus(otherNode, node, ui.helper, hitMode, res!==false);
 			break;
 		case "drop":
 			// issue 286: don't trigger onDrop, if DnD status is 'reject'
@@ -3305,7 +3294,7 @@ var _registerDnd = function() {
 			if(targetNode){
 				if(!targetNode.tree.options.dnd.onDrop) {
 					// not enabled as drop target
-//					noop(); // Keep JSLint happy
+					noop(); // Keep JSLint happy
 				} else if(targetNode === prevTargetNode) {
 					// Moving over same node
 					targetNode.tree._onDragEvent("over", targetNode, sourceNode, event, ui, draggable);
