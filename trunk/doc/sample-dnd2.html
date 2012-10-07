@@ -76,8 +76,9 @@ $(function(){
 					return false;
 				}
 				// Prohibit creating childs in non-folders (only sorting allowed)
-//				if( !node.isFolder && hitMode == "over" )
-//					return "after";
+				if( !node.data.isFolder && hitMode === "over" ){
+					return "after";
+                }
 			},
 			onDrop: function(node, sourceNode, hitMode, ui, draggable) {
 				/** This function MUST be defined to enable dropping of items on
