@@ -19,7 +19,7 @@
   * Fixed issue 324: Drag and drop example bug: onDragOver doesn't allow return "after"
   * Added a sample for RTL support
   * The (unsupported) context menu plugin that I used for the sample was patched to fix a positioning bug.
-  * Using [http://gruntjs.com/ grunt] and [https://github.com/mishoo/UglifyJS uglify] in the build process.<br>jquery.dynatree.min.js has been reduced to 80% of previous size.
+  * Using [http://gruntjs.com/ grunt] and [https://github.com/mishoo/UglifyJS uglify] in the build process.<br>jquery.dynatree.min.js has been reduced to 80% of previous size.<br>This file is now found in the `/dist` folder
   * Dropped compliance with [http://www.jslint.com/ JSLint] in favor of [http://www.jshint.com/ JSHint]
   * Updated to jQuery UI 1.8.24, jQuery 1.8.2
   
