@@ -16,6 +16,7 @@
 
   * Fixed issue 321: Drag helper icons display offset is incorrect
   * Fixed issue 332: Drag and Drop Allowed when returning false
+  * Fixed issue 324: Drag and drop example bug: onDragOver doesn't allow return "after"
   * Added a sample for RTL support
   * The (unsupported) context menu plugin that I used for the sample was patched to fix a positioning bug.
   * Using [http://gruntjs.com/ grunt] and [https://github.com/mishoo/UglifyJS uglify] in the build process.<br>jquery.dynatree.min.js has been reduced to 80% of previous size.
