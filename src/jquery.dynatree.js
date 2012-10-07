@@ -2792,6 +2792,9 @@ TODO: better?
 			}
 			if(hitMode && dnd.onDragOver){
 				res = dnd.onDragOver(node, otherNode, hitMode);
+				if(res === "over" || res === "before" || res === "after") {
+					hitMode = res;
+				}
 			}
 			// issue 332
 //			this._setDndStatus(otherNode, node, ui.helper, hitMode, res!==false);
