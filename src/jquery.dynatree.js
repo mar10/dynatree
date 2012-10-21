@@ -59,6 +59,9 @@ function _log(mode, msg) {
 	} catch(e) {
 		if( !window.console ){
 			_canLog = false; // Permanently disable, when logging is not supported by the browser
+		}else if(e.number === -2146827850){
+			// fix for IE8, where window.conolse.log() exists, but does not support apply
+			window.console.log(args.join(", "));
 		}
 	}
 }
@@ -3326,7 +3329,7 @@ var _registerDnd = function() {
 				mouseDownEvent = draggable._mouseDownEvent,
 				eventType = event.type,
 				dropped = (eventType == "mouseup" && event.which == 1);
-//			logMsg("draggable-connectToDynatree.stop: targetNode(from event): %s, dtTargetNode: %s", targetNode, ui.helper.data("dtTargetNode"));
+			logMsg("draggable-connectToDynatree.stop: targetNode(from event): %s, dtTargetNode: %s", targetNode, ui.helper.data("dtTargetNode"));
 //			logMsg("draggable-connectToDynatree.stop, %s", sourceNode);
 //			logMsg("    type: %o, downEvent: %o, upEvent: %o", eventType, mouseDownEvent, event);
 //			logMsg("    targetNode: %o", targetNode);
