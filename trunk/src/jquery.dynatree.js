@@ -60,7 +60,7 @@ function _log(mode, msg) {
 		if( !window.console ){
 			_canLog = false; // Permanently disable, when logging is not supported by the browser
 		}else if(e.number === -2146827850){
-			// fix for IE8, where window.conolse.log() exists, but does not support apply
+			// fix for IE8, where window.console.log() exists, but does not support .apply()
 			window.console.log(args.join(", "));
 		}
 	}
@@ -132,8 +132,10 @@ DynaTreeNode.prototype = {
 		if ( typeof data === "string" ){
 			data = { title: data };
 		}
-		if( data.key === undefined ){
+		if( !data.key ){
 			data.key = "_" + tree._nodeCount++;
+		}else{
+			data.key = "" + data.key; // issue 371
 		}
 		this.data = $.extend({}, $.ui.dynatree.nodedatadefaults, data);
 		this.li = null; // not yet created
@@ -2368,7 +2370,7 @@ DynaTree.prototype = {
 		var match = null;
 		this.visit(function(node){
 //			window.console.log("%s", node);
-			if(node.data.key == key) {
+			if(node.data.key === key) {
 				match = node;
 				return false;
 			}
@@ -2519,7 +2521,7 @@ TODO: better?
 				data.tooltip = $li.attr("title"); // overrides <a title='...'>
 			}
 			if( $li.attr("id") ){
-				data.key = $li.attr("id");
+				data.key = "" + $li.attr("id");
 			}
 			// If a data attribute is present, evaluate as a JavaScript object
 			if( $li.attr("data") ) {
