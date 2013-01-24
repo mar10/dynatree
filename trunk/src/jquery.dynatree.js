@@ -225,6 +225,8 @@ DynaTreeNode.prototype = {
 		} else if ( data.icon === false ) {
 			// icon == false means 'no icon'
 //			noop(); // keep JSLint happy
+		} else if ( data.iconClass ) {
+			res +=  "<span class='" + " " + data.iconClass +  "'></span>";
 		} else {
 			// icon == null means 'default icon'
 			res += cache.tagNodeIcon;
