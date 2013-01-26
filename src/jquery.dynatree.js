@@ -117,6 +117,39 @@ function getDtNodeFromElement(el) {
 function noop() {
 }
 
+/** Compare two dotted version strings (like '10.2.3').
+ * @returns {Integer} 0: v1 == v2, -1: v1 < v2, 1: v1 > v2
+ */
+function versionCompare(v1, v2) {
+    var v1parts = ("" + v1).split("."),
+        v2parts = ("" + v2).split("."),
+        minLength = Math.min(v1parts.length, v2parts.length),
+        p1, p2, i;
+    // Compare tuple pair-by-pair. 
+    for(i = 0; i < minLength; i++) {
+        // Convert to integer if possible, because "8" > "10".
+        p1 = parseInt(v1parts[i], 10);
+        p2 = parseInt(v2parts[i], 10);
+        if (isNaN(p1)){ p1 = v1parts[i]; } 
+        if (isNaN(p2)){ p2 = v2parts[i]; } 
+        if (p1 == p2) {
+            continue;
+        }else if (p1 > p2) {
+            return 1;
+        }else if (p1 < p2) {
+            return -1;
+        }
+        // one operand is NaN
+        return NaN;
+    }
+    // The longer tuple is always considered 'greater'
+    if (v1parts.length === v2parts.length) {
+        return 0;
+    }
+    return (v1parts.length < v2parts.length) ? -1 : 1;
+}
+
+
 /*************************************************************************
  *	Class DynaTreeNode
  */
@@ -2862,7 +2895,8 @@ $.widget("ui.dynatree", {
 	},
  */
 	_init: function() {
-		if( parseFloat($.ui.version) < 1.8 ) {
+//		if( parseFloat($.ui.version) < 1.8 ) {
+		if(versionCompare($.ui.version, "1.8") < 0){
 			// jquery.ui.core 1.8 renamed _init() to _create(): this stub assures backward compatibility
 			if(this.options.debugLevel >= 0){
 				_log("warn", "ui.dynatree._init() was called; you should upgrade to jquery.ui.core.js v1.8 or higher.");
@@ -3007,7 +3041,8 @@ $.widget("ui.dynatree", {
 
 
 // The following methods return a value (thus breaking the jQuery call chain):
-if( parseFloat($.ui.version) < 1.8 ) {
+if(versionCompare($.ui.version, "1.8") < 0){
+//if( parseFloat($.ui.version) < 1.8 ) {
 	$.ui.dynatree.getter = "getTree getRoot getActiveNode getSelectedNodes";
 }
 
@@ -3175,7 +3210,8 @@ $.ui.dynatree.prototype.options = {
 	lastentry: undefined
 };
 //
-if( parseFloat($.ui.version) < 1.8 ) {
+if(versionCompare($.ui.version, "1.8") < 0){
+//if( parseFloat($.ui.version) < 1.8 ) {
 	$.ui.dynatree.defaults = $.ui.dynatree.prototype.options;
 }
 
