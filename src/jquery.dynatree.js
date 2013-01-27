@@ -3303,7 +3303,8 @@ var _registerDnd = function() {
 	// Register proxy-functions for draggable.start/drag/stop
 	$.ui.plugin.add("draggable", "connectToDynatree", {
 		start: function(event, ui) {
-			var draggable = $(this).data("draggable"),
+            // issue 386 
+            var draggable = $(this).data("ui-draggable") || $(this).data("draggable"),
 				sourceNode = ui.helper.data("dtSourceNode") || null;
 //			logMsg("draggable-connectToDynatree.start, %s", sourceNode);
 //			logMsg("    this: %o", this);
@@ -3325,7 +3326,8 @@ var _registerDnd = function() {
 			}
 		},
 		drag: function(event, ui) {
-			var draggable = $(this).data("draggable"),
+            // issue 386 
+            var draggable = $(this).data("ui-draggable") || $(this).data("draggable"),
 				sourceNode = ui.helper.data("dtSourceNode") || null,
 				prevTargetNode = ui.helper.data("dtTargetNode") || null,
 				targetNode = $.ui.dynatree.getNode(event.target);
@@ -3364,7 +3366,8 @@ var _registerDnd = function() {
 			// else go ahead with standard event handling
 		},
 		stop: function(event, ui) {
-			var draggable = $(this).data("draggable"),
+            // issue 386 
+            var draggable = $(this).data("ui-draggable") || $(this).data("draggable"),
 				sourceNode = ui.helper.data("dtSourceNode") || null,
 				targetNode = ui.helper.data("dtTargetNode") || null,
 				mouseDownEvent = draggable._mouseDownEvent,
