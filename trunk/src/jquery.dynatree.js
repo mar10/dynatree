@@ -66,6 +66,37 @@ function _log(mode, msg) {
 	}
 }
 
+/* Check browser version, since $.browser was removed in jQuery 1.9 */
+function _checkBrowser(){
+    var matched, browser;
+    function uaMatch( ua ) {
+        ua = ua.toLowerCase();
+        var match = /(chrome)[ \/]([\w.]+)/.exec( ua ) ||
+             /(webkit)[ \/]([\w.]+)/.exec( ua ) ||
+             /(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) ||
+             /(msie) ([\w.]+)/.exec( ua ) ||
+             ua.indexOf("compatible") < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) ||
+             [];
+        return {
+            browser: match[ 1 ] || "",
+            version: match[ 2 ] || "0"
+        };
+    };
+    matched = uaMatch( navigator.userAgent );
+    browser = {};
+     if ( matched.browser ) {
+         browser[ matched.browser ] = true;
+         browser.version = matched.version;
+     }
+     if ( browser.chrome ) {
+         browser.webkit = true;
+     } else if ( browser.webkit ) {
+         browser.safari = true;
+     }
+     return browser;
+}
+var BROWSER = jQuery.browser || _checkBrowser();
+
 function logMsg(msg) {
 	Array.prototype.unshift.apply(arguments, ["debug"]);
 	_log.apply(this, arguments);
@@ -1208,7 +1239,8 @@ DynaTreeNode.prototype = {
 			var aTag = this.span.getElementsByTagName("a");
 			if(aTag[0]){
 				// issue 154, 313
-				if(!($.browser.msie && parseInt($.browser.version, 10) < 9)){
+//                if(!($.browser.msie && parseInt($.browser.version, 10) < 9)){
+                if(!(BROWSER.msie && parseInt(BROWSER.version, 10) < 9)){
 					aTag[0].focus();
 				}
 			}else{
