@@ -6,10 +6,15 @@
 
 ==== Release 1.x ====
 
-===== 1.2.3 (not yet released) =====
+===== 1.2.4 (not yet released) =====
 
   * 
 
+
+===== 1.2.3 =====
+
+  * Fixes for jQuery 1.9
+  *  [http://code.google.com/p/dynatree/issues/list?can=1&q=Milestone%3ARelease1.2.3&colspec=Stars+ID+Type+Status+Modified+Priority+Milestone+Owner+Summary&x=status&y=milestone&mode=grid&cells=tiles details]
 
 ===== 1.2.2 =====
 *Thanks to Ben Gillis for sponsoring this release!*
