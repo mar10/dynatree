@@ -6,9 +6,11 @@
 
 ==== Release 1.x ====
 
-===== 1.2.4 (not yet released) =====
+===== 1.2.5 (not yet released) =====
 
-  * 
+===== 1.2.4 =====
+
+  * Fixes issue 402 (a regrression bug in removeChildren)
 
 
 ===== 1.2.3 =====
