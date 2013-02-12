@@ -1450,8 +1450,8 @@ DynaTreeNode.prototype = {
 		}
 		tn.removeChildren(true);
 		if(this.ul){
-//			this.ul.removeChild(tn.li);
-			$("li", $(this.ul)).remove(); // issue 399
+//			$("li", $(this.ul)).remove(); // issue 399
+		    this.ul.removeChild(tn.li); // issue 402
 		}
 		for(var i=0, l=ac.length; i<l; i++) {
 			if( ac[i] === tn ) {
