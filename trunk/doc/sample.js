@@ -2,6 +2,27 @@
 	(c) 2008-2012 Martin Wendt
  *************************************************************************/
 
+/**
+ * Replacement for $().toggle(func1, func2), which was deprecated with jQuery 1.8
+ * and removed in 1.9.;
+ * Taken from http://stackoverflow.com/a/4911660/19166
+ * By Felix Kling
+ */
+(function($) {
+    $.fn.clickToggle = function(func1, func2) {
+        var funcs = [func1, func2];
+        this.data('toggleclicked', 0);
+        this.click(function() {
+            var data = $(this).data();
+            var tc = data.toggleclicked;
+            $.proxy(funcs[tc], this)();
+            data.toggleclicked = (tc + 1) % 2;
+        });
+        return this;
+    };
+}(jQuery));
+
+
 function viewSourceCode()
 {
 	window.location = "view-source:" + window.location.href;
@@ -11,7 +32,7 @@ function viewSourceCode()
 function initCodeSamples()
 {
 	var $source = $("#sourceCode");
-	$("#codeExample").toggle(
+	$("#codeExample").clickToggle(
 		function(){
 			$source.show("fast");
 			if( !this.old ){
@@ -69,7 +90,8 @@ $(function(){
 	}
 
 	// Show some elements only, if (not) inside the Example Browser
-	if (top.location == self.location){
+//  if (top.location == self.location){
+    if (window.top == window.self){
 		$(".hideOutsideFS").hide();
 	}else{
 		$(".hideInsideFS").hide();
