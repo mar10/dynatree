@@ -831,7 +831,7 @@ DynaTreeNode.prototype = {
 			}
 			this.tree.activeNode = this;
 			if( opts.persist ){
-				$.cookie(opts.cookieId+"-active", this.data.key, opts.cookie);
+				$.cookie(opts.cookieId + "-active", this.data.key, opts.cookie);
 			}
 			this.tree.persistence.activeKey = this.data.key;
 			$(this.span).addClass(opts.classNames.active);
@@ -848,7 +848,7 @@ DynaTreeNode.prototype = {
 				if( opts.persist ) {
 					// Note: we don't pass null, but ''. So the cookie is not deleted.
 					// If we pass null, we also have to pass a COPY of opts, because $cookie will override opts.expires (issue 84)
-					$.cookie(opts.cookieId+"-active", "", opts.cookie);
+					$.cookie(opts.cookieId + "-active", "", opts.cookie);
 				}
 				this.tree.persistence.activeKey = null;
 				this.tree.activeNode = null;
@@ -1363,7 +1363,7 @@ DynaTreeNode.prototype = {
 			}
 			this.tree.tnFocused = null;
 			if( opts.persist ){
-				$.cookie(opts.cookieId+"-focus", "", opts.cookie);
+				$.cookie(opts.cookieId + "-focus", "", opts.cookie);
 			}
 		} else if ( event.type=="focus" || event.type=="focusin") {
 			// Fix: sometimes the blur event is not generated
@@ -1377,7 +1377,7 @@ DynaTreeNode.prototype = {
 			}
 			$(this.tree.tnFocused.span).addClass(opts.classNames.focused);
 			if( opts.persist ){
-				$.cookie(opts.cookieId+"-focus", this.data.key, opts.cookie);
+				$.cookie(opts.cookieId + "-focus", this.data.key, opts.cookie);
 			}
 		}
 		// TODO: return anything?
@@ -1389,7 +1389,7 @@ DynaTreeNode.prototype = {
 		var res = true;
 		if( includeSelf === true ) {
 			res = fn(this);
-			if( res === false || res == "skip" ){
+			if( res === false || res === "skip" ){
 				return res;
 			}
 		}
@@ -2035,23 +2035,23 @@ DynaTreeStatus.prototype = {
 		this.cookiesFound = false;
 
 		var cookie = $.cookie(this.cookieId + "-active");
-		this.activeKey = ( cookie === null ) ? "" : cookie;
-		if( cookie !== null ){
+		this.activeKey = cookie || "";
+		if( cookie ){
 			this.cookiesFound = true;
 		}
 		cookie = $.cookie(this.cookieId + "-focus");
-		this.focusedKey = ( cookie === null ) ? "" : cookie;
-		if( cookie !== null ){
+		this.focusedKey = cookie || "";
+		if( cookie ){
 			this.cookiesFound = true;
 		}
 		cookie = $.cookie(this.cookieId + "-expand");
-		this.expandedKeyList = ( cookie === null ) ? [] : cookie.split(",");
-		if( cookie !== null ){
+		this.expandedKeyList = cookie ? cookie.split(",") : [];
+		if( cookie ){
 			this.cookiesFound = true;
 		}
 		cookie = $.cookie(this.cookieId + "-select");
-		this.selectedKeyList = ( cookie === null ) ? [] : cookie.split(",");
-		if( cookie !== null ){
+		this.selectedKeyList = cookie ? cookie.split(",") : [];
+		if( cookie ){
 			this.cookiesFound = true;
 		}
 	},
