@@ -2119,18 +2119,10 @@ var DynaTree = Class.create();
 
 DynaTree.version = "$Version:$";
 
-/*
-DynaTree._initTree = function() {
-};
-
-DynaTree._bind = function() {
-};
-*/
 //--- Class members ------------------------------------------------------------
 
 DynaTree.prototype = {
 	// Constructor
-//	initialize: function(divContainer, options) {
 	initialize: function($widget) {
 		// instance members
 		this.phase = "init";
@@ -2140,10 +2132,6 @@ DynaTree.prototype = {
 		this.timer = null;
 		// find container element
 		this.divTree = this.$tree.get(0);
-
-//		var parentPos = $(this.divTree).parent().offset();
-//		this.parentTop = parentPos.top;
-//		this.parentLeft = parentPos.left;
 
 		_initDragAndDrop(this);
 	},
@@ -3076,52 +3064,48 @@ $.widget("ui.dynatree", {
 
 // The following methods return a value (thus breaking the jQuery call chain):
 if(versionCompare($.ui.version, "1.8") < 0){
-//if( parseFloat($.ui.version) < 1.8 ) {
 	$.ui.dynatree.getter = "getTree getRoot getActiveNode getSelectedNodes";
 }
 
 /*******************************************************************************
  * Tools in ui.dynatree namespace
  */
-$.ui.dynatree.version = "$Version:$";
+$.extend($.ui.dynatree, {
+    /** @type {String} */
+    version: "$Version:$",
+    /** @type {int} */
+    debugLevel: 2,
 
-/**
- * Return a DynaTreeNode object for a given DOM element
- */
-$.ui.dynatree.getNode = function(el) {
-	if(el instanceof DynaTreeNode){
-		return el; // el already was a DynaTreeNode
-	}
-	if(el.selector !== undefined){
-		el = el[0]; // el was a jQuery object: use the DOM element
-	}
-	// TODO: for some reason $el.parents("[dtnode]") does not work (jQuery 1.6.1)
-	// maybe, because dtnode is a property, not an attribute
-	while( el ) {
-		if(el.dtnode) {
-			return el.dtnode;
-		}
-		el = el.parentNode;
-	}
-	return null;
-/*
-	var $el = el.selector === undefined ? $(el) : el,
-//		parent = $el.closest("[dtnode]"),
-//		parent = $el.parents("[dtnode]").first(),
-		useProp = (typeof $el.prop == "function"),
-		node;
-	$el.parents().each(function(){
-		node = useProp ? $(this).prop("dtnode") : $(this).attr("dtnode");
-		if(node){
-			return false;
-		}
-	});
-	return node;
-*/
-};
+    focusTree: null,
+    /** Expose class object as $.ui.dynatree._DynaTreeClass */
+    _DynaTreeClass: DynaTree,
+    /** Expose class object as $.ui.dynatree._DynaTreeNodeClass */
+    _DynaTreeNodeClass: DynaTreeNode,
+    /**
+     * Return a DynaTreeNode object for a given DOM element
+     */
+    getNode: function(el) {
+        if(el instanceof DynaTreeNode){
+            return el; // el already was a DynaTreeNode
+        }
+        if(el.selector !== undefined){
+            el = el[0]; // el was a jQuery object: use the DOM element
+        }
+        // TODO: for some reason $el.parents("[dtnode]") does not work (jQuery 1.6.1)
+        // maybe, because dtnode is a property, not an attribute
+        while( el ) {
+            if(el.dtnode) {
+                return el.dtnode;
+            }
+            el = el.parentNode;
+        }
+        return null;
+    },
+    /**Return persistence information from cookies.*/
+    getPersistData: DynaTreeStatus._getTreePersistData
+});
 
-/**Return persistence information from cookies.*/
-$.ui.dynatree.getPersistData = DynaTreeStatus._getTreePersistData;
+
 
 /*******************************************************************************
  * Plugin default options:
@@ -3245,7 +3229,6 @@ $.ui.dynatree.prototype.options = {
 };
 //
 if(versionCompare($.ui.version, "1.8") < 0){
-//if( parseFloat($.ui.version) < 1.8 ) {
 	$.ui.dynatree.defaults = $.ui.dynatree.prototype.options;
 }
 
