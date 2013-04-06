@@ -8,31 +8,37 @@ module.exports = function(grunt) {
         meta: {
             banner: "/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - " +
                     "<%= grunt.template.today('yyyy-mm-dd') %>\n" +
-                    "<%= pkg.homepage ? '* ' + pkg.homepage + '\n' : '' %>" +
+                    "<%= pkg.homepage ? '* ' + pkg.homepage + '\\n' : '' %>" +
                     "* Copyright (c) <%= grunt.template.today('yyyy') %> <%= pkg.author.name %>;" +
                     " Licensed <%= _.pluck(pkg.licenses, 'type').join(', ') %> */"
         },
         concat: {
+            options: {
+                stripBanners: true
+            },
             dist: {
-                src: ["<banner:meta.banner>", "<file_strip_banner:src/<%= pkg.name %>.js>"],
-//                src: ["src/jquery.dynatree.js"],
+                src: ["<banner:meta.banner>", 
+                      "src/<%= pkg.name %>.js"
+                      ],
                 dest: "dist/<%= pkg.name %>-<%= pkg.version %>.js"
             }
         },
-        min: {
+        uglify: {
             dist: {
-                src: ["<banner:meta.banner>", "<config:concat.dist.dest>"],
-                dest: "dist/<%= pkg.name %>.min.js"
+                options: {
+                    banner: "<%= meta.banner %>"
+                },
+                files: {
+                    "dist/<%= pkg.name %>.min.js": ["<%= concat.dist.dest %>"]
+                }
             }
         },
 //        qunit: {
 //            files: ["tests/unit/**/*.html"]
 //        },
         jshint: {
-//            beforeconcat: ["grunt.js", "src/**/*.js", "tests/**/*.js"],
-            beforeconcat: ["Gruntfile.js", "src/jquery.dynatree.js"],
-//            beforeconcat: ["grunt.js"],
-//            beforeconcat: ["grunt.js", "src/jquery.dynatree.js", "tests/**/*.js"],
+//            beforeconcat: ["Gruntfile.js", "src/jquery.dynatree.js"],
+            beforeconcat: ["Gruntfile.js", "src/jquery.dynatree.js", "tests/test-dynatree.js"],
             afterconcat: ["<config:concat.dist.dest>"],
             options: {
                 // Enforcing Options:
@@ -65,16 +71,11 @@ module.exports = function(grunt) {
                     "jQuery": false
                 }
             }
-        },
+        }
         // watch: {
         //   files: "<config:lint.files>",
         //   tasks: "lint qunit"
         // },        
-
-        jshintrc: {
-        },
-        uglify: {
-        }
     });
     grunt.loadNpmTasks("grunt-contrib-concat");
     grunt.loadNpmTasks("grunt-contrib-jshint");
