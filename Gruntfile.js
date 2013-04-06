@@ -1,9 +1,9 @@
-/*jslint node:true */
+/*jshint node:true */
 
 module.exports = function(grunt) {
     // Project configuration.
     grunt.initConfig({
-        pkg: "<json:package.json>",
+        pkg: grunt.file.readJSON("package.json"),
         // Project metadata, used by the <banner> directive.
         meta: {
             banner: "/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - " +
@@ -28,53 +28,65 @@ module.exports = function(grunt) {
 //        qunit: {
 //            files: ["tests/unit/**/*.html"]
 //        },
-        lint: {
+        jshint: {
 //            beforeconcat: ["grunt.js", "src/**/*.js", "tests/**/*.js"],
-            beforeconcat: ["src/jquery.dynatree.js"],
+            beforeconcat: ["Gruntfile.js", "src/jquery.dynatree.js"],
 //            beforeconcat: ["grunt.js"],
 //            beforeconcat: ["grunt.js", "src/jquery.dynatree.js", "tests/**/*.js"],
-            afterconcat: ["<config:concat.dist.dest>"]
+            afterconcat: ["<config:concat.dist.dest>"],
+            options: {
+                // Enforcing Options:
+                bitwise: true,
+                curly: true,
+    //          forin: true,
+                eqeqeq: true,
+                immed: true,
+                latedef: true,
+                newcap: true,
+                noarg: true,
+    //          noempty: true,
+                nonew: true,
+    //          plusplus: true,
+                regexp: true,
+    //          strict: true,
+                sub: true,
+                undef: true,
+                // Relaxing Options:
+                eqnull: false,
+                laxbreak: true,
+    //            laxcomma: true,
+                smarttabs: false,
+    //            globalstrict: true,
+                // Environments:
+    //          node: true,  // TODO: only for grunt.js and dynatree-server.json
+                browser: true,
+                globals: {
+                    "define": false,
+                    "jQuery": false
+                }
+            }
         },
         // watch: {
         //   files: "<config:lint.files>",
         //   tasks: "lint qunit"
         // },        
 
-        jshint: {
-            options: {
-                // Enforcing Options:
-                bitwise: true,
-                curly: true,
-//              forin: true,
-                eqeqeq: true,
-                immed: true,
-                latedef: true,
-                newcap: true,
-                noarg: true,
-//              noempty: true,
-                nonew: true,
-//              plusplus: true,
-                regexp: true,
-//              strict: true,
-                sub: true,
-                undef: true,
-                // Relaxing Options:
-                eqnull: false,
-                laxbreak: true,
-//                laxcomma: true,
-                smarttabs: false,
-//                globalstrict: true,
-                // Environments:
-//              node: true,  // TODO: only for grunt.js and dynatree-server.json
-                browser: true
-            },
-            globals: {
-                jQuery: true
-            }
+        jshintrc: {
         },
         uglify: {
         }
     });
+    grunt.loadNpmTasks("grunt-contrib-concat");
+    grunt.loadNpmTasks("grunt-contrib-jshint");
+    grunt.loadNpmTasks("grunt-contrib-uglify");
+//  grunt.loadNpmTasks("grunt-contrib-qunit");
+
+    grunt.registerTask("default", ["jshint:beforeconcat", 
+                                   "concat", 
+                                   "jshint:afterconcat", 
+                                   "uglify"]);
+//  grunt.registerTask("build", ["default"]);
+//  grunt.registerTask("ci", ["jshint", "qunit"]);
     // Default task.
-    grunt.registerTask("default", "lint:beforeconcat concat lint:afterconcat min");
+//  grunt.registerTask("default", "lint:beforeconcat concat lint:afterconcat min");
 };
