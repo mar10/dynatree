@@ -79,6 +79,16 @@ function addNodes(dtnode, level1, level2, level3, forceUpdate) {
  */
 module("Init");
 
+test("Initialization", function() {
+    expect(6);
+    ok(!!$.ui.dynatree, "defined $.ui.dynatree");
+    ok(!!$.ui.dynatree.version, "defined $.ui.dynatree.version");
+    ok($.isFunction($.ui.dynatree.getNode), "defined $.ui.dynatree.getNode()");
+    ok($.isFunction($.ui.dynatree.getPersistData), "defined $.ui.dynatree.getPersistData()");
+    ok(!!$.ui.dynatree._DynaTreeClass.prototype, "defined $.ui.dynatree._DynaTreeClass");
+    ok(!!$.ui.dynatree._DynaTreeNodeClass.prototype, "defined $.ui.dynatree._DynaTreeNodeClass");
+});
+/*
 test("Create dynatree", function() {
     $("#tree").dynatree({
         children: [
@@ -128,7 +138,7 @@ test("Create dynatree", function() {
         }
     });
 });
-
+*/
 /*******************************************************************************
  * Module Load
  */
