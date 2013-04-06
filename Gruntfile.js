@@ -37,34 +37,34 @@ module.exports = function(grunt) {
 //            files: ["tests/unit/**/*.html"]
 //        },
         jshint: {
-//            beforeconcat: ["Gruntfile.js", "src/jquery.dynatree.js"],
-            beforeconcat: ["Gruntfile.js", "src/jquery.dynatree.js", "tests/test-dynatree.js"],
+            beforeconcat: ["Gruntfile.js", 
+                           "src/jquery.dynatree.js", 
+                           "tests/test-dynatree.js"],
             afterconcat: ["<config:concat.dist.dest>"],
             options: {
                 // Enforcing Options:
                 bitwise: true,
                 curly: true,
-    //          forin: true,
+//              forin: true,
                 eqeqeq: true,
                 immed: true,
                 latedef: true,
                 newcap: true,
                 noarg: true,
-    //          noempty: true,
+//              noempty: true,
                 nonew: true,
-    //          plusplus: true,
+//              plusplus: true,
                 regexp: true,
-    //          strict: true,
+//              strict: true,
                 sub: true,
                 undef: true,
                 // Relaxing Options:
                 eqnull: false,
                 laxbreak: true,
-    //            laxcomma: true,
-                smarttabs: false,
-    //            globalstrict: true,
+//                laxcomma: true,
+                smarttabs: true,
+//                globalstrict: true,
                 // Environments:
-    //          node: true,  // TODO: only for grunt.js and dynatree-server.json
                 browser: true,
                 globals: {
                     "define": false,
@@ -72,10 +72,10 @@ module.exports = function(grunt) {
                 }
             }
         }
-        // watch: {
-        //   files: "<config:lint.files>",
-        //   tasks: "lint qunit"
-        // },        
+//      watch: {
+//          files: "<config:lint.files>",
+//          tasks: "lint qunit"
+//      },        
     });
     grunt.loadNpmTasks("grunt-contrib-concat");
     grunt.loadNpmTasks("grunt-contrib-jshint");
@@ -88,6 +88,4 @@ module.exports = function(grunt) {
                                    "uglify"]);
 //  grunt.registerTask("build", ["default"]);
 //  grunt.registerTask("ci", ["jshint", "qunit"]);
-    // Default task.
-//  grunt.registerTask("default", "lint:beforeconcat concat lint:afterconcat min");
 };
