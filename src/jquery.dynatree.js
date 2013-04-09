@@ -3273,7 +3273,25 @@ function _initDragAndDrop(tree) {
 			containment: false,
 			delay: 0,
 			distance: 4,
-			revert: false,
+//            revert: false,
+//            revert: "invalid", // slide back, when dropping over non-target
+            revert: function(dropped){
+                // This is called by ui-draggable._mouseStop() when a drag stops.
+                // Return `true` to let the helper slide back.
+                logMsg("draggable.revert(), dropped=", dropped);
+                if(typeof dropped === "boolean"){
+                    // dropped == true, when dropped over a simple, valid droppable target.
+                    // false, when dropped outside a drop target.
+                    return !dropped;
+                }
+                // Drop comes from another tree. Default behavior is to assume
+                // a valid drop, since we are over a drop-target.
+                // Therefore we have to make an extra check, if the target node 
+                // was rejected by a Dynatree callback.
+                var helper = $.ui.ddmanager && $.ui.ddmanager.current && $.ui.ddmanager.current.helper;
+                var isRejected = helper && helper.hasClass("dynatree-drop-reject");
+                return isRejected;
+                },
 			scroll: true, // issue 244: enable scrolling (if ul.dynatree-container)
 			scrollSpeed: 7,
 			scrollSensitivity: 10,
@@ -3292,8 +3310,7 @@ function _initDragAndDrop(tree) {
 //				var sourceNode = $.ui.dynatree.getNode(event.target);
 				var sourceNode = ui.helper.data("dtSourceNode");
 				return !!sourceNode; // Abort dragging if no Node could be found
-			},
-			_last: null
+			}
 		});
 	}
 	// Attach ui.droppable to this Dynatree instance
@@ -3301,8 +3318,7 @@ function _initDragAndDrop(tree) {
 		tree.$tree.droppable({
 			addClasses: false,
 			tolerance: "intersect",
-			greedy: false,
-			_last: null
+			greedy: false
 		});
 	}
 }
@@ -3367,7 +3383,6 @@ var _registerDnd = function() {
 			if(targetNode){
 				if(!targetNode.tree.options.dnd.onDrop) {
 					// not enabled as drop target
-//					noop(); // Keep JSLint happy
 				} else if(targetNode === prevTargetNode) {
 					// Moving over same node
 					targetNode.tree._onDragEvent("over", targetNode, sourceNode, event, ui, draggable);
@@ -3383,7 +3398,7 @@ var _registerDnd = function() {
 			var draggable = $(this).data("ui-draggable") || $(this).data("draggable"),
 				sourceNode = ui.helper.data("dtSourceNode") || null,
 				targetNode = ui.helper.data("dtTargetNode") || null,
-				mouseDownEvent = draggable._mouseDownEvent,
+//				mouseDownEvent = draggable._mouseDownEvent,
 				eventType = event.type,
 				dropped = (eventType == "mouseup" && event.which == 1);
 			logMsg("draggable-connectToDynatree.stop: targetNode(from event): %s, dtTargetNode: %s", targetNode, ui.helper.data("dtTargetNode"));
