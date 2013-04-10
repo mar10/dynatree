@@ -4,9 +4,9 @@
 	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 	<title>Dynatree - Example</title>
 
-    <link type="text/css" rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js" type="text/javascript"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.js" type="text/javascript"></script>
+	<link type="text/css" rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js" type="text/javascript"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.js" type="text/javascript"></script>
 
 	<script src="../jquery/jquery.cookie.js" type="text/javascript"></script>
 
@@ -14,10 +14,10 @@
 	<script src="../src/jquery.dynatree.js" type="text/javascript"></script>
 
 	<!-- jquery-contextmenu (https://github.com/mar10/jquery-contextmenu/) -->
-<!-- 
-    <script src="../../eclipsews/jquery-contextmenu/jquery.contextmenu.js" type="text/javascript"></script>
+<!--
+	<script src="../../eclipsews/jquery-contextmenu/jquery.contextmenu.js" type="text/javascript"></script>
  -->
-    <script src="jquery.contextmenu.js/jquery.contextmenu.js" type="text/javascript"></script>
+	<script src="jquery.contextmenu.js/jquery.contextmenu.js" type="text/javascript"></script>
 
 
 	<!-- Start_Exclude: This block is not part of the sample code -->
@@ -29,7 +29,7 @@
 
 <style type="text/css">
 .ui-menu{
-    min-width: 100px;
+	min-width: 100px;
 }
 </style>
 
@@ -40,8 +40,8 @@ var clipboardNode = null;
 var pasteMode = null;
 
 function copyPaste(action, node) {
-    // Strip leading '#'
-    action = action.replace(/^#/, "");
+	// Strip leading '#'
+	action = action.replace(/^#/, "");
 	switch( action ) {
 	case "cut":
 	case "copy":
@@ -150,16 +150,16 @@ $("#tree").dynatree({
 
 /* Enable the context menu for all node titles */
 $("#tree").contextmenu({
-    delegate: ".dynatree-title",
-    menu: "#menu",
-    select: function(event, ui) {
-        var cmd = ui.item.find(">a").attr("href"),
-            target = event.relatedTarget,
-            node = $.ui.dynatree.getNode(target);
-        window.console && console.log(cmd + " - " + node);
-        node.activate();
-        copyPaste(cmd, node);
-    }
+	delegate: ".dynatree-title",
+	menu: "#menu",
+	select: function(event, ui) {
+		var cmd = ui.item.find(">a").attr("href"),
+			target = event.relatedTarget,
+			node = $.ui.dynatree.getNode(target);
+		window.console && console.log(cmd + " - " + node);
+		node.activate();
+		copyPaste(cmd, node);
+	}
 });
 
 }); // $(function){...}
@@ -179,8 +179,8 @@ $("#tree").contextmenu({
 		<code>Ctrl-C</code>, <code>Ctrl-V</code>.
 	</p>
 	<p class="description">
-        <b>NOTE:</b><br>
-		This sample uses the jquery-contextmenu plugin (which in turn depends 
+		<b>NOTE:</b><br>
+		This sample uses the jquery-contextmenu plugin (which in turn depends
 		on jQuery UI 1.9+).
 		Visit  <a href="https://github.com/mar10/jquery-contextmenu/" target="_blank">the project page at github</a> for usage and more information.
 		<br>
@@ -211,15 +211,15 @@ $("#tree").contextmenu({
 
 	<div>Selected node: <span id="echoActivated">-</span></div>
 
-    <!-- Definition of the menu -->
-    <ul id="menu" class="ui-helper-hidden">
-        <li><a href="#cut"><span class="ui-icon ui-icon-scissors"></span>Cut</a></li>
-        <li><a href="#copy"><span class="ui-icon ui-icon-copy"></span>Copy</a></li>
-        <li><a href="#paste"><span class="ui-icon ui-icon-clipboard"></span>Paste</a></li>
-        <li>----</li>
-        <li><a href="#edit" class="ui-state-disabled"><span class="ui-icon ui-icon-pencil"></span>Edit</a></li>
-        <li><a href="#delete" class="ui-state-disabled"><span class="ui-icon ui-icon-trash"></span>Delete</a></li>
-    </ul>
+	<!-- Definition of the menu -->
+	<ul id="menu" class="ui-helper-hidden">
+		<li><a href="#cut"><span class="ui-icon ui-icon-scissors"></span>Cut</a></li>
+		<li><a href="#copy"><span class="ui-icon ui-icon-copy"></span>Copy</a></li>
+		<li><a href="#paste"><span class="ui-icon ui-icon-clipboard"></span>Paste</a></li>
+		<li>----</li>
+		<li><a href="#edit" class="ui-state-disabled"><span class="ui-icon ui-icon-pencil"></span>Edit</a></li>
+		<li><a href="#delete" class="ui-state-disabled"><span class="ui-icon ui-icon-trash"></span>Delete</a></li>
+	</ul>
 	<!-- Start_Exclude: This block is not part of the sample code -->
 	<hr>
 	<p class="sample-links  no_code">

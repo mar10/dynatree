@@ -12,6 +12,16 @@ module.exports = function(grunt) {
                     "* Copyright (c) <%= grunt.template.today('yyyy') %> <%= pkg.author.name %>;" +
                     " Licensed <%= _.pluck(pkg.licenses, 'type').join(', ') %> */"
         },
+        exec: {
+            tabfixSrc: {
+                // convert 4-spaces to tabs (requires https://code.google.com/p/tabfix/)
+                cmd: "tabfix -trx -m*.css -m*.js src",
+                stdout: true
+            },
+            tabfixDoc: {
+                cmd: "tabfix -trx -m*.css -m*.js -m*.html doc"
+            }
+        },
         concat: {
             options: {
                 stripBanners: true
@@ -81,8 +91,11 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-contrib-jshint");
     grunt.loadNpmTasks("grunt-contrib-uglify");
 //  grunt.loadNpmTasks("grunt-contrib-qunit");
+    grunt.loadNpmTasks("grunt-exec");
 
-    grunt.registerTask("default", ["jshint:beforeconcat", 
+    grunt.registerTask("default", ["exec:tabfixSrc",
+                                   "exec:tabfixDoc",
+                                   "jshint:beforeconcat", 
                                    "concat", 
                                    "jshint:afterconcat", 
                                    "uglify"]);

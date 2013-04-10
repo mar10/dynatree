@@ -3071,34 +3071,34 @@ if(versionCompare($.ui.version, "1.8") < 0){
  * Tools in ui.dynatree namespace
  */
 $.extend($.ui.dynatree, {
-    /** @type {String} */
-    version: "$Version:$",
-    /** Expose class object as $.ui.dynatree._DynaTreeClass */
-    _DynaTreeClass: DynaTree,
-    /** Expose class object as $.ui.dynatree._DynaTreeNodeClass */
-    _DynaTreeNodeClass: DynaTreeNode,
-    /**
-     * Return a DynaTreeNode object for a given DOM element
-     */
-    getNode: function(el) {
-        if(el instanceof DynaTreeNode){
-            return el; // el already was a DynaTreeNode
-        }
-        if(el.selector !== undefined){
-            el = el[0]; // el was a jQuery object: use the DOM element
-        }
-        // TODO: for some reason $el.parents("[dtnode]") does not work (jQuery 1.6.1)
-        // maybe, because dtnode is a property, not an attribute
-        while( el ) {
-            if(el.dtnode) {
-                return el.dtnode;
-            }
-            el = el.parentNode;
-        }
-        return null;
-    },
-    /**Return persistence information from cookies.*/
-    getPersistData: DynaTreeStatus._getTreePersistData
+	/** @type {String} */
+	version: "$Version:$",
+	/** Expose class object as $.ui.dynatree._DynaTreeClass */
+	_DynaTreeClass: DynaTree,
+	/** Expose class object as $.ui.dynatree._DynaTreeNodeClass */
+	_DynaTreeNodeClass: DynaTreeNode,
+	/**
+	 * Return a DynaTreeNode object for a given DOM element
+	 */
+	getNode: function(el) {
+		if(el instanceof DynaTreeNode){
+			return el; // el already was a DynaTreeNode
+		}
+		if(el.selector !== undefined){
+			el = el[0]; // el was a jQuery object: use the DOM element
+		}
+		// TODO: for some reason $el.parents("[dtnode]") does not work (jQuery 1.6.1)
+		// maybe, because dtnode is a property, not an attribute
+		while( el ) {
+			if(el.dtnode) {
+				return el.dtnode;
+			}
+			el = el.parentNode;
+		}
+		return null;
+	},
+	/**Return persistence information from cookies.*/
+	getPersistData: DynaTreeStatus._getTreePersistData
 });
 
 
@@ -3275,23 +3275,23 @@ function _initDragAndDrop(tree) {
 			distance: 4,
 //            revert: false,
 //            revert: "invalid", // slide back, when dropping over non-target
-            revert: function(dropped){
-                // This is called by ui-draggable._mouseStop() when a drag stops.
-                // Return `true` to let the helper slide back.
-                logMsg("draggable.revert(), dropped=", dropped);
-                if(typeof dropped === "boolean"){
-                    // dropped == true, when dropped over a simple, valid droppable target.
-                    // false, when dropped outside a drop target.
-                    return !dropped;
-                }
-                // Drop comes from another tree. Default behavior is to assume
-                // a valid drop, since we are over a drop-target.
-                // Therefore we have to make an extra check, if the target node 
-                // was rejected by a Dynatree callback.
-                var helper = $.ui.ddmanager && $.ui.ddmanager.current && $.ui.ddmanager.current.helper;
-                var isRejected = helper && helper.hasClass("dynatree-drop-reject");
-                return isRejected;
-                },
+			revert: function(dropped){
+				// This is called by ui-draggable._mouseStop() when a drag stops.
+				// Return `true` to let the helper slide back.
+				logMsg("draggable.revert(), dropped=", dropped);
+				if(typeof dropped === "boolean"){
+					// dropped == true, when dropped over a simple, valid droppable target.
+					// false, when dropped outside a drop target.
+					return !dropped;
+				}
+				// Drop comes from another tree. Default behavior is to assume
+				// a valid drop, since we are over a drop-target.
+				// Therefore we have to make an extra check, if the target node
+				// was rejected by a Dynatree callback.
+				var helper = $.ui.ddmanager && $.ui.ddmanager.current && $.ui.ddmanager.current.helper;
+				var isRejected = helper && helper.hasClass("dynatree-drop-reject");
+				return isRejected;
+				},
 			scroll: true, // issue 244: enable scrolling (if ul.dynatree-container)
 			scrollSpeed: 7,
 			scrollSensitivity: 10,
