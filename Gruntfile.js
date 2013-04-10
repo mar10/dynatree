@@ -15,11 +15,11 @@ module.exports = function(grunt) {
         exec: {
             tabfixSrc: {
                 // convert 4-spaces to tabs (requires https://code.google.com/p/tabfix/)
-                cmd: "tabfix -trx -m*.css -m*.js src",
+                cmd: "tabfix -trx --no-backup -m*.css -m*.js src",
                 stdout: true
             },
             tabfixDoc: {
-                cmd: "tabfix -trx -m*.css -m*.js -m*.html doc"
+                cmd: "tabfix -trx --no-backup -m*.css -m*.js -m*.html doc"
             }
         },
         concat: {
