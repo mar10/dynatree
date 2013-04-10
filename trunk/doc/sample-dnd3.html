@@ -72,7 +72,7 @@ $(function(){
 				 */
 				logMsg("tree.onDragStart(%o)", node);
 				if(node.data.isFolder){
-                    return false;
+					return false;
 				}
 				return true;
 			},
@@ -168,21 +168,21 @@ $(function(){
 	// --- Initialize simple draggable sample ----------------------------------
 	$("#draggableSample").draggable({
 //      revert: "invalid", // slide back, when dropping over non-target
-        revert: function(dropped){
-            // Return `true` to let the helper slide back.
-            if(typeof dropped === "boolean"){
-                // dropped == true, when dropped over a simple, valid droppable target.
-                // false, when dropped outside a drop target.
-                return !dropped;
-            }
-            // Drop comes from another tree. Default behavior is to assume
-            // a valid drop, since we are over a drop-target.
-            // Therefore we have to make an extra check, if the target node 
-            // was rejected by a Dynatree callback.
-            var helper = $.ui.ddmanager && $.ui.ddmanager.current && $.ui.ddmanager.current.helper;
-            var isRejected = helper && helper.hasClass("dynatree-drop-reject");
-            return isRejected;
-            },
+		revert: function(dropped){
+			// Return `true` to let the helper slide back.
+			if(typeof dropped === "boolean"){
+				// dropped == true, when dropped over a simple, valid droppable target.
+				// false, when dropped outside a drop target.
+				return !dropped;
+			}
+			// Drop comes from another tree. Default behavior is to assume
+			// a valid drop, since we are over a drop-target.
+			// Therefore we have to make an extra check, if the target node
+			// was rejected by a Dynatree callback.
+			var helper = $.ui.ddmanager && $.ui.ddmanager.current && $.ui.ddmanager.current.helper;
+			var isRejected = helper && helper.hasClass("dynatree-drop-reject");
+			return isRejected;
+			},
 		connectToDynatree: true,
 		cursorAt: { top: -5, left:-5 },
 		helper: "clone"
