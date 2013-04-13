@@ -3157,6 +3157,7 @@ $.ui.dynatree.prototype.options = {
 		onDragStart: null, // Callback(sourceNode), return true, to enable dnd
 		onDragStop: null, // Callback(sourceNode)
 //		helper: null,
+		revert: false, // true: slide helper back to source if drop is rejected
 		// Make tree nodes accept draggables
 		autoExpandMS: 1000, // Expand nodes after n milliseconds of hovering.
 		preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
@@ -3276,7 +3277,7 @@ function _initDragAndDrop(tree) {
 			distance: 4,
 //            revert: false,
 			// slide back, when dropping over non-target
-			revert: function(dropped){
+			revert: dnd.revert !== true ? false : function(dropped){
 				// This is called by ui-draggable._mouseStop() when a drag stops.
 				// Return `true` to let the helper slide back.
 				logMsg("draggable.revert(), dropped=", dropped);

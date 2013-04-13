@@ -269,6 +269,7 @@ $("#tree").dynatree({
 		// Make tree nodes accept draggables
 		autoExpandMS: 1000, // Expand nodes after n milliseconds of hovering.
 		preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
+		revert: false, // true: slide helper back to source if drop is rejected
 		onDragEnter: null, // Callback(targetNode, sourceNode)
 		onDragOver: null, // Callback(targetNode, sourceNode, hitMode)
 		onDrop: null, // Callback(targetNode, sourceNode, hitMode)
