@@ -3274,7 +3274,7 @@ function _initDragAndDrop(tree) {
 			delay: 0,
 			distance: 4,
 //            revert: false,
-//            revert: "invalid", // slide back, when dropping over non-target
+            // slide back, when dropping over non-target
 			revert: function(dropped){
 				// This is called by ui-draggable._mouseStop() when a drag stops.
 				// Return `true` to let the helper slide back.
@@ -3317,7 +3317,8 @@ function _initDragAndDrop(tree) {
 	if(dnd && dnd.onDrop) {
 		tree.$tree.droppable({
 			addClasses: false,
-			tolerance: "intersect",
+            tolerance: "pointer",
+//            tolerance: "intersect",
 			greedy: false
 		});
 	}
