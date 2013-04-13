@@ -196,7 +196,8 @@ DynaTreeNode.prototype = {
 		if ( typeof data === "string" ){
 			data = { title: data };
 		}
-		if( !data.key ){
+//      if( !data.key ){
+		if( data.key == null ){ // test for null OR undefined (issue 420)
 			data.key = "_" + tree._nodeCount++;
 		}else{
 			data.key = "" + data.key; // issue 371
@@ -3274,7 +3275,7 @@ function _initDragAndDrop(tree) {
 			delay: 0,
 			distance: 4,
 //            revert: false,
-            // slide back, when dropping over non-target
+			// slide back, when dropping over non-target
 			revert: function(dropped){
 				// This is called by ui-draggable._mouseStop() when a drag stops.
 				// Return `true` to let the helper slide back.
@@ -3317,7 +3318,7 @@ function _initDragAndDrop(tree) {
 	if(dnd && dnd.onDrop) {
 		tree.$tree.droppable({
 			addClasses: false,
-            tolerance: "pointer",
+			tolerance: "pointer",
 //            tolerance: "intersect",
 			greedy: false
 		});
