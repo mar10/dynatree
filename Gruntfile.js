@@ -69,7 +69,7 @@ module.exports = function(grunt) {
                 sub: true,
                 undef: true,
                 // Relaxing Options:
-                eqnull: false,
+                eqnull: true,
                 laxbreak: true,
 //                laxcomma: true,
                 smarttabs: true,
