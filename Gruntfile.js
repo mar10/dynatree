@@ -93,12 +93,12 @@ module.exports = function(grunt) {
 //  grunt.loadNpmTasks("grunt-contrib-qunit");
     grunt.loadNpmTasks("grunt-exec");
 
-    grunt.registerTask("default", ["exec:tabfixSrc",
-                                   "exec:tabfixDoc",
-                                   "jshint:beforeconcat", 
+    grunt.registerTask("default", ["jshint:beforeconcat", 
                                    "concat", 
                                    "jshint:afterconcat", 
                                    "uglify"]);
-//  grunt.registerTask("build", ["default"]);
+    grunt.registerTask("build", ["exec:tabfixSrc",
+                                 "exec:tabfixDoc",
+                                 "default"]);
 //  grunt.registerTask("ci", ["jshint", "qunit"]);
 };

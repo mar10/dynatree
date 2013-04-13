@@ -191,6 +191,7 @@ $(function(){
 	$("#droppableSample").droppable({
 		hoverClass: "drophover",
 		addClasses: true,
+//		tolerance: "pointer",
 		over: function(event, ui) {
 			logMsg("droppable.over, %o, %o", event, ui);
 		},
