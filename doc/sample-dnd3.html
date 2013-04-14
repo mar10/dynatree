@@ -66,6 +66,7 @@ $(function(){
 			$("#echoActive").text("-");
 		},
 		dnd: {
+			revert: false, // true: slide helper back to source if drop is rejected
 			onDragStart: function(node) {
 				/** This function MUST be defined to enable dragging for the tree.
 				 *  Return false to cancel dragging of node.
