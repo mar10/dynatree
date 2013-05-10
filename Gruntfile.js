@@ -20,6 +20,15 @@ module.exports = function(grunt) {
             },
             tabfixDoc: {
                 cmd: "tabfix -trx --no-backup -m*.css -m*.js -m*.html doc"
+            },
+            tabfix: {
+                // Cleanup whitespace according to http://contribute.jquery.org/style-guide/js/
+                // (requires https://github.com/mar10/tabfix)
+                cmd: "tabfix -t --line=UNIX -r -m *.js,*.css,*.html,*json,*.yaml -i node_modules src doc -d"
+            },
+            upload: {
+                // FTP upload the demo files (requires https://github.com/mar10/pyftpsync)
+                cmd: "pyftpsync --progress upload . ftp://www.wwwendt.de/tech/demo/dynatree --delete-unmatched --omit dist,node_modules,.*,_*"
             }
         },
         concat: {
@@ -81,6 +90,15 @@ module.exports = function(grunt) {
                     "jQuery": false
                 }
             }
+        },
+        connect: {
+            demo: {
+                options: {
+                    port: 8080,
+                    base: "./",
+                    keepalive: true
+                }
+            }
         }
 //      watch: {
 //          files: "<config:lint.files>",
@@ -88,6 +106,7 @@ module.exports = function(grunt) {
 //      },        
     });
     grunt.loadNpmTasks("grunt-contrib-concat");
+    grunt.loadNpmTasks("grunt-contrib-connect");
     grunt.loadNpmTasks("grunt-contrib-jshint");
     grunt.loadNpmTasks("grunt-contrib-uglify");
 //  grunt.loadNpmTasks("grunt-contrib-qunit");
@@ -100,5 +119,6 @@ module.exports = function(grunt) {
     grunt.registerTask("build", ["exec:tabfixSrc",
                                  "exec:tabfixDoc",
                                  "default"]);
+    grunt.registerTask("server", ["connect:demo"]);
 //  grunt.registerTask("ci", ["jshint", "qunit"]);
 };
