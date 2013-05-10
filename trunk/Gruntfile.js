@@ -15,11 +15,11 @@ module.exports = function(grunt) {
         exec: {
             tabfixSrc: {
                 // convert 4-spaces to tabs (requires https://code.google.com/p/tabfix/)
-                cmd: "tabfix -trx --no-backup -m*.css -m*.js src",
+                cmd: "tabfix -tr -m*.css -m*.js src",
                 stdout: true
             },
             tabfixDoc: {
-                cmd: "tabfix -trx --no-backup -m*.css -m*.js -m*.html doc"
+                cmd: "tabfix -tr -m*.css -m*.js -m*.html doc"
             },
             tabfix: {
                 // Cleanup whitespace according to http://contribute.jquery.org/style-guide/js/
