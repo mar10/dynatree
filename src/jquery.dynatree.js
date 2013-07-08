@@ -190,7 +190,8 @@ function versionCompare(v1, v2) {
 }
 
 
-var BROWSER = jQuery.browser || _checkBrowser();
+//var BROWSER = jQuery.browser || _checkBrowser();
+var BROWSER = _checkBrowser(); // issue 440
 var jquerySupports = {
 	// http://jqueryui.com/upgrade-guide/1.9/#deprecated-offset-option-merged-into-my-and-at
 	positionMyOfs: versionCompare($.ui.version, "1.9") >= 0  //isVersionAtLeast($.ui.version, 1, 9)
@@ -1256,7 +1257,6 @@ DynaTreeNode.prototype = {
 			var aTag = this.span.getElementsByTagName("a");
 			if(aTag[0]){
 				// issue 154, 313
-//                if(!($.browser.msie && parseInt($.browser.version, 10) < 9)){
 				if(!(BROWSER.msie && parseInt(BROWSER.version, 10) < 9)){
 					aTag[0].focus();
 				}
