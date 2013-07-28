@@ -2764,12 +2764,11 @@ TODO: better?
 //      if(eventName !== "over"){
 //          this.logDebug("tree._onDragEvent(%s, %o, %o) - %o", eventName, node, otherNode, this);
 //      }
-		var opts = this.options,
+		var hitMode, enterResponse, r, 
+//			opts = this.options,
 			dnd = this.options.dnd,
 			res = null,
-			nodeTag = $(node.span),
-			hitMode,
-			enterResponse;
+			nodeTag = $(node.span);
 
 		switch (eventName) {
 		case "helper":
@@ -2803,19 +2802,25 @@ TODO: better?
 			}
 			break;
 		case "enter":
-			res = dnd.onDragEnter ? dnd.onDragEnter(node, otherNode) : null;
-			if(!res){
+			r = dnd.onDragEnter ? dnd.onDragEnter(node, otherNode) : null;
+			if(!r){
 				// convert null, undefined, false to false
 				res = false;
+			}else if ( $.isArray(r) ) {
+				res = {
+					over: ($.inArray("over", r) >= 0),
+					before: ($.inArray("before", r) >= 0),
+					after: ($.inArray("after", r) >= 0)
+				};
 			}else{
 				res = {
-					over: ((res === true) || (res === "over") || $.inArray("over", res) >= 0),
-					before: ((res === true) || (res === "before") || $.inArray("before", res) >= 0),
-					after: ((res === true) || (res === "after") || $.inArray("after", res) >= 0)
+					over: ((r === true) || (r === "over")),
+					before: ((r === true) || (r === "before")),
+					after: ((r === true) || (r === "after"))
 				};
 			}
 			ui.helper.data("enterResponse", res);
-//          this.logDebug("helper.enterResponse: %o", res);
+//            this.logDebug("helper.enterResponse: %o", res);
 			break;
 		case "over":
 			enterResponse = ui.helper.data("enterResponse");
