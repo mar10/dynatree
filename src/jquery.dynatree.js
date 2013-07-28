@@ -2761,11 +2761,7 @@ TODO: better?
 		 *     _onDragEvent("leave", targetNode, sourceNode, event, ui, draggable);
 		 *     _onDragEvent("stop", sourceNode, null, event, ui, draggable);
 		 */
-//      if(eventName !== "over"){
-//          this.logDebug("tree._onDragEvent(%s, %o, %o) - %o", eventName, node, otherNode, this);
-//      }
 		var hitMode, enterResponse, r, 
-//			opts = this.options,
 			dnd = this.options.dnd,
 			res = null,
 			nodeTag = $(node.span);
@@ -2781,8 +2777,6 @@ TODO: better?
 //          $(node.tree.divTree).append($helper);
 			// Attach node reference to helper object
 			$helper.data("dtSourceNode", node);
-//          this.logDebug("helper=%o", $helper);
-//          this.logDebug("helper.sourceNode=%o", $helper.data("dtSourceNode"));
 			res = $helper;
 			break;
 		case "start":
@@ -2835,20 +2829,11 @@ TODO: better?
 			} else {
 				// Calculate hitMode from relative cursor position.
 				var nodeOfs = nodeTag.offset();
-//              var relPos = { x: event.clientX - nodeOfs.left,
-//                          y: event.clientY - nodeOfs.top };
-//              nodeOfs.top += this.parentTop;
-//              nodeOfs.left += this.parentLeft;
 				var relPos = { x: event.pageX - nodeOfs.left,
 							   y: event.pageY - nodeOfs.top };
 				var relPos2 = { x: relPos.x / nodeTag.width(),
 								y: relPos.y / nodeTag.height() };
-//              this.logDebug("event.page: %s/%s", event.pageX, event.pageY);
-//              this.logDebug("event.client: %s/%s", event.clientX, event.clientY);
-//              this.logDebug("nodeOfs: %s/%s", nodeOfs.left, nodeOfs.top);
-////                this.logDebug("parent: %s/%s", this.parentLeft, this.parentTop);
-//              this.logDebug("relPos: %s/%s", relPos.x, relPos.y);
-//              this.logDebug("relPos2: %s/%s", relPos2.x, relPos2.y);
+
 				if( enterResponse.after && relPos2.y > 0.75 ){
 					hitMode = "after";
 				} else if(!enterResponse.over && enterResponse.after && relPos2.y > 0.5 ){
@@ -2864,17 +2849,13 @@ TODO: better?
 				// TODO: these are no-ops when moving nodes, but not in copy mode
 				if( dnd.preventVoidMoves ){
 					if(node === otherNode){
-//                      this.logDebug("    drop over source node prevented");
 						hitMode = null;
 					}else if(hitMode === "before" && otherNode && node === otherNode.getNextSibling()){
-//                      this.logDebug("    drop after source node prevented");
 						hitMode = null;
 					}else if(hitMode === "after" && otherNode && node === otherNode.getPrevSibling()){
-//                      this.logDebug("    drop before source node prevented");
 						hitMode = null;
 					}else if(hitMode === "over" && otherNode
 							&& otherNode.parent === node && otherNode.isLastSibling() ){
-//                      this.logDebug("    drop last child over own parent prevented");
 						hitMode = null;
 					}
 				}
