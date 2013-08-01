@@ -3200,7 +3200,9 @@ $.ui.dynatree.prototype.options = {
 //      secure: true
 	},
 	// Class names used, when rendering the HTML markup.
-	// Note: if only single entries are passed for options.classNames, all other
+	// Note:
+	// These settings only apply on initialisation. 
+	// If only single entries are passed for options.classNames, all other
 	// values are still set to default.
 	classNames: {
 		container: "dynatree-container",
