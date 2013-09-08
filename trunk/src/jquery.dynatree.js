@@ -2356,12 +2356,12 @@ DynaTree.prototype = {
 	},
 
 	toString: function() {
-//      return "DynaTree '" + this.options.title + "'";
 		return "Dynatree '" + this.$tree.attr("id") + "'";
 	},
 
-	toDict: function() {
-		return this.tnRoot.toDict(true);
+	toDict: function(includeRoot) {
+		var dict = this.tnRoot.toDict(true);
+		return includeRoot ? dict : dict.children;
 	},
 
 	serializeArray: function(stopOnParents) {
