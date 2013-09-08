@@ -1603,9 +1603,10 @@ tree.enableUpdate(prevMode);</pre>
 		function and may be used in $.post() calls.<br>
 		See also the 'form' sample in the Example Browser.
 	</dd>
-	<dt>tree.toDict()
+	<dt>tree.toDict(includeRoot)
 	<dd>
 		Convert the tree into a JavaScript object.<br>
+		If 'includeRoot' is false or omitted, the result is an array of node dcts.<br>
 		See <code>node.toDict()</code> for details.
 	</dd>
 	<dt>tree.visit(fn, includeRoot)
