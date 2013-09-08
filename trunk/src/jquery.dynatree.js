@@ -782,16 +782,16 @@ DynaTreeNode.prototype = {
 		// Note: there is no check, if the event was fired on THIS node.
 		var tcn = event && event.target ? event.target.className : "",
 			cns = this.tree.options.classNames;
-
-		if( tcn === cns.title ){
+		
+		if( tcn.indexOf(cns.title) >= 0 ){
 			return "title";
-		}else if( tcn === cns.expander ){
+		}else if( tcn.indexOf(cns.expander) >= 0 ){
 			return "expander";
-		}else if( tcn === cns.checkbox ){
+		}else if( tcn.indexOf(cns.checkbox) >= 0 ){
 			return "checkbox";
-		}else if( tcn === cns.nodeIcon ){
+		}else if( tcn.indexOf(cns.nodeIcon) >= 0 ){
 			return "icon";
-		}else if( tcn === cns.empty || tcn === cns.vline || tcn === cns.connector ){
+		}else if( tcn.indexOf(cns.empty) >= 0 || tcn.indexOf(cns.vline) >= 0 || tcn.indexOf(cns.connector) >= 0 ){
 			return "prefix";
 		}else if( tcn.indexOf(cns.node) >= 0 ){
 			// FIX issue #93
