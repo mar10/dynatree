@@ -1470,7 +1470,7 @@ DynaTreeNode.prototype = {
 			}
 		}
 		tn.removeChildren(true);
-		if(this.ul){
+		if(this.ul && tn.li	){
 //          $("li", $(this.ul)).remove(); // issue 399
 			this.ul.removeChild(tn.li); // issue 402
 		}
