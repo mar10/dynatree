@@ -236,7 +236,8 @@ DynaTreeNode.prototype = {
 	},
 
 	toDict: function(recursive, callback) {
-		var dict = $.extend({}, this.data);
+		var node,
+			dict = $.extend({}, this.data);
 		dict.activate = ( this.tree.activeNode === this );
 		dict.focus = ( this.tree.focusNode === this );
 		dict.expand = this.bExpanded;
@@ -247,7 +248,10 @@ DynaTreeNode.prototype = {
 		if( recursive && this.childList ) {
 			dict.children = [];
 			for(var i=0, l=this.childList.length; i<l; i++ ){
-				dict.children.push(this.childList[i].toDict(true, callback));
+				node = this.childList[i];
+				if( !node.isStatusNode() ){
+					dict.children.push(node.toDict(true, callback));
+				}
 			}
 		} else {
 			delete dict.children;
