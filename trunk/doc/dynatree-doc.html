@@ -270,9 +270,9 @@ $("#tree").dynatree({
 		autoExpandMS: 1000, // Expand nodes after n milliseconds of hovering.
 		preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
 		revert: false, // true: slide helper back to source if drop is rejected
-		onDragEnter: null, // Callback(targetNode, sourceNode)
+		onDragEnter: null, // Callback(targetNode, sourceNode, ui, draggable)
 		onDragOver: null, // Callback(targetNode, sourceNode, hitMode)
-		onDrop: null, // Callback(targetNode, sourceNode, hitMode)
+		onDrop: null, // Callback(targetNode, sourceNode, hitMode, ui, draggable)
 		onDragLeave: null // Callback(targetNode, sourceNode)
 	},
 	ajaxDefaults: { // Used by initAjax option
@@ -919,20 +919,20 @@ and <code>tree.isReloading()</code> to determine who generated this event.
 	Return <code>false</code> to cancel dragging of node.
 	</dd>
 
-	<dt>opts.dnd.onDragEnter(targetNode, sourceNode)
+	<dt>opts.dnd.onDragEnter(targetNode, sourceNode, ui, draggable)
 	<dd>
 	Return <code>true</code> to make tree nodes accept dropping of draggables.
 	</dd>
 
-	<dt>opts.dnd.onDragOver(targetNode, sourceNode, hitMode)
+	<dt>opts.dnd.onDragOver(targetNode, sourceNode, hitMode, ui, draggable)
 	<dd>
 	</dd>
 
-	<dt>opts.dnd.onDragLeave(targetNode, sourceNode)
+	<dt>opts.dnd.onDragLeave(targetNode, sourceNode, ui, draggable)
 	<dd>
 	</dd>
 
-	<dt>opts.dnd.onDrop(targetNode, sourceNode, hitMode)
+	<dt>opts.dnd.onDrop(targetNode, sourceNode, hitMode, ui, draggable)
 	<dd>
 	This function <i>must</i> be defined to enable dropping of items on the tree.
 	</dd>

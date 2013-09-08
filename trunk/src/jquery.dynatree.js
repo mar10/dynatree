@@ -2800,7 +2800,7 @@ TODO: better?
 			}
 			break;
 		case "enter":
-			r = dnd.onDragEnter ? dnd.onDragEnter(node, otherNode) : null;
+			r = dnd.onDragEnter ? dnd.onDragEnter(node, otherNode, ui, draggable) : null;
 			if(!r){
 				// convert null, undefined, false to false
 				res = false;
@@ -2872,7 +2872,7 @@ TODO: better?
 				node.scheduleAction("expand", dnd.autoExpandMS);
 			}
 			if(hitMode && dnd.onDragOver){
-				res = dnd.onDragOver(node, otherNode, hitMode);
+				res = dnd.onDragOver(node, otherNode, hitMode, ui, draggable);
 				if(res === "over" || res === "before" || res === "after") {
 					hitMode = res;
 				}
@@ -2896,7 +2896,7 @@ TODO: better?
 			ui.helper.data("hitMode", null);
 			this._setDndStatus(otherNode, node, ui.helper, "out", undefined);
 			if(dnd.onDragLeave){
-				dnd.onDragLeave(node, otherNode);
+				dnd.onDragLeave(node, otherNode, ui, draggable);
 			}
 			break;
 		case "stop":
@@ -3178,9 +3178,9 @@ $.ui.dynatree.prototype.options = {
 		// Make tree nodes accept draggables
 		autoExpandMS: 1000, // Expand nodes after n milliseconds of hovering.
 		preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
-		onDragEnter: null, // Callback(targetNode, sourceNode)
+		onDragEnter: null, // Callback(targetNode, sourceNode, ui, draggable)
 		onDragOver: null, // Callback(targetNode, sourceNode, hitMode)
-		onDrop: null, // Callback(targetNode, sourceNode, hitMode)
+		onDrop: null, // Callback(targetNode, sourceNode, hitMode, ui, draggable)
 		onDragLeave: null // Callback(targetNode, sourceNode)
 	},
 	ajaxDefaults: { // Used by initAjax option
