@@ -1,4 +1,4 @@
-/*************************************************************************
+/*! ****************************************************************************
 	jquery.dynatree.js
 	Dynamic tree view control, with support for lazy loading of branches.
 
@@ -9,13 +9,13 @@
 	A current version and some documentation is available at
 		http://dynatree.googlecode.com/
 
-	$Version:$
-	$Revision:$
+	@version: DEVELOPMENT
+	@date:    DEVELOPMENT
 
 	@depends: jquery.js
 	@depends: jquery.ui.core.js
 	@depends: jquery.cookie.js
-*************************************************************************/
+*******************************************************************************/
 
 /* jsHint options*/
 // Note: We currently allow eval() to parse the 'data' attribtes, when initializing from HTML.
@@ -782,7 +782,7 @@ DynaTreeNode.prototype = {
 		// Note: there is no check, if the event was fired on THIS node.
 		var tcn = event && event.target ? event.target.className : "",
 			cns = this.tree.options.classNames;
-		
+
 		if( tcn.indexOf(cns.title) >= 0 ){
 			return "title";
 		}else if( tcn.indexOf(cns.expander) >= 0 ){
@@ -2138,7 +2138,7 @@ var DynaTree = Class.create();
 
 // --- Static members ----------------------------------------------------------
 
-DynaTree.version = "$Version:$";
+DynaTree.version = "@@Version";
 
 //--- Class members ------------------------------------------------------------
 
@@ -2765,7 +2765,7 @@ TODO: better?
 		 *     _onDragEvent("leave", targetNode, sourceNode, event, ui, draggable);
 		 *     _onDragEvent("stop", sourceNode, null, event, ui, draggable);
 		 */
-		var hitMode, enterResponse, r, 
+		var hitMode, enterResponse, r,
 			dnd = this.options.dnd,
 			res = null,
 			nodeTag = $(node.span);
@@ -3090,7 +3090,9 @@ if(versionCompare($.ui.version, "1.8") < 0){
  */
 $.extend($.ui.dynatree, {
 	/** @type {String} */
-	version: "$Version:$",
+	version: "development",
+	/** @type {String} */
+	buildType: "develop",
 	/** Expose class object as $.ui.dynatree._DynaTreeClass */
 	_DynaTreeClass: DynaTree,
 	/** Expose class object as $.ui.dynatree._DynaTreeNodeClass */
@@ -3205,7 +3207,7 @@ $.ui.dynatree.prototype.options = {
 	},
 	// Class names used, when rendering the HTML markup.
 	// Note:
-	// These settings only apply on initialisation. 
+	// These settings only apply on initialisation.
 	// If only single entries are passed for options.classNames, all other
 	// values are still set to default.
 	classNames: {
@@ -3239,7 +3241,7 @@ $.ui.dynatree.prototype.options = {
 		partsel: "dynatree-partsel",
 		lastsib: "dynatree-lastsib"
 	},
-	debugLevel: 2, // 0:quiet, 1:normal, 2:debug $REPLACE:  debugLevel: 1,
+	debugLevel: 2, // 0:quiet, 1:normal, 2:debug
 
 	// ------------------------------------------------------------------------
 	lastentry: undefined
