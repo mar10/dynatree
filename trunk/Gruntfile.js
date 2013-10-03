@@ -12,54 +12,81 @@ module.exports = function(grunt) {
                     "* Copyright (c) <%= grunt.template.today('yyyy') %> <%= pkg.author.name %>;" +
                     " Licensed <%= _.pluck(pkg.licenses, 'type').join(', ') %> */"
         },
-        exec: {
-            tabfixSrc: {
-                // convert 4-spaces to tabs (requires https://code.google.com/p/tabfix/)
-                cmd: "tabfix -tr -m*.css -m*.js src",
-                stdout: true
+        clean: {
+          build: {
+            noWrite: true,
+            src: ["build"]
+          }
+        },
+        compress: {
+          build: {
+            options: {
+              archive: "dist/<%= pkg.name %>-<%= pkg.version %>.zip"
             },
-            tabfixDoc: {
-                cmd: "tabfix -tr -m*.css -m*.js -m*.html doc"
-            },
-            tabfix: {
-                // Cleanup whitespace according to http://contribute.jquery.org/style-guide/js/
-                // (requires https://github.com/mar10/tabfix)
-                cmd: "tabfix -t --line=UNIX -r -m *.js,*.css,*.html,*json,*.yaml -i node_modules src doc -d"
-            },
-            upload: {
-                // FTP upload the demo files (requires https://github.com/mar10/pyftpsync)
-                cmd: "pyftpsync --progress upload . ftp://www.wwwendt.de/tech/demo/dynatree --delete-unmatched --omit dist,node_modules,.*,_*"
-            }
+            files: [
+              {
+                expand: true,
+                cwd: "build/",
+                src: ["**/*"],
+                dest: ""
+              }
+            ]
+          }
         },
         concat: {
             options: {
                 stripBanners: true
             },
-            dist: {
+            build: {
                 src: ["<banner:meta.banner>", 
                       "src/<%= pkg.name %>.js"
                       ],
-                dest: "dist/<%= pkg.name %>-<%= pkg.version %>.js"
+                // dest: "build/<%= pkg.name %>-<%= pkg.version %>.js"
+                dest: "build/<%= pkg.name %>.js"
             }
         },
-        uglify: {
-            dist: {
+        connect: {
+            demo: {
                 options: {
-                    banner: "<%= meta.banner %>"
-                },
-                files: {
-                    "dist/<%= pkg.name %>.min.js": ["<%= concat.dist.dest %>"]
+                    port: 8080,
+                    base: "./",
+                    keepalive: true
                 }
             }
         },
-//        qunit: {
-//            files: ["tests/unit/**/*.html"]
-//        },
+        copy: {
+          build: {
+            files: [
+              {
+                expand: true,
+                cwd: "src/",
+                src: ["skin**/*.{css,gif,png}", "*.txt"],
+                dest: "build/"
+              }, {
+                src: ["*.txt", "*.md"],
+                dest: "build/"
+              }
+            ]
+          }
+        },
+        exec: {
+            tabfix: {
+                // Cleanup whitespace according to http://contribute.jquery.org/style-guide/js/
+                // (requires https://github.com/mar10/tabfix)
+                // cmd: "tabfix -t --line=UNIX -r -m *.js,*.css,*.html,*json,*.yaml -i node_modules src doc -d"
+                cmd: "tabfix -t -r -m*.js,*.css,*.html,*.json -inode_modules src doc"
+            },
+            upload: {
+                // FTP upload the demo files (requires https://github.com/mar10/pyftpsync)
+                // cmd: "pyftpsync --progress upload . ftp://www.wwwendt.de/tech/fancytree --delete-unmatched --omit build,node_modules,.*,_*  -x"
+                cmd: "pyftpsync --progress upload . ftp://www.wwwendt.de/tech/demo/dynatree --delete-unmatched --omit dist,node_modules,.*,_*"
+            }
+        },
         jshint: {
-            beforeconcat: ["Gruntfile.js", 
+            beforeConcat: ["Gruntfile.js", 
                            "src/jquery.dynatree.js", 
                            "tests/test-dynatree.js"],
-            afterconcat: ["<config:concat.dist.dest>"],
+            afterConcat: ["<config:concat.dist.dest>"],
             options: {
                 // Enforcing Options:
                 bitwise: true,
@@ -91,34 +118,79 @@ module.exports = function(grunt) {
                 }
             }
         },
-        connect: {
-            demo: {
+        qunit: {
+            // files: ["tests/unit/**/*.html"]
+          build: ["test/unit/test-core-build.html"],
+          develop: ["test/unit/test-core.html"]
+        },
+        replace: {
+          build: {
+            src: ["build/*.js"],
+            overwrite: true,
+            replacements: [
+              {
+                from: /version:\s*\"development\"/g,
+                // from: /version:\s*\"[0-9\.\-]+\"/g,
+                to: "version: \"<%= pkg.version %>\""
+              }, {
+                from: /(@version:?\s*)(DEVELOPMENT)(\s*)/g,
+                to: "$1<%= pkg.version %>$3"
+              }, {
+                from: /(@date:?\s*)(DEVELOPMENT)(\s*)/g,
+                to: "$1<%= grunt.template.today('yyyy-mm-dd\"T\"HH:MM') %>$3"
+              }, {
+                from: /buildType:\s*\"[a-zA-Z]+\"/g,
+                to: "buildType: \"release\""
+              }, {
+                from: /debugLevel:\s*[0-9]/g,
+                to: "debugLevel: 1"
+              }
+            ]
+          }
+        },
+        uglify: {
+            build: {
                 options: {
-                    port: 8080,
-                    base: "./",
-                    keepalive: true
+                    banner: "<%= meta.banner %>"
+                },
+                files: {
+                    "build/<%= pkg.name %>.min.js": ["<%= concat.build.dest %>"]
                 }
             }
         }
-//      watch: {
-//          files: "<config:lint.files>",
-//          tasks: "lint qunit"
-//      },        
     });
+    grunt.loadNpmTasks("grunt-contrib-clean");
+    grunt.loadNpmTasks("grunt-contrib-compress");
     grunt.loadNpmTasks("grunt-contrib-concat");
     grunt.loadNpmTasks("grunt-contrib-connect");
+    grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-contrib-jshint");
+    // grunt.loadNpmTasks("grunt-contrib-qunit");
     grunt.loadNpmTasks("grunt-contrib-uglify");
-//  grunt.loadNpmTasks("grunt-contrib-qunit");
     grunt.loadNpmTasks("grunt-exec");
+    grunt.loadNpmTasks("grunt-text-replace");
 
-    grunt.registerTask("default", ["jshint:beforeconcat", 
-                                   "concat", 
-                                   "jshint:afterconcat", 
-                                   "uglify"]);
-    grunt.registerTask("build", ["exec:tabfixSrc",
-                                 "exec:tabfixDoc",
-                                 "default"]);
     grunt.registerTask("server", ["connect:demo"]);
-//  grunt.registerTask("ci", ["jshint", "qunit"]);
+    grunt.registerTask("test", [
+        "jshint:beforeConcat"
+        // "qunit:develop"
+        ]);
+    // grunt.registerTask("travis", ["test"]);
+    grunt.registerTask("default", ["test"]);
+    grunt.registerTask("build", [
+        "exec:tabfix", 
+        "test", 
+        "clean:build", 
+        "copy:build", 
+        "concat:build", 
+        "replace:build", 
+        "uglify:build",
+        "jshint:afterConcat", 
+        "uglify", 
+        // "qunit:build",
+        "compress:build"
+        // "clean:build"
+        ]);
+    // grunt.registerTask("release", ["checkrepo:beforeRelease", "build", "tagrelease", "bumpup:prerelease"]);
+    grunt.registerTask("upload", ["build", "exec:upload"]);
 };
