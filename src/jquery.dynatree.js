@@ -1452,7 +1452,7 @@ DynaTreeNode.prototype = {
 	removeChild: function(tn) {
 		// Remove tn from list of direct children.
 		var ac = this.childList;
-		if( ac.length == 1 ) {
+		if( ac.length === 1 ) {
 			if( tn !== ac[0] ){
 				throw "removeChild: invalid child";
 			}
@@ -1503,7 +1503,7 @@ DynaTreeNode.prototype = {
 					}
 				}
 				tn.removeChildren(true, retainPersistence);
-				if(this.ul){
+				if(this.ul && tn.li){
 //                  this.ul.removeChild(tn.li);
 					$("li", $(this.ul)).remove(); // issue 231
 				}
