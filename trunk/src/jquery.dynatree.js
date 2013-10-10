@@ -3090,9 +3090,9 @@ if(versionCompare($.ui.version, "1.8") < 0){
  */
 $.extend($.ui.dynatree, {
 	/** @type {String} */
-	version: "development",
+	version: "DEVELOPMENT",
 	/** @type {String} */
-	buildType: "develop",
+	buildType: "DEVELOP",
 	/** Expose class object as $.ui.dynatree._DynaTreeClass */
 	_DynaTreeClass: DynaTree,
 	/** Expose class object as $.ui.dynatree._DynaTreeNodeClass */

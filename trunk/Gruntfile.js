@@ -78,8 +78,7 @@ module.exports = function(grunt) {
             },
             upload: {
                 // FTP upload the demo files (requires https://github.com/mar10/pyftpsync)
-                // cmd: "pyftpsync --progress upload . ftp://www.wwwendt.de/tech/fancytree --delete-unmatched --omit build,node_modules,.*,_*  -x"
-                cmd: "pyftpsync --progress upload . ftp://www.wwwendt.de/tech/demo/dynatree --delete-unmatched --omit dist,node_modules,.*,_*"
+                cmd: "pyftpsync --progress upload . ftp://www.wwwendt.de/tech/dynatree --delete-unmatched --omit dist,node_modules,.*,_* -x"
             }
         },
         jshint: {
@@ -192,5 +191,6 @@ module.exports = function(grunt) {
         // "clean:build"
         ]);
     // grunt.registerTask("release", ["checkrepo:beforeRelease", "build", "tagrelease", "bumpup:prerelease"]);
-    grunt.registerTask("upload", ["build", "exec:upload"]);
+    // grunt.registerTask("upload", ["build", "exec:upload"]);
+    grunt.registerTask("upload", ["test", "exec:upload"]);
 };
