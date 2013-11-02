@@ -8,7 +8,7 @@
 
 ===== 1.2.5 (not yet released) =====
 
-  * Fixed issue 379: tree.toDict() has new parameter ´includeRoot´ (defaults to false)
+  * _BREAKING CHANGE_: issue 379: tree.toDict() has a new parameter ´includeRoot´ (defaults to false).<br>Use `tree.toDict(true)` to achieve the previous behavior.
   * Fixed issue 411:  D'n'd for jQuery UI 1.10
   * Fixed issue 420:  Allow 0 as key
   *  [http://code.google.com/p/dynatree/issues/list?can=1&q=Milestone%3ARelease1.2.5&colspec=Stars+ID+Type+Status+Modified+Priority+Milestone+Owner+Summary&x=status&y=milestone&mode=grid&cells=tiles details]
