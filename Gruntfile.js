@@ -16,17 +16,38 @@ module.exports = function(grunt) {
           build: {
             noWrite: true,
             src: ["build"]
+          },
+          buildAll: {
+            noWrite: true,
+            src: ["build-all"]
+          },
+          dist: {
+            noWrite: true,
+            src: ["dist"]
           }
         },
         compress: {
-          build: {
+          distToBuild: {
             options: {
-              archive: "dist/<%= pkg.name %>-<%= pkg.version %>.zip"
+              archive: "build/<%= pkg.name %>-<%= pkg.version %>-dist.zip"
             },
             files: [
               {
                 expand: true,
-                cwd: "build/",
+                cwd: "dist/",
+                src: ["**/*"],
+                dest: ""
+              }
+            ]
+          },
+          buildAllToBuild: {
+            options: {
+              archive: "build/<%= pkg.name %>-<%= pkg.version %>-all.zip"
+            },
+            files: [
+              {
+                expand: true,
+                cwd: "build-all/",
                 src: ["**/*"],
                 dest: ""
               }
@@ -55,9 +76,9 @@ module.exports = function(grunt) {
             }
         },
         copy: {
-          build: {
-            files: [
-              {
+          // Copy the dist files (lib and css) from src/ to build/
+          libToBuild: {
+            files: [{
                 expand: true,
                 cwd: "src/",
                 src: ["skin**/*.{css,gif,png}", "*.txt"],
@@ -65,6 +86,22 @@ module.exports = function(grunt) {
               }, {
                 src: ["*.txt", "*.md"],
                 dest: "build/"
+              }
+            ]
+          },
+          buildToDist: {
+            files: [{
+                expand: true,
+                cwd: "build/",
+                src: "**", 
+                dest: "dist/"
+            } ]
+          },
+          // Copy everything (except for build files) from src/ to build-all/
+          srcToBuildAll: {
+            files: [{
+                src: ["**/*", "!**/build/**", "!**/build-all/**", "!**/node_modules/**"],
+                dest: "build-all/"
               }
             ]
           }
@@ -85,7 +122,7 @@ module.exports = function(grunt) {
             beforeConcat: ["Gruntfile.js", 
                            "src/jquery.dynatree.js", 
                            "tests/test-dynatree.js"],
-            afterConcat: ["<config:concat.dist.dest>"],
+            afterConcat: ["<%= concat.build.dest %>"],
             options: {
                 // Enforcing Options:
                 bitwise: true,
@@ -177,18 +214,30 @@ module.exports = function(grunt) {
     // grunt.registerTask("travis", ["test"]);
     grunt.registerTask("default", ["test"]);
     grunt.registerTask("build", [
+        // Cleanup source and run tests
         "exec:tabfix", 
         "test", 
+        // Copy compressed library to /dist/jquery.dynatree-1.2.3.zip
         "clean:build", 
-        "copy:build", 
+        "copy:libToBuild", 
         "concat:build", 
         "replace:build", 
         "uglify:build",
-        "jshint:afterConcat", 
-        "uglify", 
-        // "qunit:build",
-        "compress:build"
-        // "clean:build"
+        "jshint:afterConcat",
+//      "qunit:build",
+        // The build folder now contains the tagged & minified (but uncompressed) 
+        // library and css. Now copy that to /dist
+        "clean:dist", 
+        "copy:buildToDist",
+        // Now copy everything (including dist/) to build-all/ 
+        // and compress that to build/
+        "clean:build",
+        "clean:buildAll", 
+        "copy:srcToBuildAll", 
+        "compress:buildAllToBuild",
+        "clean:buildAll",
+        // The dist folder is compressed into a separate smaller zip
+        "compress:distToBuild"
         ]);
     // grunt.registerTask("release", ["checkrepo:beforeRelease", "build", "tagrelease", "bumpup:prerelease"]);
     // grunt.registerTask("upload", ["build", "exec:upload"]);
