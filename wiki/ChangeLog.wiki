@@ -8,7 +8,7 @@
 
 ===== 1.2.5 (not yet released) =====
 
-  * rc3 does not introduce functional changes compared to rc2, but uses a new build process 
+  * rc3/4 do not introduce functional changes compared to rc2, but uses a new build process 
   * _BREAKING CHANGE_: issue 379: tree.toDict() has a new parameter ´includeRoot´ (defaults to false).<br>Use `tree.toDict(true)` to achieve the previous behavior.
   * Fixed issue 411:  D'n'd for jQuery UI 1.10
   * Fixed issue 420:  Allow 0 as key
