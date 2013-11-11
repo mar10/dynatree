@@ -13,13 +13,13 @@ module.exports = function(grunt) {
                     " Licensed <%= _.pluck(pkg.licenses, 'type').join(', ') %> */"
         },
         clean: {
+          // archive: {
+          //   noWrite: true,
+          //   src: ["archive"]
+          // },
           build: {
             noWrite: true,
             src: ["build"]
-          },
-          buildAll: {
-            noWrite: true,
-            src: ["build-all"]
           },
           dist: {
             noWrite: true,
@@ -27,9 +27,9 @@ module.exports = function(grunt) {
           }
         },
         compress: {
-          distToBuild: {
+          distToArchive: {
             options: {
-              archive: "build/<%= pkg.name %>-<%= pkg.version %>-dist.zip"
+              archive: "archive/<%= pkg.name %>-<%= pkg.version %>-dist.zip"
             },
             files: [
               {
@@ -40,14 +40,14 @@ module.exports = function(grunt) {
               }
             ]
           },
-          buildAllToBuild: {
+          buildToArchive: {
             options: {
-              archive: "build/<%= pkg.name %>-<%= pkg.version %>-all.zip"
+              archive: "archive/<%= pkg.name %>-<%= pkg.version %>-all.zip"
             },
             files: [
               {
                 expand: true,
-                cwd: "build-all/",
+                cwd: "build/",
                 src: ["**/*"],
                 dest: ""
               }
@@ -58,7 +58,7 @@ module.exports = function(grunt) {
             options: {
                 stripBanners: true
             },
-            build: {
+            srcToBuild: {
                 src: ["<banner:meta.banner>", 
                       "src/<%= pkg.name %>.js"
                       ],
@@ -97,11 +97,11 @@ module.exports = function(grunt) {
                 dest: "dist/"
             } ]
           },
-          // Copy everything (except for build files) from src/ to build-all/
-          srcToBuildAll: {
+          // Copy everything (except for archive and build files) from src/ to build/
+          srcToBuild: {
             files: [{
-                src: ["**/*", "!**/build/**", "!**/build-all/**", "!**/node_modules/**"],
-                dest: "build-all/"
+                src: ["**/*", "!**/archive/**", "!**/build/**", "!**/node_modules/**"],
+                dest: "build/"
               }
             ]
           }
@@ -122,7 +122,7 @@ module.exports = function(grunt) {
             beforeConcat: ["Gruntfile.js", 
                            "src/jquery.dynatree.js", 
                            "tests/test-dynatree.js"],
-            afterConcat: ["<%= concat.build.dest %>"],
+            afterConcat: ["<%= concat.srcToBuild.dest %>"],
             options: {
                 // Enforcing Options:
                 bitwise: true,
@@ -165,7 +165,7 @@ module.exports = function(grunt) {
             overwrite: true,
             replacements: [
               {
-                from: /version:\s*\"development\"/g,
+                from: /version:\s*\"DEVELOPMENT\"/g,
                 // from: /version:\s*\"[0-9\.\-]+\"/g,
                 to: "version: \"<%= pkg.version %>\""
               }, {
@@ -190,7 +190,7 @@ module.exports = function(grunt) {
                     banner: "<%= meta.banner %>"
                 },
                 files: {
-                    "build/<%= pkg.name %>.min.js": ["<%= concat.build.dest %>"]
+                    "build/<%= pkg.name %>.min.js": ["<%= concat.srcToBuild.dest %>"]
                 }
             }
         }
@@ -220,7 +220,7 @@ module.exports = function(grunt) {
         // Copy compressed library to /dist/jquery.dynatree-1.2.3.zip
         "clean:build", 
         "copy:libToBuild", 
-        "concat:build", 
+        "concat:srcToBuild", 
         "replace:build", 
         "uglify:build",
         "jshint:afterConcat",
@@ -229,15 +229,15 @@ module.exports = function(grunt) {
         // library and css. Now copy that to /dist
         "clean:dist", 
         "copy:buildToDist",
-        // Now copy everything (including dist/) to build-all/ 
-        // and compress that to build/
+        // Now copy everything (including dist/) to build/ 
+        // and compress that to archive/
         "clean:build",
-        "clean:buildAll", 
-        "copy:srcToBuildAll", 
-        "compress:buildAllToBuild",
-        "clean:buildAll",
+        // "clean:temp", 
+        "copy:srcToBuild", 
+        "compress:buildToArchive",
+        "clean:build",
         // The dist folder is compressed into a separate smaller zip
-        "compress:distToBuild"
+        "compress:distToArchive"
         ]);
     // grunt.registerTask("release", ["checkrepo:beforeRelease", "build", "tagrelease", "bumpup:prerelease"]);
     // grunt.registerTask("upload", ["build", "exec:upload"]);
