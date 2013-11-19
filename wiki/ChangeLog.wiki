@@ -6,26 +6,26 @@
 
 ==== Release 1.x ====
 
-===== 1.2.5 (not yet released) =====
+===== 1.2.6 (not yet released) =====
 
-  * rc3/4 do not introduce functional changes compared to rc2, but uses a new build process 
+===== 1.2.5 / 2013-11-19 =====
   * _BREAKING CHANGE_: issue 379: tree.toDict() has a new parameter ´includeRoot´ (defaults to false).<br>Use `tree.toDict(true)` to achieve the previous behavior.
   * Fixed issue 411:  D'n'd for jQuery UI 1.10
   * Fixed issue 420:  Allow 0 as key
   *  [http://code.google.com/p/dynatree/issues/list?can=1&q=Milestone%3ARelease1.2.5&colspec=Stars+ID+Type+Status+Modified+Priority+Milestone+Owner+Summary&x=status&y=milestone&mode=grid&cells=tiles details]
 
-===== 1.2.4 =====
+===== 1.2.4 / 2013-02-12 =====
 
   * Fixes issue 402 (a regrression bug in removeChildren)
   *  [http://code.google.com/p/dynatree/issues/list?can=1&q=Milestone%3ARelease1.2.4&colspec=Stars+ID+Type+Status+Modified+Priority+Milestone+Owner+Summary&x=status&y=milestone&mode=grid&cells=tiles details]
 
 
-===== 1.2.3 =====
+===== 1.2.3 / 2013-02-10 =====
 
   * Fixes for jQuery 1.9
   *  [http://code.google.com/p/dynatree/issues/list?can=1&q=Milestone%3ARelease1.2.3&colspec=Stars+ID+Type+Status+Modified+Priority+Milestone+Owner+Summary&x=status&y=milestone&mode=grid&cells=tiles details]
 
-===== 1.2.2 =====
+===== 1.2.2 / 2012-10-07 =====
 *Thanks to Ben Gillis for sponsoring this release!*
 
   * Fixed issue 321: Drag helper icons display offset is incorrect
@@ -38,7 +38,7 @@
   * Updated to jQuery UI 1.8.24, jQuery 1.8.2
   
 
-===== 1.2.1 =====
+===== 1.2.1 / 2012-06-16 =====
   * Fixed a regression in issue 202
   * Fixed issue 277: loadKeyPath exception when key doesn't exist when parent has no children
   * Fixed issue 278: Clicking on the scroll bar in a scrollable tree (overflow: scroll) causes onDragStart
@@ -64,7 +64,7 @@
   * Using dynatree for sample navigator.
   * Updated to jQuery 1.7.1, jQuery UI 1.8.17
 
-===== 1.2.0 =====
+===== 1.2.0 / 2011-09-17 =====
   * Pass additional error info to onPostInit() (issue 224)
   * New node.onCreate() event to allow lazy binding (issue 210)
   * Native support for ASP.NET 3.5 Ajax services (issue 202)
@@ -80,7 +80,7 @@
   * Added sample on how to activate nodes according to URL.
   * Fixed context menu sample for jQuery 1.6 (issue 203)
 
-===== 1.1.1 =====
+===== 1.1.1 / 2011-03-01 =====
   * Enable event bubbling in click events (issue 181)
   * Sample that combines context menu with drag'n'drop (issue 174).
   * Fixed sortChildren() on Safari (issue 180)
@@ -88,7 +88,7 @@
   * Fixed source pretty printing for IE.
   * Updated to jQuery 1.5.1
 
-===== 1.1.0 =====
+===== 1.1.0 / 2011-01-23 =====
   * Expander icon disappeared while lazy loading (issue 167).
   * Allow empty lists when loading lazily (issue 168).
   * New callback `tree.onRender(node, span)` allows changing or binding after HTML markup was created.
@@ -97,18 +97,18 @@
   * New methods `tree.count()` and `node.countChildren()`.
   * Updated to jQuery 1.4.4 / jQuery-UI 1.8.7
 
-===== 1.0.3 =====
+===== 1.0.3 / 2010-12-12 =====
   * Default skins now using CSS sprites (improved load time).
   * Simplified custom theming.
   * Checked with JSLint.
   * Some minor speed improvements (issue 159)
   * Fixed layout for IE 6,7 (issue 166).
 
-===== 1.0.2 =====
+===== 1.0.2 / 2010-11-23 =====
   * Fixed layout when not using strict mode (issue 165).
   * Fixed lazy-loading empty nodes ('[]') (issue 164)
 
-===== 1.0.0 =====
+===== 1.0.1 / 2010-11-20 =====
   * Build against jQuery 1.4 and jQuery UI 1.8
   * Drag'n'drop support.
   * Improveded HTML markup.
@@ -117,36 +117,36 @@
 
 ==== Release 0.5 ====
 
-===== 0.5.5 =====
+===== 0.5.5 / 2010-11-07 =====
   * Updated jQuery Context Menu Plugin to version 1.01
   * Fixed drag'n'drop sample
 
-===== 0.5.4 =====
+===== 0.5.4 / 2010-05-30 =====
   * Dual licensed under the MIT or GPL Version 2 licenses (issue 144)
   * issue 140
   * issue 141
 
-===== 0.5.3 =====
+===== 0.5.3 / 2010-03-15 =====
   * issue 137
   * Improved Ajax error logging
   * issue 135
   * issue 133
 
-===== 0.5.2 =====
+===== 0.5.2 / 2009-12-20 =====
   * Added a drag and drop sample using standard plugins.
   * Improved the lazy load sample to use realistic Ajax calls with local files
   * Fixed persistence when reloading lazy nodes
   * Fixed the context menu sample (online includes had moved)
   * See also the [http://code.google.com/p/dynatree/issues/list?can=1&q=milestone:Release0.5.2+status%3AFixed%2CVerified&sort=-modified&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary fix list].
 
-===== 0.5.1 =====
+===== 0.5.1 / 2009-08-16 =====
   * Support for reloading the tree or single lazy nodes.
   * Optionally inserting child nodes (instead of appending).
   * Optionally display radio buttons instead of checkboxes (credits to Lukasz Lakomy).
   * Options to hide checkboxes or make them unselectable.
   * See also the [http://code.google.com/p/dynatree/issues/list?can=1&q=milestone:Release0.5.1+status%3AFixed%2CVerified&sort=-modified&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary fix list].
 
-===== 0.5.0 =====
+===== 0.5.0 / 2009-07-15 =====
   * Change how persistance and related events are working (no longer fires events)
   * Support for persistence with lazy trees
   * See also the [http://code.google.com/p/dynatree/issues/list?can=1&q=milestone:Release0.5+status%3AFixed%2CVerified&sort=-modified&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary fix list].
@@ -157,16 +157,16 @@
 
 See [UpdateToVersion04 Migration hints] for details.
 
-===== 0.4.2 =====
+===== 0.4.2 / 2009-04-18 =====
   * Added support for callbacks after lazy loading.
   * Fixed a persistence bug.
   * Implemented cut/copy/paste in the context menu example.
   * See the [http://code.google.com/p/dynatree/issues/list?can=1&q=milestone:Release0.4.2+status%3AFixed%2CVerified&sort=-modified&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary fix list].
 
-===== 0.4.1 =====
+===== 0.4.1 / 2009-03-23 =====
   * See the [http://code.google.com/p/dynatree/issues/list?can=1&q=milestone:Release0.4.1+status%3AFixed%2CVerified&sort=-modified&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary fix list].
 
-===== 0.4.0 =====
+===== 0.4.0 / 2009-03-12 =====
   * Minor fixes
 
 ===== 0.4 rc-1 =====
@@ -209,7 +209,7 @@ See [UpdateToVersion04 Migration hints] for details.
 ===== 0.3.1 (currently in the SVN manintenance branch only) =====
   * Fixes: issue #64
 
-===== 0.3.0 =====
+===== 0.3.0 / 2008-12-07 =====
   * Changes: selectExpandsFolders is deprecated. Use clickFolderMode instead.
   * Enhancements: issue #5, issue #57
 
