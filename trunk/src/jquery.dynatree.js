@@ -2774,8 +2774,8 @@ TODO: better?
 		case "helper":
 			// Only event and node argument is available
 			var $helper = $("<div class='dynatree-drag-helper'><span class='dynatree-drag-helper-img' /></div>")
-				.append($(event.target).closest(".dynatree-title").clone());
-//              .append($(event.target).closest('a').clone());
+				    // .append($(event.target).closest(".dynatree-title").clone());
+					.append(nodeTag.find(".dynatree-title").clone());
 			// issue 244: helper should be child of scrollParent
 			$("ul.dynatree-container", node.tree.divTree).append($helper);
 //          $(node.tree.divTree).append($helper);
