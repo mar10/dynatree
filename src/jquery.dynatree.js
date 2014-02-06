@@ -1827,7 +1827,9 @@ DynaTreeNode.prototype = {
 			success: function(data, textStatus, jqXHR){
 				// <this> is the request options
 //              self.tree.logDebug("appendAjax().success");
-				var prevPhase = self.tree.phase;
+				var prevPhase = self.tree.phase,
+					options = this.tree.options; // #473
+
 				self.tree.phase = "init";
 				// postProcess is similar to the standard dataFilter hook,
 				// but it is also called for JSONP
