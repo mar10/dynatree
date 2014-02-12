@@ -1,7 +1,5 @@
-/*globals $:false, expect:false, module:false, ok:false, test:false, QUnit:false */
-/*globals logMsg, alert */
-
 $(function(){
+
 /*******************************************************************************
  * QUnit setup
  */
@@ -9,19 +7,19 @@ QUnit.log = function(result, message) {
   if (window.console && window.console.log) {  
       window.console.log(result +' :: '+ message);  
   }  
-};
+}      
 
 /*******************************************************************************
  * Tool functions
  */
 function makeBenchWrapper(testName, callback) {
     return function() {
-        var start = +new Date();
+        var start = +new Date;
 //        callback.apply(this, arguments);
         callback.call();
-        var elap = +new Date() - start;
+        var elap = +new Date - start;
         ok(true, testName + " took " + elap + " milliseconds");
-    };
+    }
 }
 
 
@@ -44,13 +42,13 @@ function simulateClick(selector) {
     $(selector).each(function(){
         this.dispatchEvent(e);
     });
-}
+};
 
 
 function addNodes(dtnode, level1, level2, level3, forceUpdate) {
-    if( forceUpdate !== true ){
+    if( forceUpdate != true )
         dtnode.tree.enableUpdate(false);
-    }
+    
     var key;
     for (var i=0; i<level1; i++) {
         key = "" + (i+1);
@@ -79,16 +77,6 @@ function addNodes(dtnode, level1, level2, level3, forceUpdate) {
  */
 module("Init");
 
-test("Initialization", function() {
-    expect(6);
-    ok(!!$.ui.dynatree, "defined $.ui.dynatree");
-    ok(!!$.ui.dynatree.version, "defined $.ui.dynatree.version");
-    ok($.isFunction($.ui.dynatree.getNode), "defined $.ui.dynatree.getNode()");
-    ok($.isFunction($.ui.dynatree.getPersistData), "defined $.ui.dynatree.getPersistData()");
-    ok(!!$.ui.dynatree._DynaTreeClass.prototype, "defined $.ui.dynatree._DynaTreeClass");
-    ok(!!$.ui.dynatree._DynaTreeNodeClass.prototype, "defined $.ui.dynatree._DynaTreeNodeClass");
-});
-/*
 test("Create dynatree", function() {
     $("#tree").dynatree({
         children: [
@@ -106,23 +94,23 @@ test("Create dynatree", function() {
         },
         onLazyRead: function(dtnode) {
             var tree = dtnode.tree;
-            var start = +new Date();
+            var start = +new Date;
             logMsg("Benchmarking mode='" + dtnode.data.mode + "'...");
             switch( dtnode.data.mode ) {
                 case "add100_flat_u":
-                    addNodes(dtnode, 100, 0, 0, true);
+                    addNodes(dtnode, 100, 0, 0, true)
                     break;
                 case "add100_flat":
-                    addNodes(dtnode, 100, 0, 0);
+                    addNodes(dtnode, 100, 0, 0)
                     break;
                 case "add1000_flat":
-                    addNodes(dtnode, 1000, 0, 0);
+                    addNodes(dtnode, 1000, 0, 0)
                     break;
                 case "add1000_deep":
-                    addNodes(dtnode, 10, 10, 10);
+                    addNodes(dtnode, 10, 10, 10)
                     break;
                 case "add10000_deep":
-                    addNodes(dtnode, 10, 100, 10);
+                    addNodes(dtnode, 10, 100, 10)
                     break;
                 case "addJsonFile":
                     dtnode.appendAjax({
@@ -132,13 +120,13 @@ test("Create dynatree", function() {
                 default:
                     throw "Invalid Mode "+ dtnode.data.mode;
             }
-            logMsg("Benchmarking mode='" + dtnode.data.mode + "' done: " + (+new Date() - start) + " milliseconds");
+            logMsg("Benchmarking mode='" + dtnode.data.mode + "' done: " + (+new Date - start) + " milliseconds");
             // Return true, to show we're finished
             return true;
         }
     });
 });
-*/
+
 /*******************************************************************************
  * Module Load
  */
