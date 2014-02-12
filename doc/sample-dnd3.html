@@ -66,15 +66,13 @@ $(function(){
 			$("#echoActive").text("-");
 		},
 		dnd: {
-			revert: false, // true: slide helper back to source if drop is rejected
 			onDragStart: function(node) {
 				/** This function MUST be defined to enable dragging for the tree.
 				 *  Return false to cancel dragging of node.
 				 */
 				logMsg("tree.onDragStart(%o)", node);
-				if(node.data.isFolder){
+				if(node.data.isFolder)
 					return false;
-				}
 				return true;
 			},
 			onDragStop: function(node) {
@@ -109,22 +107,22 @@ $(function(){
 			autoExpandMS: 1000,
 			preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
 			onDragEnter: function(node, sourceNode) {
-				/* sourceNode may be null for non-dynatree droppables.
-				 * Return false to disallow dropping on node. In this case
-				 * onDragOver and onDragLeave are not called.
-				 * Return 'over', 'before, or 'after' to force a hitMode.
-				 * Any other return value will calc the hitMode from the cursor position.
+				/** sourceNode may be null for non-dynatree droppables.
+				 *  Return false to disallow dropping on node. In this case
+				 *  onDragOver and onDragLeave are not called.
+				 *  Return 'over', 'before, or 'after' to force a hitMode.
+				 *  Any other return value will calc the hitMode from the cursor position.
 				 */
 				logMsg("tree.onDragEnter(%o, %o)", node, sourceNode);
-				// For the sake of this example deny dropping over folders
-				if(node.data.isFolder){
-					return false;
-				}
+//				if(node.data.isFolder)
+//					return false;
 				return true;
 //                return "over";
 			},
 			onDragOver: function(node, sourceNode, hitMode) {
-				/* Return false to disallow dropping this node.*/
+				/** Return false to disallow dropping this node.
+				 *
+				 */
 //				 if(node.data.isFolder){
 //					 var dd = $.ui.ddmanager.current;
 //					 dd.cancel();
@@ -133,7 +131,7 @@ $(function(){
 				logMsg("tree.onDragOver(%o, %o, %o)", node, sourceNode, hitMode);
 			},
 			onDrop: function(node, sourceNode, hitMode, ui, draggable) {
-				/* This function MUST be defined to enable dropping of items on the tree.
+				/**This function MUST be defined to enable dropping of items on the tree.
 				 * sourceNode may be null, if it is a non-Dynatree droppable.
 				 */
 				logMsg("tree.onDrop(%o, %o)", node, sourceNode);
@@ -168,22 +166,7 @@ $(function(){
 	});
 	// --- Initialize simple draggable sample ----------------------------------
 	$("#draggableSample").draggable({
-//      revert: "invalid", // slide back, when dropping over non-target
-		revert: function(dropped){
-			// Return `true` to let the helper slide back.
-			if(typeof dropped === "boolean"){
-				// dropped == true, when dropped over a simple, valid droppable target.
-				// false, when dropped outside a drop target.
-				return !dropped;
-			}
-			// Drop comes from another tree. Default behavior is to assume
-			// a valid drop, since we are over a drop-target.
-			// Therefore we have to make an extra check, if the target node
-			// was rejected by a Dynatree callback.
-			var helper = $.ui.ddmanager && $.ui.ddmanager.current && $.ui.ddmanager.current.helper;
-			var isRejected = helper && helper.hasClass("dynatree-drop-reject");
-			return isRejected;
-			},
+		revert: true,
 		connectToDynatree: true,
 		cursorAt: { top: -5, left:-5 },
 		helper: "clone"
@@ -192,7 +175,6 @@ $(function(){
 	$("#droppableSample").droppable({
 		hoverClass: "drophover",
 		addClasses: true,
-//		tolerance: "pointer",
 		over: function(event, ui) {
 			logMsg("droppable.over, %o, %o", event, ui);
 		},
@@ -204,14 +186,14 @@ $(function(){
 	});
 	<!-- Start_Exclude: This block is not part of the sample code -->
 	$("#skinCombo")
-		.val(0) // set state to prevent caching
-		.change(function(){
-			var href = "../src/"
-				+ $(this).val()
-				+ "/ui.dynatree.css"
-				+ "?reload=" + new Date().getTime();
-			$("#skinSheet").attr("href", href);
-		});
+	.val(0) // set state to prevent caching
+	.change(function(){
+		var href = "../src/"
+			+ $(this).val()
+			+ "/ui.dynatree.css"
+			+ "?reload=" + new Date().getTime();
+		$("#skinSheet").attr("href", href);
+	});
 	<!-- End_Exclude -->
 });
 --></script>

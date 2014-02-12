@@ -12,50 +12,16 @@
 // This plugin is dual-licensed under the GNU General Public License
 //   and the MIT License and is copyright A Beautiful Site, LLC.
 //
-// 2011-02-17 Martin Wendt:
+// 2011-02-17 Martin Wendt: 
 //            Changed stopPropagation() to preventDefault() in order to make it
-//            work with Dynatree drag'n'drop.
+//            work with Dynatree drag'n'drop.  
 //            See http://code.google.com/p/dynatree/issues/detail?id=174
-// 2012-09-27 Martin Wendt:
+// 2012-09-27 Martin Wendt: 
 //            fixed position in a fancy layout
-// 2013-05-09 Martin Wendt:
-//            Added polyfil for $.browser (fixes compatibility with jQuery 1.9)
 //
 if(jQuery)( function() {
-
-	/* Check browser version, since $.browser was removed in jQuery 1.9 */
-	function _checkBrowser(){
-		var matched, browser;
-		function uaMatch( ua ) {
-			ua = ua.toLowerCase();
-			var match = /(chrome)[ \/]([\w.]+)/.exec( ua ) ||
-				 /(webkit)[ \/]([\w.]+)/.exec( ua ) ||
-				 /(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) ||
-				 /(msie) ([\w.]+)/.exec( ua ) ||
-				 ua.indexOf("compatible") < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) ||
-				 [];
-			return {
-				browser: match[ 1 ] || "",
-				version: match[ 2 ] || "0"
-			};
-		}
-		matched = uaMatch( navigator.userAgent );
-		browser = {};
-		 if ( matched.browser ) {
-			 browser[ matched.browser ] = true;
-			 browser.version = matched.version;
-		 }
-		 if ( browser.chrome ) {
-			 browser.webkit = true;
-		 } else if ( browser.webkit ) {
-			 browser.safari = true;
-		 }
-		 return browser;
-	}
-	var BROWSER = jQuery.browser || _checkBrowser();
-
 	$.extend($.fn, {
-
+		
 		contextMenu: function(o, callback) {
 			// Defaults
 			if( o.menu == undefined ) return false;
@@ -85,9 +51,9 @@ if(jQuery)( function() {
 							$(".contextMenu").hide();
 							// Get this context menu
 							var menu = $('#' + o.menu);
-
+							
 							if( $(el).hasClass('disabled') ) return false;
-
+							
 							// Detect mouse position
 							var d = {}, x, y;
 							if( self.innerHeight ) {
@@ -109,7 +75,7 @@ if(jQuery)( function() {
 							}
 							(e.pageX) ? x = e.pageX : x = e.clientX + d.scrollLeft;
 							(e.pageY) ? y = e.pageY : y = e.clientY + d.scrollTop;
-
+							
 							// Show the menu
 							$(document).unbind('click');
 							// MW: fixed position in a fancy layout
@@ -122,7 +88,7 @@ if(jQuery)( function() {
 							}).mouseout( function() {
 								$(menu).find('LI.hover').removeClass('hover');
 							});
-
+							
 							// Keyboard
 							$(document).keypress( function(e) {
 								switch( e.keyCode ) {
@@ -150,7 +116,7 @@ if(jQuery)( function() {
 									break
 								}
 							});
-
+							
 							// When items are selected
 							$('#' + o.menu).find('A').unbind('click');
 							$('#' + o.menu).find('LI:not(.disabled) A').click( function() {
@@ -160,7 +126,7 @@ if(jQuery)( function() {
 								if( callback ) callback( $(this).attr('href').substr(1), $(srcElement), {x: x - offset.left, y: y - offset.top, docX: x, docY: y} );
 								return false;
 							});
-
+							
 							// Hide bindings
 							setTimeout( function() { // Delay for Mozilla
 								$(document).click( function() {
@@ -172,22 +138,22 @@ if(jQuery)( function() {
 						}
 					});
 				});
-
+				
 				// Disable text selection
-				if( BROWSER.mozilla ) {
+				if( $.browser.mozilla ) {
 					$('#' + o.menu).each( function() { $(this).css({ 'MozUserSelect' : 'none' }); });
-				} else if( BROWSER.msie ) {
+				} else if( $.browser.msie ) {
 					$('#' + o.menu).each( function() { $(this).bind('selectstart.disableTextSelect', function() { return false; }); });
 				} else {
 					$('#' + o.menu).each(function() { $(this).bind('mousedown.disableTextSelect', function() { return false; }); });
 				}
 				// Disable browser context menu (requires both selectors to work in IE/Safari + FF/Chrome)
 				$(el).add($('UL.contextMenu')).bind('contextmenu', function() { return false; });
-
+				
 			});
 			return $(this);
 		},
-
+		
 		// Disable context menu items on the fly
 		disableContextMenuItems: function(o) {
 			if( o == undefined ) {
@@ -200,13 +166,13 @@ if(jQuery)( function() {
 					var d = o.split(',');
 					for( var i = 0; i < d.length; i++ ) {
 						$(this).find('A[href="' + d[i] + '"]').parent().addClass('disabled');
-
+						
 					}
 				}
 			});
 			return( $(this) );
 		},
-
+		
 		// Enable context menu items on the fly
 		enableContextMenuItems: function(o) {
 			if( o == undefined ) {
@@ -219,13 +185,13 @@ if(jQuery)( function() {
 					var d = o.split(',');
 					for( var i = 0; i < d.length; i++ ) {
 						$(this).find('A[href="' + d[i] + '"]').parent().removeClass('disabled');
-
+						
 					}
 				}
 			});
 			return( $(this) );
 		},
-
+		
 		// Disable context menu(s)
 		disableContextMenu: function() {
 			$(this).each( function() {
@@ -233,7 +199,7 @@ if(jQuery)( function() {
 			});
 			return( $(this) );
 		},
-
+		
 		// Enable context menu(s)
 		enableContextMenu: function() {
 			$(this).each( function() {
@@ -241,7 +207,7 @@ if(jQuery)( function() {
 			});
 			return( $(this) );
 		},
-
+		
 		// Destroy context menu(s)
 		destroyContextMenu: function() {
 			// Destroy specified context menus
@@ -251,6 +217,6 @@ if(jQuery)( function() {
 			});
 			return( $(this) );
 		}
-
+		
 	});
 })(jQuery);

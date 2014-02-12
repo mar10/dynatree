@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Sample for a Dynatree custom stylesheet.
  * This is expected to be included after the standard ui.dynatree.css, thus
- * overridung the defaults.
+ * overridung the defaults. 
  */
 .dynatree-has-children span.dynatree-icon
 {
-	background-position: 0 0;
+    background-position: 0 0;
 	background-image: url("doc_with_children.gif");
 }
 
@@ -54,7 +54,7 @@ span.custom1 a
 }
 span.custom1 span.dynatree-icon
 {
-	background-position: 0 0;
+    background-position: 0 0;
 	background-image: url("customDoc2.gif");
 }
 
@@ -66,6 +66,6 @@ span.custom2 a
 }
 span.custom2 span.dynatree-icon
 {
-	background-position: 0 0;
+    background-position: 0 0;
 	background-image: url("folder_page.gif");
 }

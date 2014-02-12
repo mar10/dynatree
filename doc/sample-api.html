@@ -109,7 +109,6 @@
 		$("#btnFromDict").click(function(){
 			var node = $("#tree").dynatree("getActiveNode");
 			if( !node ) return;
-//			alert(JSON.stringify(node.toDict(true)));
 			// Set node data and - optionally - replace children
 			node.fromDict({
 				title: node.data.title + new Date(),
