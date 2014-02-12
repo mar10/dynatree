@@ -105,11 +105,6 @@ module.exports = function(grunt) {
               }
             ]
           }
-          // , repo: {
-          //   files: [
-          //       {cwd: "/", src: ["**/*", "!build"],  dest: "build/" }
-          //   ]
-          // }
         },
         exec: {
             tabfix: {

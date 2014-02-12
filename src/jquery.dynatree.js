@@ -1827,9 +1827,7 @@ DynaTreeNode.prototype = {
 			success: function(data, textStatus, jqXHR){
 				// <this> is the request options
 //              self.tree.logDebug("appendAjax().success");
-				var prevPhase = self.tree.phase,
-					options = this.tree.options; // #473
-
+				var prevPhase = self.tree.phase;
 				self.tree.phase = "init";
 				// postProcess is similar to the standard dataFilter hook,
 				// but it is also called for JSONP
@@ -2776,8 +2774,8 @@ TODO: better?
 		case "helper":
 			// Only event and node argument is available
 			var $helper = $("<div class='dynatree-drag-helper'><span class='dynatree-drag-helper-img' /></div>")
-				    // .append($(event.target).closest(".dynatree-title").clone());
-					.append(nodeTag.find(".dynatree-title").clone());
+				.append($(event.target).closest(".dynatree-title").clone());
+//              .append($(event.target).closest('a').clone());
 			// issue 244: helper should be child of scrollParent
 			$("ul.dynatree-container", node.tree.divTree).append($helper);
 //          $(node.tree.divTree).append($helper);
