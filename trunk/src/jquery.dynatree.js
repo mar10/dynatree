@@ -1909,7 +1909,7 @@ DynaTreeNode.prototype = {
 			this.parent.childList.splice(pos, 1);
 		}
 		// Remove from source DOM parent
-		if(this.parent.ul){
+		if(this.parent.ul && this.li){
 			this.parent.ul.removeChild(this.li);
 		}
 
@@ -1949,7 +1949,9 @@ DynaTreeNode.prototype = {
 			// (Hidden, because it will be
 			targetParent.ul = document.createElement("ul");
 			targetParent.ul.style.display = "none";
-			targetParent.li.appendChild(targetParent.ul);
+			if( targetParent.li ){
+				targetParent.li.appendChild(targetParent.ul);
+			}
 		}
 		// Issue 319: Add to target DOM parent (only if node was already rendered(expanded))
 		if(this.li){
