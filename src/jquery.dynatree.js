@@ -767,7 +767,7 @@ DynaTreeNode.prototype = {
 					return "title";
 				}else if( cn.className==cns.expander ){
 					return "expander";
-				}else if( cn.className==cns.checkbox ){
+				}else if( cn.className==cns.checkbox || cn.className==cns.radio ){
 					return "checkbox";
 				}else if( cn.className==cns.nodeIcon ){
 					return "icon";
@@ -787,7 +787,7 @@ DynaTreeNode.prototype = {
 			return "title";
 		}else if( tcn.indexOf(cns.expander) >= 0 ){
 			return "expander";
-		}else if( tcn.indexOf(cns.checkbox) >= 0 ){
+		}else if( tcn.indexOf(cns.checkbox) >= 0 || tcn.indexOf(cns.radio) >= 0 ){
 			return "checkbox";
 		}else if( tcn.indexOf(cns.nodeIcon) >= 0 ){
 			return "icon";
@@ -3223,6 +3223,7 @@ $.ui.dynatree.prototype.options = {
 		expander: "dynatree-expander",
 		connector: "dynatree-connector",
 		checkbox: "dynatree-checkbox",
+		radio: "dynatree-radio",
 		nodeIcon: "dynatree-icon",
 		title: "dynatree-title",
 		noConnector: "dynatree-no-connector",
