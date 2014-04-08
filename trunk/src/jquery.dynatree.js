@@ -778,7 +778,7 @@ DynaTreeNode.prototype = {
 	},
 
 	getEventTargetType: function(event) {
-		// Return the part of a node, that a click event occured on.
+		// Return the part of a node, that a click event occurred on.
 		// Note: there is no check, if the event was fired on THIS node.
 		var tcn = event && event.target ? event.target.className : "",
 			cns = this.tree.options.classNames;
