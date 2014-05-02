@@ -1,0 +1,9 @@
+#summary Download page.
+
+= Download Dynatree =
+
+Google Code [http://google-opensource.blogspot.de/2013/05/a-change-to-google-code-download-service.html deprecated the download service] starting 2014-01-15.
+
+Downloads are now [https://bintray.com/moogle/generic/dynatree/view available at Bintray]: https://bintray.com/moogle/generic/dynatree/
+
+See here for [https://code.google.com/p/dynatree/downloads/list a list of older versions] (hosted on Google Code).
