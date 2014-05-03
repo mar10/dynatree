@@ -500,13 +500,15 @@ DynaTreeNode.prototype = {
 	},
 	/** Return '/id1/id2/id3'. */
 	getKeyPath: function(excludeSelf) {
-		var path = [];
+		var path = [],
+			sep = this.tree.options.keyPathSeparator;
+
 		this.visitParents(function(node){
 			if(node.parent){
 				path.unshift(node.data.key);
 			}
 		}, !excludeSelf);
-		return "/" + path.join(this.tree.options.keyPathSeparator);
+		return sep + path.join(sep);
 	},
 
 	getParent: function() {
