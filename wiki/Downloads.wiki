@@ -7,7 +7,7 @@ Google Code [http://google-opensource.blogspot.de/2013/05/a-change-to-google-cod
 
 Downloads are now [https://bintray.com/moogle/generic/dynatree/view available at Bintray]:
 
-<a href='https://bintray.com/moogle/generic/dynatree/_latestVersion'>
+<a href='https://bintray.com/moogle/generic/dynatree/view'>
 <img src='https://api.bintray.com/packages/moogle/generic/dynatree/images/download.png'/>
 </a>
 
