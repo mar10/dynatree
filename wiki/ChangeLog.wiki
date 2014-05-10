@@ -7,11 +7,14 @@
 ==== Release 1.x ====
 
 ===== 1.2.6 (not yet released) =====
+  * Fixed issue 471: duplicate onQueryActivate(false) events
+  * Fixed issue 470: Regression for issue 263 (IE9 overflow:auto causes container div to grow on hover)
   * Fixed issue 487: node.getKeyPath() always starts path with "/", regardless of tree.options.keyPathSeparator
   * Fixed issue 478: Unable to get property options of undefinied or null reference (regression of r693)
   * Fixed issue 473: postProcess callback does not get called in initAjax
   * Fixed issue 474: Support mixing radio and checkbox nodes in same tree and toggling select state for both
   * Fixed issue 458: Drag and Drop helper does not show dragged item text when drag start from icon or left of it
+  * Update to jQuery 1.10.2, jQuery-UI 1.9.2, jQuery Cookie 1.4.1
 
 
 ===== 1.2.5 / 2013-11-19 =====
