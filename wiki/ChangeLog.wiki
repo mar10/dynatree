@@ -15,6 +15,7 @@
   * Fixed issue 474: Support mixing radio and checkbox nodes in same tree and toggling select state for both
   * Fixed issue 458: Drag and Drop helper does not show dragged item text when drag start from icon or left of it
   * Update to jQuery 1.10.2, jQuery-UI 1.9.2, jQuery Cookie 1.4.1
+  *  [http://code.google.com/p/dynatree/issues/list?can=1&q=Milestone%3ARelease1.2.6&colspec=Stars+ID+Type+Status+Modified+Priority+Milestone+Owner+Summary&x=status&y=milestone&mode=grid&cells=tiles details]
 
 
 ===== 1.2.5 / 2013-11-19 =====
