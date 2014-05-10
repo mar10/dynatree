@@ -839,10 +839,10 @@ DynaTreeNode.prototype = {
 		if( this.data.isStatusNode ){
 			return;
 		}
-		if ( fireEvents && opts.onQueryActivate && opts.onQueryActivate.call(this.tree, flag, this) === false ){
-			return; // Callback returned false
-		}
 		if( flag ) {
+			if ( fireEvents && opts.onQueryActivate && opts.onQueryActivate.call(this.tree, flag, this) === false ){
+				return; // Callback returned false
+			}
 			// Activate
 			if( this.tree.activeNode ) {
 				if( this.tree.activeNode === this ){
