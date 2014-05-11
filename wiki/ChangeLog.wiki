@@ -6,7 +6,9 @@
 
 ==== Release 1.x ====
 
-===== 1.2.6 (not yet released) =====
+===== 1.2.7 (not yet released) =====
+
+===== 1.2.6 / 2014-05-11 =====
   * Fixed issue 471: duplicate onQueryActivate(false) events
   * Fixed issue 470: Regression for issue 263 (IE9 overflow:auto causes container div to grow on hover)
   * Fixed issue 487: node.getKeyPath() always starts path with "/", regardless of tree.options.keyPathSeparator
