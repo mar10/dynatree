@@ -18,12 +18,12 @@ module.exports = function(grunt) {
           //   src: ["archive"]
           // },
           build: {
-            noWrite: true,
-            src: ["build"]
+            // noWrite: true,
+            src: ["build/"]
           },
           dist: {
-            noWrite: true,
-            src: ["dist"]
+            // noWrite: true,
+            src: ["dist/"]
           }
         },
         compress: {
