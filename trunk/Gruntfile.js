@@ -100,7 +100,13 @@ module.exports = function(grunt) {
           // Copy everything (except for archive and build files) from src/ to build/
           srcToBuild: {
             files: [{
-                src: ["**/*", "!**/archive/**", "!**/build/**", "!**/node_modules/**"],
+                src: ["**/*", 
+                      "!**/archive/**", 
+                      "!**/build/**", 
+                      "!**/node_modules/**", 
+                      "!**/_*/**",
+                      "!**/_*"
+                      ],
                 dest: "build/"
               }
             ]
