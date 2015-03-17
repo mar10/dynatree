@@ -1,5 +1,9 @@
 ##### 1.2.7 (not yet released)
 
+Note that probably there will be no further releases. 
+Checkout [Fancytree](https://github.com/mar10/fancytree) instead.
+
+
 ##### 1.2.6 / 2014-05-11
   * Fixed issue 471: duplicate onQueryActivate(false) events
   * Fixed issue 470: Regression for issue 263 (IE9 overflow:auto causes container div to grow on hover)
