@@ -15,13 +15,12 @@ See [original project site](https://code.google.com/p/dynatree) at Google Code.
 See the [change log](https://github.com/mar10/dynatree/blob/master/CHANGELOG.md) 
 for details.
 
-##### Fancytree 2.x is released
-**NOTE:** Dynatree 1.x will eventually be replaced by 
-[Fancytree](https://github.com/mar10/fancytree/).<br>
+##### Note: Fancytree 2.x is released
+Dynatree 1.x will eventually be replaced by [Fancytree](https://github.com/mar10/fancytree/).<br>
 I will support Dynatree for a while, but no new features will be added.
 
-[Fancytree](https://github.com/mar10/fancytree/) is the next generation of Dynatree
-(see also the [migration hints](https://github.com/mar10/fancytree/wiki/WhatsNew)).
+It is recommended to migrate to [Fancytree](https://github.com/mar10/fancytree/).
+See also the [migration hints](https://github.com/mar10/fancytree/wiki/WhatsNew).
 
 
 ## Overview
