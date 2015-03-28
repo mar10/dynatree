@@ -13,25 +13,25 @@ Checkout [Fancytree](https://github.com/mar10/fancytree) instead.
   * Fixed issue 474: Support mixing radio and checkbox nodes in same tree and toggling select state for both
   * Fixed issue 458: Drag and Drop helper does not show dragged item text when drag start from icon or left of it
   * Update to jQuery 1.10.2, jQuery-UI 1.9.2, jQuery Cookie 1.4.1
-  *  [http://code.google.com/p/dynatree/issues/list?can=1&q=Milestone%3ARelease1.2.6&colspec=Stars+ID+Type+Status+Modified+Priority+Milestone+Owner+Summary&x=status&y=milestone&mode=grid&cells=tiles details]
+  *  [details](http://code.google.com/p/dynatree/issues/list?can=1&q=Milestone%3ARelease1.2.6&colspec=Stars+ID+Type+Status+Modified+Priority+Milestone+Owner+Summary&x=status&y=milestone&mode=grid&cells=tiles)
 
 
 ##### 1.2.5 / 2013-11-19
   * _BREAKING CHANGE_: issue 379: tree.toDict() has a new parameter ´includeRoot´ (defaults to false).<br>Use `tree.toDict(true)` to achieve the previous behavior.
   * Fixed issue 411:  D'n'd for jQuery UI 1.10
   * Fixed issue 420:  Allow 0 as key
-  *  [http://code.google.com/p/dynatree/issues/list?can=1&q=Milestone%3ARelease1.2.5&colspec=Stars+ID+Type+Status+Modified+Priority+Milestone+Owner+Summary&x=status&y=milestone&mode=grid&cells=tiles details]
+  *  [details](http://code.google.com/p/dynatree/issues/list?can=1&q=Milestone%3ARelease1.2.5&colspec=Stars+ID+Type+Status+Modified+Priority+Milestone+Owner+Summary&x=status&y=milestone&mode=grid&cells=tiles)
 
 ##### 1.2.4 / 2013-02-12
 
   * Fixes issue 402 (a regrression bug in removeChildren)
-  *  [http://code.google.com/p/dynatree/issues/list?can=1&q=Milestone%3ARelease1.2.4&colspec=Stars+ID+Type+Status+Modified+Priority+Milestone+Owner+Summary&x=status&y=milestone&mode=grid&cells=tiles details]
+  *  [details](http://code.google.com/p/dynatree/issues/list?can=1&q=Milestone%3ARelease1.2.4&colspec=Stars+ID+Type+Status+Modified+Priority+Milestone+Owner+Summary&x=status&y=milestone&mode=grid&cells=tiles)
 
 
 ##### 1.2.3 / 2013-02-10
 
   * Fixes for jQuery 1.9
-  *  [http://code.google.com/p/dynatree/issues/list?can=1&q=Milestone%3ARelease1.2.3&colspec=Stars+ID+Type+Status+Modified+Priority+Milestone+Owner+Summary&x=status&y=milestone&mode=grid&cells=tiles details]
+  * [details](http://code.google.com/p/dynatree/issues/list?can=1&q=Milestone%3ARelease1.2.3&colspec=Stars+ID+Type+Status+Modified+Priority+Milestone+Owner+Summary&x=status&y=milestone&mode=grid&cells=tiles)
 
 ##### 1.2.2 / 2012-10-07
 *Thanks to Ben Gillis for sponsoring this release!*
@@ -41,8 +41,8 @@ Checkout [Fancytree](https://github.com/mar10/fancytree) instead.
   * Fixed issue 324: Drag and drop example bug: onDragOver doesn't allow return "after"
   * Added a sample for RTL support
   * The (unsupported) context menu plugin that I used for the sample was patched to fix a positioning bug.
-  * Using [http://gruntjs.com/ grunt] and [https://github.com/mishoo/UglifyJS uglify] in the build process.<br>jquery.dynatree.min.js has been reduced to 80% of previous size.<br>This file is now found in the `/dist` folder
-  * Dropped compliance with [http://www.jslint.com/ JSLint] in favor of [http://www.jshint.com/ JSHint]
+  * Using [uglify](http://gruntjs.com/ grunt] and [https://github.com/mishoo/UglifyJS) in the build process.<br>jquery.dynatree.min.js has been reduced to 80% of previous size.<br>This file is now found in the `/dist` folder
+  * Dropped compliance with [JSHint](http://www.jslint.com/ JSLint] in favor of [http://www.jshint.com/)
   * Updated to jQuery UI 1.8.24, jQuery 1.8.2
   
 
