@@ -3,11 +3,7 @@
 > Dynatree is a JavaScript dynamic tree view plugin for jQuery with support for 
 > persistence, keyboard, checkboxes, drag'n'drop, and lazy loading.
 
-**NOTE: This repository was migrated from [Google Code](https://code.google.com/p/dynatree) at 2015-03-15.**<br>
-[Google announced](http://google-opensource.blogspot.de/2015/03/farewell-to-google-code.html)
-that Google Code Project Hosting will be turned down.<br>
-See [original project site](https://code.google.com/p/dynatree) at Google Code.
-
+**Note:** This repository was migrated from [Google Code](https://code.google.com/p/dynatree) at 2015-03-15.
 
 ## Status
 
@@ -20,7 +16,7 @@ Dynatree 1.x will eventually be replaced by [Fancytree](https://github.com/mar10
 I will support Dynatree for a while, but no new features will be added.
 
 It is recommended to migrate to [Fancytree](https://github.com/mar10/fancytree/).
-See also the [migration hints](https://github.com/mar10/fancytree/wiki/WhatsNew).
+It's easy: see also the [migration hints](https://github.com/mar10/fancytree/wiki/WhatsNew).
 
 
 ## Overview
