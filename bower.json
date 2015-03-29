@@ -14,10 +14,12 @@
     "/doc",
     "/jquery",
     "/lib",
-    "/test",
-    "dynatree.jquery.json",
+    "/src",
+    "/tests",
+    "dynatree_sample.png",
     "Gruntfile.js",
-    "index.html"
+    "index.html",
+    "README.md"
   ],
   "keywords": [
     "ajax",
