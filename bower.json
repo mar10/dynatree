@@ -1,0 +1,41 @@
+{
+  "name": "jquery.dynatree",
+  "description": "Dynatree is a JavaScript dynamic tree view plugin for jQuery with support for persistence, keyboard, checkboxes, drag'n'drop, and lazy loading.",
+  "main": [
+    "src/jquery.jquery-dynatree.js"
+  ],
+  "license": ["MIT", "GPL-2.0"],
+  "ignore": [
+    "**/.*",
+    "/archive",
+    "/bin",
+    "/build",
+    "/demo",
+    "/doc",
+    "/lib",
+    "/test",
+    "dynatree.jquery.json",
+    "Gruntfile.js",
+    "index.html"
+  ],
+  "keywords": [
+    "ajax",
+    "jquery-plugin",
+    "lazy",
+    "tree"
+  ],
+  "authors": [
+    {
+      "name": "Martin Wendt",
+      "homepage": "http://careers.stackoverflow.com/martin-wendt"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mar10/dynatree.git"
+  },
+  "dependencies": {
+    "jquery": ">=1.5"
+  },
+  "devDependencies": {}
+}
