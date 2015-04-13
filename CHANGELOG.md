@@ -5,7 +5,7 @@ Checkout [Fancytree](https://github.com/mar10/fancytree) instead.
 
 
 ##### 1.2.7 / 2015-03-29
-  * Add bower support
+  * #495 Add bower support: `bower install dynatree`
 
 
 ##### 1.2.6 / 2014-05-11
