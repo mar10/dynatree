@@ -18,7 +18,7 @@
 *******************************************************************************/
 
 /* jsHint options*/
-// Note: We currently allow eval() to parse the 'data' attribtes, when initializing from HTML.
+// Note: We currently allow eval() to parse the 'data' attributes, when initializing from HTML.
 // TODO: pass jsHint with the options given in grunt.js only.
 //       The following should not be required:
 /*global alert */
