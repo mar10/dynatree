@@ -9,8 +9,8 @@
 	A current version and some documentation is available at
 		http://dynatree.googlecode.com/
 
-	@version: 1.2.7
-	@date:    2015-03-29T19:33
+	@version: 1.2.8
+	@date:    2015-07-04T16:44
 
 	@depends: jquery.js
 	@depends: jquery.ui.core.js
@@ -18,7 +18,7 @@
 *******************************************************************************/
 
 /* jsHint options*/
-// Note: We currently allow eval() to parse the 'data' attribtes, when initializing from HTML.
+// Note: We currently allow eval() to parse the 'data' attributes, when initializing from HTML.
 // TODO: pass jsHint with the options given in grunt.js only.
 //       The following should not be required:
 /*global alert */
@@ -3096,7 +3096,7 @@ if(versionCompare($.ui.version, "1.8") < 0){
  */
 $.extend($.ui.dynatree, {
 	/** @type {String} */
-	version: "1.2.7",
+	version: "1.2.8",
 	/** @type {String} */
 	buildType: "release",
 	/** Expose class object as $.ui.dynatree._DynaTreeClass */

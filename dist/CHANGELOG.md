@@ -1,11 +1,15 @@
-##### 1.2.8-0 (not yet released)
+##### 1.2.9-0 (not yet released)
 
 Note that probably there will be no further releases. 
 Checkout [Fancytree](https://github.com/mar10/fancytree) instead.
 
 
+##### 1.2.8 / 2015-07-04
+  * #498 Fix bower error due to too long description
+
+
 ##### 1.2.7 / 2015-03-29
-  * Add bower support
+  * #495 Add bower support: `bower install dynatree`
 
 
 ##### 1.2.6 / 2014-05-11
