@@ -1260,7 +1260,8 @@ DynaTreeNode.prototype = {
 			this.focus(); // issue 95
 		} else {
 			this._userActivate();
-			var aTag = this.span.getElementsByTagName("a");
+			// var aTag = this.span.getElementsByTagName("a");
+			var aTag = $(this.span).children("a.dynatree-title");  // #500
 			if(aTag[0]){
 				// issue 154, 313
 				if(!(BROWSER.msie && parseInt(BROWSER.version, 10) < 9)){

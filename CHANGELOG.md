@@ -3,6 +3,8 @@
 Note that probably there will be no further releases. 
 Checkout [Fancytree](https://github.com/mar10/fancytree) instead.
 
+  * #500 Fix Dynatree 'steals' clicks on anchors inside the node title
+
 
 ##### 1.2.8 / 2015-07-04
   * #498 Fix bower error due to too long description
