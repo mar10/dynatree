@@ -2975,6 +2975,11 @@ $.widget("ui.dynatree", {
 		this.tree._load();
 		this.tree.logDebug("Dynatree._init(): done.");
 	},
+	
+	_destroy: function(){
+		this.unbind();
+		this.tree.logDebug("Dynatree._destroy(): done.");
+	},
 
 	bind: function() {
 		// Prevent duplicate binding
@@ -3031,12 +3036,8 @@ $.widget("ui.dynatree", {
 		}
 		var div = this.tree.divTree;
 
-		if( div.addEventListener ) {
-			div.addEventListener("focus", __focusHandler, true);
-			div.addEventListener("blur", __focusHandler, true);
-		} else {
-			div.onfocusin = div.onfocusout = __focusHandler;
-		}
+		this.element.bind("focusin.dynatree focusout.dynatree", __focusHandler);
+		
 		// EVENTS
 		// disable click if event is configured to something else
 //      if (!(/^click/).test(o.event))
